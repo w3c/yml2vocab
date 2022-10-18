@@ -2,6 +2,11 @@
 
 The script in the directory generates RDFS vocabulary files in JSON and Turtle formats, plus a human readable HTML file containing the vocabulary in RDFa, based on a simple vocabulary definition in a CSV file. Neither the script nor the CSV format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies without, for instance, sophisticated OWL statements.
 
+When running, the script relies on two files:
+
+1. The `vocabulary.csv` file, containing the definition cells for the vocabulary.
+2. The `template.html` file, used to create the HTML file version of the vocabulary.
+
 ## Definition of the vocabulary in the CSV file
 
 The vocabulary is defined in a CSV file, which contains the following columns: `category`, `id`, `property`, `value`, `label`, `upper value`, `domain`, `range`, `deprecated`, `comment`, and `see also`. The `category` column defines the category of the row, and the interpretation of the row's content (that is, of the other columns) depends on this category. 
@@ -35,8 +40,13 @@ The available categories, specified by the `category` cells, and the correspondi
 The script is in TypeScript (version 4.6 and beyond) running on top of `node.js` (version 16 and beyond). Take the following steps to install and run the script:
 
 1. Install [`node.js`](https://nodejs.org/) on your local machine. Installation of `node.js` should automatically install the [`npm`](https://www.npmjs.com) package manager.
-2. In the directory of the script, run `npm install` on the command line. This installs all the necessary packages in the `node_modules` subdirectory.
-3. The script can be run through `npm run generate` on the command line.
+2. Clone the repository to your local machine
+3. In the directory of the repository clone, run `npm install` on the command line. This installs all the necessary packages in the `node_modules` subdirectory.
+4. Modify the `main.ts` file's first line (staring with `#!`) to refer to the local file directory where the installation happened
+5. Create a directory for the vocabulary definition; this should include
+   1. A `vocabulary.csv` file. You can start with the CSV file in the `example` directory of the repository, and change the cells for your vocabulary.
+   2. A `template.html` file. You can start with the HTML file in the `example` directory of the repository, and adapt/change it as you wish. Be careful with the changes, though: the script relies on the existing `id` values and section structures.
+6. Run the `main.ts` file in the directory that contains the `vocabulary.csv` and `template.html` files
 
 The vocabulary specification in CSV is in the `vocabulary.csv` file. The script generates the files `vocabulary.ttl`, `vocabulary.jsonld` and `vocabulary.html` for, respectively, the Turtle, JSON-LD, and HTML representations.
 
@@ -48,12 +58,13 @@ The vocabulary specification in CSV is in the `vocabulary.csv` file. The script 
 - `template.json`: an HTML template file used by the script; it is the skeleton of the final HTML format, also based on [ReSpec](https://respec.org/docs/). If the file is modified, care should be taken to not change the core structure and the various, possibly empty, HTML elements with `@id` values. The script fills those elements with content when generating the `vocabulary.html` file.
 - `lib` directory: the TypeScript modules for the script.
 - `main.ts`: the TypeScript entry point to the script.
+- `example` directory: example csv and template files.
 
 The following files and directories are generated/modified by either the script or `npm`; better not to touch these directly:
 
 - `package-lock.json`: used by `npm` as an internal file for the packages.
 - `node_modules` directory: the various Javascript libraries used by the script. This directory should _not_ be uploaded to github, it is strictly for the local activation of the script.
-- `vocabulary.ttl`, `vocabulary.jsonld`, `vocabulary.html`: the vocabulary representation in different format. These are the only files "visible", conceptually, to the outside.
+- `example/vocabulary.ttl`, `example/vocabulary.jsonld`, `example/vocabulary.html`: the vocabulary representation in different formats, used for testing.
 
 ## Acknowledgement
 
