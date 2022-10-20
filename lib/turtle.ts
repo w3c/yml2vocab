@@ -65,7 +65,7 @@ export function to_turtle(fname: string, vocab: Vocab): Promise<void> {
     {
         // Block for the top level ontology entries
         turtle += "# Ontology definition\n";
-        turtle += "cred: a owl:Ontology\n";
+        turtle += "cred: a owl:Ontology ;\n";
         for (const ont of vocab.ontology_properties) {
             if (ont.property === 'dc:date') {
                 turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`
@@ -87,7 +87,7 @@ export function to_turtle(fname: string, vocab: Vocab): Promise<void> {
             if (cl.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
             }
-            if (cl.subClassOf) {
+            if (cl.subClassOf && cl.subClassOf.length > 0) {
                 turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
             }
             common_fields(cl);
