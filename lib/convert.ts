@@ -148,9 +148,18 @@ function finalize_raw_entry(raw: RawVocabEntry): RawVocabEntry {
         }
     }
 
-    // In some cases the YAML parser puts an extra `\n` character into the comment line,
+    // In some cases the YAML parser puts an extra `\n` character at the end of the comment line,
     // this is removed
-    const clean_comment = (val: string): string => val.endsWith('\n') ? val.slice(0,-1):val;
+    const clean_comment = (val: string): string => {
+        let final = val.endsWith('\n') ? val.slice(0,-1):val;
+        if (final.endsWith('"') && final.startsWith('"')) {
+            final = final.slice(1,-1);
+        }
+        if (final.endsWith("'") && final.startsWith("'")) {
+            final = final.slice(1,-1)
+        }
+        return final;
+    }
 
     return {
         id          : (raw.id) ? raw.id : "Vocabulary definition error: no ID provided.",
@@ -211,7 +220,7 @@ function finalize_raw_vocab(raw: RawVocab) : RawVocab {
  */
 export async function get_data(filename: string): Promise<Vocab> {
     const vocab_source = await fs.readFile(filename, 'utf-8');
-    const vocab_yml: RawVocab = yaml.parse(vocab_source, { prettyErrors: true }) as RawVocab;
+    const vocab_yml: RawVocab = yaml.parse(vocab_source) as RawVocab;
     const vocab: RawVocab = finalize_raw_vocab(vocab_yml);
 
     // Convert all the raw structures into their respective internal representations for 
@@ -322,10 +331,5 @@ export async function get_data(filename: string): Promise<Vocab> {
             }
         }) : [];
 
-    // console.log(JSON.stringify(prefixes,null,4))
-    // console.log(JSON.stringify(ontologies,null,4))
-    // console.log(JSON.stringify(classes,null,4))
-    // console.log(JSON.stringify(properties,null,4))
-    // console.log(JSON.stringify(individuals,null,4))
     return {prefixes, ontology_properties, classes, properties, individuals}
 }

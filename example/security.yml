@@ -224,13 +224,13 @@ property:
     label: Blockchain account ID
     range: xsd:string
     comment: |
-      A `blockchainAccountId`` property is used to specify a blockchain account identifier, as per the <a href=”https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md”>CAIP-10Account ID Specification</a>.
+      A `blockchainAccountId` property is used to specify a blockchain account identifier, as per the <a href=”https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md”>CAIP-10Account ID Specification</a>.
 
   - id: ethereumAddress
     label: Ethereum address
     range: xsd:string
     comment: |
-      'An `ethereumAddress`` property is used to specify the Ethereum address (as per the Ethereum Yellow Paper “Ethereum: a secure decentralised generalised transaction ledger” prefix "0x", a common identifier for hexadecimal, concatenated with the rightmost 20 bytes of the Keccak-256 hash (big endian) of the ECDSA public key (the curve used is the so-called secp256k1). In hexadecimal, 2 digits represent a byte, meaning addresses contain 40 hexadecimal digits. The Ethereum address should also contain a checksum as per EIP-55.'
+      'An `ethereumAddress` property is used to specify the Ethereum address. As per the Ethereum Yellow Paper “Ethereum: a secure decentralised generalised transaction ledger” prefix "0x", a common identifier for hexadecimal, concatenated with the rightmost 20 bytes of the Keccak-256 hash (big endian) of the ECDSA public key (the curve used is the so-called secp256k1). In hexadecimal, 2 digits represent a byte, meaning addresses contain 40 hexadecimal digits. The Ethereum address should also contain a checksum as per EIP-55.'
     see_also:
       - label: EIP-55
         url: https://eips.ethereum.org/EIPS/eip-55
@@ -382,8 +382,7 @@ property:
   - id: publicKeyService
     label: Public key service
     range: IRI
-    comment: The publicKeyService property is used to express the REST URL that
-      provides public key management services.
+    comment: The publicKeyService property is used to express the REST URL that provides public key management services.
 
   - id: revoked
     label: Revocation time

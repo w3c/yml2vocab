@@ -521,7 +521,7 @@
                 "en": "Digest algorithm"
             },
             "rdfs:comment": {
-                "en": "\"The digest algorithm is used to specify the cryptographic function to use when generating the data to be digitally signed. Typically, data that is to be signed goes through three steps: 1) canonicalization, 2) digest, and 3) signature. This property is used to specify the algorithm that should be used for step 2. A signature class typically specifies a default digest method, so this property is typically used to specify information for a signature algorithm.\""
+                "en": "The digest algorithm is used to specify the cryptographic function to use when generating the data to be digitally signed. Typically, data that is to be signed goes through three steps: 1) canonicalization, 2) digest, and 3) signature. This property is used to specify the algorithm that should be used for step 2. A signature class typically specifies a default digest method, so this property is typically used to specify information for a signature algorithm."
             }
         },
         {
@@ -549,7 +549,7 @@
                 "en": "Blockchain account ID"
             },
             "rdfs:comment": {
-                "en": "A `blockchainAccountId`` property is used to specify a blockchain account identifier, as per the CAIP-10Account ID Specification."
+                "en": "A `blockchainAccountId` property is used to specify a blockchain account identifier, as per the CAIP-10Account ID Specification."
             }
         },
         {
@@ -563,7 +563,7 @@
                 "en": "Ethereum address"
             },
             "rdfs:comment": {
-                "en": "'An `ethereumAddress`` property is used to specify the Ethereum address (as per the Ethereum Yellow Paper “Ethereum: a secure decentralised generalised transaction ledger” prefix \"0x\", a common identifier for hexadecimal, concatenated with the rightmost 20 bytes of the Keccak-256 hash (big endian) of the ECDSA public key (the curve used is the so-called secp256k1). In hexadecimal, 2 digits represent a byte, meaning addresses contain 40 hexadecimal digits. The Ethereum address should also contain a checksum as per EIP-55.'"
+                "en": "An `ethereumAddress` property is used to specify the Ethereum address. As per the Ethereum Yellow Paper “Ethereum: a secure decentralised generalised transaction ledger” prefix \"0x\", a common identifier for hexadecimal, concatenated with the rightmost 20 bytes of the Keccak-256 hash (big endian) of the ECDSA public key (the curve used is the so-called secp256k1). In hexadecimal, 2 digits represent a byte, meaning addresses contain 40 hexadecimal digits. The Ethereum address should also contain a checksum as per EIP-55."
             },
             "rdfs:seeAlso": [
                 "https://eips.ethereum.org/EIPS/eip-55",
@@ -1027,7 +1027,7 @@
                 "en": "Signature algorithm"
             },
             "rdfs:comment": {
-                "en": "\"The signature algorithm is used to specify the cryptographic signature function to use when digitally signing the digest data. Typically, text to be signed goes through three steps: 1) canonicalization, 2) digest, and 3) signature. This property is used to specify the algorithm that should be used for step #3. A signature class typically specifies a default signature algorithm, so this property rarely needs to be used in practice when specifying digital signatures.\""
+                "en": "The signature algorithm is used to specify the cryptographic signature function to use when digitally signing the digest data. Typically, text to be signed goes through three steps: 1) canonicalization, 2) digest, and 3) signature. This property is used to specify the algorithm that should be used for step #3. A signature class typically specifies a default signature algorithm, so this property rarely needs to be used in practice when specifying digital signatures."
             }
         },
         {

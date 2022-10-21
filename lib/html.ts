@@ -74,7 +74,7 @@ const bnode = (): string => {
  */
 export async function to_html(fname: string, template: string, vocab: Vocab): Promise<void> {
     const add_break = (text: string): string => {
-        const regex = /\\n/g;
+        const regex = /\n/g;
         return text.replace(regex, '<br>');
     }
 
