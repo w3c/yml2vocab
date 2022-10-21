@@ -1,20 +1,21 @@
 /**
- * Convert the raw CSV description of the vocabulary into an internal representation 
+ * Convert the raw YAML description of the vocabulary into an internal representation 
  * (see the 'Vocab' interface).
  * 
  * @packageDocumentation
  */
-import { parse }          from 'csv-parse/sync';
-import { promises as fs } from 'fs';
-import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, global } from './common';
+ import { promises as fs } from 'fs';
+ import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, global } from './common';
+ import * as yaml from 'yaml'
 
-const today = new Date();
+/************************************************ Helper functions and constants **********************************/
 
 /**
  * Just a shorthand to make the code more readable... Checking whether a string can be considered as a URL
  * 
  * @param value 
  * @returns 
+ * @internal
  */
 const isURL = (value:string): boolean => {
     try {
@@ -25,230 +26,302 @@ const isURL = (value:string): boolean => {
     }
 }
 
+/**
+ * These prefixes are added no matter what; they are not vocabulary specific
+ * 
+ * @internal
+ */
+const default_prefixes: RDFPrefix[] = [
+    {
+        prefix : "dc",
+        url    : "http://purl.org/dc/terms/",
+    },
+    {
+        prefix : "owl",
+        url    : "http://www.w3.org/2002/07/owl#",
+    },
+    {
+        prefix : "rdf",
+        url    : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    },
+    {
+        prefix : "rdfs",
+        url    : "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    {
+        prefix : "xsd",
+        url    : "http://www.w3.org/2001/XMLSchema#"
+    }
+];
+
+
+/**
+ * These ontology properties are added no matter what; they are not vocabulary specific
+ * @internal
+ */
+const default_ontology_properties: OntologyProperty[] = [
+    {
+        property : "dc:date",
+        value    :  (new Date()).toISOString().split('T')[0],
+        url      : false
+    }
+];
+
+
 /** 
-* One row of the CSV entries. Look at the Readme.md file for what they are meant for.
+* Superset of all YAML entries expressed in TS. Look at the Readme.md file for what they are meant for.
+*
+* This is used to induce some extra checks by TS compile time; the classes are converted into
+* the common classes defined in common.ts in this module
+*
+* @internal
 */
 interface RawVocabEntry {
-    category    : string;
     id          : string;
-    property    : string;
-    value       : string;
+    property    ?: string;
+    value       ?: string;
     label       : string;
-    upper_value : string[];
-    domain      : string[];
-    range       : string[];
-    deprecated  : boolean;
+    upper_value ?: string[];
+    domain      ?: string[];
+    range       ?: string[];
+    deprecated  ?: boolean;
     comment     : string;
-    see_also    : Link[]
+    see_also    ?: Link[];
+};
+
+/**
+ * This is the structure of the YAML file itself. Note that vocab and ontology is required, everything else is optional
+ */
+interface RawVocab {
+    vocab       : RawVocabEntry[];
+    prefix     ?: RawVocabEntry[];
+    ontology    : RawVocabEntry[];
+    class      ?: RawVocabEntry[];
+    property   ?: RawVocabEntry[];
+    individual ?: RawVocabEntry[];
+}
+
+
+/**
+ * Although the YAML parsing is declared to produce a RawVocabEntry, it in fact does not
+ * (e.g., some entries should be converted into arrays even if the YAML source has only a single item).
+ * This function does some basic conversion for all the types, to make the processing later a bit simpler.
+ * 
+ * @param raw entry as it comes from the YAML parser
+ * @returns a "real" RawVocabEntry instance
+ * @internal
+ */
+function finalize_raw_entry(raw: RawVocabEntry): RawVocabEntry {
+    // Some entries are to be put into an array, even if there is only one item
+    const toArray = (val: undefined|string|string[]) : undefined|string[] => {
+        if (val === undefined) {
+            return undefined
+        } else if (val.length === 0) {
+            return undefined
+        } else if ( typeof val === "string") {
+            return [val]
+        } else {
+            return val
+        }
+    };
+
+    // The "toSeeAlso" structure needs some special treatment and should also be turned into an array
+    const toSeeAlso = (val: undefined|any|any[]) : undefined|Link[] => {
+        if (val === undefined) {
+            return undefined
+        } else if (Array.isArray(val) && val.length === 0) {
+            return undefined
+        } else {
+            if (Array.isArray(val)) {
+                return val.map((raw: any): Link => {
+                    return {
+                        label : raw.label,
+                        url   : raw.url
+                    }
+                })
+            } else {
+                return [{
+                    label : val.label,
+                    url   : val.url
+                }]
+            }
+        }
+    }
+
+    // In some cases the YAML parser puts an extra `\n` character into the comment line,
+    // this is removed
+    const clean_comment = (val: string): string => val.endsWith('\n') ? val.slice(0,-1):val;
+
+    return {
+        id          : (raw.id) ? raw.id : "Vocabulary definition error: no ID provided.",
+        property    : raw.property,
+        value       : raw.value,
+        label       : (raw.label) ? raw.label : "Vocabulary definition error: no label provided.",
+        upper_value : toArray(raw.upper_value),
+        domain      : toArray(raw.domain),
+        range       : toArray(raw.range),
+        deprecated  : (raw.deprecated === undefined) ? false : raw.deprecated,
+        comment     : (raw.comment) ? clean_comment(raw.comment) : "",
+        see_also    : toSeeAlso(raw.see_also),
+    }
 }
 
 /**
- * Parse and interpret the CSV file's raw content. This is, essentially, just translation of the 
- * CSV file structure into the its internal equivalent representation with only a very few changes:
- * comma separated structures are converted into arrays when applicable, and the  
- * value for 'deprecated' is converted into boolean. See the interface definition of 'RawVocabEntry' for the details.
+ * Run the entry finalization function through all entries in the vocabulary
+ * as parsed from YAML
+ * 
+ * @param raw 
+ * @returns 
+ */
+function finalize_raw_vocab(raw: RawVocab) : RawVocab {
+    // Check whether the required entries (vocab and ontology) are present
+    if (raw.vocab === undefined) {
+        throw("No 'vocab' section in the vocabulary specification.")
+    }
+    if (raw.ontology === undefined) {
+        throw("No 'ontology' section in the vocabulary specification.")
+    }
+    return {
+        vocab      : raw.vocab.map(finalize_raw_entry),
+        prefix     : raw.prefix?.map(finalize_raw_entry),
+        ontology   : raw.ontology?.map(finalize_raw_entry),
+        class      : raw.class?.map(finalize_raw_entry),
+        property   : raw.property?.map(finalize_raw_entry),
+        individual : raw.individual?.map(finalize_raw_entry),
+    }
+}
+
+/******************************************* External entry point **********************************/
+/**
+ * Parse and interpret the YAML file's raw content. This is, essentially, just translation of the 
+ * YAML file structure into the its internal equivalent representation with only a very few changes.
+ * See the interface definition of 'RawVocabEntry' for the details.
  * 
  * The result is ephemeral, in the sense that it is then immediately transformed into a proper internal 
  * representation of the vocabulary using the `Vocab` interface. This is done 
  * in a separate function for a better readability of the code.
  * 
- * @param fname File name of the csv file
+ * @param fname File name of the yaml file
  * @returns The collection of the row values
  * @async
  */
-async function get_vocab(fname: string): Promise<RawVocabEntry[]> {
-    const handle_csv_list = (csv_entry: string): string[] => {
-        return csv_entry ? csv_entry.split(',').map((entry: string): string => entry.trim()) : []
-    }
+export async function get_data(filename: string): Promise<Vocab> {
+    const vocab_source = await fs.readFile(filename, 'utf-8');
+    const vocab_yml: RawVocab = yaml.parse(vocab_source, { prettyErrors: true }) as RawVocab;
+    const vocab: RawVocab = finalize_raw_vocab(vocab_yml);
 
-    const convert_links = (md_links: string[]): Link[] => {
-        // TS cannot detect that the 'undefined' entries are removed by filter,
-        // hence the necessity of the 'as Link[]'. The TS compiler
-        // asks for '(Link|undefined)[]'...
-        return md_links.map((entry: string): Link | undefined => {
-            const cut = entry.split('](');
-            if (cut.length < 2) {
-                return undefined;
-            } else {
-                return {
-                    label : cut[0].slice(1),
-                    url   : cut[1].slice(0,-1),
-                }
-            }
-        }).filter((entry: Link|undefined): boolean => entry !== undefined) as Link[];
-    }
-
-    const vocab_source = await fs.readFile(fname);
-    const vocab = parse(vocab_source, {delimiter: ',', columns: true})
-
-    return vocab.map((entry: Record<string, unknown>): RawVocabEntry => {
-        return {
-            category    : entry["category"] as string,
-            id          : entry["id"] as string,
-            property    : entry["property"] as string,
-            value       : entry["value"] as string,
-            label       : entry["label"] as string,
-            domain      : handle_csv_list(entry["domain"] as string),
-            upper_value : handle_csv_list(entry["upper value"] as string),
-            range       : handle_csv_list(entry["range"] as string),
-            comment     : entry["comment"] as string,
-            deprecated  : (entry["deprecated"] as string) === "yes",
-            see_also    : convert_links(handle_csv_list(entry["see also"] as string)),
-        };
-    });
-}
-
-/**
- * The Raw representation is transformed into separate arrays of classes, individuals, prefixes, etc.
- * The column for "category" is the main switch for the interpretation of the individual rows.
- * See the definition of the 'Vocab' interface for more details, as well as the Readme.md for more.
- * 
- * 
- * @param raw_vocab The set of raw vocabulary entries, i.e., the individual rows within the CSV file
- * @returns A properly categorized set of terms and values
- */
-function categorize_vocabulary(raw_vocab: RawVocabEntry[]): Vocab {
-    // These prefixes are added no matter what; they are not vocabulary specific
-    const default_prefixes: RDFPrefix[] = [
-        {
-            prefix : "dc",
-            url    : "http://purl.org/dc/terms/",
-        },
-        {
-            prefix : "owl",
-            url    : "http://www.w3.org/2002/07/owl#",
-        },
-        {
-            prefix : "rdf",
-            url    : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-        },
-        {
-            prefix : "rdfs",
-            url    : "http://www.w3.org/2000/01/rdf-schema#"
-        },
-        {
-            prefix : "xsd",
-            url    : "http://www.w3.org/2001/XMLSchema#"
-        }
-    ];
-    // These ontology properties are added no matter what; they are not vocabulary specific
-    const default_ontology_properties: OntologyProperty[] = [
-        {
-            property : "dc:date",
-            value    :  today.toISOString().split('T')[0],
-            url      : false
-        }
-    ]
+    // Convert all the raw structures into their respective internal representations for 
+    // prefixes, ontology properties, classes, etc.
 
     // Get the extra prefixes and combine them with the defaults. Note that the 'vocab' category
     // should be added to the list, too, but it needs a special treatment (eg, it is
-    // explicitly displayed in the HTML output), hence these
-    // values are also stored globally.
+    // explicitly displayed in the HTML output), hence these values are also stored globally.
     const prefixes: RDFPrefix[] = [
-        ...(raw_vocab.filter((entry: RawVocabEntry): boolean => entry.category === "vocab"))
-            .map( (entry: RawVocabEntry): RDFPrefix => {
-                global.vocab_prefix = entry.id;
-                global.vocab_url = entry.value
+        ...vocab.vocab.map((raw: RawVocabEntry): RDFPrefix => {
+            if (raw.id === undefined) {
+                throw "The vocabulary has no prefix"
+            }
+            if (raw.value === undefined) {
+                throw "The vocabulary has no identifier"
+            }
+            global.vocab_prefix = raw.id;
+            global.vocab_url = raw.value;
+            return {
+                prefix : raw.id,
+                url    : raw.value,
+            }
+        }),
+        ...((vocab["prefix"] &&  vocab["prefix"].length > 0) 
+            ? vocab["prefix"].map((raw: RawVocabEntry): RDFPrefix => {
                 return {
-                    prefix : entry.id,
-                    url    : entry.value,
+                    prefix : raw.id,
+                    url    : (raw.value) ? raw.value : "UNDEFINED PREFIX VALUE",
                 }
-            }),
-        ...(raw_vocab.filter((entry: RawVocabEntry): boolean => entry.category === "prefix"))
-            .map( (entry: RawVocabEntry): RDFPrefix => {
-                return {
-                    prefix : entry.id,
-                    url    : entry.value,
-                }
-            }),
+            })
+            : []
+        ),
         ...default_prefixes
     ];
 
-    // Get the classes. Note the special treatment for deprecated classes...
-    const classes: RDFClass[] = (raw_vocab.filter((entry: RawVocabEntry): boolean => entry.category === "class"))
-    .map((entry:RawVocabEntry): RDFClass => {
-        const types: string[] = (entry.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
-        return {
-            id         : entry.id,
-            type       : types,
-            subClassOf : entry.upper_value.length === 1 && entry.upper_value[0] === "" ? undefined : entry.upper_value,
-            label      : entry.label,
-            comment    : entry.comment,
-            deprecated : entry.deprecated,
-            see_also   : entry.see_also,
-        }
-    });
-
-    // Get the classes. Note the special treatment for deprecated properties...
-    const properties: RDFProperty[] = (raw_vocab.filter((entry: RawVocabEntry): boolean => entry.category === "property"))
-    .map((entry:RawVocabEntry): RDFProperty => {
-        const types: string[] = (entry.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"];
-        if (entry.range && entry.range.length > 0) {
-            if (entry.range.length === 1 && entry.range[0] === "IRI") {
-                types.push("owl:ObjectProperty");
-                entry.range = [];
-            } else {
-                let isDTProperty = true;
-                for (const rg of entry.range) {
-                    if (rg.startsWith("xsd") === false) {
-                        isDTProperty = false;
-                        break;
-                    }
-                }
-                if (isDTProperty) types.push("owl:DatatypeProperty");        
-            }
-        }
-        return {
-            id            : entry.id,
-            type          : types,
-            subPropertyOf : entry.upper_value.length === 0 ? undefined : entry.upper_value ,
-            range         : entry.range.length === 0 ? undefined : entry.range,
-            domain        : entry.domain.length === 0 ? undefined : entry.domain,
-            label         : entry.label,
-            comment       : entry.comment,
-            deprecated    : entry.deprecated,
-            see_also      : entry.see_also,
-        }
-    });
-
-    // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the csv file
-    const individuals: RDFIndividual[] = (raw_vocab.filter((entry: RawVocabEntry): boolean => entry.category === "individual"))
-    .map((entry: RawVocabEntry): RDFIndividual => {
-        return {
-            id            : entry.id,
-            type          : entry.upper_value.length === 1 && entry.upper_value[0] === "" ? [] : entry.upper_value,
-            label         : entry.label,
-            comment       : entry.comment,
-            deprecated    : entry.deprecated,
-            see_also      : entry.see_also,
-        }
-    });
-
-    // Get the ontology properties
+    // Get the ontology properties. Note that there are also default ontology properties
+    // that are added to what the YAML input provides
     const ontology_properties: OntologyProperty[] = [
-        ...(raw_vocab.filter((entry:RawVocabEntry): boolean => entry.category === "ontology"))
-            .map( (entry: RawVocabEntry): OntologyProperty => {
-                return {
-                    property : entry.property,
-                    value    : entry.value,
-                    url      : isURL(entry.value)
-                }
-            }),
+        ...vocab.ontology.map((raw: RawVocabEntry): OntologyProperty => {
+            return {
+                property : (raw.property) ? raw.property : "UNDEFINED ONTOLOGY PROPERTY",
+                value    : (raw.value) ? raw.value : "UNDEFINED PROPERTY VALUE",
+                url      : (raw.value) ? isURL(raw.value) : false,
+            }
+        }),
         ...default_ontology_properties,
     ];
+
+    // Get the classes. Note the special treatment for deprecated classes...
+    const classes: RDFClass[] = (vocab.class !== undefined) ? 
+        vocab.class.map((raw: RawVocabEntry): RDFClass => {
+            const types: string[] = (raw.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
+            return {
+                id         : raw.id,
+                type       : types,
+                label      : raw.label,
+                comment    : raw.comment,
+                deprecated : raw.deprecated,
+                subClassOf : raw.upper_value,
+                see_also   : raw.see_also,
+            }
+        }) : [];
+
+    // Get the classes. Note the special treatment for deprecated properties, as well as 
+    // the extra owl types added depending on the range
+    const properties: RDFProperty[] = (vocab.property !== undefined) ?
+        vocab.property.map((raw: RawVocabEntry): RDFProperty => {
+            const types: string[] = (raw.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdfs:Property"];
+            let range = raw.range;
+            if (range && range.length > 0) {
+                if (range.length === 1 && (range[0].toUpperCase() === "IRI" || range[0].toUpperCase() === "URL")) {
+                    types.push("owl:ObjectProperty");
+                    range = [];
+                } else {
+                    let isDTProperty = true;
+                    for (const rg of range) {
+                        if (rg.startsWith("xsd") === false) {
+                            isDTProperty = false;
+                            break;
+                        }  
+                    }
+                    if (isDTProperty) types.push("owl:DatatypeProperty");
+                }
+            }
+            return {
+                id            : raw.id,
+                type          : types,
+                label         : raw.label,
+                comment       : raw.comment,
+                deprecated    : raw.deprecated,
+                subPropertyOf : raw.upper_value,
+                see_also      : raw.see_also,
+                range         : range,
+                domain        : raw.domain,
+            }
+        }) : [];
+
+    // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
+    const individuals: RDFIndividual[] = (vocab.individual !== undefined) ?
+        vocab.individual.map((raw:RawVocabEntry): RDFIndividual => {
+            return {
+                id            : raw.id,
+                label         : raw.label,
+                comment       : raw.comment,
+                deprecated    : raw.deprecated,
+                type          : (raw.upper_value !== undefined) ? raw.upper_value : [],
+                see_also      : raw.see_also,
+            }
+        }) : [];
+
+    // console.log(JSON.stringify(prefixes,null,4))
+    // console.log(JSON.stringify(ontologies,null,4))
+    // console.log(JSON.stringify(classes,null,4))
+    // console.log(JSON.stringify(properties,null,4))
+    // console.log(JSON.stringify(individuals,null,4))
     return {prefixes, ontology_properties, classes, properties, individuals}
-}
-
-
-/**
- * Conversion of the CSV file into the internal representation of the vocabulary. 
- * This function is just the externally visible shell for the two functions above.
- * 
- * @param filename File name for the CSV file
- * @returns 
- * @async
- */
-export async function get_data(filename: string): Promise<Vocab> {
-    const raw_vocab: RawVocabEntry[] = await get_vocab(filename);
-    return categorize_vocabulary(raw_vocab);    
 }

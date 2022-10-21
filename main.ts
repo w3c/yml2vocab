@@ -8,22 +8,30 @@ import { to_html }        from './lib/html';
 /**
  * Entry point for the script: 
  * 
- * 1. Read the CSV file
+ * 1. Read the YAML file
  * 2. Transform the content into an internal representation of the vocabulary
  * 3. Use the internal representation to generate a Turtle, JSON-LD, and HTML versions.
  * 
- * At the moment, the names of the files ('vocabulary.ttl', 'vocabulary.jsonld', and 'vocabulary.html' for
- * the output, and 'vocabulary.csv' for the CSV file itself) are baked into the code. At some point
- * an external config file may become a good idea. 
+ * The common name of the yml/ttl/html/jsonld files (differing only in the suffixes) can be given as the argument of the script.
+ * The default is `vocabulary`
  * 
  */
 async function main() {
-    const vocab: Vocab = await get_data('vocabulary.csv');
+    const get_fname = () : string => {
+        if (process.argv.length > 2) {
+            const vocab_name = process.argv[2];
+            return vocab_name.endsWith('.yml') ? vocab_name.slice(0,-4) : vocab_name;
+        } else {
+            return 'vocabulary'
+        }  
+    }
+    const fname = get_fname();
+    const vocab: Vocab = await get_data(`${fname}.yml`);
     await Promise.all([
-        to_turtle("vocabulary.ttl", vocab),
-        to_jsonld("vocabulary.jsonld", vocab),
-        to_html("vocabulary.html", "template.html", vocab)
-    ])    
+        to_turtle(`${fname}.ttl`, vocab),
+        to_jsonld(`${fname}.jsonld`, vocab),
+        to_html(`${fname}.html`, "template.html", vocab)
+    ])
 }
 
 // At some point, node.js will allow to have async calls at the top level, and this extra function will
