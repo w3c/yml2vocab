@@ -4,7 +4,8 @@
   "description": "Generation of vocabulary files starting by CSV",
   "main": "main.ts",
   "scripts": {
-    "test": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts)"
+    "test_security": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts security)",
+    "test_vcdm": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts credentials)"
   },
   "author": "Ivan Herman",
   "license": "W3C-20150513",

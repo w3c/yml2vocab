@@ -181,6 +181,10 @@ function finalize_raw_vocab(raw: RawVocab) : RawVocab {
     if (raw.ontology === undefined) {
         throw("No 'ontology' section in the vocabulary specification.")
     }
+
+    // It is perfectly fine if the vocab is not encoded as an array in YAML
+    if (!Array.isArray(raw.vocab)) raw.vocab = [raw.vocab];
+
     return {
         vocab      : raw.vocab.map(finalize_raw_entry),
         prefix     : raw.prefix?.map(finalize_raw_entry),
