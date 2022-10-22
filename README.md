@@ -1,4 +1,4 @@
-# Generate RDFS vocabulary files from CSV
+# Generate RDFS vocabulary files from YAML
 
 The script in the directory generates RDFS vocabulary files in JSON and Turtle formats, plus a human readable HTML file containing the vocabulary in RDFa, based on a simple vocabulary definition in a YAML file. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies without, for instance, sophisticated OWL statements.
 
