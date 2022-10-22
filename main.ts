@@ -1,4 +1,4 @@
-#! /Users/ivan/W3C/github/Tools/csv2vocab/node_modules/.bin/ts-node
+#! /Users/ivan/W3C/github/VC/yml2vocab/node_modules/.bin/ts-node
 import { Vocab }          from './lib/common';
 import { get_data }       from "./lib/convert";
 import { to_turtle }      from "./lib/turtle";
