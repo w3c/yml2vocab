@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
-import { Vocab, Link, RDFTerm, global }  from './common';
+import { Vocab, Link, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual } from './common';
 import { JSDOM }          from 'jsdom';
 import { promises as fs } from 'fs';
 
@@ -124,28 +124,19 @@ export async function to_html(fname: string, template: string, vocab: Vocab): Pr
         }
     }
 
-    // Get the DOM of the template
-    const template_text = await fs.readFile(template, 'utf-8');
-    const document = (new JSDOM(template_text)).window.document;
-
-    // The prefix and the URL for the vocabulary itself
-    // I am just lazy to type things that are too long... :-)
-    const vocab_prefix = global.vocab_prefix;
-    const vocab_url    = global.vocab_url;
-
-    {
-        // RDFa preamble. If, at some point, we decide that the RDFa part is superfluous, this block can be removed.
+    // RDFa preamble. If, at some point, we decide that the RDFa part is superfluous, this block can be removed.
+    const rdfa_preamble = () => {
         const body = document.getElementsByTagName('body')[0];
         if (body) {
-            body.setAttribute('resource',vocab_url);
-            body.setAttribute('prefix',  vocab.prefixes.map( (value): string => `${value.prefix}: ${value.url}`).join(' ')  )    
-        }    
+            body.setAttribute('resource', vocab_url);
+            body.setAttribute('prefix', vocab.prefixes.map((value): string => `${value.prefix}: ${value.url}`).join(' '));
+        }
     }    
 
-    {
-        // Get some generic metadata for the vocabulary that are part of the template text
-        // These come from the ontology properties of the vocabulary.
-        try {
+    // Get some generic metadata for the vocabulary that are part of the template text
+    // These come from the ontology properties of the vocabulary.
+    const ontology_properties = () => {
+         try {
             const title = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:title')[0].value;
             add_text(title, document.getElementsByTagName('title')[0]);
             add_text(title, document.getElementById('title'));    
@@ -176,9 +167,9 @@ export async function to_html(fname: string, template: string, vocab: Vocab): Pr
         }
     }
 
-    {
-        // There is a separate list in the template for all the namespaces used by the vocabulary
-        // The prefix part of the vocabulary is just for that.
+    // There is a separate list in the template for all the namespaces used by the vocabulary
+    // The prefix part of the vocabulary is just for that.
+    const prefixes = () => {
         const ns_dl = document.getElementById('namespaces');
         if (ns_dl) {
             for (const ns of vocab.prefixes) {
@@ -190,21 +181,21 @@ export async function to_html(fname: string, template: string, vocab: Vocab): Pr
         }
     }
 
-    {
-        // Generation of the section content for classes: a big table, with a row per class
-        // There is a check for a possible template error and also whether there are class
-        // definitions in the first place.
-        //
-        // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
-        // that makes things fairly confusing :-(
-        const section = document.getElementById('class_definitions');
+    // Generation of the section content for classes: a big table, with a row per class
+    // There is a check for a possible template error and also whether there are class
+    // definitions in the first place.
+    //
+    // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
+    // that makes things fairly confusing :-(
+    const classes = (cl_list: RDFClass[], deprecated: boolean) => {
+        const section = document.getElementById(`${deprecated ? 'deprecated_' : ''}class_definitions`);
         if (section) {
-            if (vocab.classes.length > 0) {
-                add_child(section, 'p', `The following are class definitions in the <code>${vocab_prefix}</code> namespace:`)
+            if (cl_list.length > 0) {
+                add_child(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} class definitions in the <code>${vocab_prefix}</code> namespace:`)
                 const table = add_child(section, 'table');
                 table.className = 'rdfs-definition simple';
 
-                for (const item of vocab.classes) {
+                for (const item of cl_list) {
                     // Each item has its own row in the table
                     const tr = add_child(table, 'tr');
                     const td1 = add_child(tr, 'td', item.id);
@@ -237,21 +228,21 @@ export async function to_html(fname: string, template: string, vocab: Vocab): Pr
         }
     }
 
-    {
-        // Generation of the section content for properties: a big table, with a row per property
-        // There is a check for a possible template error and also whether there are properties
-        // definitions in the first place.
-        //
-        // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
-        // that makes things fairly confusing :-(
-            const section = document.getElementById('property_definitions');
+    // Generation of the section content for properties: a big table, with a row per property
+    // There is a check for a possible template error and also whether there are properties
+    // definitions in the first place.
+    //
+    // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
+    // that makes things fairly confusing :-(
+    const properties = (pr_list: RDFProperty[], deprecated: boolean) => {
+        const section = document.getElementById(`${deprecated ? 'deprecated_' : ''}property_definitions`);
         if (section) {
-            if (vocab.properties.length > 0) {
-                add_child(section, 'p', `The following are property definitions in the <code>${vocab_prefix}</code> namespace:`)
+            if (pr_list.length > 0) {
+                add_child(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} property definitions in the <code>${vocab_prefix}</code> namespace:`)
                 const table = add_child(section, 'table');
                 table.className = 'rdfs-definition simple';
 
-                for (const item of vocab.properties) {
+                for (const item of pr_list) {
                     // Each item has its own row in the table
                     const tr = add_child(table, 'tr');
                     const td1 = add_child(tr, 'td', item.id);
@@ -333,20 +324,20 @@ export async function to_html(fname: string, template: string, vocab: Vocab): Pr
         }
     }
 
-    {
-        // Generation of the section content for individuals: a big table, with a row per individual
-        // There is a check for a possible template error and also whether there are individual
-        // definitions in the first place.
-        //
-        // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
-        // that makes things fairly confusing :-(
-        const section = document.getElementById('individual_definitions');
+    // Generation of the section content for individuals: a big table, with a row per individual
+    // There is a check for a possible template error and also whether there are individual
+    // definitions in the first place.
+    //
+    // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
+    // that makes things fairly confusing :-(
+    const individuals = (ind_list: RDFIndividual[], deprecated: boolean) => {
+        const section = document.getElementById(`${deprecated ? 'deprecated_' : ''}individual_definitions`);
         if (section) {
-            if (vocab.individuals.length > 0) {
-                add_child(section, 'p', `The following are definitions for individuals in the <code>${vocab_prefix}</code> namespace:`)
+            if (ind_list.length > 0) {
+                add_child(section, 'p', `The following are definitions for ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} individuals in the <code>${vocab_prefix}</code> namespace:`)
                 const table = add_child(section, 'table');
                 table.className = 'rdfs-definition simple';
-                for (const item of vocab.individuals) {
+                for (const item of ind_list) {
                     const tr = add_child(table, 'tr');
                     const td1 = add_child(tr, 'td', item.id);
                     td1.className = 'bold';
@@ -373,6 +364,49 @@ export async function to_html(fname: string, template: string, vocab: Vocab): Pr
         } else {
             console.log("Template error: no section prepared for individuals!")
         }
+    }
+
+    /* *********************** The real processing part ****************** */
+    // Get the DOM of the template
+    const template_text = await fs.readFile(template, 'utf-8');
+    const document = (new JSDOM(template_text)).window.document;
+
+    // The prefix and the URL for the vocabulary itself
+    // I am just lazy to type things that are too long... :-)
+    const vocab_prefix = global.vocab_prefix;
+    const vocab_url    = global.vocab_url;
+
+    // 1. Set the necessary RDFa preamble into the body element
+    rdfa_preamble();
+
+    // 2. Set the general properties on the ontology itself
+    ontology_properties();
+
+    // 3. The introductory list of prefixes used in the document
+    prefixes();
+
+    // 4. Sections on classes
+    const actual_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.deprecated === false)
+    const deprecated_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.deprecated === true)
+    classes(actual_classes, false)
+    classes(deprecated_classes, true)
+
+    // 5. Sections on properties
+    const actual_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.deprecated === false)
+    const deprecated_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.deprecated === true)
+    properties(actual_properties, false);
+    properties(deprecated_properties, true);
+
+    // 6. Sections on individuals
+    const actual_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.deprecated === false)
+    const deprecated_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.deprecated === true)
+    individuals(actual_individuals, false);
+    individuals(deprecated_individuals, true);
+
+    // 7. Remove the section on deprecation in case there aren't any...
+    if ((deprecated_classes.length + deprecated_properties.length + deprecated_individuals.length) === 0) {
+        const section = document.getElementById('deprecated_term_definitions');
+        if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }
 
     // That is it... generate the output

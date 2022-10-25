@@ -85,7 +85,7 @@
         "en": "The Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.\n"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2022-10-22",
+    "dc:date": "2022-10-25",
     "rdfs_classes": [
         {
             "@id": "sec:Key",
