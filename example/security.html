@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html><head>
     <meta charset="utf-8">
-    <title>The Security Vocabulary</title>
+    <title>TEST — The Security Vocabulary</title>
     <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c"></script>
-    <script class="remove" src="../common.js"></script>
+    <script>
+        function remove_status_remark() {
+            const sotd = document.getElementById("sotd");
+            const p = sotd.getElementsByTagName('p')[0];
+            sotd.removeChild(p);
+        }
+    </script>
     <script class="remove">
       var respecConfig = {
         localBiblio: {
@@ -31,15 +37,11 @@
           companyURL: "http://digitalbazaar.com/",
           w3cid:      48025,
         }],
-        // group : "vc",
-        // github: {
-				// 	repoURL: "https://github.com/w3c/vc-data-model",
-				// 	branch: "main"
-				// },
         alternateFormats: [
           {uri: "vocabulary.ttl", label: "Turtle"},
           {uri: "vocabulary.jsonld", label: "JSON-LD"}
         ],
+        postProcess : [remove_status_remark],
         inlineCSS: true,
         doRDFa: false,
         noIDLIn: true,
@@ -87,8 +89,8 @@
   </head>
   <body typeof="owl:Ontology" resource="https://w3id.org/security/v1" prefix="sec: https://w3id.org/security/v1 cred: https://w3.org/2018/credentials# dc: http://purl.org/dc/terms/ owl: http://www.w3.org/2002/07/owl# rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# xsd: http://www.w3.org/2001/XMLSchema#">
     <section id="abstract">
-      <p>This document describes the <span property="dc:title" id="title">The Security Vocabulary</span>, i.e.,
-         the <span property="dc:description" id="description">The Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.
+      <p>This document describes the <span property="dc:title" id="title">TEST — The Security Vocabulary</span>, i.e.,
+         the <span property="dc:description" id="description">test vocabulary specification, modeled after the Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.
 </span>.
       </p>
       <p>Alternate versions of the vocabulary definition exist in
@@ -104,6 +106,8 @@
     </section>
     <section id="sotd">
       <p>
+        This vocabulary has been defined by the <a href="https://www.w3.org/2017/vc/WG/">W3C Verifiable Credentials Working Group</a> and provides
+        the official RDFS vocabulary for <a href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials</a>.
         Comments regarding this document are welcome. Please file issues
         directly on <a href="https://github.com/w3c/vc-data-integrity/issues/">GitHub</a>, or send them to
         <a href="mailto:public-vc-comments@w3.org">public-vc-comments@w3.org</a>
@@ -111,6 +115,8 @@
         <a href="https://lists.w3.org/Archives/Public/public-vc-comments/">archives</a>).
       </p>
     </section>
+
+    <section id="conformance"></section>
     <section>
       <h2>Namespaces</h2>
       <p>This specification makes use of the following namespaces:</p>

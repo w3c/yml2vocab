@@ -79,10 +79,10 @@
     "@id": "https://w3id.org/security/v1",
     "@type": "owl:Ontology",
     "dc:title": {
-        "en": "The Security Vocabulary"
+        "en": "TEST — The Security Vocabulary"
     },
     "dc:description": {
-        "en": "The Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.\n"
+        "en": "test vocabulary specification, modeled after the Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.\n"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
     "dc:date": "2022-10-25",
