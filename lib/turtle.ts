@@ -5,18 +5,16 @@
  * @packageDocumentation
  */
 import { Vocab, global, text_comment, RDFTerm, Link } from './common';
-import { promises as fs }               from 'fs';
 
 /**
  * Generate the Turtle representation of the vocabulary.
  * Nothing complex, just a straightforward conversion of the information into the turtle syntax.
  * 
- * @param fname File name for the generated turtle file
- * @param vocab The internal representation of the vocabulary
+ * @param vocab - The internal representation of the vocabulary
  * @returns 
  * @async
  */
-export function to_turtle(fname: string, vocab: Vocab): Promise<void> {
+export function to_turtle(vocab: Vocab): string {
 
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct if there are several domains; factored it here to make the 
@@ -126,5 +124,5 @@ export function to_turtle(fname: string, vocab: Vocab): Promise<void> {
         }
     }
 
-    return fs.writeFile(fname, turtle, 'utf-8');
+    return turtle;
 }
