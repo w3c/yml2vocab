@@ -1,12 +1,8 @@
 #! /Users/ivan/W3C/github/VC/yml2vocab/node_modules/.bin/ts-node
-import { Vocab }          from './lib/common';
-import { get_data }       from "./lib/convert";
-import { to_turtle }      from "./lib/turtle";
-import { to_jsonld }      from './lib/jsonld';
-import { to_html }        from './lib/html';
+import * as yml2vocab from './index';
 
 /**
- * Entry point for the script: 
+ * Entry point for running the script on the command line: 
  * 
  * 1. Read the YAML file
  * 2. Transform the content into an internal representation of the vocabulary
@@ -26,12 +22,7 @@ async function main() {
         }  
     }
     const fname = get_fname();
-    const vocab: Vocab = await get_data(`${fname}.yml`);
-    await Promise.all([
-        to_turtle(`${fname}.ttl`, vocab),
-        to_jsonld(`${fname}.jsonld`, vocab),
-        to_html(`${fname}.html`, "template.html", vocab)
-    ])
+    await yml2vocab.generate_vocabulary_files(fname, "template.html");
 }
 
 // At some point, node.js will allow to have async calls at the top level, and this extra function will

@@ -42,6 +42,7 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
 
 ## Installation and use
 
+### Using it from the command line
 The script is in TypeScript (version 4.6 and beyond) running on top of `node.js` (version 16 and beyond). Take the following steps to install and run the script:
 
 1. Install [`node.js`](https://nodejs.org/) on your local machine. Installation of `node.js` should automatically install the [`npm`](https://www.npmjs.com) package manager.
@@ -58,6 +59,32 @@ The script is in TypeScript (version 4.6 and beyond) running on top of `node.js`
    The generates the `vocabulary.ttl`, `vocabulary.jsonld`, and `vocabulary.html` files for, respectively, the Turtle, JSON-LD, and HTML representations.
 
    The script also accepts a single argument to be used instead of `vocabulary` to name the various files.
+
+### Using it as a library
+
+The library can also be used as a standard npm module in a node based TypeScript project via:
+
+```
+npm install yml2vocab
+```
+
+The simplest way of using the module is to use 
+
+```
+import * as yml2vocab from 'yml2vocab';
+await yml2vocab.generate_vocabulary_files(yaml_file_name, template_file_name)
+```
+
+that will read the YAML/Template files and store the generated vocabulary representations (see the command line interface for details). Alternatively, the `yml2vocab.VocabGeneration` class can be used:
+
+
+```
+import * as yml2vocab from 'yml2vocab';
+const vocab_generation = new yml2vocab.VocabGeneration(yml_content); // yml_content is text form, before parsing
+const turtle: string = vocab_generation.get_turtle();
+const jsonld: string = vocab_generation.get_jsonld();
+const html: string   = vocab_generation.get_html(template_file_content);
+```
 
 
 ## Content of the directory

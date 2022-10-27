@@ -12,9 +12,9 @@ import { promises as fs } from 'fs';
 /**
  * Add a new HTML Element to a parent, and return the new element
  * 
- * @param parent The parent HTML Element
- * @param element The new element's name
- * @param content The new element's (HTML) content
+ * @param parent - The parent HTML Element
+ * @param element - The new element's name
+ * @param content - The new element's (HTML) content
  * @returns the new element
  * 
  * @internal
@@ -29,9 +29,11 @@ import { promises as fs } from 'fs';
 /**
  * Add some text to an element, including the obligatory checks that Typescript imposes
  * 
- * @param content text to add
+ * @param content - text to add
  * @param element HTML Element to add it to
  * @returns 
+ * 
+ * @internal
  */
 const add_text = (content: string, element: HTMLElement|null): HTMLElement|null => {
     if (element) {
@@ -66,13 +68,11 @@ const bnode = (): string => {
  * that the vocabulary can be extracted by an RDFa distiller. I am not sure it is all
  * that useful and it complicates the code; at some point we may decide to remove this.
  * 
- * @param fname File name for the generated HTML file 
- * @param template File name of the template file 
- * @param vocab The internal representation of the vocabulary
+ * @param vocab - The internal representation of the vocabulary
+ * @param template_text - The textual content of the template file 
  * @returns
- * @async 
  */
-export async function to_html(fname: string, template: string, vocab: Vocab): Promise<void> {
+export function to_html(vocab: Vocab, template_text: string): string {
     const add_break = (text: string): string => {
         const regex = /\n/g;
         return text.replace(regex, '<br>');
@@ -368,7 +368,6 @@ export async function to_html(fname: string, template: string, vocab: Vocab): Pr
 
     /* *********************** The real processing part ****************** */
     // Get the DOM of the template
-    const template_text = await fs.readFile(template, 'utf-8');
     const document = (new JSDOM(template_text)).window.document;
 
     // The prefix and the URL for the vocabulary itself
@@ -411,8 +410,7 @@ export async function to_html(fname: string, template: string, vocab: Vocab): Pr
 
     // That is it... generate the output
     // I wish it was possible to generate a properly formatted HTML source, but I am not sure how to do that
-    const output = `<!DOCTYPE html>\n<html>${document.documentElement.innerHTML}</html>`
-    return fs.writeFile(fname, output, 'utf-8')
+    return `<!DOCTYPE html>\n<html>${document.documentElement.innerHTML}</html>`;
 }
 
 

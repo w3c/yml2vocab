@@ -2,7 +2,8 @@
   "name": "csv2vocab",
   "version": "1.0.0",
   "description": "Generation of vocabulary files starting by CSV",
-  "main": "main.ts",
+  "main": "index.ts",
+  "types": "index.ts",
   "scripts": {
     "test_security": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts security)",
     "test_vcdm": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts credentials)"
@@ -10,7 +11,6 @@
   "author": "Ivan Herman",
   "license": "W3C-20150513",
   "dependencies": {
-    "@types/csv-parse": "^1.2.2",
     "@types/jsdom": "^20.0.0",
     "@types/node": "^18.7.17",
     "jsdom": "^20.0.0",
