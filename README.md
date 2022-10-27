@@ -48,15 +48,15 @@ The script is in TypeScript (version 4.6 and beyond) running on top of `node.js`
 1. Install [`node.js`](https://nodejs.org/) on your local machine. Installation of `node.js` should automatically install the [`npm`](https://www.npmjs.com) package manager.
 2. Clone the repository to your local machine.
 3. In the directory of the repository clone, run `npm install` on the command line. This installs all the necessary packages in the `node_modules` subdirectory.
-4. Modify the `main.ts` file's first line (staring with `#!`) to refer to the local file directory where the installation happened
-5. Create a directory for the vocabulary definition; this should include
+4. Create a directory for the vocabulary definition; this should include
    1. A `vocabulary.yml` file. You can start with the YAML file in the `example` directory of the repository, and change the cells for your vocabulary.
    2. A `template.html` file. You can start with the HTML file in the `example` directory of the repository, and adapt/change it as you wish. Be careful with the changes, though: the script relies on the existing `id` values and section structures.
-6. Run the `main.ts` file in the directory that contains:  
-   - the `vocabulary.yml` file is the vocabulary definition itself;
-   - the `template.html` is an HTML template file used by the script; it is the skeleton of the final HTML format, also based on [ReSpec](https://respec.org/docs/). If the file is modified, care should be taken not to change the core structure and the various, possibly empty, HTML elements with `@id` values. The script fills those elements with content when generating the `vocabulary.html` file.
+5. Run the `main.ts` file in the directory vocabulary definition. This generates the `vocabulary.ttl`, `vocabulary.jsonld`, and `vocabulary.html` files for, respectively, the Turtle, JSON-LD, and HTML representations.
 
-   The generates the `vocabulary.ttl`, `vocabulary.jsonld`, and `vocabulary.html` files for, respectively, the Turtle, JSON-LD, and HTML representations.
+   "Running" may be done in two different ways:
+
+   1. Run, via `node`, the file `dist/main.js` of the repository
+   2. Run, via `node_modules/.bin/ts-node`, the file `main.ts` of the repository
 
    The script also accepts a single argument to be used instead of `vocabulary` to name the various files.
 

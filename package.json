@@ -2,13 +2,34 @@
   "name": "csv2vocab",
   "version": "1.0.0",
   "description": "Generation of vocabulary files starting by CSV",
-  "main": "index.ts",
-  "types": "index.ts",
+  "homepage": "https://github.com/w3c/yml2vocab",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/w3c/yml2vocab"
+  },
+  "bugs": {
+    "url": "https://github.com/w3c/yml2vocab/issues"
+  },
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "lib/**/*",
+    "dist/**/*",
+    "index.ts",
+    "main.ts"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin" : "dist/main.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "test_security": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts security)",
-    "test_vcdm": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts credentials)"
+    "test_vcdm": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts credentials)",
+    "dist": "tsc"
   },
-  "author": "Ivan Herman",
+  "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/",
   "license": "W3C-20150513",
   "dependencies": {
     "@types/jsdom": "^20.0.0",

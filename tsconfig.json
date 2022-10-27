@@ -1,0 +1,47 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "alwaysStrict": true,
+        "baseUrl": ".",
+        "esModuleInterop": false,
+        "lib": ["esnext", "dom"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noEmitHelpers": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": false,
+        "outDir": "dist",
+        "paths": {
+            "*": [
+                "node_modules/*"
+            ]
+        },
+        "resolveJsonModule": true,
+        "sourceMap": false,
+        "target": "esnext",
+    },
+    "typesRoots": [
+        "node_modules/@types"
+    ],
+    "include": [
+        "lib/**/*",
+        "main.ts",
+        "index.ts"
+    ],
+    "exclude": [
+        "example/**/*"
+    ],
+    "typedocOptions" : {
+        "excludeExternals": true,
+        "excludePrivate" : true,
+        "excludeProtected" : false,
+        "out" : "docs",
+        "theme": "default",
+        "includeVersion": true,
+        "categorizeByGroup": true,
+        "gitRemote": "origin",
+        "hideGenerator": true,
+        "name" : "Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa"
+    }
+}
