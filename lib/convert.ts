@@ -214,12 +214,10 @@ function finalize_raw_vocab(raw: RawVocab) : RawVocab {
  * representation of the vocabulary using the `Vocab` interface. This is done 
  * in a separate function for a better readability of the code.
  * 
- * @param fname File name of the yaml file
- * @returns The collection of the row values
- * @async
+ * @param vocab_source YAML file content
+ * @returns
  */
-export async function get_data(filename: string): Promise<Vocab> {
-    const vocab_source = await fs.readFile(filename, 'utf-8');
+export function get_data(vocab_source: string): Vocab {
     const vocab_yml: RawVocab = yaml.parse(vocab_source) as RawVocab;
     const vocab: RawVocab = finalize_raw_vocab(vocab_yml);
 

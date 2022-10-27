@@ -6,7 +6,6 @@
  */
 
 import { Vocab, global, text_comment, RDFTerm, Link } from './common';
-import { promises as fs }                             from 'fs';
 
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
@@ -49,12 +48,10 @@ const generic_context = {
  * 'rdfs_properties', and 'rdfs_instances'). Thanks to Gregg Kellogg for that trick...
  * 
  * 
- * @param fname File name for the generated JSON-LD file
- * @param vocab The internal representation of the vocabulary
+ * @param vocab - The internal representation of the vocabulary
  * @returns
- * @async 
  */
-export function to_jsonld(fname: string, vocab: Vocab): Promise<void> {
+export function to_jsonld(vocab: Vocab): string {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct; factored it here to make the 
     // code more readable.
@@ -196,5 +193,5 @@ export function to_jsonld(fname: string, vocab: Vocab): Promise<void> {
         if (individuals.length > 0) jsonld.rdfs_individuals = individuals;
     }
 
-    return fs.writeFile(fname, JSON.stringify(jsonld, null, 4),'utf-8');
+    return JSON.stringify(jsonld, null, 4);
 }

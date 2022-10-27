@@ -1,56 +1,55 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.to_turtle = void 0;
 /**
- * Convert the internal representation of the vocabulary into turtle 
+ * Convert the internal representation of the vocabulary into turtle
  * (see the 'Vocab' interface).
- * 
+ *
  * @packageDocumentation
  */
-import { Vocab, global, text_comment, RDFTerm, Link } from './common';
-
+const common_1 = require("./common");
 /**
  * Generate the Turtle representation of the vocabulary.
  * Nothing complex, just a straightforward conversion of the information into the turtle syntax.
- * 
+ *
  * @param vocab - The internal representation of the vocabulary
- * @returns 
+ * @returns
  * @async
  */
-export function to_turtle(vocab: Vocab): string {
-
+function to_turtle(vocab) {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct if there are several domains; factored it here to make the 
     // code more readable.
-    const multi_domain = (value: string[]): string => {
+    const multi_domain = (value) => {
         if (value.length === 1) {
             return value[0];
-        } else {
+        }
+        else {
             return `[ owl:unionOf (${value.join(" ")}) ]`;
         }
-    }
-
+    };
     // This is just for symmetry v.a.v. the domain...
-    const multi_range = (value: string[]): string => {
+    const multi_range = (value) => {
         if (value.length === 1) {
             return value[0];
-        } else {
-            return value.join(", ")
         }
-    }
-
+        else {
+            return value.join(", ");
+        }
+    };
     // This will be the output...
     let turtle = "";
-
     // Factoring out the common fields
-    const common_fields = (entry: RDFTerm): void => {
+    const common_fields = (entry) => {
         turtle += `    rdfs:label "${entry.label}" ;\n`;
-        turtle += `    rdfs:comment """${text_comment(entry.comment)}"""@en ;\n`;
+        turtle += `    rdfs:comment """${(0, common_1.text_comment)(entry.comment)}"""@en ;\n`;
         turtle += `    rdfs:isDefinedBy cred: ;\n`;
         if (entry.see_also && entry.see_also.length > 0) {
-            const urls = entry.see_also.map( (link: Link): string => `<${link.url}>`).join(", ");
-            turtle +=`    rdfs:seeAlso ${urls} ;\n`
+            const urls = entry.see_also.map((link) => `<${link.url}>`).join(", ");
+            turtle += `    rdfs:seeAlso ${urls} ;\n`;
         }
         turtle += ".\n\n";
-    }
-
+    };
     // Here we go, category by category...
     {
         // Copy-paste (sort of...) the prefix definitions
@@ -59,29 +58,29 @@ export function to_turtle(vocab: Vocab): string {
         }
         turtle += "\n";
     }
-
     {
         // Block for the top level ontology entries
         turtle += "# Ontology definition\n";
         turtle += "cred: a owl:Ontology ;\n";
         for (const ont of vocab.ontology_properties) {
             if (ont.property === 'dc:date') {
-                turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`
-            } else {
+                turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`;
+            }
+            else {
                 if (ont.url) {
                     turtle += `    ${ont.property} <${ont.value}> ;\n`;
-                } else {
+                }
+                else {
                     turtle += `    ${ont.property} """${ont.value}"""@en ;\n`;
                 }
             }
         }
-        turtle += ".\n\n"
+        turtle += ".\n\n";
     }
-
     if (vocab.classes.length > 0) {
-        turtle += "# Class definitions\n"
+        turtle += "# Class definitions\n";
         for (const cl of vocab.classes) {
-            turtle += `${global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
+            turtle += `${common_1.global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
             if (cl.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
             }
@@ -90,13 +89,12 @@ export function to_turtle(vocab: Vocab): string {
             }
             common_fields(cl);
         }
-        turtle += "\n\n";    
+        turtle += "\n\n";
     }
-
-    if (vocab.properties.length > 0){
-        turtle += "# Property definitions\n"
+    if (vocab.properties.length > 0) {
+        turtle += "# Property definitions\n";
         for (const prop of vocab.properties) {
-            turtle += `${global.vocab_prefix}:${prop.id} a ${prop.type.join(", ")} ;\n`;
+            turtle += `${common_1.global.vocab_prefix}:${prop.id} a ${prop.type.join(", ")} ;\n`;
             if (prop.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
             }
@@ -112,17 +110,16 @@ export function to_turtle(vocab: Vocab): string {
             common_fields(prop);
         }
     }
-
     if (vocab.individuals.length > 0) {
-        turtle += "# Definitions of individuals\n"
+        turtle += "# Definitions of individuals\n";
         for (const ind of vocab.individuals) {
-            turtle += `${global.vocab_prefix}:${ind.id} a ${ind.type.join(", ")} ;\n`;
+            turtle += `${common_1.global.vocab_prefix}:${ind.id} a ${ind.type.join(", ")} ;\n`;
             if (ind.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
             }
             common_fields(ind);
         }
     }
-
     return turtle;
 }
+exports.to_turtle = to_turtle;

@@ -8,11 +8,11 @@ prefix:
 
 ontology:
   - property: dc:title
-    value: The Security Vocabulary
+    value: TEST — The Security Vocabulary
 
   - property: dc:description
     value: |
-      The Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.
+      test vocabulary specification, modeled after the Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.
 
   - property: rdfs:seeAlso
     value: https://www.w3.org/TR/vc-data-integrity/

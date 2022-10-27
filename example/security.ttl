@@ -8,11 +8,11 @@
 
 # Ontology definition
 cred: a owl:Ontology ;
-    dc:title """The Security Vocabulary"""@en ;
-    dc:description """The Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.
+    dc:title """TEST — The Security Vocabulary"""@en ;
+    dc:description """test vocabulary specification, modeled after the Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2022-10-22"^^xsd:date ;
+    dc:date "2022-10-27"^^xsd:date ;
 .
 
 # Class definitions
