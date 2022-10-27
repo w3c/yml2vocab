@@ -11,7 +11,6 @@ import { promises as fs } from 'fs';
  */
 export class VocabGeneration {
     private vocab: Vocab;
-    private fname: string;
 
     /**
      * 
