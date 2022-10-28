@@ -6,7 +6,6 @@
  */
 import { Vocab, Link, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual } from './common';
 import { JSDOM }          from 'jsdom';
-import { promises as fs } from 'fs';
 
 /* ---------------- Utility functions ------------------------- */
 /**
@@ -75,31 +74,32 @@ const bnode = (): string => {
 export function to_html(vocab: Vocab, template_text: string): string {
     const add_break = (text: string): string => {
         const regex = /\n/g;
-        return text.replace(regex, '<br>');
+        return text.replace(regex, '<br><br>');
     }
 
     // Factor out all common fields for the terms
-    const common_fields = (td: HTMLElement, item: RDFTerm): void => {
-        td.setAttribute('typeof', `${item.type.join(' ')}`);
-        td.setAttribute('resource',`${vocab_prefix}:${item.id}`);
-        td.setAttribute('typeof', `${item.type.join(' ')}`);
-        const em = add_child(td, 'em', item.label);
-        em.setAttribute('property', 'rdfs:label');
+    const common_fields = (section: HTMLElement, item: RDFTerm): void => {        
+        section.setAttribute('resource',`${vocab_prefix}:${item.id}`);
+        section.setAttribute('typeof', `${item.type.join(' ')}`);
+
+        const h = add_child(section,'h4', `<code>${item.id}</code>`);
+        const term = add_child(section, 'p', `<em>${item.label}</code>`);
+        term.setAttribute('property', 'rdfs:label');
         if (item.deprecated) {
-            const span = add_child(td, 'span');
+            const span = add_child(term, 'span');
             span.className = 'bold';
             add_child(span, 'em', ' (deprecated)');
         }
 
         let explanation = add_break(item.comment);
         if (item.type.includes("owl:ObjectProperty")) {
-            explanation += "<br>The property's value should be a URL, i.e., not a literal."
+            explanation += "<br><br>The property's value should be a URL, i.e., not a literal."
         }
-        const p = add_child(td, 'p', explanation);
+        const p = add_child(section, 'p', explanation);
         p.setAttribute('property', 'rdfs:comment');
 
         if (item.see_also && item.see_also.length > 0) {
-            const dl = add_child(td, 'dl');
+            const dl = add_child(section, 'dl');
             dl.className = 'terms';
             add_child(dl, 'dt', 'See also:');
             const dd = add_child(dl, 'dd');
@@ -111,12 +111,12 @@ export function to_html(vocab: Vocab, template_text: string): string {
             }
         }
 
-        const span = add_child(td, 'span');
+        const span = add_child(section, 'span');
         span.setAttribute('property', 'rdfs:isDefinedBy');
         span.setAttribute('resource', `${vocab_prefix}:`);
 
         if (item.deprecated) {
-            const span = add_child(td, 'span');
+            const span = add_child(section, 'span');
             span.setAttribute('property', 'owl:deprecated');
             span.setAttribute('datatype', 'xsd:boolean');
             span.style.display = 'none';
@@ -192,22 +192,14 @@ export function to_html(vocab: Vocab, template_text: string): string {
         if (section) {
             if (cl_list.length > 0) {
                 add_child(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} class definitions in the <code>${vocab_prefix}</code> namespace:`)
-                const table = add_child(section, 'table');
-                table.className = 'rdfs-definition simple';
 
                 for (const item of cl_list) {
-                    // Each item has its own row in the table
-                    const tr = add_child(table, 'tr');
-                    const td1 = add_child(tr, 'td', item.id);
-                    td1.className = 'bold';
-                    td1.id = item.id
-
-                    const td2 = add_child(tr, 'td');
-                    common_fields(td2, item);
-                    
+                    const cl_section = add_child(section, 'section');
+                    cl_section.id = item.id;
+                    common_fields(cl_section,item);
                     // Extra list of superclasses, if applicable
                     if (item.subClassOf && item.subClassOf.length > 0) {
-                        const dl = add_child(td2, 'dl');
+                        const dl = add_child(cl_section, 'dl');
                         dl.className = 'terms'
                         add_child(dl, 'dt', 'Subclass of:')
                         const dd = add_child(dl, 'dd');
@@ -218,7 +210,7 @@ export function to_html(vocab: Vocab, template_text: string): string {
                             add_child(dd, 'br')
                         }
                     }
-                }
+                }                
             } else {
                 // Remove section from the DOM
                 if (section.parentElement) section.parentElement.removeChild(section);
@@ -239,22 +231,14 @@ export function to_html(vocab: Vocab, template_text: string): string {
         if (section) {
             if (pr_list.length > 0) {
                 add_child(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} property definitions in the <code>${vocab_prefix}</code> namespace:`)
-                const table = add_child(section, 'table');
-                table.className = 'rdfs-definition simple';
 
                 for (const item of pr_list) {
-                    // Each item has its own row in the table
-                    const tr = add_child(table, 'tr');
-                    const td1 = add_child(tr, 'td', item.id);
-                    td1.className = 'bold';
-                    td1.id = item.id
-
-                    const td2 = add_child(tr, 'td');
-                    common_fields(td2, item);
-
+                    const pr_section = add_child(section, 'section');
+                    pr_section.id = item.id;
+                    common_fields(pr_section,item);
                     // Extra list of superproperties, if applicable
                     if (item.subPropertyOf && item.subPropertyOf.length > 0) {
-                        const dl = add_child(td2, 'dl');
+                        const dl = add_child(pr_section, 'dl');
                         dl.className = 'terms'
                         add_child(dl, 'dt', 'Subproperty of:')
                         const dd = add_child(dl, 'dd');
@@ -268,7 +252,7 @@ export function to_html(vocab: Vocab, template_text: string): string {
 
                     // Again an extra list for range/domain definitions, if applicable
                     if ((item.range && item.range.length > 0) || (item.domain && item.domain.length > 0)) {
-                        const dl = add_child(td2, 'dl');
+                        const dl = add_child(pr_section, 'dl');
                         dl.className = 'terms';
 
                         if (item.range && item.range.length > 0) {
@@ -336,18 +320,12 @@ export function to_html(vocab: Vocab, template_text: string): string {
         if (section) {
             if (ind_list.length > 0) {
                 add_child(section, 'p', `The following are definitions for ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} individuals in the <code>${vocab_prefix}</code> namespace:`)
-                const table = add_child(section, 'table');
-                table.className = 'rdfs-definition simple';
+
                 for (const item of ind_list) {
-                    const tr = add_child(table, 'tr');
-                    const td1 = add_child(tr, 'td', item.id);
-                    td1.className = 'bold';
-                    td1.id = item.id
-
-                    const td2 = add_child(tr, 'td');
-                    common_fields(td2, item);
-
-                    const dl = add_child(td2, 'dl');
+                    const ind_section = add_child(section, 'section');
+                    ind_section.id = item.id;
+                    common_fields(ind_section,item);
+                    const dl = add_child(ind_section, 'dl');
                     dl.className = 'terms';
                     if (item.type.length > 0) {
                         add_child(dl, 'dt', 'Type')

@@ -519,5 +519,21 @@ property:
     comment: T.B.D.
 
   - id: invoker
-    label: Invoker
-    comment: T.B.D.
+    label: (False) invoker
+    comment: This is just a complicated property definition to make be used for more complex generation of range, domains, and the corresponding HTML display. It has no semantic sense whatsover
+    range:
+      - sec:Key
+      - sec:Signature
+    domain:
+      - sec:ImaginaryClass
+      - sec:AnotherImaginaryClass
+    upper_value:
+      - sec:invocationTarget
+      - sec:delegator
+    see_also:
+      - label: X.509 Certificates
+        url: https://tools.ietf.org/html/rfc5280
+      - label: multibase
+        url: https://tools.ietf.org/id/draft-multiformats-multibase-00.html
+
+

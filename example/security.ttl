@@ -12,7 +12,7 @@ cred: a owl:Ontology ;
     dc:description """test vocabulary specification, modeled after the Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2022-10-27"^^xsd:date ;
+    dc:date "2022-10-28"^^xsd:date ;
 .
 
 # Class definitions
@@ -596,8 +596,12 @@ sec:invocationTarget a rdfs:Property ;
 .
 
 sec:invoker a rdfs:Property ;
-    rdfs:label "Invoker" ;
-    rdfs:comment """T.B.D."""@en ;
+    rdfs:subPropertyOf sec:invocationTarget, sec:delegator ;
+    rdfs:domain [ owl:unionOf (sec:ImaginaryClass sec:AnotherImaginaryClass) ] ;
+    rdfs:range sec:Key, sec:Signature ;
+    rdfs:label "(False) invoker" ;
+    rdfs:comment """This is just a complicated property definition to make be used for more complex generation of range, domains, and the corresponding HTML display. It has no semantic sense whatsover"""@en ;
     rdfs:isDefinedBy cred: ;
+    rdfs:seeAlso <https://tools.ietf.org/html/rfc5280>, <https://tools.ietf.org/id/draft-multiformats-multibase-00.html> ;
 .
 
