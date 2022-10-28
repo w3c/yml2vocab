@@ -1,5 +1,5 @@
 {
-  "name": "csv2vocab",
+  "name": "yml2vocab",
   "version": "1.0.0",
   "description": "Generation of vocabulary files starting by CSV",
   "homepage": "https://github.com/w3c/yml2vocab",
@@ -13,10 +13,7 @@
   "files": [
     "LICENSE.md",
     "README.md",
-    "lib/**/*",
-    "dist/**/*",
-    "index.ts",
-    "main.ts"
+    "dist/**/*"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
