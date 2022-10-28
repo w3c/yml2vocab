@@ -274,6 +274,7 @@ export function to_html(vocab: Vocab, template_text: string): string {
                         if (item.range && item.range.length > 0) {
                             add_child(dl, 'dt', 'Range:');
                             const dd = add_child(dl, 'dd');
+                            dd.setAttribute('property', 'rdfs:range');
                             if (item.range.length === 1) {
                                 dd.setAttribute('resource',item.range[0])
                                 add_child(dd, 'code', item.range[0]);
