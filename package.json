@@ -26,7 +26,7 @@
     "test_vcdm": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts credentials)",
     "dist": "tsc"
   },
-  "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/",
+  "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
   "license": "W3C-20150513",
   "dependencies": {
     "@types/jsdom": "^20.0.0",
