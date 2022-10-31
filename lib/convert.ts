@@ -5,7 +5,7 @@
  * @packageDocumentation
  */
  import { promises as fs } from 'fs';
- import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, global } from './common';
+ import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Example, global } from './common';
  import * as yaml from 'yaml'
 
 /************************************************ Helper functions and constants **********************************/
@@ -87,6 +87,7 @@ interface RawVocabEntry {
     deprecated  ?: boolean;
     comment     : string;
     see_also    ?: Link[];
+    example     ?: Example[];
 };
 
 /**
@@ -148,6 +149,29 @@ function finalize_raw_entry(raw: RawVocabEntry): RawVocabEntry {
         }
     }
 
+    // The "toSeeAlso" structure needs some special treatment and should also be turned into an array
+    const toExample = (val: undefined|any|any[]) : undefined|Example[] => {
+        if (val === undefined) {
+            return undefined
+        } else if (Array.isArray(val) && val.length === 0) {
+            return undefined
+        } else {
+            if (Array.isArray(val)) {
+                return val.map((raw: any): Example => {
+                    return {
+                        label : raw.label,
+                        json  : raw.json
+                    }
+                })
+            } else {
+                return [{
+                    label : val.label,
+                    json  : val.json
+                }]
+            }
+        }
+    }
+
     // In some cases the YAML parser puts an extra `\n` character at the end of the comment line,
     // this is removed
     const clean_comment = (val: string): string => {
@@ -172,6 +196,7 @@ function finalize_raw_entry(raw: RawVocabEntry): RawVocabEntry {
         deprecated  : (raw.deprecated === undefined) ? false : raw.deprecated,
         comment     : (raw.comment) ? clean_comment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
+        example     : toExample(raw.example),
     }
 }
 
@@ -279,6 +304,7 @@ export function get_data(vocab_source: string): Vocab {
                 deprecated : raw.deprecated,
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
+                example    : raw.example,
             }
         }) : [];
 
@@ -313,6 +339,7 @@ export function get_data(vocab_source: string): Vocab {
                 see_also      : raw.see_also,
                 range         : range,
                 domain        : raw.domain,
+                example       : raw.example,
             }
         }) : [];
 
@@ -326,6 +353,7 @@ export function get_data(vocab_source: string): Vocab {
                 deprecated    : raw.deprecated,
                 type          : (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also      : raw.see_also,
+                example       : raw.example,
             }
         }) : [];
 
