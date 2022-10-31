@@ -124,6 +124,18 @@ export function to_html(vocab: Vocab, template_text: string): string {
         }
     }
 
+    const set_example = (section: HTMLElement, item: RDFClass|RDFIndividual|RDFProperty): void => {
+        if (item.example && item.example.length > 0) {
+            for (const ex of item.example) {
+                const example = add_child(section, 'pre', ex.json);
+                example.className = 'example prettyprint language-json';
+                if (ex.label) {
+                    example.setAttribute('title', ex.label)
+                }
+            }
+        }
+    }
+
     // RDFa preamble. If, at some point, we decide that the RDFa part is superfluous, this block can be removed.
     const rdfa_preamble = () => {
         const body = document.getElementsByTagName('body')[0];
@@ -210,6 +222,7 @@ export function to_html(vocab: Vocab, template_text: string): string {
                             add_child(dd, 'br')
                         }
                     }
+                    set_example(cl_section, item);
                 }                
             } else {
                 // Remove section from the DOM
@@ -300,6 +313,7 @@ export function to_html(vocab: Vocab, template_text: string): string {
                             }
                         }
                     }
+                    set_example(pr_section, item);
                 }
             } else {
                 if (section.parentElement) section.parentElement.removeChild(section);
@@ -335,6 +349,7 @@ export function to_html(vocab: Vocab, template_text: string): string {
                             add_child(dd, 'br')    
                         }
                     }
+                    set_example(ind_section, item);
                 }
             } else {
                 // removing the section from the DOM

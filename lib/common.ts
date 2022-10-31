@@ -25,6 +25,11 @@ export interface Link {
     url   : string;
 }
 
+export interface Example {
+    label ?: string;
+    json   : string;
+}
+
 /**
  * Top level class for a term in general. Pretty much self-explanatory...
  */
@@ -43,6 +48,7 @@ export interface RDFTerm {
  */
 export interface RDFClass extends RDFTerm {
     subClassOf ?: string[];
+    example    ?: Example[];
 }
 
 /**
@@ -53,6 +59,7 @@ export interface RDFProperty extends RDFTerm {
     subPropertyOf ?: string[];
     domain        ?: string[];
     range         ?: string[];
+    example       ?: Example[];
 }
 
 /**
@@ -60,6 +67,7 @@ export interface RDFProperty extends RDFTerm {
  * more readable if there is a separate interface for it.
  */
 export interface RDFIndividual extends RDFTerm {
+    example   ?: Example[];
 }
 
 /**
