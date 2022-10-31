@@ -1,6 +1,6 @@
 {
   "name": "yml2vocab",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generation of vocabulary files starting by CSV",
   "homepage": "https://github.com/w3c/yml2vocab",
   "repository": {
