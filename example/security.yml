@@ -64,6 +64,7 @@ class:
       - label: ecdsa-secp256k1
         url: https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1
     example: 
+      label: Verification key example
       json : |
         {
           "id": "did:example:123#WqzaOweASs78whhl_YvCEvj1nd89IycryVlmZMefcjU",

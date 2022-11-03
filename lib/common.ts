@@ -40,6 +40,7 @@ export interface RDFTerm {
     comment     : string;
     see_also   ?: Link[];
     deprecated ?: boolean;
+    example    ?: Example[];
 }
 
 /**
@@ -48,7 +49,6 @@ export interface RDFTerm {
  */
 export interface RDFClass extends RDFTerm {
     subClassOf ?: string[];
-    example    ?: Example[];
 }
 
 /**
@@ -59,7 +59,6 @@ export interface RDFProperty extends RDFTerm {
     subPropertyOf ?: string[];
     domain        ?: string[];
     range         ?: string[];
-    example       ?: Example[];
 }
 
 /**
@@ -67,7 +66,6 @@ export interface RDFProperty extends RDFTerm {
  * more readable if there is a separate interface for it.
  */
 export interface RDFIndividual extends RDFTerm {
-    example   ?: Example[];
 }
 
 /**
