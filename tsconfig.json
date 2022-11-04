@@ -19,7 +19,7 @@
         },
         "resolveJsonModule": true,
         "sourceMap": false,
-        "target": "esnext",
+        "target": "esnext"
     },
     "typesRoots": [
         "node_modules/@types"
