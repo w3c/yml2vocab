@@ -25,6 +25,11 @@ export interface Link {
     url   : string;
 }
 
+export interface Example {
+    label ?: string;
+    json   : string;
+}
+
 /**
  * Top level class for a term in general. Pretty much self-explanatory...
  */
@@ -35,6 +40,7 @@ export interface RDFTerm {
     comment     : string;
     see_also   ?: Link[];
     deprecated ?: boolean;
+    example    ?: Example[];
 }
 
 /**

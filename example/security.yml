@@ -38,6 +38,15 @@ class:
     see_also:
       - label: ecdsa-sep256k1
         url: https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1
+    example: 
+      json: |
+        {
+          "type": "EcdsaSecp256k1Signature2019",
+          "created": "2020-03-30T20:54:52Z",
+          "verificationMethod": "did:example:123#qfknmVDhMi3Uc190IHBRfBRqMgbEEBRzWOj1E9EmzwM",
+          "proofPurpose": "assertionMethod",
+          "jws": "eyJhbGciOiJFUzI1NksiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..EsCNG3KD8CcurIBd354JMIYvsBr9bvF17RQbfqEg5dZy45vmSGVg1U5_rlXihjGLb3EtTK9-73X3YYYgfW2Byg"
+        }
 
   - id: EcdsaSecp256k1RecoverySignature2020
     label: TBD.
@@ -53,7 +62,22 @@ class:
     comment: This class represents a linked data signature verification key.
     see_also:
       - label: ecdsa-secp256k1
-        url: https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1 
+        url: https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1
+    example: 
+      label: Verification key example
+      json : |
+        {
+          "id": "did:example:123#WqzaOweASs78whhl_YvCEvj1nd89IycryVlmZMefcjU",
+          "type": "EcdsaSecp256k1VerificationKey2019",
+          "controller": "did:example:123",
+          "publicKeyJwk": {
+            "crv": "secp256k1",
+            "x": "4xAbUxbGGFPv4qpHlPFAUJdzteUGR1lRK-CELCufU9w",
+            "y": "EYcgCTsff1qtZjI9_ckZTXDSKAIuM0BknrKgo0BZ_Is",
+            "kty": "EC",
+            "kid": "WqzaOweASs78whhl_YvCEvj1nd89IycryVlmZMefcjU"
+          }
+        }
 
   - id: EcdsaSecp256k1RecoveryMethod2020
     label: TBD.
@@ -62,6 +86,29 @@ class:
     see_also:
       - label: ecdsasecp256k1recoverymethod2020
         url: https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverymethod2020
+    example:
+      - label: Example using publicKeyJwk
+        json: |
+          {
+            "id": "did:example:123#WqzaOweASs78whhl_YvCEvj1nd89IycryVlmZMefcjU",
+            "type": "EcdsaSecp256k1RecoveryMethod2020",
+            "controller": "did:example:123",
+            "publicKeyJwk": {
+              "crv": "secp256k1",
+              "x": "4xAbUxbGGFPv4qpHlPFAUJdzteUGR1lRK-CELCufU9w",
+              "y": "EYcgCTsff1qtZjI9_ckZTXDSKAIuM0BknrKgo0BZ_Is",
+              "kty": "EC",
+              "kid": "WqzaOweASs78whhl_YvCEvj1nd89IycryVlmZMefcjU"
+            }
+          }
+      - label: Example using blockchainAccountId
+        json: |
+          {
+            "id": "did:example:123#keys-1",
+            "type": "EcdsaSecp256k1RecoveryMethod2020",
+            "controller": "did:example:123",
+            "blockchainAccountId": "eip155:1:0x89a932207c485f85226d86f7cd486a89a24fcc12"
+          }            
 
   - id: RsaSignature2018
     label: Signature Suite for RSA
@@ -519,5 +566,21 @@ property:
     comment: T.B.D.
 
   - id: invoker
-    label: Invoker
-    comment: T.B.D.
+    label: (False) invoker
+    comment: This is just a complicated property definition to make be used for more complex generation of range, domains, and the corresponding HTML display. It has no semantic sense whatsover
+    range:
+      - sec:Key
+      - sec:Signature
+    domain:
+      - sec:ImaginaryClass
+      - sec:AnotherImaginaryClass
+    upper_value:
+      - sec:invocationTarget
+      - sec:delegator
+    see_also:
+      - label: X.509 Certificates
+        url: https://tools.ietf.org/html/rfc5280
+      - label: multibase
+        url: https://tools.ietf.org/id/draft-multiformats-multibase-00.html
+
+

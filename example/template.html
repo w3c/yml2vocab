@@ -76,6 +76,12 @@
         color: red;
       }
 
+      .term_definitions section {
+        border-bottom-style: solid ;
+        border-bottom-width: 1px;
+        border-bottom-color: darkgrey;
+      }
+
       .annoy {
         background: hsla(40,100%,50%,0.95);
 		    color: black;
@@ -126,15 +132,15 @@
     <section id="term_definitions">
       <h2>Term definitions</h2>
 
-      <section id="class_definitions">
+      <section id="class_definitions" class="term_definitions">
         <h2>Class definitions</h2>
       </section>
   
-      <section id="property_definitions">
+      <section id="property_definitions" class="term_definitions">
         <h3>Property definitions</h3>
       </section>
   
-      <section id="individual_definitions">
+      <section id="individual_definitions" class="term_definitions">
         <h3>Definitions for individuals</h3>
       </section>
     </section>
@@ -146,15 +152,15 @@
         <br>New applications should not use them.
       </p>
 
-      <section id="deprecated_class_definitions">
+      <section id="deprecated_class_definitions" class="term_definitions">
         <h3>Deprecated class definitions</h3>
       </section>
   
-      <section id="deprecated_property_definitions">
+      <section id="deprecated_property_definitions" class="term_definitions">
         <h3>Deprecated property definitions</h3>
       </section>
   
-      <section id="deprecated_individual_definitions">
+      <section id="deprecated_individual_definitions" class="term_definitions">
         <h3>Deprecated definitions for individuals</h3>
       </section>
     </section>

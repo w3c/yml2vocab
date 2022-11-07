@@ -85,7 +85,7 @@
         "en": "test vocabulary specification, modeled after the Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.\n"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2022-10-27",
+    "dc:date": "2022-10-31",
     "rdfs_classes": [
         {
             "@id": "sec:Key",
@@ -1165,12 +1165,30 @@
         {
             "@id": "sec:invoker",
             "@type": "rdfs:Property",
+            "rdfs:subPropertyOf": [
+                "sec:invocationTarget",
+                "sec:delegator"
+            ],
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "sec:ImaginaryClass",
+                    "sec:AnotherImaginaryClass"
+                ]
+            },
+            "rdfs:range": [
+                "sec:Key",
+                "sec:Signature"
+            ],
             "rdfs:label": {
-                "en": "Invoker"
+                "en": "(False) invoker"
             },
             "rdfs:comment": {
-                "en": "T.B.D."
-            }
+                "en": "This is just a complicated property definition to make be used for more complex generation of range, domains, and the corresponding HTML display. It has no semantic sense whatsover"
+            },
+            "rdfs:seeAlso": [
+                "https://tools.ietf.org/html/rfc5280",
+                "https://tools.ietf.org/id/draft-multiformats-multibase-00.html"
+            ]
         }
     ]
 }
