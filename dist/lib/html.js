@@ -73,28 +73,28 @@ const bnode = () => {
 function to_html(vocab, template_text) {
     const add_break = (text) => {
         const regex = /\n/g;
-        return text.replace(regex, '<br>');
+        return text.replace(regex, '<br><br>');
     };
     // Factor out all common fields for the terms
-    const common_fields = (td, item) => {
-        td.setAttribute('typeof', `${item.type.join(' ')}`);
-        td.setAttribute('resource', `${vocab_prefix}:${item.id}`);
-        td.setAttribute('typeof', `${item.type.join(' ')}`);
-        const em = add_child(td, 'em', item.label);
-        em.setAttribute('property', 'rdfs:label');
+    const common_fields = (section, item) => {
+        section.setAttribute('resource', `${vocab_prefix}:${item.id}`);
+        section.setAttribute('typeof', `${item.type.join(' ')}`);
+        const h = add_child(section, 'h4', `<code>${item.id}</code>`);
+        const term = add_child(section, 'p', `<em>${item.label}</code>`);
+        term.setAttribute('property', 'rdfs:label');
         if (item.deprecated) {
-            const span = add_child(td, 'span');
+            const span = add_child(term, 'span');
             span.className = 'bold';
             add_child(span, 'em', ' (deprecated)');
         }
         let explanation = add_break(item.comment);
         if (item.type.includes("owl:ObjectProperty")) {
-            explanation += "<br>The property's value should be a URL, i.e., not a literal.";
+            explanation += "<br><br>The property's value should be a URL, i.e., not a literal.";
         }
-        const p = add_child(td, 'p', explanation);
+        const p = add_child(section, 'p', explanation);
         p.setAttribute('property', 'rdfs:comment');
         if (item.see_also && item.see_also.length > 0) {
-            const dl = add_child(td, 'dl');
+            const dl = add_child(section, 'dl');
             dl.className = 'terms';
             add_child(dl, 'dt', 'See also:');
             const dd = add_child(dl, 'dd');
@@ -105,15 +105,26 @@ function to_html(vocab, template_text) {
                 add_child(dd, 'br');
             }
         }
-        const span = add_child(td, 'span');
+        const span = add_child(section, 'span');
         span.setAttribute('property', 'rdfs:isDefinedBy');
         span.setAttribute('resource', `${vocab_prefix}:`);
         if (item.deprecated) {
-            const span = add_child(td, 'span');
+            const span = add_child(section, 'span');
             span.setAttribute('property', 'owl:deprecated');
             span.setAttribute('datatype', 'xsd:boolean');
             span.style.display = 'none';
             add_text('true', span);
+        }
+    };
+    const set_example = (section, item) => {
+        if (item.example && item.example.length > 0) {
+            for (const ex of item.example) {
+                const example = add_child(section, 'pre', ex.json);
+                example.className = 'example prettyprint language-json';
+                if (ex.label) {
+                    example.setAttribute('title', ex.label);
+                }
+            }
         }
     };
     // RDFa preamble. If, at some point, we decide that the RDFa part is superfluous, this block can be removed.
@@ -181,19 +192,13 @@ function to_html(vocab, template_text) {
         if (section) {
             if (cl_list.length > 0) {
                 add_child(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} class definitions in the <code>${vocab_prefix}</code> namespace:`);
-                const table = add_child(section, 'table');
-                table.className = 'rdfs-definition simple';
                 for (const item of cl_list) {
-                    // Each item has its own row in the table
-                    const tr = add_child(table, 'tr');
-                    const td1 = add_child(tr, 'td', item.id);
-                    td1.className = 'bold';
-                    td1.id = item.id;
-                    const td2 = add_child(tr, 'td');
-                    common_fields(td2, item);
+                    const cl_section = add_child(section, 'section');
+                    cl_section.id = item.id;
+                    common_fields(cl_section, item);
                     // Extra list of superclasses, if applicable
                     if (item.subClassOf && item.subClassOf.length > 0) {
-                        const dl = add_child(td2, 'dl');
+                        const dl = add_child(cl_section, 'dl');
                         dl.className = 'terms';
                         add_child(dl, 'dt', 'Subclass of:');
                         const dd = add_child(dl, 'dd');
@@ -204,6 +209,7 @@ function to_html(vocab, template_text) {
                             add_child(dd, 'br');
                         }
                     }
+                    set_example(cl_section, item);
                 }
             }
             else {
@@ -213,7 +219,7 @@ function to_html(vocab, template_text) {
             }
         }
         else {
-            console.log("Template error: no section prepared for classes!");
+            console.log(`Template error: no section prepared for ${deprecated ? 'deprecated' : ''} classes!`);
         }
     };
     // Generation of the section content for properties: a big table, with a row per property
@@ -227,19 +233,13 @@ function to_html(vocab, template_text) {
         if (section) {
             if (pr_list.length > 0) {
                 add_child(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} property definitions in the <code>${vocab_prefix}</code> namespace:`);
-                const table = add_child(section, 'table');
-                table.className = 'rdfs-definition simple';
                 for (const item of pr_list) {
-                    // Each item has its own row in the table
-                    const tr = add_child(table, 'tr');
-                    const td1 = add_child(tr, 'td', item.id);
-                    td1.className = 'bold';
-                    td1.id = item.id;
-                    const td2 = add_child(tr, 'td');
-                    common_fields(td2, item);
+                    const pr_section = add_child(section, 'section');
+                    pr_section.id = item.id;
+                    common_fields(pr_section, item);
                     // Extra list of superproperties, if applicable
                     if (item.subPropertyOf && item.subPropertyOf.length > 0) {
-                        const dl = add_child(td2, 'dl');
+                        const dl = add_child(pr_section, 'dl');
                         dl.className = 'terms';
                         add_child(dl, 'dt', 'Subproperty of:');
                         const dd = add_child(dl, 'dd');
@@ -252,11 +252,12 @@ function to_html(vocab, template_text) {
                     }
                     // Again an extra list for range/domain definitions, if applicable
                     if ((item.range && item.range.length > 0) || (item.domain && item.domain.length > 0)) {
-                        const dl = add_child(td2, 'dl');
+                        const dl = add_child(pr_section, 'dl');
                         dl.className = 'terms';
                         if (item.range && item.range.length > 0) {
                             add_child(dl, 'dt', 'Range:');
                             const dd = add_child(dl, 'dd');
+                            dd.setAttribute('property', 'rdfs:range');
                             if (item.range.length === 1) {
                                 dd.setAttribute('resource', item.range[0]);
                                 add_child(dd, 'code', item.range[0]);
@@ -299,6 +300,7 @@ function to_html(vocab, template_text) {
                             }
                         }
                     }
+                    set_example(pr_section, item);
                 }
             }
             else {
@@ -307,7 +309,7 @@ function to_html(vocab, template_text) {
             }
         }
         else {
-            console.log("Template error: no section prepared for properties!");
+            console.log(`Template error: no section prepared for ${deprecated ? 'deprecated' : ''} properties!`);
         }
     };
     // Generation of the section content for individuals: a big table, with a row per individual
@@ -321,16 +323,11 @@ function to_html(vocab, template_text) {
         if (section) {
             if (ind_list.length > 0) {
                 add_child(section, 'p', `The following are definitions for ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} individuals in the <code>${vocab_prefix}</code> namespace:`);
-                const table = add_child(section, 'table');
-                table.className = 'rdfs-definition simple';
                 for (const item of ind_list) {
-                    const tr = add_child(table, 'tr');
-                    const td1 = add_child(tr, 'td', item.id);
-                    td1.className = 'bold';
-                    td1.id = item.id;
-                    const td2 = add_child(tr, 'td');
-                    common_fields(td2, item);
-                    const dl = add_child(td2, 'dl');
+                    const ind_section = add_child(section, 'section');
+                    ind_section.id = item.id;
+                    common_fields(ind_section, item);
+                    const dl = add_child(ind_section, 'dl');
                     dl.className = 'terms';
                     if (item.type.length > 0) {
                         add_child(dl, 'dt', 'Type');
@@ -340,6 +337,7 @@ function to_html(vocab, template_text) {
                             add_child(dd, 'br');
                         }
                     }
+                    set_example(ind_section, item);
                 }
             }
             else {
@@ -349,7 +347,7 @@ function to_html(vocab, template_text) {
             }
         }
         else {
-            console.log("Template error: no section prepared for individuals!");
+            console.log(`Template error: no section prepared for ${deprecated ? 'deprecated' : ''} individuals!`);
         }
     };
     /* *********************** The real processing part ****************** */

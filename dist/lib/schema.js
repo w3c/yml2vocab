@@ -1,9 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.schema_validate = void 0;
 // import Ajv from 'ajv';
-import Ajv2019, { ErrorObject} from 'ajv/dist/2019';
-import addFormats from 'ajv-formats';
-import * as yaml from 'yaml';
-import { RawVocab, ValidationError, ValidationResults } from './common';
-
+const _2019_1 = require("ajv/dist/2019");
+const ajv_formats_1 = require("ajv-formats");
+const yaml = require("yaml");
 const schema = {
     "$id": "https://github.com/w3c/yml2vocab/lib/schema",
     "$comment": "This schema depends on JSON Schema draft-2019-09 version",
@@ -26,7 +27,6 @@ const schema = {
                 }
             ]
         },
-
         "prefix": {
             "title": "Prefix settings",
             "anyOf": [
@@ -41,7 +41,6 @@ const schema = {
                 }
             ]
         },
-
         "ontology": {
             "title": "Ontology properties' settings",
             "type": "array",
@@ -49,7 +48,6 @@ const schema = {
                 "$ref": "#/$defs/Ontology"
             }
         },
-
         "class": {
             "title": "Class definitions",
             "$comment": "The use of 'unevaluatedProperties' is the schema 2019 idiom to disallow additional properties.",
@@ -64,7 +62,6 @@ const schema = {
                 "unevaluatedProperties": false
             }
         },
-
         "property": {
             "title": "Property definitions",
             "$comment": "The use of 'unevaluatedProperties' is the schema 2019 idiom to disallow additional properties.",
@@ -78,7 +75,7 @@ const schema = {
                     {
                         "type": "object",
                         "properties": {
-                             "domain": {
+                            "domain": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
                             "range": {
@@ -90,7 +87,6 @@ const schema = {
                 "unevaluatedProperties": false
             }
         },
-
         "individual": {
             "title": "Definitions of individuals",
             "$comment": "The use of 'unevaluatedProperties' is the schema 2019 idiom to disallow additional properties.",
@@ -106,12 +102,10 @@ const schema = {
             }
         }
     },
-
     "required": [
         "vocab",
         "ontology"
     ],
-
     "$defs": {
         "CommonTerm": {
             "title": "Common root for classes, properties, and individuals.",
@@ -145,7 +139,6 @@ const schema = {
                 "label"
             ]
         },
-
         "StringOrArrayOfStrings": {
             "description": "Most of the string values may be arrays or single strings, hence this utility schema",
             "oneOf": [
@@ -160,9 +153,8 @@ const schema = {
                 }
             ]
         },
-
         "ExampleElement": {
-            "title" : "A single example block, with an optional label",
+            "title": "A single example block, with an optional label",
             "type": "object",
             "additionalProperties": false,
             "properties": {
@@ -177,7 +169,6 @@ const schema = {
                 "json"
             ]
         },
-
         "ExampleUnion": {
             "description": "Examples may be arrays or single objects, hence this utility schema",
             "anyOf": [
@@ -192,7 +183,6 @@ const schema = {
                 }
             ]
         },
-
         "SeeAlso": {
             "description": "'seeAlso' blocks may be arrays or single objects, hence this utility schema",
             "anyOf": [
@@ -207,7 +197,6 @@ const schema = {
                 }
             ]
         },
-
         "OneSeeAlso": {
             "$comment": "The AJV implementation does not seem to understand the format='uri' constraint, although that should be used here...",
             "type": "object",
@@ -226,9 +215,8 @@ const schema = {
                 "url"
             ]
         },
-
         "Ontology": {
-            "title" : "Ontology properties",
+            "title": "Ontology properties",
             "type": "object",
             "additionalProperties": false,
             "properties": {
@@ -244,7 +232,6 @@ const schema = {
                 "value"
             ]
         },
-
         "Vocab": {
             "type": "object",
             "additionalProperties": false,
@@ -264,46 +251,31 @@ const schema = {
         }
     }
 };
-
-
-/**
- * Perfom a JSON Schema validation on the YAML content. Done by converting the YAML content into 
- * a Javascript object (using the YAML parser) and checking the object against a schema.
- * 
- * @param yaml_raw_content The raw textual content of the YAML file (i.e, presumably after reading the file itself)
- * @returns 
- */
-export function validate_with_schema(yaml_raw_content: string): ValidationResults {
-    try {
-        const yaml_content :any = yaml.parse(yaml_raw_content);
-        const ajv = new Ajv2019({allErrors: true, verbose: true});
-        addFormats(ajv);
-
-        if (!ajv.validate(schema, yaml_content)) {
-            // Simplify the error messages of Ajv, this schema is way too simple to need the
-            // full complexity of those;
-            const simple_errors = ajv.errors.map((e: ErrorObject): ValidationError => {
-                return {
-                    message: (e.message) ? e.message : undefined,
-                    params: e.params,
-                    data: (e.data) ? e.data : undefined,
-                }
-            });
+;
+function schema_validate(yaml_raw_content) {
+    const yaml_content = yaml.parse(yaml_raw_content);
+    const ajv = new _2019_1.default({ allErrors: true, verbose: true });
+    (0, ajv_formats_1.default)(ajv);
+    if (!ajv.validate(schema, yaml_content)) {
+        // Simplify the error message of Ajv, this schema is way too simple to need the
+        // full complexity of those;
+        const simple_errors = ajv.errors.map((e) => {
             return {
-                vocab: null,
-                error: simple_errors
-            }
-        } else {
-            return {
-                vocab: yaml_content as RawVocab,
-                error: []
-            }
-        }
-    } catch(e) {
-        // This is the case if the yaml parser throws some errors
+                message: (e.message) ? e.message : undefined,
+                params: e.params,
+                data: (e.data) ? e.data : undefined,
+            };
+        });
         return {
             vocab: null,
-            error: [{message: `${e}`}]
-        }
+            error: simple_errors
+        };
+    }
+    else {
+        return {
+            vocab: yaml_content,
+            error: null
+        };
     }
 }
+exports.schema_validate = schema_validate;

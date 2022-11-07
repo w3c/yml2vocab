@@ -1,9 +1,9 @@
-import { Vocab }          from './lib/common';
-import { get_data }       from "./lib/convert";
-import { to_turtle }      from "./lib/turtle";
-import { to_jsonld }      from './lib/jsonld';
-import { to_html }        from './lib/html';
-import { promises as fs } from 'fs';
+import { Vocab, ValidationError }  from './lib/common';
+import { get_data }                from "./lib/convert";
+import { to_turtle }               from "./lib/turtle";
+import { to_jsonld }               from './lib/jsonld';
+import { to_html }                 from './lib/html';
+import { promises as fs }          from 'fs';
 
 
 /**
@@ -15,6 +15,7 @@ export class VocabGeneration {
     /**
      * 
      * @param yml_content - the YAML content in string (before parsing)
+     * @throws {ValidationError} Error raised by either the YAML parser or the Schema Validator
      */
     constructor(yml_content: string) {
         this.vocab = get_data(yml_content);
@@ -53,6 +54,9 @@ export class VocabGeneration {
  * using a common basename for all three files, derived from the YAML file itself. The resulting vocabulary 
  * files are stored on the local file system.
  * 
+ * If the YAML file is incorrect (i.e., either the YAML parser or the Schema validation reports an error), an
+ * error message is printed on the console and no additional files are generated.
+ * 
  * @param yaml_file_name - the vocabulary file in YAML 
  * @param template_file_name - the HTML template file
  */
@@ -67,11 +71,15 @@ export async function generate_vocabulary_files(yaml_file_name: string, template
         fs.readFile(template_file_name, 'utf-8')
     ]);
 
-    const conversion: VocabGeneration = new VocabGeneration(yaml);
+    try {
+        const conversion: VocabGeneration = new VocabGeneration(yaml);
 
-    await Promise.all([
-        fs.writeFile(`${basename}.ttl`, conversion.get_turtle()),
-        fs.writeFile(`${basename}.jsonld`, conversion.get_jsonld()),
-        fs.writeFile(`${basename}.html`, conversion.get_html(template)),
-    ]);
+        await Promise.all([
+            fs.writeFile(`${basename}.ttl`, conversion.get_turtle()),
+            fs.writeFile(`${basename}.jsonld`, conversion.get_jsonld()),
+            fs.writeFile(`${basename}.html`, conversion.get_html(template)),
+        ]);    
+    } catch(e: any) {
+        console.error(`Validation error in the YAML file:\n${JSON.stringify(e,null,4)}`);
+    }
 }

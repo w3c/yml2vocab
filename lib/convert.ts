@@ -4,9 +4,9 @@
  * 
  * @packageDocumentation
  */
- import { promises as fs } from 'fs';
- import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Example, global } from './common';
- import * as yaml from 'yaml'
+ import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Example, global} from './common';
+ import { RawVocabEntry, RawVocab, ValidationResults } from './common';
+ import { validate_with_schema } from './schema';
 
 /************************************************ Helper functions and constants **********************************/
 
@@ -66,41 +66,6 @@ const default_ontology_properties: OntologyProperty[] = [
         url      : false
     }
 ];
-
-
-/** 
-* Superset of all YAML entries expressed in TS. Look at the Readme.md file for what they are meant for.
-*
-* This is used to induce some extra checks by TS compile time; the classes are converted into
-* the common classes defined in common.ts in this module
-*
-* @internal
-*/
-interface RawVocabEntry {
-    id          : string;
-    property    ?: string;
-    value       ?: string;
-    label       : string;
-    upper_value ?: string[];
-    domain      ?: string[];
-    range       ?: string[];
-    deprecated  ?: boolean;
-    comment     : string;
-    see_also    ?: Link[];
-    example     ?: Example[];
-};
-
-/**
- * This is the structure of the YAML file itself. Note that vocab and ontology is required, everything else is optional
- */
-interface RawVocab {
-    vocab       : RawVocabEntry[];
-    prefix     ?: RawVocabEntry[];
-    ontology    : RawVocabEntry[];
-    class      ?: RawVocabEntry[];
-    property   ?: RawVocabEntry[];
-    individual ?: RawVocabEntry[];
-}
 
 
 /**
@@ -241,10 +206,15 @@ function finalize_raw_vocab(raw: RawVocab) : RawVocab {
  * 
  * @param vocab_source YAML file content
  * @returns
+ * 
+ * @throws {ValidationError} Error in the schema validation or when parsing the YAML content
  */
 export function get_data(vocab_source: string): Vocab {
-    const vocab_yml: RawVocab = yaml.parse(vocab_source) as RawVocab;
-    const vocab: RawVocab = finalize_raw_vocab(vocab_yml);
+    const validation_results: ValidationResults = validate_with_schema(vocab_source);
+    if (validation_results.vocab === null) {
+        throw(validation_results.error);
+    }
+    const vocab: RawVocab = finalize_raw_vocab(validation_results.vocab);
 
     // Convert all the raw structures into their respective internal representations for 
     // prefixes, ontology properties, classes, etc.
