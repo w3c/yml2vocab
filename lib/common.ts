@@ -30,6 +30,63 @@ export interface Example {
     json   : string;
 }
 
+/** 
+* Superset of all YAML entries expressed in TS. Look at the Readme.md file for what they are meant for.
+*
+* This is used to induce some extra checks by TS compile time; the classes are converted into
+* the common classes defined in common.ts in this module
+*/
+export interface RawVocabEntry {
+    id          : string;
+    property    ?: string;
+    value       ?: string;
+    label       : string;
+    upper_value ?: string[];
+    domain      ?: string[];
+    range       ?: string[];
+    deprecated  ?: boolean;
+    comment     : string;
+    see_also    ?: Link[];
+    example     ?: Example[];
+};
+
+/**
+ * This is the structure of the YAML file itself. Note that vocab and ontology is required, everything else is optional
+ */
+export interface RawVocab {
+    vocab       : RawVocabEntry[];
+    prefix     ?: RawVocabEntry[];
+    ontology    : RawVocabEntry[];
+    class      ?: RawVocabEntry[];
+    property   ?: RawVocabEntry[];
+    individual ?: RawVocabEntry[];
+}
+
+/**
+ * Type needed for the JSON Schema validation interface
+ * 
+ * One of the two values are null, depending on the validation result.
+ */
+export interface ValidationResults {
+    /** 
+     * The YAML content converted into a JSON object; ready to be converted further.
+     * If the content is valid, the error array is empty. Otherwise, the vocab field is null, and
+     * the validation error(s) are returned.
+     */
+    vocab: RawVocab | null,
+    error: ValidationError[];
+}
+
+/**
+ * This is a shortened version of the full Ajv error message (the schema is very simple,
+ * the generic Ajv error message is way to complex for this use)
+ */
+export interface ValidationError {
+    message ?: string,
+    params  ?: any,
+    data    ?: any,
+}
+
 /**
  * Top level class for a term in general. Pretty much self-explanatory...
  */

@@ -109,6 +109,31 @@ function finalize_raw_entry(raw) {
             }
         }
     };
+    // The "toSeeAlso" structure needs some special treatment and should also be turned into an array
+    const toExample = (val) => {
+        if (val === undefined) {
+            return undefined;
+        }
+        else if (Array.isArray(val) && val.length === 0) {
+            return undefined;
+        }
+        else {
+            if (Array.isArray(val)) {
+                return val.map((raw) => {
+                    return {
+                        label: raw.label,
+                        json: raw.json
+                    };
+                });
+            }
+            else {
+                return [{
+                        label: val.label,
+                        json: val.json
+                    }];
+            }
+        }
+    };
     // In some cases the YAML parser puts an extra `\n` character at the end of the comment line,
     // this is removed
     const clean_comment = (val) => {
@@ -132,6 +157,7 @@ function finalize_raw_entry(raw) {
         deprecated: (raw.deprecated === undefined) ? false : raw.deprecated,
         comment: (raw.comment) ? clean_comment(raw.comment) : "",
         see_also: toSeeAlso(raw.see_also),
+        example: toExample(raw.example),
     };
 }
 /**
@@ -231,6 +257,7 @@ function get_data(vocab_source) {
                 deprecated: raw.deprecated,
                 subClassOf: raw.upper_value,
                 see_also: raw.see_also,
+                example: raw.example,
             };
         }) : [];
     // Get the classes. Note the special treatment for deprecated properties, as well as 
@@ -266,6 +293,7 @@ function get_data(vocab_source) {
                 see_also: raw.see_also,
                 range: range,
                 domain: raw.domain,
+                example: raw.example,
             };
         }) : [];
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
@@ -278,6 +306,7 @@ function get_data(vocab_source) {
                 deprecated: raw.deprecated,
                 type: (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also: raw.see_also,
+                example: raw.example,
             };
         }) : [];
     return { prefixes, ontology_properties, classes, properties, individuals };

@@ -1,4 +1,4 @@
-#!/usr/bin/env/node
+#!/usr/bin/env node
 import * as yml2vocab from './index';
 
 /**
@@ -12,6 +12,8 @@ import * as yml2vocab from './index';
  * The default is `vocabulary`
  * 
  */
+import { promises as fs } from 'fs';
+
 async function main() {
     const get_fname = () : string => {
         if (process.argv.length > 2) {
@@ -27,5 +29,7 @@ async function main() {
 
 // At some point, node.js will allow to have async calls at the top level, and this extra function will
 // become unnecessary. Until then…
+
 main();
+
 
