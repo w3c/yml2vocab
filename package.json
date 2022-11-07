@@ -13,6 +13,7 @@
   "files": [
     "LICENSE.md",
     "README.md",
+    "CHANGES.md",
     "dist/**/*"
   ],
   "main": "dist/index.js",
@@ -22,6 +23,7 @@
     "node": ">=16.0.0"
   },
   "scripts": {
+    "generate" : "dist/main.js",
     "test_security": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts security)",
     "test_vcdm": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts credentials)",
     "dist": "tsc"

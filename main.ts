@@ -1,4 +1,4 @@
-#!/usr/bin/env/node
+#!/usr/bin/env node
 import * as yml2vocab from './index';
 
 /**
