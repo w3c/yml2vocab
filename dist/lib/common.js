@@ -10,6 +10,7 @@ exports.global = {
     vocab_prefix: "",
     vocab_url: ""
 };
+;
 /* ------------------------ Utility functions used by the various serializers... ------------------- */
 const jsdom_1 = require("jsdom");
 /**

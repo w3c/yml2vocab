@@ -12,7 +12,7 @@ cred: a owl:Ontology ;
     dc:description """test vocabulary specification, modeled after the Security vocabulary is used to enable Internet-based applications to encrypt, decrypt, and digitally sign information expressed as Linked Data.
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2022-10-31"^^xsd:date ;
+    dc:date "2022-11-08"^^xsd:date ;
 .
 
 # Class definitions

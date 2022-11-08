@@ -14,6 +14,7 @@ class VocabGeneration {
     /**
      *
      * @param yml_content - the YAML content in string (before parsing)
+     * @throws {ValidationError} Error raised by either the YAML parser or the Schema Validator
      */
     constructor(yml_content) {
         this.vocab = (0, convert_1.get_data)(yml_content);
@@ -49,6 +50,9 @@ exports.VocabGeneration = VocabGeneration;
  * using a common basename for all three files, derived from the YAML file itself. The resulting vocabulary
  * files are stored on the local file system.
  *
+ * If the YAML file is incorrect (i.e., either the YAML parser or the Schema validation reports an error), an
+ * error message is printed on the console and no additional files are generated.
+ *
  * @param yaml_file_name - the vocabulary file in YAML
  * @param template_file_name - the HTML template file
  */
@@ -61,11 +65,16 @@ async function generate_vocabulary_files(yaml_file_name, template_file_name) {
         fs_1.promises.readFile(`${basename}.yml`, 'utf-8'),
         fs_1.promises.readFile(template_file_name, 'utf-8')
     ]);
-    const conversion = new VocabGeneration(yaml);
-    await Promise.all([
-        fs_1.promises.writeFile(`${basename}.ttl`, conversion.get_turtle()),
-        fs_1.promises.writeFile(`${basename}.jsonld`, conversion.get_jsonld()),
-        fs_1.promises.writeFile(`${basename}.html`, conversion.get_html(template)),
-    ]);
+    try {
+        const conversion = new VocabGeneration(yaml);
+        await Promise.all([
+            fs_1.promises.writeFile(`${basename}.ttl`, conversion.get_turtle()),
+            fs_1.promises.writeFile(`${basename}.jsonld`, conversion.get_jsonld()),
+            fs_1.promises.writeFile(`${basename}.html`, conversion.get_html(template)),
+        ]);
+    }
+    catch (e) {
+        console.error(`Validation error in the YAML file:\n${JSON.stringify(e, null, 4)}`);
+    }
 }
 exports.generate_vocabulary_files = generate_vocabulary_files;

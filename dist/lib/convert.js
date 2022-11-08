@@ -1,8 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.get_data = void 0;
+/**
+ * Convert the raw YAML description of the vocabulary into an internal representation
+ * (see the 'Vocab' interface).
+ *
+ * @packageDocumentation
+ */
 const common_1 = require("./common");
-const yaml = require("yaml");
+const schema_1 = require("./schema");
 /************************************************ Helper functions and constants **********************************/
 /**
  * Just a shorthand to make the code more readable... Checking whether a string can be considered as a URL
@@ -58,7 +64,6 @@ const default_ontology_properties = [
         url: false
     }
 ];
-;
 /**
  * Although the YAML parsing is declared to produce a RawVocabEntry, it in fact does not
  * (e.g., some entries should be converted into arrays even if the YAML source has only a single item).
@@ -199,10 +204,15 @@ function finalize_raw_vocab(raw) {
  *
  * @param vocab_source YAML file content
  * @returns
+ *
+ * @throws {ValidationError} Error in the schema validation or when parsing the YAML content
  */
 function get_data(vocab_source) {
-    const vocab_yml = yaml.parse(vocab_source);
-    const vocab = finalize_raw_vocab(vocab_yml);
+    const validation_results = (0, schema_1.validate_with_schema)(vocab_source);
+    if (validation_results.vocab === null) {
+        throw (validation_results.error);
+    }
+    const vocab = finalize_raw_vocab(validation_results.vocab);
     // Convert all the raw structures into their respective internal representations for 
     // prefixes, ontology properties, classes, etc.
     // Get the extra prefixes and combine them with the defaults. Note that the 'vocab' category
