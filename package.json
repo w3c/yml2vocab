@@ -1,7 +1,7 @@
 {
   "name": "yml2vocab",
   "version": "1.1.0",
-  "description": "Generation of vocabulary files starting by CSV",
+  "description": "Generation of vocabulary files starting by YAML",
   "homepage": "https://github.com/w3c/yml2vocab",
   "repository": {
     "type": "git",
@@ -23,18 +23,20 @@
     "node": ">=16.0.0"
   },
   "scripts": {
-    "generate" : "dist/main.js",
-    "test_security": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts security)",
-    "test_vcdm": "(cd example; ../node_modules/ts-node/dist/bin.js ../main.ts credentials)",
-    "dist": "tsc"
+    "generate": "node_modules/.bin/ts-node main.ts",
+    "test_security": "node_modules/.bin/ts-node main.ts -v example/security.yml -t example/template.html",
+    "test_vcdm": "node_modules/.bin/ts-node main.ts -v example/credentials.yml -t example/template.html",
+    "distribute": "tsc; git commit -a -m \"New distribution\" ; git push"
   },
   "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
   "license": "W3C-20150513",
   "dependencies": {
+    "@types/commander": "^2.12.2",
     "@types/jsdom": "^20.0.0",
     "@types/node": "^18.7.17",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
+    "commander": "^9.4.1",
     "jsdom": "^20.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.6.3",
