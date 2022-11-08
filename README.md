@@ -63,10 +63,10 @@ npm install yml2vocab
 The npm installation installs the `node_modules/.bin/yml2vocab` script. The script can be used as:
 
 ```
-yml2vocab [file_name]
+yml2vocab [-v vocab_file_name] [-t template_file_name]
 ```
 
-Running this script generates the `file_name.ttl`, `file_name.jsonld`, and `file_name.html` files for the Turtle, JSON-LD, and HTML+RDFa versions, respectively. The script relies on the `file_name.yml` file for the vocabulary specification in YAML and a `template.html` file for a template file. The default for `file_name` is `vocabulary`.
+Running this script generates the `vocab_file_name.ttl`, `vocab_file_name.jsonld`, and `vocab_file_name.html` files for the Turtle, JSON-LD, and HTML+RDFa versions, respectively. The script relies on the `vocab_file_name.yml` file for the vocabulary specification in YAML and a `template_file_name` file for a template file. The defaults are `vocabulary` and `template.html`, respectively.
 
 #### Running from a Javascript/TypeScript program
 
