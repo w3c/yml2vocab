@@ -99,21 +99,6 @@ class:
     see_also:
       - label: ecdsa-secp256k1
         url: https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1
-    example:
-      label: Verification key example
-      json : |
-        {
-          "id": "did:example:123#WqzaOweASs78whhl_YvCEvj1nd89IycryVlmZMefcjU",
-          "type": "EcdsaSecp256k1VerificationKey2019",
-          "controller": "did:example:123",
-          "publicKeyJwk": {
-            "crv": "secp256k1",
-            "x": "4xAbUxbGGFPv4qpHlPFAUJdzteUGR1lRK-CELCufU9w",
-            "y": "EYcgCTsff1qtZjI9_ckZTXDSKAIuM0BknrKgo0BZ_Is",
-            "kty": "EC",
-            "kid": "WqzaOweASs78whhl_YvCEvj1nd89IycryVlmZMefcjU"
-          }
-        }
 
   - id: EcdsaSecp256k1RecoveryMethod2020
     deprecated: true
@@ -123,29 +108,6 @@ class:
     see_also:
       - label: ecdsasecp256k1recoverymethod2020
         url: https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverymethod2020
-    example:
-      - label: Example using publicKeyJwk
-        json: |
-          {
-            "id": "did:example:123#WqzaOweASs78whhl_YvCEvj1nd89IycryVlmZMefcjU",
-            "type": "EcdsaSecp256k1RecoveryMethod2020",
-            "controller": "did:example:123",
-            "publicKeyJwk": {
-              "crv": "secp256k1",
-              "x": "4xAbUxbGGFPv4qpHlPFAUJdzteUGR1lRK-CELCufU9w",
-              "y": "EYcgCTsff1qtZjI9_ckZTXDSKAIuM0BknrKgo0BZ_Is",
-              "kty": "EC",
-              "kid": "WqzaOweASs78whhl_YvCEvj1nd89IycryVlmZMefcjU"
-            }
-          }
-      - label: Example using blockchainAccountId
-        json: |
-          {
-            "id": "did:example:123#keys-1",
-            "type": "EcdsaSecp256k1RecoveryMethod2020",
-            "controller": "did:example:123",
-            "blockchainAccountId": "eip155:1:0x89a932207c485f85226d86f7cd486a89a24fcc12"
-          }            
 
   - id: RsaSignature2018
     deprecated: true
@@ -338,11 +300,10 @@ property:
     label: Proof sets
     range: sec:ProofGraph
     comment: The value of the `proof` property MUST identify <a href=”#ProofGraph”>`ProofGraph` instances</a> (informally, it indirectly identifies <a href=”#Proof”>`Proof` instances</a> each contained in a separate graph). The property is used to associate a proof with a graph of information. The proof property is typically not included in the canonicalized graphs that are then digested, and digitally signed. The order of the proofs is not relevant.
-    dataset: true
 
   - id: proofChain
     label: Proof chain
-    range: rdf:List
+    range: sec:ProofGraph
     comment: |
       The value of the `proofChain` property MUST identify a sequence of <a href=”#ProofGraph”>`ProofGraph` instances</a> (informally, it indirectly identifies a series of <a href=”#Proof”>`Proof` instances</a>, each contained in a separate graph). The property is used to provide a sequence of multiple proofs where the order of when the proofs occurred matters. The proof chain property is typically not included in the canonicalized graphs that are then separately digested, and digitally signed.
 

@@ -162,6 +162,7 @@ function finalize_raw_entry(raw: RawVocabEntry): RawVocabEntry {
         comment     : (raw.comment) ? clean_comment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
+        dataset     : (raw.dataset === undefined) ? false : raw.dataset,
     }
 }
 
@@ -310,6 +311,7 @@ export function get_data(vocab_source: string): Vocab {
                 range         : range,
                 domain        : raw.domain,
                 example       : raw.example,
+                dataset       : raw.dataset,
             }
         }) : [];
 

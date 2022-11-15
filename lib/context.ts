@@ -29,15 +29,13 @@ const preamble: Context = {
 export function to_context(vocab: Vocab): string {
     // Generation of a unit for properties
     const pr_context = (property: RDFProperty, for_class: boolean = true): Context|string => {
-        // Set in case there is any "extra set beyond the simple ID setting"
-        let extras = false;
+        // the real id of the property...
         const url = `${global.vocab_url}${property.id}`
         const retval: Context = {
             "@id" : url
         }
         if (for_class || property.type.includes("owl:ObjectProperty")) {
             retval["@type"] = "@id";
-            extras = true;
         }
         // Try to catch the datatype settings; these can be used
         // to set these in the context as well
@@ -45,12 +43,19 @@ export function to_context(vocab: Vocab): string {
             for (const range of property.range) {
                 if (range.startsWith("xsd:")) {
                     retval["@type"] = range.replace('xsd:', 'http://www.w3.org/2001/XMLSchema#');
-                    extras = true
                     break;
+                } else if (range === "rdf:List") {
+                    retval["@container"] = "@list"
                 }
             } 
         }
-        return (extras) ? retval : url;
+        if (property.dataset) {
+            retval["@container"] = "@graph";
+        }
+
+        // if only the URL is set, it makes the context simpler to use its direct value,
+        // no need for an indirection
+        return (Object.keys(retval).length === 1) ? url: retval;
     }
 
     // This is the top level context that will be returned to the caller
@@ -90,14 +95,9 @@ export function to_context(vocab: Vocab): string {
             }
         }
 
-        if (embedded_properties) {
-            top_level[cl.id] = {
-                "@id" : url,
-                "@complex": embedded
-            }
-        } else {
-            top_level[cl.id] =  url;
-        }
+        // If no properties are added, then the embedded context is unnecessary
+        top_level[cl.id] = (Object.keys(embedded).length === Object.keys(preamble).length) ? 
+            url : { "@id": url, "@context": embedded };
     }
 
     // Add the properties that have not been handled in the 

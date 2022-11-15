@@ -83,6 +83,9 @@ const schema = {
                             },
                             "range": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
+                            },
+                            "dataset": {
+                                "type": "boolean"
                             }
                         }
                     }
