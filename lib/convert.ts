@@ -287,7 +287,7 @@ export function get_data(vocab_source: string): Vocab {
             if (range && range.length > 0) {
                 if (range.length === 1 && (range[0].toUpperCase() === "IRI" || range[0].toUpperCase() === "URL")) {
                     types.push("owl:ObjectProperty");
-                    range = [];
+                    range = undefined;
                 } else {
                     let isDTProperty = true;
                     for (const rg of range) {
