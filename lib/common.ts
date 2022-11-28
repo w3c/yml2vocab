@@ -48,6 +48,7 @@ export interface RawVocabEntry {
     comment     : string;
     see_also    ?: Link[];
     example     ?: Example[];
+    dataset     ?: boolean;
 };
 
 /**
@@ -116,6 +117,7 @@ export interface RDFProperty extends RDFTerm {
     subPropertyOf ?: string[];
     domain        ?: string[];
     range         ?: string[];
+    dataset       ?: boolean;
 }
 
 /**

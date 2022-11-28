@@ -162,6 +162,7 @@ function finalize_raw_entry(raw: RawVocabEntry): RawVocabEntry {
         comment     : (raw.comment) ? clean_comment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
+        dataset     : (raw.dataset === undefined) ? false : raw.dataset,
     }
 }
 
@@ -287,7 +288,7 @@ export function get_data(vocab_source: string): Vocab {
             if (range && range.length > 0) {
                 if (range.length === 1 && (range[0].toUpperCase() === "IRI" || range[0].toUpperCase() === "URL")) {
                     types.push("owl:ObjectProperty");
-                    range = [];
+                    range = undefined;
                 } else {
                     let isDTProperty = true;
                     for (const rg of range) {
@@ -310,6 +311,7 @@ export function get_data(vocab_source: string): Vocab {
                 range         : range,
                 domain        : raw.domain,
                 example       : raw.example,
+                dataset       : raw.dataset,
             }
         }) : [];
 

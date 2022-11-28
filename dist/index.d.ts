@@ -2,6 +2,7 @@ import { Vocab }          from './lib/common';
 import { get_data }       from "./lib/convert";
 import { to_turtle }      from "./lib/turtle";
 import { to_jsonld }      from './lib/jsonld';
+import { to_context }     from './lib/context';
 import { to_html }        from './lib/html';
 import { promises as fs } from 'fs';
 
@@ -29,6 +30,13 @@ export class VocabGeneration {
      * @returns The JSON-LD content
      */
     get_jsonld(): string ;
+
+    /**
+     * Get the minimal JSON-LD Context file for the vocabulary
+     * 
+     * @returns The JSON-LD content
+     */
+     get_context(): string ;
 
     /**
      * Get the HTML/RDFa representation of the vocabulary based on an HTML template

@@ -1,11 +1,11 @@
 # Generate RDFS vocabulary files from YAML
 
-This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-concepts/) vocabulary, described in [YAML](https://yaml.org/spec/1.2.2/), into a formal [RDFS](https://www.w3.org/TR/rdf-schema/) in [JSON-LD](https://www.w3.org/TR/json-ld11/), [Turtle](https://www.w3.org/TR/turtle/), and [HTML+RDFa](https://www.w3.org/TR/rdfa-core/). Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements.
+This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-concepts/) vocabulary, described in [YAML](https://yaml.org/spec/1.2.2/), into a formal [RDFS](https://www.w3.org/TR/rdf-schema/) in [JSON-LD](https://www.w3.org/TR/json-ld11/), [Turtle](https://www.w3.org/TR/turtle/), and [HTML+RDFa](https://www.w3.org/TR/rdfa-core/). Optionally, a simple [JSON-LD `@context`](https://www.w3.org/TR/json-ld11/#the-context)  is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements. 
 
 When running, the script relies on two files:
 
 1. The `vocabulary.yml` file, containing the definition for the vocabulary entries. (It is also possible to use a different name for the YAML file, see below.)
-2. The `template.html` file, used to create the HTML file version of the vocabulary.
+2. The `template.html` file, used to create the HTML file version of the vocabulary. (It is also possible to use a different name for the template file, see below.)
 
 ## Definition of the vocabulary in the YAML file
 
@@ -37,9 +37,11 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
  
   - `property`: blocks of a property definitions. For each property the `id` key defines the property name (no prefix should be used here); possible superproperties are defined in the by the `upper_value` as a single term, or as a sequence of terms. The domain and range classes can also be provided as a single term, or as a sequence of terms, through the `domain` and `range` keys, respectively.
   
-    The `range` column may also use the (single) `IRI` (or `URL`) term instead of class references. This keyword denotes a property that has no explicit range, but whose objects are expected to be IRI references. The generated vocabulary annotates these properties as belonging to the `owl:ObjectProperty` class, which is the term reserved for properties whose objects are not supposed to be literals.
+    The `range` key may also use the (single) `IRI` (or `URL`) term instead of class references. This keyword denotes a property that has no explicit range, but whose objects are expected to be IRI references. The generated vocabulary annotates these properties as belonging to the `owl:ObjectProperty` class, which is the term reserved for properties whose objects are not supposed to be literals.
+
+    The `dataset` key can also be set to a boolean value. This key only influences the generated JSON-LD `@context`: if the value is `true`, the JSON-LD `@container` is set to the `@graph` value for the property, signalling that the value refers to a _dataset_ (or _graph_). See the [JSON-LD Specification](https://www.w3.org/TR/json-ld/#graph-containers) for further details.
   
-  - `individual`: blocks of definitions of individuals, i.e., a single resources defined in the vocabulary. For each individual the `id` key defines the property name (no prefix should be used here); the possible types are defined in the column `upper_value` as a single term, or a sequence of terms.
+  - `individual`: blocks of definitions of individuals, i.e., a single resources defined in the vocabulary. For each individual the `id` key defines the property name (no prefix should be used here); the possible types are defined in the block for `upper_value` as a single term, or a sequence of terms.
 
 There are some examples in the [example directory on github](https://github.com/w3c/yml2vocab/tree/main/example) that illustrate all of these terms.
 
@@ -63,10 +65,12 @@ npm install yml2vocab
 The npm installation installs the `node_modules/.bin/yml2vocab` script. The script can be used as:
 
 ```
-yml2vocab [-v vocab_file_name] [-t template_file_name]
+yml2vocab [-v vocab_file_name] [-t template_file_name] [-c]
 ```
 
 Running this script generates the `vocab_file_name.ttl`, `vocab_file_name.jsonld`, and `vocab_file_name.html` files for the Turtle, JSON-LD, and HTML+RDFa versions, respectively. The script relies on the `vocab_file_name.yml` file for the vocabulary specification in YAML and a `template_file_name` file for a template file. The defaults are `vocabulary` and `template.html`, respectively.
+
+If the `-c` flag is also set, the additional `vocab_file_name_context.jsonld` is also generated, containing a simple `@context` structure that can be used as a separate `@context` file or embedded in a JSON file. Note that this is a "minimal" JSON-LD file, which does not necessarily use all the sophistication that JSON-LD [defines](https://www.w3.org/TR/json-ld11/#the-context) for `@context`; these may have to be added manually.
 
 #### Running from a Javascript/TypeScript program
 
@@ -75,21 +79,22 @@ The simplest way of using the module from Javascript is:
 ```
 const yml2vocab = require('yml2vocab');
 async function main() {
-    await yml2vocab.generate_vocabulary_files("vocabulary","template.html");
+    await yml2vocab.generate_vocabulary_files("vocabulary","template.html",false);
 }
 main();
 ```
 
-This reads (asynchronously) the YAML and template files and stores the generated vocabulary representations (see the command line interface for details) in the directory alongside the YAML file. 
+This reads (asynchronously) the YAML and template files and stores the generated vocabulary representations (see the command line interface for details) in the directory alongside the YAML file. By setting the last argument to `true` a `@context` is also generated.
 
 The somewhat lower level  `yml2vocab.VocabGeneration` class can also be used:
 
 ```
 const yml2vocab = require('yml2vocab');
 const vocab_generation = new yml2vocab.VocabGeneration(yml_content);     // YAML content is text form, before parsing
-const turtle: string = vocab_generation.get_turtle();                    // return the turtle content as a string
-const jsonld: string = vocab_generation.get_jsonld();                    // return the JSON-LD content as a string
-const html: string   = vocab_generation.get_html(template_file_content); // return the HTML+RDFa content as a string
+const turtle: string = vocab_generation.get_turtle();                    // returns the turtle content as a string
+const jsonld: string = vocab_generation.get_jsonld();                    // returns the JSON-LD content as a string
+const html: string   = vocab_generation.get_html(template_file_content); // returns the HTML+RDFa content as a string
+const html: string   = vocab_generation.get_context();                   // returns the minimal @context file for the vocabulary
 ```
 
 If TypeScript is used instead of Javascript the same works, except that the `require` must be replaced by:
@@ -98,7 +103,7 @@ If TypeScript is used instead of Javascript the same works, except that the `req
 import yml2vocab from 'yml2vocab';
 ```
 
-There is no need to install any extra typing, it is included in the package. The interfaces are simply using strings, no extra TypeScript type definitions.
+There is no need to install any extra typing, it is included in the package. The interfaces are simply using strings, no extra TypeScript type definitions have been defined.
 
 
 ### Cloning the repository
@@ -118,7 +123,7 @@ The [repository](https://github.com/yml2vocab) may also be cloned. For a complet
    1. Run, via `node`, the file `dist/main.js` of the repository
    2. Run, via `node_modules/.bin/ts-node`, the file `main.ts` of the repository
 
-   The script also accepts a single argument to be used instead of `vocabulary` to name the various files.
+   The script also accepts a single argument to be used instead of `vocabulary` to name the various files (see above).
 
 #### Content of the directory
 
