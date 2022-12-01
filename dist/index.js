@@ -5,6 +5,7 @@ const convert_1 = require("./lib/convert");
 const turtle_1 = require("./lib/turtle");
 const jsonld_1 = require("./lib/jsonld");
 const html_1 = require("./lib/html");
+const context_1 = require("./lib/context");
 const fs_1 = require("fs");
 /**
  * Conversion class for YAML to the various syntaxes.
@@ -36,6 +37,14 @@ class VocabGeneration {
         return (0, jsonld_1.to_jsonld)(this.vocab);
     }
     /**
+     * Get the minimal JSON-LD Context file for the vocabulary
+     *
+     * @returns The JSON-LD content
+     */
+    get_context() {
+        return (0, context_1.to_context)(this.vocab);
+    }
+    /**
      * Get the HTML/RDFa representation of the vocabulary based on an HTML template
      * @param template - Textual version of the vocabulary template
      * @returns
@@ -55,8 +64,9 @@ exports.VocabGeneration = VocabGeneration;
  *
  * @param yaml_file_name - the vocabulary file in YAML
  * @param template_file_name - the HTML template file
+ * @param context - whether the JSON-LD context file should also be generated
  */
-async function generate_vocabulary_files(yaml_file_name, template_file_name) {
+async function generate_vocabulary_files(yaml_file_name, template_file_name, context) {
     // This trick allows the user to give the full yaml file name, or only the common base
     const basename = yaml_file_name.endsWith('.yml') ? yaml_file_name.slice(0, -4) : yaml_file_name;
     // Get the two files from the file system (at some point, this can be extended
@@ -67,11 +77,15 @@ async function generate_vocabulary_files(yaml_file_name, template_file_name) {
     ]);
     try {
         const conversion = new VocabGeneration(yaml);
-        await Promise.all([
+        const fs_writes = [
             fs_1.promises.writeFile(`${basename}.ttl`, conversion.get_turtle()),
             fs_1.promises.writeFile(`${basename}.jsonld`, conversion.get_jsonld()),
             fs_1.promises.writeFile(`${basename}.html`, conversion.get_html(template)),
-        ]);
+        ];
+        if (context) {
+            fs_writes.push(fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.get_context()));
+        }
+        await Promise.all(fs_writes);
     }
     catch (e) {
         console.error(`Validation error in the YAML file:\n${JSON.stringify(e, null, 4)}`);
