@@ -1,16 +1,7 @@
-import { Vocab }          from './lib/common';
-import { get_data }       from "./lib/convert";
-import { to_turtle }      from "./lib/turtle";
-import { to_jsonld }      from './lib/jsonld';
-import { to_context }     from './lib/context';
-import { to_html }        from './lib/html';
-import { promises as fs } from 'fs';
-
-
 /**
  * Conversion class for YAML to the various syntaxes.
  */
-export class VocabGeneration {
+declare class VocabGeneration {
     /**
      * 
      * @param yml_content - the YAML content in string (before parsing)
@@ -54,4 +45,4 @@ export class VocabGeneration {
  * @param yaml_file_name - the vocabulary file in YAML 
  * @param template_file_name - the HTML template file
  */
-export function generate_vocabulary_files(yaml_file_name: string, template_file_name: string): Promise<void> ;
+declare function generate_vocabulary_files(yaml_file_name: string, template_file_name: string): Promise<void> ;
