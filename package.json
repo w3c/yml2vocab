@@ -26,25 +26,27 @@
     "generate": "node_modules/.bin/ts-node main.ts",
     "test_security": "node_modules/.bin/ts-node main.ts -v example/security.yml -t example/template.html -c",
     "test_vcdm": "node_modules/.bin/ts-node main.ts -v example/credentials.yml -t example/template.html -c",
+    "docs": "./node_modules/.bin/typedoc main.js index.ts lib/*",
     "distribute": "tsc; git commit -a -m \"New distribution\" ; git push"
   },
   "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
   "license": "W3C-20150513",
   "dependencies": {
-    "@types/commander": "^2.12.2",
-    "@types/jsdom": "^20.0.0",
-    "@types/node": "^18.7.17",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
     "commander": "^9.4.1",
     "jsdom": "^20.0.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.6.3",
     "yaml": "^2.1.3"
   },
   "devDependencies": {
+    "@types/jsdom": "^20.0.0",
+    "@types/commander": "^2.12.2",
+    "@types/node": "^18.7.17",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
-    "eslint": "^8.23.1"
+    "eslint": "^8.23.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.6.3",
+    "typedoc": "^0.23.22"
   }
 }
