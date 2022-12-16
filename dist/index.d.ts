@@ -13,28 +13,34 @@ declare class VocabGeneration {
      * 
      * @returns The Turtle content
      */
-    get_turtle(): string ;
+    getTurtle(): string ;
 
     /**
      * Get the JSON-LD representation of the vocabulary
      * 
      * @returns The JSON-LD content
      */
-    get_jsonld(): string ;
+    getJSOLD(): string ;
 
     /**
      * Get the minimal JSON-LD Context file for the vocabulary
      * 
      * @returns The JSON-LD content
      */
-     get_context(): string ;
+     getContext(): string ;
 
     /**
      * Get the HTML/RDFa representation of the vocabulary based on an HTML template
      * @param template - Textual version of the vocabulary template
      * @returns 
      */
-    get_html(template: string): string ;
+    getHTML(template: string): string ;
+
+    /* Deprecated; these are just to avoid problems for users of earlier versions */
+    get_turtle() :string;
+    get_jsonld() :string;
+    get_html(template: string) :string;
+    get_context() :string;
 }
 
 /**
@@ -45,4 +51,5 @@ declare class VocabGeneration {
  * @param yaml_file_name - the vocabulary file in YAML 
  * @param template_file_name - the HTML template file
  */
+declare function generateVocabularyFiles(yaml_file_name: string, template_file_name: string): Promise<void> ;
 declare function generate_vocabulary_files(yaml_file_name: string, template_file_name: string): Promise<void> ;

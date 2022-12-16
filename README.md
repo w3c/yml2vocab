@@ -79,7 +79,7 @@ The simplest way of using the module from Javascript is:
 ```
 const yml2vocab = require('yml2vocab');
 async function main() {
-    await yml2vocab.generate_vocabulary_files("vocabulary","template.html",false);
+    await yml2vocab.generateVocabularyFiles("vocabulary","template.html",false);
 }
 main();
 ```
@@ -90,11 +90,11 @@ The somewhat lower level  `yml2vocab.VocabGeneration` class can also be used:
 
 ```
 const yml2vocab = require('yml2vocab');
-const vocab_generation = new yml2vocab.VocabGeneration(yml_content);     // YAML content is text form, before parsing
-const turtle: string = vocab_generation.get_turtle();                    // returns the turtle content as a string
-const jsonld: string = vocab_generation.get_jsonld();                    // returns the JSON-LD content as a string
-const html: string   = vocab_generation.get_html(template_file_content); // returns the HTML+RDFa content as a string
-const html: string   = vocab_generation.get_context();                   // returns the minimal @context file for the vocabulary
+const vocabGeneration = new yml2vocab.VocabGeneration(yml_content);     // YAML content is text form, before parsing
+const turtle: string  = vocabGeneration.getTurtle();                    // returns the turtle content as a string
+const jsonld: string  = vocabGeneration.getJSONLD();                    // returns the JSON-LD content as a string
+const html: string    = vocabGeneration.getHTML(template_file_content); // returns the HTML+RDFa content as a string
+const html: string    = vocabGeneration.getContext();                   // returns the minimal @context file for the vocabulary
 ```
 
 If TypeScript is used instead of Javascript the same works, except that the `require` must be replaced by:

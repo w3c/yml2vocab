@@ -26,9 +26,9 @@ const preamble: Context = {
  * @param vocab - The internal representation of the vocabulary
  * @returns
  */
-export function to_context(vocab: Vocab): string {
+export function toContext(vocab: Vocab): string {
     // Generation of a unit for properties
-    const pr_context = (property: RDFProperty, for_class: boolean = true): Context|string => {
+    const propertyContext = (property: RDFProperty, for_class: boolean = true): Context|string => {
         // the real id of the property...
         const url = `${global.vocab_url}${property.id}`
         const retval: Context = {
@@ -89,7 +89,7 @@ export function to_context(vocab: Vocab): string {
         for (const prop of vocab.properties) {
             if (prop.domain && prop.domain.includes(prefixed_id)) {
                 // bingo, this property can be added here
-                embedded[prop.id] = pr_context(prop);
+                embedded[prop.id] = propertyContext(prop);
                 class_properties.add(prop.id);
                 embedded_properties = true;
             }
@@ -104,7 +104,7 @@ export function to_context(vocab: Vocab): string {
     // previous step
     for (const prop of vocab.properties) {
         if (!class_properties.has(prop.id)) {
-            top_level[prop.id] = pr_context(prop, false);
+            top_level[prop.id] = propertyContext(prop, false);
         }
     }
 

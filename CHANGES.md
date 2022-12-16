@@ -9,6 +9,7 @@
 
 - Better use of the Commander package for the CLI
 - Some CSV leftover still persisted in the README.md file...
+- Adopted some naming conventions from the airbnb style file.
 
 ## Version 1.1
 

@@ -169,7 +169,7 @@ import { JSDOM } from 'jsdom';
  * @param text 
  * @returns transformed text
  */
-export function text_comment(text: string): string {
+export function textualComment(text: string): string {
     /** Remove the HTML tags */
     const de_html  = (txt: string): string => {
         const dom = new JSDOM(`<!DOCTYPE html><section>${txt}</section>`);

@@ -29,7 +29,7 @@ async function main() {
     const vocabulary: string = options.vocab ? options.vocab : 'vocabulary.yml';
     const template: string   = options.template ? options.template : 'template.html'; 
     const context: boolean   = options.context ? true : false;
-    await yml2vocab.generate_vocabulary_files(vocabulary,template,context);
+    await yml2vocab.generateVocabularyFiles(vocabulary,template,context);
 }
 
 // At some point, node.js will allow to have async calls at the top level, and this extra function will

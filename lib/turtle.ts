@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
-import { Vocab, global, text_comment, RDFTerm, Link } from './common';
+import { Vocab, global, textualComment, RDFTerm, Link } from './common';
 
 /**
  * Generate the Turtle representation of the vocabulary.
@@ -14,12 +14,12 @@ import { Vocab, global, text_comment, RDFTerm, Link } from './common';
  * @returns 
  * @async
  */
-export function to_turtle(vocab: Vocab): string {
+export function toTurtle(vocab: Vocab): string {
 
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct if there are several domains; factored it here to make the 
     // code more readable.
-    const multi_domain = (value: string[]): string => {
+    const multiDomain = (value: string[]): string => {
         if (value.length === 1) {
             return value[0];
         } else {
@@ -28,7 +28,7 @@ export function to_turtle(vocab: Vocab): string {
     }
 
     // This is just for symmetry v.a.v. the domain...
-    const multi_range = (value: string[]): string => {
+    const multiRange = (value: string[]): string => {
         if (value.length === 1) {
             return value[0];
         } else {
@@ -40,9 +40,9 @@ export function to_turtle(vocab: Vocab): string {
     let turtle = "";
 
     // Factoring out the common fields
-    const common_fields = (entry: RDFTerm): void => {
+    const commonFields = (entry: RDFTerm): void => {
         turtle += `    rdfs:label "${entry.label}" ;\n`;
-        turtle += `    rdfs:comment """${text_comment(entry.comment)}"""@en ;\n`;
+        turtle += `    rdfs:comment """${textualComment(entry.comment)}"""@en ;\n`;
         turtle += `    rdfs:isDefinedBy cred: ;\n`;
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map( (link: Link): string => `<${link.url}>`).join(", ");
@@ -88,7 +88,7 @@ export function to_turtle(vocab: Vocab): string {
             if (cl.subClassOf && cl.subClassOf.length > 0) {
                 turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
             }
-            common_fields(cl);
+            commonFields(cl);
         }
         turtle += "\n\n";    
     }
@@ -104,12 +104,12 @@ export function to_turtle(vocab: Vocab): string {
                 turtle += `    rdfs:subPropertyOf ${prop.subPropertyOf.join(", ")} ;\n`;
             }
             if (prop.domain) {
-                turtle += `    rdfs:domain ${multi_domain(prop.domain)} ;\n`;
+                turtle += `    rdfs:domain ${multiDomain(prop.domain)} ;\n`;
             }
             if (prop.range) {
-                turtle += `    rdfs:range ${multi_range(prop.range)} ;\n`;
+                turtle += `    rdfs:range ${multiRange(prop.range)} ;\n`;
             }
-            common_fields(prop);
+            commonFields(prop);
         }
     }
 
@@ -120,7 +120,7 @@ export function to_turtle(vocab: Vocab): string {
             if (ind.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
             }
-            common_fields(ind);
+            commonFields(ind);
         }
     }
 
