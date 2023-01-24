@@ -276,7 +276,7 @@ const schema = {
  * @param yaml_raw_content The raw textual content of the YAML file (i.e, presumably after reading the file itself)
  * @returns 
  */
-export function validate_with_schema(yaml_raw_content: string): ValidationResults {
+export function validateWithSchema(yaml_raw_content: string): ValidationResults {
     try {
         const yaml_content :any = yaml.parse(yaml_raw_content);
         const ajv = new Ajv2019({allErrors: true, verbose: true});

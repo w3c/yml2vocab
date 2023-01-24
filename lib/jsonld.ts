@@ -5,7 +5,7 @@
  * @packageDocumentation
  */
 
-import { Vocab, global, text_comment, RDFTerm, Link } from './common';
+import { Vocab, global, textualComment, RDFTerm, Link } from './common';
 
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
@@ -51,11 +51,11 @@ const generic_context = {
  * @param vocab - The internal representation of the vocabulary
  * @returns
  */
-export function to_jsonld(vocab: Vocab): string {
+export function toJSONLD(vocab: Vocab): string {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct; factored it here to make the 
     // code more readable.
-    const multi_domain = (value: string[]): any => {
+    const multiDomain = (value: string[]): any => {
         if (value.length === 1) {
             return value[0];
         } else {
@@ -66,7 +66,7 @@ export function to_jsonld(vocab: Vocab): string {
     }
 
     // This is just for symmetry v.a.v. the domain...
-    const multi_range = (value: string[]): any => {
+    const multiRange = (value: string[]): any => {
         if (value.length === 1) {
             return value[0];
         } else {
@@ -78,12 +78,12 @@ export function to_jsonld(vocab: Vocab): string {
     const jsonld: any = {}
 
     // Factoring out the common fields
-    const common_fields = (target: any, entry: RDFTerm): void => {
+    const commonFields = (target: any, entry: RDFTerm): void => {
         target["rdfs:label"] = {
             "en" : entry.label
         }
         target["rdfs:comment"] = {
-            "en" : text_comment(entry.comment),
+            "en" : textualComment(entry.comment),
         }
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map( (link: Link): string => link.url);
@@ -137,7 +137,7 @@ export function to_jsonld(vocab: Vocab): string {
             if (cl.subClassOf && cl.subClassOf.length > 0) {
                 cl_object["rdfs:subClassOf"] = cl.subClassOf;
             }
-            common_fields(cl_object,cl);
+            commonFields(cl_object,cl);
             classes.push(cl_object)
         }
         if (classes.length > 0) jsonld.rdfs_classes = classes;
@@ -162,12 +162,12 @@ export function to_jsonld(vocab: Vocab): string {
                 pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf;
             }
             if (prop.domain) {
-                pr_object["rdfs:domain"] = multi_domain(prop.domain);
+                pr_object["rdfs:domain"] = multiDomain(prop.domain);
             }
             if (prop.range) {
-                pr_object["rdfs:range"] = multi_range(prop.range);
+                pr_object["rdfs:range"] = multiRange(prop.range);
             }
-            common_fields(pr_object,prop);
+            commonFields(pr_object,prop);
             properties.push(pr_object);
         }
         if (properties.length > 0) jsonld.rdfs_properties = properties;
@@ -187,7 +187,7 @@ export function to_jsonld(vocab: Vocab): string {
             if (ind.deprecated) {
                 ind_object["owl:deprecated"] = true
             }
-            common_fields(ind_object,ind);
+            commonFields(ind_object,ind);
             individuals.push(ind_object);
         }
         if (individuals.length > 0) jsonld.rdfs_individuals = individuals;
