@@ -56,6 +56,12 @@ cred:RefreshService a rdfs:Class ;
     rdfs:isDefinedBy cred: ;
 .
 
+cred:Credential a rdfs:Class ;
+    rdfs:label "Credential" ;
+    rdfs:comment """A Credential is a set of one or more claims made by an issuer."""@en ;
+    rdfs:isDefinedBy cred: ;
+.
+
 cred:CredentialSchema a rdfs:Class ;
     rdfs:label "Credential schema" ;
 <<<<<<< main
@@ -86,33 +92,21 @@ cred:CredentialEvidence a rdfs:Class ;
     rdfs:isDefinedBy cred: ;
 .
 
-cred:VerifiableCredential a rdfs:Class ;
-    rdfs:label "Verifiable credential" ;
-<<<<<<< main
-    rdfs:comment """<div>A Credential is a set of one or more claims made by an issuer. A Verifiable Credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable Credentials can be used to build Verifiable Presentations, which can also be cryptographically verified.</div>"""^^rdf:HTML ;
-=======
-    rdfs:comment """A Credential is a set of one or more claims made by an issuer. A Verifiable Credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable Credentials can be used to build Verifiable Presentations, which can also be cryptographically verified."""@en ;
->>>>>>> Setting up previews
+cred:CredentialGraph a rdfs:Class ;
+    rdfs:label "(Verifiable) credential graph" ;
+    rdfs:comment """Instances of this class are RDF Graphs, where each of these graphs must include exactly one Credential (usually a Verifiable Credential)."""@en ;
     rdfs:isDefinedBy cred: ;
 .
 
-cred:VerifiableCredentialGraph a rdfs:Class ;
-    rdfs:label "Verifiable credential graph" ;
-<<<<<<< main
-    rdfs:comment """<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Verifiable Credential</div>"""^^rdf:HTML ;
-=======
-    rdfs:comment """Instances of this class are RDF Graphs, where each of these graphs must include exactly one Verifiable Credential"""@en ;
->>>>>>> Setting up previews
+cred:VerifiableCredential a rdfs:Class ;
+    rdfs:label "Verifiable credential" ;
+    rdfs:comment """A Verifiable Credential is a Credential that is tamper-evident and has authorship that can be cryptographically verified. Verifiable Credentials can be used to build Verifiable Presentations, which can also be cryptographically verified."""@en ;
     rdfs:isDefinedBy cred: ;
 .
 
 cred:VerifiablePresentation a rdfs:Class ;
     rdfs:label "Verifiable presentation" ;
-<<<<<<< main
-    rdfs:comment """<div>A Presentation is data derived from one or more Credentials, issued by one or more `issuers`, that is shared with a specific `verifier`. A Verifiable Presentation is a tamper-evident Presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs).</div>"""^^rdf:HTML ;
-=======
-    rdfs:comment """A Presentation is data derived from one or more Credentials, issued by one or more `issuers`, that is shared with a specific `verifier`. A Verifiable Presentation is a tamper-evident Presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs)."""@en ;
->>>>>>> Setting up previews
+    rdfs:comment """A Presentation is data derived from one or more Credentials (usually, but not necessarily, Verifiable Credentials), issued by one or more `issuers`, that is shared with a specific `verifier`. A Verifiable Presentation is a tamper-evident Presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs)."""@en ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -120,7 +114,7 @@ cred:VerifiablePresentation a rdfs:Class ;
 
 # Property definitions
 cred:credentialSchema a rdfs:Property ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:range cred:CredentialSchema ;
     rdfs:label "Credential schema" ;
 <<<<<<< main
@@ -132,7 +126,7 @@ cred:credentialSchema a rdfs:Property ;
 .
 
 cred:credentialStatus a rdfs:Property ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:range cred:CredentialStatus ;
     rdfs:label "Credential status" ;
 <<<<<<< main
@@ -144,7 +138,7 @@ cred:credentialStatus a rdfs:Property ;
 .
 
 cred:credentialSubject a rdfs:Property, owl:ObjectProperty ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:label "Credential subject" ;
 <<<<<<< main
     rdfs:comment """<div>An entity about which claims are made.</div>"""^^rdf:HTML ;
@@ -155,7 +149,7 @@ cred:credentialSubject a rdfs:Property, owl:ObjectProperty ;
 .
 
 cred:evidence a rdfs:Property ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:range cred:CredentialEvidence ;
     rdfs:label "Evidence" ;
 <<<<<<< main
@@ -168,7 +162,7 @@ cred:evidence a rdfs:Property ;
 
 cred:expirationDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     owl:deprecated true ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Expiration date" ;
 <<<<<<< main
@@ -180,7 +174,7 @@ cred:expirationDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty
 .
 
 cred:holder a rdfs:Property, owl:ObjectProperty ;
-    rdfs:domain [ owl:unionOf (cred:VerifiableCredential cred:VerifiablePresentation) ] ;
+    rdfs:domain [ owl:unionOf (cred:Credential cred:VerifiablePresentation) ] ;
     rdfs:label "Holder" ;
 <<<<<<< main
     rdfs:comment """<div>The value of the `holder` property MUST be a URI. It is RECOMMENDED that dereferencing the URI results in a document containing machine-readable information about the holder that can be used to verify the information expressed in the credential.</div>"""^^rdf:HTML ;
@@ -204,7 +198,7 @@ cred:issuanceDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
 .
 
 cred:issued a rdfs:Property, owl:DatatypeProperty ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:range xsd:dateTime ;
     rdfs:label "issue date" ;
 <<<<<<< main
@@ -216,7 +210,7 @@ cred:issued a rdfs:Property, owl:DatatypeProperty ;
 .
 
 cred:issuer a rdfs:Property, owl:ObjectProperty ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:label "issuer" ;
 <<<<<<< main
     rdfs:comment """<div>The value of the `issuer` property MUST be a URI. It is RECOMMENDED that dereferencing the URI results in a document containing machine-readable information about the issuer that can be used to verify the information expressed in the credential.</div>"""^^rdf:HTML ;
@@ -227,7 +221,7 @@ cred:issuer a rdfs:Property, owl:ObjectProperty ;
 .
 
 cred:refreshService a rdfs:Property ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:range cred:RefreshService ;
     rdfs:label "refresh service" ;
 <<<<<<< main
@@ -250,7 +244,7 @@ cred:serviceEndpoint a rdfs:Property, owl:ObjectProperty ;
 .
 
 cred:termsOfUse a rdfs:Property ;
-    rdfs:domain cred:VerifiableCredential,cred:VerifiablePresentation ;
+    rdfs:domain cred:Credential,cred:VerifiablePresentation ;
     rdfs:range odrl:Policy ;
     rdfs:label "terms of use" ;
 <<<<<<< main
@@ -262,7 +256,7 @@ cred:termsOfUse a rdfs:Property ;
 .
 
 cred:validFrom a rdfs:Property, owl:DatatypeProperty ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Valid from" ;
 <<<<<<< main
@@ -274,7 +268,7 @@ cred:validFrom a rdfs:Property, owl:DatatypeProperty ;
 .
 
 cred:validUntil a rdfs:Property, owl:DatatypeProperty ;
-    rdfs:domain cred:VerifiableCredential ;
+    rdfs:domain cred:Credential ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Valid until" ;
 <<<<<<< main
@@ -287,13 +281,9 @@ cred:validUntil a rdfs:Property, owl:DatatypeProperty ;
 
 cred:verifiableCredential a rdfs:Property ;
     rdfs:domain cred:VerifiablePresentation ;
-    rdfs:range cred:VerifiableCredentialGraph ;
+    rdfs:range cred:CredentialGraph ;
     rdfs:label "verifiable credential" ;
-<<<<<<< main
-    rdfs:comment """<div>The value of the `verifiableCredential` property MUST identify a <a href="#VerifiableCredentialGraph">Verifiable credential graph</a> (informally, it indirectly identifies a <a href="#VerifiableCredential">Verifiable credential</a> contained in a separate graph).</div>"""^^rdf:HTML ;
-=======
-    rdfs:comment """The value of the `verifiableCredential` property MUST identify a Verifiable credential graph (informally, it indirectly identifies a Verifiable credential contained in a separate graph)."""@en ;
->>>>>>> Setting up previews
+    rdfs:comment """The value of the `verifiableCredential` property MUST identify a (Verifiable) credential graph (informally, it indirectly identifies a Credential contained in a separate graph)."""@en ;
     rdfs:isDefinedBy cred: ;
 .
 
