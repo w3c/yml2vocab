@@ -171,6 +171,7 @@
             }
         },
         {
+<<<<<<< main
             "@id": "cred:Credential",
             "@type": "rdfs:Class",
             "rdfs:label": {
@@ -181,6 +182,8 @@
             }
         },
         {
+=======
+>>>>>>> Setting up previews
             "@id": "cred:CredentialSchema",
             "@type": "rdfs:Class",
 <<<<<<< main
@@ -232,6 +235,7 @@
             }
         },
         {
+<<<<<<< main
             "@id": "cred:CredentialGraph",
             "@type": "rdfs:Class",
 <<<<<<< main
@@ -261,6 +265,25 @@
             },
             "rdfs:comment": {
                 "en": "A Verifiable Credential is a Credential that is tamper-evident and has authorship that can be cryptographically verified. Verifiable Credentials can be used to build Verifiable Presentations, which can also be cryptographically verified."
+=======
+            "@id": "cred:VerifiableCredential",
+            "@type": "rdfs:Class",
+            "rdfs:label": {
+                "en": "Verifiable credential"
+            },
+            "rdfs:comment": {
+                "en": "A Credential is a set of one or more claims made by an issuer. A Verifiable Credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable Credentials can be used to build Verifiable Presentations, which can also be cryptographically verified."
+            }
+        },
+        {
+            "@id": "cred:VerifiableCredentialGraph",
+            "@type": "rdfs:Class",
+            "rdfs:label": {
+                "en": "Verifiable credential graph"
+            },
+            "rdfs:comment": {
+                "en": "Instances of this class are RDF Graphs, where each of these graphs must include exactly one Verifiable Credential"
+>>>>>>> Setting up previews
             }
         },
         {
@@ -276,7 +299,11 @@
                 "en": "Verifiable presentation"
             },
             "rdfs:comment": {
+<<<<<<< main
                 "en": "A Presentation is data derived from one or more Credentials (usually, but not necessarily, Verifiable Credentials), issued by one or more `issuers`, that is shared with a specific `verifier`. A Verifiable Presentation is a tamper-evident Presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs)."
+=======
+                "en": "A Presentation is data derived from one or more Credentials, issued by one or more `issuers`, that is shared with a specific `verifier`. A Verifiable Presentation is a tamper-evident Presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs)."
+>>>>>>> Setting up previews
             }
         }
     ],
@@ -284,7 +311,11 @@
         {
             "@id": "cred:credentialSchema",
             "@type": "rdfs:Property",
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:range": "cred:CredentialSchema",
 <<<<<<< main
             "rdfs:label": "Credential schema",
@@ -303,7 +334,11 @@
         {
             "@id": "cred:credentialStatus",
             "@type": "rdfs:Property",
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:range": "cred:CredentialStatus",
 <<<<<<< main
             "rdfs:label": "Credential status",
@@ -325,7 +360,11 @@
                 "rdfs:Property",
                 "owl:ObjectProperty"
             ],
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:label": {
                 "en": "Credential subject"
             },
@@ -337,7 +376,11 @@
         {
             "@id": "cred:evidence",
             "@type": "rdfs:Property",
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:range": "cred:CredentialEvidence",
 <<<<<<< main
             "rdfs:label": "Evidence",
@@ -361,7 +404,11 @@
                 "owl:DatatypeProperty"
             ],
             "owl:deprecated": true,
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:range": "xsd:dateTime",
 <<<<<<< main
             "rdfs:label": "Expiration date",
@@ -385,7 +432,11 @@
             ],
             "rdfs:domain": {
                 "owl:unionOf": [
+<<<<<<< main
                     "cred:Credential",
+=======
+                    "cred:VerifiableCredential",
+>>>>>>> Setting up previews
                     "cred:VerifiablePresentation"
                 ]
             },
@@ -433,7 +484,11 @@
                 "rdfs:Property",
                 "owl:DatatypeProperty"
             ],
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:range": "xsd:dateTime",
 <<<<<<< main
             "rdfs:label": "issue date",
@@ -455,7 +510,11 @@
                 "rdfs:Property",
                 "owl:ObjectProperty"
             ],
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:label": {
                 "en": "issuer"
             },
@@ -467,7 +526,11 @@
         {
             "@id": "cred:refreshService",
             "@type": "rdfs:Property",
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:range": "cred:RefreshService",
 <<<<<<< main
             "rdfs:label": "refresh service",
@@ -507,7 +570,11 @@
         {
             "@id": "cred:termsOfUse",
             "@type": "rdfs:Property",
+<<<<<<< main
             "rdfs:domain": "cred:Credential,cred:VerifiablePresentation",
+=======
+            "rdfs:domain": "cred:VerifiableCredential,cred:VerifiablePresentation",
+>>>>>>> Setting up previews
             "rdfs:range": "odrl:Policy",
 <<<<<<< main
             "rdfs:label": "terms of use",
@@ -529,7 +596,11 @@
                 "rdfs:Property",
                 "owl:DatatypeProperty"
             ],
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:range": "xsd:dateTime",
 <<<<<<< main
             "rdfs:label": "Valid from",
@@ -551,7 +622,11 @@
                 "rdfs:Property",
                 "owl:DatatypeProperty"
             ],
+<<<<<<< main
             "rdfs:domain": "cred:Credential",
+=======
+            "rdfs:domain": "cred:VerifiableCredential",
+>>>>>>> Setting up previews
             "rdfs:range": "xsd:dateTime",
 <<<<<<< main
             "rdfs:label": "Valid until",
@@ -571,12 +646,20 @@
             "@id": "cred:verifiableCredential",
             "@type": "rdfs:Property",
             "rdfs:domain": "cred:VerifiablePresentation",
+<<<<<<< main
             "rdfs:range": "cred:CredentialGraph",
+=======
+            "rdfs:range": "cred:VerifiableCredentialGraph",
+>>>>>>> Setting up previews
             "rdfs:label": {
                 "en": "verifiable credential"
             },
             "rdfs:comment": {
+<<<<<<< main
                 "en": "The value of the `verifiableCredential` property MUST identify a (Verifiable) credential graph (informally, it indirectly identifies a Credential contained in a separate graph)."
+=======
+                "en": "The value of the `verifiableCredential` property MUST identify a Verifiable credential graph (informally, it indirectly identifies a Verifiable credential contained in a separate graph)."
+>>>>>>> Setting up previews
             }
         }
     ]
