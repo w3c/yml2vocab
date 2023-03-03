@@ -189,7 +189,7 @@
             "@id": "cred:VerifiableCredential",
             "@type": "rdfs:Class",
             "rdfs:label": {
-                "en": "Verifiable credential"
+                "en": "(Verifiable) credential graph"
             },
             "rdfs:comment": {
                 "en": "A Verifiable Credential is a Credential that is tamper-evident and has authorship that can be cryptographically verified. Verifiable Credentials can be used to build Verifiable Presentations, which can also be cryptographically verified."
@@ -204,10 +204,10 @@
             }
         },
         {
-            "@id": "cred:VerifiableCredentialGraph",
+            "@id": "cred:VerifiableCredential",
             "@type": "rdfs:Class",
             "rdfs:label": {
-                "en": "Verifiable credential graph"
+                "en": "Verifiable credential"
             },
             "rdfs:comment": {
                 "en": "Instances of this class are RDF Graphs, where each of these graphs must include exactly one Verifiable Credential"
