@@ -72,7 +72,12 @@ const bnode = (): string => {
  * @returns
  */
 export function toHTML(vocab: Vocab, template_text: string): string {
-    const adBreak = (text: string): string => {
+    const addBullet = (text: string): string => {
+        const regex = /\n\* /g;
+        return text.replace(regex, '<br>    • ');
+    }
+
+    const addBreak = (text: string): string => {
         const regex = /\n/g;
         return text.replace(regex, '<br><br>');
     }
@@ -91,7 +96,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             addChild(span, 'em', ' (deprecated)');
         }
 
-        let explanation = adBreak(item.comment);
+        let explanation = addBreak(addBullet(item.comment));
         if (item.type.includes("owl:ObjectProperty")) {
             explanation += "<br><br>The property's value should be a URL, i.e., not a literal."
         }

@@ -85,7 +85,7 @@
         "en": "vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs \n"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2022-12-16",
+    "dc:date": "2023-03-09",
     "rdfs_classes": [
         {
             "@id": "sec:Proof",
@@ -816,7 +816,7 @@
                 "en": "Public key multibase"
             },
             "rdfs:comment": {
-                "en": "The public key multibase property is used to specify the multibase-encoded version of a public key. The contents of the property are defined by specifications such as ED25519-2020 and listed in the Linked Data Cryptosuite Registry. Most public key type definitions are expected to:\n• Specify only a single encoding base per public key type as it reduces implementation burden and increases the chances of reaching broad interoperability.\n• Specify a multicodec header on the encoded public key to aid encoding and decoding applications in confirming that they are serializing and deserializing an expected public key type.\n• Use compressed binary formats to ensure efficient key sizes."
+                "en": "The public key multibase property is used to specify the multibase-encoded version of a public key. The contents of the property are defined by specifications such as ED25519-2020 and listed in the Linked Data Cryptosuite Registry. Most public key type definitions are expected to:\n* Specify only a single encoding base per public key type as it reduces implementation burden and increases the chances of reaching broad interoperability.\n* Specify a multicodec header on the encoded public key to aid encoding and decoding applications in confirming that they are serializing and deserializing an expected public key type.\n* Use compressed binary formats to ensure efficient key sizes."
             },
             "rdfs:seeAlso": [
                 "https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03",
