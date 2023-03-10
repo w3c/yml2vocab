@@ -161,33 +161,33 @@ export interface Vocab {
 
 
 /* ------------------------ Utility functions used by the various serializers... ------------------- */
-import { JSDOM } from 'jsdom';
+// import { JSDOM } from 'jsdom';
 
-/**
- * Turn a text field with HTML tags and line breaks into a single text.
- * 
- * @param text 
- * @returns transformed text
- */
-export function textualComment(text: string): string {
-    /** Remove the HTML tags */
-    const de_html  = (txt: string): string => {
-        const dom = new JSDOM(`<!DOCTYPE html><section>${txt}</section>`);
-        if (dom) {
-            const p = dom.window.document.querySelector("section");
-            const retval = p?.textContent;
-            return (retval) ? retval : ""; 
-        } else {
-            return ""
-        }    
-    };
-    /** Turn the line feed characters into spaces */
-    const de_break = (txt: string): string => {
-        const regex = /\\n/g;
-        return txt.replace(regex, ' ');
-    };
+// /**
+//  * Turn a text field with HTML tags and line breaks into a single text.
+//  * 
+//  * @param text 
+//  * @returns transformed text
+//  */
+// export function textualComment(text: string): string {
+//     /** Remove the HTML tags */
+//     const de_html  = (txt: string): string => {
+//         const dom = new JSDOM(`<!DOCTYPE html><section>${txt}</section>`);
+//         if (dom) {
+//             const p = dom.window.document.querySelector("section");
+//             const retval = p?.textContent;
+//             return (retval) ? retval : ""; 
+//         } else {
+//             return ""
+//         }    
+//     };
+//     /** Turn the line feed characters into spaces */
+//     const de_break = (txt: string): string => {
+//         const regex = /\\n/g;
+//         return txt.replace(regex, ' ');
+//     };
 
-    const pure_txt = de_html(text);
-    return de_break(pure_txt);
-}
+//     const pure_txt = de_html(text);
+//     return de_break(pure_txt);
+// }
 

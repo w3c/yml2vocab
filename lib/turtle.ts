@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
-import { Vocab, global, textualComment, RDFTerm, Link } from './common';
+import { Vocab, global, RDFTerm, Link } from './common';
 
 /**
  * Generate the Turtle representation of the vocabulary.
@@ -42,7 +42,7 @@ export function toTurtle(vocab: Vocab): string {
     // Factoring out the common fields
     const commonFields = (entry: RDFTerm): void => {
         turtle += `    rdfs:label "${entry.label}" ;\n`;
-        turtle += `    rdfs:comment """${textualComment(entry.comment)}"""@en ;\n`;
+        turtle += `    rdfs:comment """<div lang='en'>${entry.comment}</div>"""^^rdf:HTML ;\n`;
         turtle += `    rdfs:isDefinedBy cred: ;\n`;
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map( (link: Link): string => `<${link.url}>`).join(", ");

@@ -5,7 +5,7 @@
  * @packageDocumentation
  */
 
-import { Vocab, global, textualComment, RDFTerm, Link } from './common';
+import { Vocab, global, RDFTerm, Link } from './common';
 
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
@@ -83,7 +83,8 @@ export function toJSONLD(vocab: Vocab): string {
             "en" : entry.label
         }
         target["rdfs:comment"] = {
-            "en" : textualComment(entry.comment),
+            "@value" : `<div lang='en'>${entry.comment}</div>`,
+            "@type"  : "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
         }
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map( (link: Link): string => link.url);

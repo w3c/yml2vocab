@@ -9,20 +9,16 @@
                 "@protected": true,
                 "id": "@id",
                 "type": "@type",
-                "proofPurpose": {
-                    "@id": "https://w3id.org/security/v1proofPurpose",
-                    "@type": "http://www.w3.org/2001/XMLSchema#string"
-                },
-                "created": {
-                    "@id": "https://w3id.org/security/v1created",
-                    "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
-                },
                 "domain": {
                     "@id": "https://w3id.org/security/v1domain",
                     "@type": "http://www.w3.org/2001/XMLSchema#string"
                 },
                 "challenge": {
                     "@id": "https://w3id.org/security/v1challenge",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "proofPurpose": {
+                    "@id": "https://w3id.org/security/v1proofPurpose",
                     "@type": "http://www.w3.org/2001/XMLSchema#string"
                 },
                 "proofValue": {
@@ -46,12 +42,12 @@
                     "@id": "https://w3id.org/security/v1controller",
                     "@type": "@id"
                 },
-                "publicKeyJwk": {
-                    "@id": "https://w3id.org/security/v1publicKeyJwk",
-                    "@type": "http://www.w3.org/2001/XMLSchema#string"
-                },
                 "publicKeyMultibase": {
                     "@id": "https://w3id.org/security/v1publicKeyMultibase",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "publicKeyJwk": {
+                    "@id": "https://w3id.org/security/v1publicKeyJwk",
                     "@type": "http://www.w3.org/2001/XMLSchema#string"
                 }
             }
@@ -187,10 +183,7 @@
         "Bls12381G1Key2020": "https://w3id.org/security/v1Bls12381G1Key2020",
         "Bls12381G2Key2020": "https://w3id.org/security/v1Bls12381G2Key2020",
         "verificationMethod": "https://w3id.org/security/v1verificationMethod",
-        "proof": {
-            "@id": "https://w3id.org/security/v1proof",
-            "@container": "@graph"
-        },
+        "proof": "https://w3id.org/security/v1proof",
         "proofChain": {
             "@id": "https://w3id.org/security/v1proofChain",
             "@container": "@list"
