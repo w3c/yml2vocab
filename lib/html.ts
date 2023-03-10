@@ -72,16 +72,6 @@ const bnode = (): string => {
  * @returns
  */
 export function toHTML(vocab: Vocab, template_text: string): string {
-    const addBullet = (text: string): string => {
-        const regex = /\n\* /g;
-        return text.replace(regex, '<br>    • ');
-    }
-
-    const addBreak = (text: string): string => {
-        const regex = /\n/g;
-        return text.replace(regex, '<br><br>');
-    }
-
     // Factor out all common fields for the terms
     const commonFields = (section: HTMLElement, item: RDFTerm): void => {        
         section.setAttribute('resource',`${vocab_prefix}:${item.id}`);
@@ -96,12 +86,13 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             addChild(span, 'em', ' (deprecated)');
         }
 
-        let explanation = addBreak(addBullet(item.comment));
+        // let explanation = addBreak(item.comment);
+        let explanation = item.comment;
         if (item.type.includes("owl:ObjectProperty")) {
             explanation += "<br><br>The property's value should be a URL, i.e., not a literal."
         }
-        const p = addChild(section, 'p', explanation);
-        p.setAttribute('property', 'rdfs:comment');
+        const div = addChild(section, 'div', explanation);
+        div.setAttribute('property', 'rdfs:comment');
 
         if (item.see_also && item.see_also.length > 0) {
             const dl = addChild(section, 'dl');
