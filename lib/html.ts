@@ -87,12 +87,13 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
 
         // let explanation = addBreak(item.comment);
-        let explanation = item.comment;
+        let description = item.comment;
         if (item.type.includes("owl:ObjectProperty")) {
-            explanation += "<br><br>The property's value should be a URL, i.e., not a literal."
+            description += "<br><br>The property's value should be a URL, i.e., not a literal."
         }
-        const div = addChild(section, 'div', explanation);
+        const div = addChild(section, 'div', description);
         div.setAttribute('property', 'rdfs:comment');
+        div.setAttribute('datatype', 'rdf:HTML')
 
         if (item.see_also && item.see_also.length > 0) {
             const dl = addChild(section, 'dl');

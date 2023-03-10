@@ -1,3 +1,11 @@
+## Version 1.3
+
+### Major changes
+
+- The content of the `comment` field is now considered as an HTML fragment. For most of the vocabularies it does not have any consequence now, because those descriptions/comments are a single paragraph anyway. However, if line feeds or other tricks are used to force some formatting, those should be redone in bona fide HTML.
+    The RDF version of the ontologies use the `rdf:HTML` data type and therefore keep those structures in the official RDF definition, too.
+
+
 ## Version 1.2
 
 ### Major changes

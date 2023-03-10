@@ -8,9 +8,9 @@
 
 # Ontology definition
 cred: a owl:Ontology ;
-    dc:title """Security Vocabulary"""@en ;
+    dc:title """Security Vocabulary""" ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs 
-"""@en ;
+""" ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
     dc:date "2023-03-10"^^xsd:date ;
 .
@@ -18,26 +18,26 @@ cred: a owl:Ontology ;
 # Class definitions
 sec:Proof a rdfs:Class ;
     rdfs:label "Digital proof" ;
-    rdfs:comment """<div lang='en'>This class represents a digital proof on serialized data. </div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a digital proof on serialized data. </div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:ProofGraph a rdfs:Class ;
     rdfs:label "An RDF Graph for a digital proof" ;
-    rdfs:comment """<div lang='en'>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Proof.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Proof.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:VerificationMethod a rdfs:Class ;
     rdfs:label "Verification method" ;
-    rdfs:comment """<div lang='en'>A Verification Method class can express different verification methods, such as cryptographic public keys, which can be used to authenticate or authorize interaction with the `controller` or associated parties. Verification methods might take many parameters.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Verification Method class can express different verification methods, such as cryptographic public keys, which can be used to authenticate or authorize interaction with the `controller` or associated parties. Verification methods might take many parameters.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:DataIntegrityProof a rdfs:Class ;
     rdfs:subClassOf sec:Proof ;
     rdfs:label "A Data Integrity Proof" ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity proof used to encode a variety of cryptographic suite proof encodings.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity proof used to encode a variety of cryptographic suite proof encodings.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof> ;
 .
@@ -45,14 +45,14 @@ sec:DataIntegrityProof a rdfs:Class ;
 sec:Ed25519Signature2020 a rdfs:Class ;
     rdfs:subClassOf sec:Proof ;
     rdfs:label "ED2559 Signature Suite, 2020 version" ;
-    rdfs:comment """<div lang='en'>T.B.D.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>T.B.D.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:Key a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:label "Cryptographic key" ;
-    rdfs:comment """<div lang='en'>This class represents a cryptographic key that may be used for encryption, decryption, or digitally signing data.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a cryptographic key that may be used for encryption, decryption, or digitally signing data.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -60,7 +60,7 @@ sec:Signature a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Proof ;
     rdfs:label "Digital signature" ;
-    rdfs:comment """<div lang='en'>This class represents a digital signature on serialized data. It is an abstract class and should not be used other than for Semantic Web reasoning purposes, such as by a reasoning agent. This class MUST NOT be used directly, but only through its subclasses.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a digital signature on serialized data. It is an abstract class and should not be used other than for Semantic Web reasoning purposes, such as by a reasoning agent. This class MUST NOT be used directly, but only through its subclasses.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -68,7 +68,7 @@ sec:SignatureGraph a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:ProofGraph ;
     rdfs:label "An RDF Graph for a digital signature" ;
-    rdfs:comment """<div lang='en'>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Signature.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Signature.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -76,7 +76,7 @@ sec:EcdsaSecp256k1Signature2019 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "TBD." ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1> ;
 .
@@ -85,7 +85,7 @@ sec:EcdsaSecp256k1Signature2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "TBD." ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1> ;
 .
@@ -94,7 +94,7 @@ sec:EcdsaSecp256k1RecoverySignature2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "TBD." ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity signature.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity signature.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverysignature2020> ;
 .
@@ -103,7 +103,7 @@ sec:EcdsaSecp256k1VerificationKey2019 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "TBD." ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1> ;
 .
@@ -112,7 +112,7 @@ sec:EcdsaSecp256k1RecoveryMethod2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "TBD." ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverymethod2020> ;
 .
@@ -121,7 +121,7 @@ sec:RsaSignature2018 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "Signature Suite for RSA (was deprecated in the CCG document)" ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#rsa> ;
 .
@@ -130,7 +130,7 @@ sec:RsaVerificationKey2018 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "Verification Key for RSA (was deprecated in the CCG document)" ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#rsa> ;
 .
@@ -139,7 +139,7 @@ sec:SchnorrSecp256k1Signature2019 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "TBD." ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -147,28 +147,28 @@ sec:SchnorrSecp256k1VerificationKey2019 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "TBD." ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:ServiceEndpointProxyService a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:label "TBD." ;
-    rdfs:comment """<div lang='en'>T.B.D.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>T.B.D.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:Digest a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:label "Message digest" ;
-    rdfs:comment """<div lang='en'>This class represents a message digest that may be used for data integrity verification. The digest algorithm used will determine the cryptographic properties of the digest.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a message digest that may be used for data integrity verification. The digest algorithm used will determine the cryptographic properties of the digest.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:EncryptedMessage a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:label "Encrypted message" ;
-    rdfs:comment """<div lang='en'>A class of messages that are obfuscated in some cryptographic manner. These messages are incredibly difficult to decrypt without the proper decryption key.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A class of messages that are obfuscated in some cryptographic manner. These messages are incredibly difficult to decrypt without the proper decryption key.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -176,7 +176,7 @@ sec:GraphSignature2012 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "RDF graph signature" ;
-    rdfs:comment """<div lang='en'>A graph signature is used for digital signatures on RDF graphs. The default canonicalization mechanism is specified in the RDF Graph normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A graph signature is used for digital signatures on RDF graphs. The default canonicalization mechanism is specified in the RDF Graph normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -184,7 +184,7 @@ sec:LinkedDataSignature2015 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "Linked data signature, 2015 version (was deprecated in the CCG document)" ;
-    rdfs:comment """<div lang='en'>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -192,7 +192,7 @@ sec:LinkedDataSignature2016 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "Linked data signature, 2016 version (was deprecated in the CCG document)" ;
-    rdfs:comment """<div lang='en'>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -200,7 +200,7 @@ sec:MerkleProof2019 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "Merkle Proof" ;
-    rdfs:comment """<div lang='en'>Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and ECDSA to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and ECDSA to perform the digital signature.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/lds-merkle-proof-2019/> ;
 .
@@ -209,7 +209,7 @@ sec:X25519KeyAgreementKey2019 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "X25519 Key Agreement Key 2019" ;
-    rdfs:comment """<div lang='en'>This class represents a verification key.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a verification key.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -217,7 +217,7 @@ sec:Ed25519VerificationKey2018 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "ED2559 Verification Key, 2018 version" ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
 .
@@ -226,7 +226,7 @@ sec:Ed25519VerificationKey2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "ED2559 Verification Key, 2020 version" ;
-    rdfs:comment """<div lang='en'>A linked data proof suite verification method type used with <a href=”#Ed25519Signature2020>`Ed25519Signature2020`</a>.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A linked data proof suite verification method type used with <a href=”#Ed25519Signature2020>`Ed25519Signature2020`</a>.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -234,7 +234,7 @@ sec:JsonWebKey2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "JSON Web Key, 2020 version" ;
-    rdfs:comment """<div lang='en'>A linked data proof suite verification method type used with <a href=”#JsonWebSignature2020>`JsonWebSignature2020`</a></div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A linked data proof suite verification method type used with <a href=”#JsonWebSignature2020>`JsonWebSignature2020`</a></div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -242,7 +242,7 @@ sec:JsonWebSignature2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "JSON Web Signature, 2020 version" ;
-    rdfs:comment """<div lang='en'>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and JWS to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and JWS to perform the digital signature.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -250,7 +250,7 @@ sec:BbsBlsSignature2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "BBS Signature, 2020 version" ;
-    rdfs:comment """<div lang='en'>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. Importantly, a `BbsBlsSignature` digests each of the statements produced by the normalization process individually to enable selective disclosure. The signature mechanism uses Blake2B as the digest for each statement and produces a single output digital signature.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. Importantly, a `BbsBlsSignature` digests each of the statements produced by the normalization process individually to enable selective disclosure. The signature mechanism uses Blake2B as the digest for each statement and produces a single output digital signature.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -258,7 +258,7 @@ sec:BbsBlsSignatureProof2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Signature ;
     rdfs:label "BBS Signature Proof, 2020 version" ;
-    rdfs:comment """<div lang='en'>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. Importantly, a `BbsBlsSignatureProof2020` is in fact a proof of knowledge of an unrevealed BbsBlsSignature2020 enabling the ability to selectively reveal information from the set that was originally signed. Each of the statements produced by the normalizing process for a JSON-LD document featuring a <a href=”#BbsBlsSignatureProof2020">`BbsBlsSignatureProof2020`</a> represent statements that were originally signed in producing the `BbsBlsSignature2020` and represent the denomination under which information can be selectively disclosed. The signature mechanism uses Blake2B as the digest for each statement and produces a single output digital signature.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. Importantly, a `BbsBlsSignatureProof2020` is in fact a proof of knowledge of an unrevealed BbsBlsSignature2020 enabling the ability to selectively reveal information from the set that was originally signed. Each of the statements produced by the normalizing process for a JSON-LD document featuring a <a href=”#BbsBlsSignatureProof2020">`BbsBlsSignatureProof2020`</a> represent statements that were originally signed in producing the `BbsBlsSignature2020` and represent the denomination under which information can be selectively disclosed. The signature mechanism uses Blake2B as the digest for each statement and produces a single output digital signature.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -266,7 +266,7 @@ sec:Bls12381G1Key2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "BLS 12381 G1 Signature Key, 2020 version" ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity signature key.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity signature key.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
 .
@@ -275,7 +275,7 @@ sec:Bls12381G2Key2020 a rdfs:Class, owl:DeprecatedClass ;
     owl:deprecated true ;
     rdfs:subClassOf sec:Key ;
     rdfs:label "BLS 12381 G2 Signature Key, 2020 version" ;
-    rdfs:comment """<div lang='en'>This class represents a data integrity signature key.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This class represents a data integrity signature key.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
 .
@@ -286,7 +286,7 @@ sec:Bls12381G2Key2020 a rdfs:Class, owl:DeprecatedClass ;
 sec:verificationMethod a rdfs:Property ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Verification method" ;
-    rdfs:comment """<div lang='en'>A `verificationMethod` property is used to specify a URL that contains information used for proof verification.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A `verificationMethod` property is used to specify a URL that contains information used for proof verification.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://www.w3.org/TR/did-core/#verification-methods> ;
 .
@@ -295,7 +295,7 @@ sec:domain a rdfs:Property, owl:DatatypeProperty ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Domain of a proof" ;
-    rdfs:comment """<div lang='en'>The `domain` property is used to associate a domain with a proof, for use with a `proofPurpose` such as `authentication` and indicating its intended usage.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The `domain` property is used to associate a domain with a proof, for use with a `proofPurpose` such as `authentication` and indicating its intended usage.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -303,7 +303,7 @@ sec:challenge a rdfs:Property, owl:DatatypeProperty ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Challenge with a proof" ;
-    rdfs:comment """<div lang='en'>The challenge property is used to associate a challenge with a proof, for use with a `proofPurpose` such as `authentication`. This string value SHOULD be included in a proof if a `domain` is specified.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The challenge property is used to associate a challenge with a proof, for use with a `proofPurpose` such as `authentication`. This string value SHOULD be included in a proof if a `domain` is specified.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -311,7 +311,7 @@ sec:proofPurpose a rdfs:Property, owl:DatatypeProperty ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Proof purpose" ;
-    rdfs:comment """<div lang='en'>The` proofPurpose` property is used to associate a purpose, such as `assertionMethod` or `authentication` with a proof. The proof purpose acts as a safeguard to prevent the proof from being misused by being applied to a purpose other than the one that was intended.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The` proofPurpose` property is used to associate a purpose, such as `assertionMethod` or `authentication` with a proof. The proof purpose acts as a safeguard to prevent the proof from being misused by being applied to a purpose other than the one that was intended.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -319,49 +319,49 @@ sec:proofValue a rdfs:Property, owl:DatatypeProperty ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Proof value" ;
-    rdfs:comment """<div lang='en'>A string value that contains the data necessary to verify the digital proof using the `verificationMethod` specified</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A string value that contains the data necessary to verify the digital proof using the `verificationMethod` specified</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:proof a rdfs:Property ;
     rdfs:range sec:ProofGraph ;
     rdfs:label "Proof sets" ;
-    rdfs:comment """<div lang='en'>The value of the `proof` property MUST identify <a href=”#ProofGraph”>`ProofGraph` instances</a> (informally, it indirectly identifies <a href=”#Proof”>`Proof` instances</a>, each contained in a separate graph). The property is used to associate a proof with a graph of information. The proof property is typically not included in the canonicalized graphs that are then digested and digitally signed. The order of the proofs is not relevant.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The value of the `proof` property MUST identify <a href=”#ProofGraph”>`ProofGraph` instances</a> (informally, it indirectly identifies <a href=”#Proof”>`Proof` instances</a>, each contained in a separate graph). The property is used to associate a proof with a graph of information. The proof property is typically not included in the canonicalized graphs that are then digested and digitally signed. The order of the proofs is not relevant.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:proofChain a rdfs:Property ;
     rdfs:range rdf:List ;
     rdfs:label "Proof chain" ;
-    rdfs:comment """<div lang='en'>The value of the `proofChain` property MUST identify a sequence of <a href=”#ProofGraph”>`ProofGraph` instances</a> (informally, it indirectly identifies a series of <a href=”#Proof”>`Proof` instances</a>, each contained in a separate graph). The property is used to provide a sequence of multiple proofs where the order of when the proofs occurred matters. The proof chain property is typically not included in the canonicalized graphs that are then separately digested and digitally signed.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The value of the `proofChain` property MUST identify a sequence of <a href=”#ProofGraph”>`ProofGraph` instances</a> (informally, it indirectly identifies a series of <a href=”#Proof”>`Proof` instances</a>, each contained in a separate graph). The property is used to provide a sequence of multiple proofs where the order of when the proofs occurred matters. The proof chain property is typically not included in the canonicalized graphs that are then separately digested and digitally signed.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:controller a rdfs:Property, owl:ObjectProperty ;
     rdfs:domain sec:VerificationMethod ;
     rdfs:label "Controller" ;
-    rdfs:comment """<div lang='en'>A controller is an entity that claims control over a particular resource. Note that control is best validated as a two-way relationship, where the controller claims control over a particular resource, and the resource clearly identifies its controller.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A controller is an entity that claims control over a particular resource. Note that control is best validated as a two-way relationship, where the controller claims control over a particular resource, and the resource clearly identifies its controller.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:authentication a rdfs:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Authentication method" ;
-    rdfs:comment """<div lang='en'>An `authentication` property is used to specify a URL that contains information about a `verificationMethod` used for authentication.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An `authentication` property is used to specify a URL that contains information about a `verificationMethod` used for authentication.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:assertionMethod a rdfs:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Assertion method" ;
-    rdfs:comment """<div lang='en'>An `assertionMethod` property is used to specify a URL that contains information about a `verificationMethod` used for assertions.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An `assertionMethod` property is used to specify a URL that contains information about a `verificationMethod` used for assertions.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:capabilityDelegation a rdfs:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Capability Delegation Method" ;
-    rdfs:comment """<div lang='en'><p>A `capabilityDelegation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of delegating capabilities.</p>
+    rdfs:comment """<div><p>A `capabilityDelegation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of delegating capabilities.</p>
 <p>A `verificationMethod` may be referenced by its identifier (a URL) or expressed in full.</p>
 <p>The aforementioned proofs are created to prove that some entity is delegating the authority to take some action to another entity. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityDelegation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that has a property of `capabilityDelegation` that references the `verificationMethod`. This indicates that the controller has authorized it for the expressed `proofPurpose`.</p></div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
@@ -370,7 +370,7 @@ sec:capabilityDelegation a rdfs:Property ;
 sec:capabilityInvocation a rdfs:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Capability Invocation Method" ;
-    rdfs:comment """<div lang='en'><p>A `capabilityInvocation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of invoking capabilities.</p>
+    rdfs:comment """<div><p>A `capabilityInvocation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of invoking capabilities.</p>
 <p>A `verificationMethod` MAY be referenced by its identifier (a URL) or expressed in full.</p>
 <p>The aforementioned proofs are created to prove that some entity is attempting to exercise some authority they possess to take an action. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityInvocation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that, when dereferenced, has a property of `capabilityInvocation` that references the `verificationMethod.` This indicates that the controller has authorized it for the expressed `proofPurpose`.</p></div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
@@ -379,7 +379,7 @@ sec:capabilityInvocation a rdfs:Property ;
 sec:keyAgreement a rdfs:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Key agreement protocols" ;
-    rdfs:comment """<div lang='en'>Indicates that a proof is used for for key agreement protocols, such as Elliptic Curve Diffie Hellman key agreement used by popular encryption libraries.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>Indicates that a proof is used for for key agreement protocols, such as Elliptic Curve Diffie Hellman key agreement used by popular encryption libraries.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -387,7 +387,7 @@ sec:cryptosuite a rdfs:Property, owl:DatatypeProperty ;
     rdfs:domain sec:DataIntegrityProof ;
     rdfs:range xsd:string ;
     rdfs:label "Cryptographic suite" ;
-    rdfs:comment """<div lang='en'>A text-based identifier for a specific cryptographic suite.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A text-based identifier for a specific cryptographic suite.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof> ;
 .
@@ -396,7 +396,7 @@ sec:publicKeyMultibase a rdfs:Property, owl:DatatypeProperty ;
     rdfs:domain sec:VerificationMethod ;
     rdfs:range xsd:string ;
     rdfs:label "Public key multibase" ;
-    rdfs:comment """<div lang='en'>The public key multibase property is used to specify the multibase-encoded version of a public key. The contents of the property are defined by specifications such as ED25519-2020 and listed in the Linked Data Cryptosuite Registry. Most public key type definitions are expected to:
+    rdfs:comment """<div>The public key multibase property is used to specify the multibase-encoded version of a public key. The contents of the property are defined by specifications such as ED25519-2020 and listed in the Linked Data Cryptosuite Registry. Most public key type definitions are expected to:
 <ul>
 <li>Specify only a single encoding base per public key type as it reduces implementation burden and increases the chances of reaching broad interoperability.
 <li>Specify a multicodec header on the encoded public key to aid encoding and decoding applications in confirming that they are serializing and deserializing an expected public key type.
@@ -410,7 +410,7 @@ sec:publicKeyJwk a rdfs:Property, owl:DatatypeProperty ;
     rdfs:domain sec:VerificationMethod ;
     rdfs:range xsd:string ;
     rdfs:label "Public key JWK" ;
-    rdfs:comment """<div lang='en'>See the JOSE suite.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>See the JOSE suite.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://www.iana.org/assignments/jose/jose.xhtml>, <https://tools.ietf.org/html/rfc7517> ;
 .
@@ -420,7 +420,7 @@ sec:cipherAlgorithm a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty
     rdfs:domain sec:EncryptedMessage ;
     rdfs:range xsd:string ;
     rdfs:label "Cipher algorithm" ;
-    rdfs:comment """<div lang='en'>The cipher algorithm describes the mechanism used to encrypt a message. It is typically a string expressing the cipher suite, the strength of the cipher, and a block cipher mode.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The cipher algorithm describes the mechanism used to encrypt a message. It is typically a string expressing the cipher suite, the strength of the cipher, and a block cipher mode.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -429,7 +429,7 @@ sec:cipherData a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     rdfs:domain sec:EncryptedMessage ;
     rdfs:range xsd:string ;
     rdfs:label "Cipher data" ;
-    rdfs:comment """<div lang='en'>Cipher data is an opaque blob of information that is used to specify an encrypted message.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>Cipher data is an opaque blob of information that is used to specify an encrypted message.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -438,7 +438,7 @@ sec:cipherKey a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     rdfs:domain sec:EncryptedMessage ;
     rdfs:range xsd:string ;
     rdfs:label "Cipher key" ;
-    rdfs:comment """<div lang='en'>A cipher key is a symmetric key that is used to encrypt or decrypt a piece of information. The key itself may be expressed in clear text or encrypted.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A cipher key is a symmetric key that is used to encrypt or decrypt a piece of information. The key itself may be expressed in clear text or encrypted.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -446,7 +446,7 @@ sec:digestAlgorithm a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty
     owl:deprecated true ;
     rdfs:range xsd:string ;
     rdfs:label "Digest algorithm" ;
-    rdfs:comment """<div lang='en'>The digest algorithm is used to specify the cryptographic function to use when generating the data to be digitally signed. Typically, data that is to be signed goes through three steps: 1) canonicalization, 2) digest, and 3) signature. This property is used to specify the algorithm that should be used for step 2. A signature class typically specifies a default digest method, so this property is typically used to specify information for a signature algorithm.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The digest algorithm is used to specify the cryptographic function to use when generating the data to be digitally signed. Typically, data that is to be signed goes through three steps: 1) canonicalization, 2) digest, and 3) signature. This property is used to specify the algorithm that should be used for step 2. A signature class typically specifies a default digest method, so this property is typically used to specify information for a signature algorithm.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -454,7 +454,7 @@ sec:digestValue a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     owl:deprecated true ;
     rdfs:range xsd:string ;
     rdfs:label "Digest value" ;
-    rdfs:comment """<div lang='en'>The digest value is used to express the output of the digest algorithm expressed in Base-16 (hexadecimal) format.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The digest value is used to express the output of the digest algorithm expressed in Base-16 (hexadecimal) format.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -462,7 +462,7 @@ sec:blockchainAccountId a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProp
     owl:deprecated true ;
     rdfs:range xsd:string ;
     rdfs:label "Blockchain account ID" ;
-    rdfs:comment """<div lang='en'>A `blockchainAccountId` property is used to specify a blockchain account identifier, as per the <a href=”https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md”>CAIP-10Account ID Specification</a>.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A `blockchainAccountId` property is used to specify a blockchain account identifier, as per the <a href=”https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md”>CAIP-10Account ID Specification</a>.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -470,7 +470,7 @@ sec:ethereumAddress a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty
     owl:deprecated true ;
     rdfs:range xsd:string ;
     rdfs:label "Ethereum address" ;
-    rdfs:comment """<div lang='en'>An `ethereumAddress` property is used to specify the Ethereum address. As per the Ethereum Yellow Paper “Ethereum: a secure decentralised generalised transaction ledger” in consists of a prefix "0x", a common identifier for hexadecimal, concatenated with the rightmost 20 bytes of the Keccak-256 hash (big endian) of the ECDSA public key (the curve used is the so-called secp256k1). In hexadecimal, 2 digits represent a byte, meaning addresses contain 40 hexadecimal digits. The Ethereum address should also contain a checksum as per EIP-55.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An `ethereumAddress` property is used to specify the Ethereum address. As per the Ethereum Yellow Paper “Ethereum: a secure decentralised generalised transaction ledger” in consists of a prefix "0x", a common identifier for hexadecimal, concatenated with the rightmost 20 bytes of the Keccak-256 hash (big endian) of the ECDSA public key (the curve used is the so-called secp256k1). In hexadecimal, 2 digits represent a byte, meaning addresses contain 40 hexadecimal digits. The Ethereum address should also contain a checksum as per EIP-55.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://eips.ethereum.org/EIPS/eip-55>, <https://ethereum.github.io/yellowpaper/paper.pdf> ;
 .
@@ -479,7 +479,7 @@ sec:expires a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     owl:deprecated true ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Expiration time" ;
-    rdfs:comment """<div lang='en'>The expiration time is typically associated with a <a href=”#Key>`Key`</a> and specifies when the validity of the key will expire.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The expiration time is typically associated with a <a href=”#Key>`Key`</a> and specifies when the validity of the key will expire.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -488,7 +488,7 @@ sec:initializationVector a rdf:Property, owl:DeprecatedProperty, owl:DatatypePro
     rdfs:domain sec:EncryptedMessage ;
     rdfs:range xsd:string ;
     rdfs:label "Initialization vector" ;
-    rdfs:comment """<div lang='en'>The initialization vector (IV) is a byte stream that is typically used to initialize certain block cipher encryption schemes. For a receiving application to be able to decrypt a message, it must know the decryption key and the initialization vector. The value is typically base-64 encoded.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The initialization vector (IV) is a byte stream that is typically used to initialize certain block cipher encryption schemes. For a receiving application to be able to decrypt a message, it must know the decryption key and the initialization vector. The value is typically base-64 encoded.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -497,7 +497,7 @@ sec:nonce a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     rdfs:domain sec:Signature ;
     rdfs:range xsd:string ;
     rdfs:label "Nonce" ;
-    rdfs:comment """<div lang='en'>This property is used in conjunction with the input to the signature hashing function in order to protect against replay attacks. Typically, receivers need to track all nonce values used within a certain time period in order to ensure that an attacker cannot merely re-send a compromised packet in order to execute a privileged request.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>This property is used in conjunction with the input to the signature hashing function in order to protect against replay attacks. Typically, receivers need to track all nonce values used within a certain time period in order to ensure that an attacker cannot merely re-send a compromised packet in order to execute a privileged request.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -505,21 +505,21 @@ sec:canonicalizationAlgorithm a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:domain sec:Signature ;
     rdfs:label "Canonicalization algorithm" ;
-    rdfs:comment """<div lang='en'>The canonicalization algorithm is used to transform the input data into a form that can be passed to a cryptographic digest method. The digest is then digitally signed using a digital signature algorithm. Canonicalization ensures that a piece of software that is generating a digital signature is able to do so on the same set of information in a deterministic manner.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The canonicalization algorithm is used to transform the input data into a form that can be passed to a cryptographic digest method. The digest is then digitally signed using a digital signature algorithm. Canonicalization ensures that a piece of software that is generating a digital signature is able to do so on the same set of information in a deterministic manner.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:controller a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:label "Controller" ;
-    rdfs:comment """<div lang='en'>A controller is an entity that claims control over a particular resource. Note that control is best validated as a two-way relationship where the controller claims control over a particular resource, and the resource clearly identifies its controller.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A controller is an entity that claims control over a particular resource. Note that control is best validated as a two-way relationship where the controller claims control over a particular resource, and the resource clearly identifies its controller.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:owner a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:label "Owner (was deprecated in the CCG document)" ;
-    rdfs:comment """<div lang='en'>An owner is an entity that claims control over a particular resource. Note that ownership is best validated as a two-way relationship where the owner claims ownership over a particular resource, and the resource clearly identifies its owner.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An owner is an entity that claims control over a particular resource. Note that ownership is best validated as a two-way relationship where the owner claims ownership over a particular resource, and the resource clearly identifies its owner.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -527,7 +527,7 @@ sec:password a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     owl:deprecated true ;
     rdfs:range xsd:string ;
     rdfs:label "Password" ;
-    rdfs:comment """<div lang='en'>A secret that is used to generate a key that can be used to encrypt or decrypt message. It is typically a string value.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A secret that is used to generate a key that can be used to encrypt or decrypt message. It is typically a string value.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -536,7 +536,7 @@ sec:privateKeyPem a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     rdfs:domain sec:Key ;
     rdfs:range xsd:string ;
     rdfs:label "PEM encoded private key" ;
-    rdfs:comment """<div lang='en'>A private key PEM property is used to specify the PEM-encoded version of the private key. This encoding is compatible with almost every Secure Sockets Layer library implementation and typically plugs directly into functions intializing private keys.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A private key PEM property is used to specify the PEM-encoded version of the private key. This encoding is compatible with almost every Secure Sockets Layer library implementation and typically plugs directly into functions intializing private keys.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <http://en.wikipedia.org/wiki/Privacy_Enhanced_Mail> ;
 .
@@ -545,7 +545,7 @@ sec:publicKey a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:domain sec:Key ;
     rdfs:label "Public Key" ;
-    rdfs:comment """<div lang='en'>A public key property is used to specify a URL that contains information about a public key.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A public key property is used to specify a URL that contains information about a public key.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -554,7 +554,7 @@ sec:publicKeyBase58 a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty
     rdfs:domain sec:Key ;
     rdfs:range xsd:string ;
     rdfs:label "Base58-encoded Public Key" ;
-    rdfs:comment """<div lang='en'>A public key Base58 property is used to specify the base58-encoded version of the public key.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A public key Base58 property is used to specify the base58-encoded version of the public key.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -563,7 +563,7 @@ sec:publicKeyPem a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     rdfs:domain sec:Key ;
     rdfs:range xsd:string ;
     rdfs:label "Public key PEM" ;
-    rdfs:comment """<div lang='en'>A public key PEM property is used to specify the PEM-encoded version of the public key. This encoding is compatible with almost every Secure Sockets Layer library implementation and typically plugs directly into functions initializing public keys.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A public key PEM property is used to specify the PEM-encoded version of the public key. This encoding is compatible with almost every Secure Sockets Layer library implementation and typically plugs directly into functions initializing public keys.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -572,7 +572,7 @@ sec:publicKeyHex a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     rdfs:domain sec:Key ;
     rdfs:range xsd:string ;
     rdfs:label "Hex-encoded version of public Key" ;
-    rdfs:comment """<div lang='en'>A `publicKeyHex` property is used to specify the hex-encoded version of the public key, based on section 8 of rfc4648. Hex encoding is also known as Base16 encoding.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A `publicKeyHex` property is used to specify the hex-encoded version of the public key, based on section 8 of rfc4648. Hex encoding is also known as Base16 encoding.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://tools.ietf.org/html/rfc4648#section-8> ;
 .
@@ -580,7 +580,7 @@ sec:publicKeyHex a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
 sec:publicKeyService a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:label "Public key service" ;
-    rdfs:comment """<div lang='en'>The publicKeyService property is used to express the REST URL that provides public key management services.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The publicKeyService property is used to express the REST URL that provides public key management services.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -588,7 +588,7 @@ sec:revoked a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     owl:deprecated true ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Revocation time" ;
-    rdfs:comment """<div lang='en'>The revocation time is typically associated with a <a href=”#Key”>`Key`</a> that has been marked as invalid as of the date and time associated with the property. Key revocations are often used when a key is compromised, such as the theft of the private key, or during the course of best-practice key rotation schedules.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The revocation time is typically associated with a <a href=”#Key”>`Key`</a> that has been marked as invalid as of the date and time associated with the property. Key revocations are often used when a key is compromised, such as the theft of the private key, or during the course of best-practice key rotation schedules.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -596,7 +596,7 @@ sec:jws a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:range sec:Signature ;
     rdfs:label "Json Web Signature" ;
-    rdfs:comment """<div lang='en'>The jws property is used to associate a detached Json Web Signature with a proof.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The jws property is used to associate a detached Json Web Signature with a proof.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://tools.ietf.org/html/rfc7797> ;
 .
@@ -606,7 +606,7 @@ sec:challenge a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Challenge with a proof" ;
-    rdfs:comment """<div lang='en'>The challenge property is used to associate a challenge with a proof, for use with a `proofPurpose` such as `authentication`. This string value SHOULD be included in a proof if a `domain` is specified.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The challenge property is used to associate a challenge with a proof, for use with a `proofPurpose` such as `authentication`. This string value SHOULD be included in a proof if a `domain` is specified.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -615,7 +615,7 @@ sec:expirationDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty 
     rdfs:domain sec:Proof ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Expiration date for proof" ;
-    rdfs:comment """<div lang='en'>The `expirationDate` property is used to associate an expiration date with a proof.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The `expirationDate` property is used to associate an expiration date with a proof.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -623,7 +623,7 @@ sec:signature a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:range sec:Signature ;
     rdfs:label "Signature  (was deprecated in the CCG document)" ;
-    rdfs:comment """<div lang='en'>The property is used to associate a proof with a graph of information. The proof property is typically not included in the canonicalized graph that is then digested, and digitally signed.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The property is used to associate a proof with a graph of information. The proof property is typically not included in the canonicalized graph that is then digested, and digitally signed.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -632,7 +632,7 @@ sec:signatureValue a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty 
     rdfs:domain sec:Signature ;
     rdfs:range xsd:string ;
     rdfs:label "Signature value  (was deprecated in the CCG document)" ;
-    rdfs:comment """<div lang='en'>The signature value is used to express the output of the signature algorithm expressed in base-64 format.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The signature value is used to express the output of the signature algorithm expressed in base-64 format.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -640,7 +640,7 @@ sec:signatureAlgorithm a rdf:Property, owl:DeprecatedProperty, owl:ObjectPropert
     owl:deprecated true ;
     rdfs:domain sec:Signature ;
     rdfs:label "Signature algorithm  (was deprecated in the CCG document)" ;
-    rdfs:comment """<div lang='en'>The signature algorithm is used to specify the cryptographic signature function to use when digitally signing the digest data. Typically, text to be signed goes through three steps: 1) canonicalization, 2) digest, and 3) signature. This property is used to specify the algorithm that should be used for step #3. A signature class typically specifies a default signature algorithm, so this property rarely needs to be used in practice when specifying digital signatures.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The signature algorithm is used to specify the cryptographic signature function to use when digitally signing the digest data. Typically, text to be signed goes through three steps: 1) canonicalization, 2) digest, and 3) signature. This property is used to specify the algorithm that should be used for step #3. A signature class typically specifies a default signature algorithm, so this property rarely needs to be used in practice when specifying digital signatures.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -648,7 +648,7 @@ sec:service a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:domain sec:Signature ;
     rdfs:label "Service" ;
-    rdfs:comment """<div lang='en'>Examples of specific services include discovery services, social networks, file storage services, and verifiable claim repository services.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>Examples of specific services include discovery services, social networks, file storage services, and verifiable claim repository services.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -656,7 +656,7 @@ sec:serviceEndpoint a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:domain sec:Signature ;
     rdfs:label "Service endpoint" ;
-    rdfs:comment """<div lang='en'>A network address at which a service operates on behalf of a controller. Examples of specific services include discovery services, social networks, file storage services, and verifiable claim repository services. Service endpoints might also be provided by a generalized data interchange protocol, such as extensible data interchange.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A network address at which a service operates on behalf of a controller. Examples of specific services include discovery services, social networks, file storage services, and verifiable claim repository services. Service endpoints might also be provided by a generalized data interchange protocol, such as extensible data interchange.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -665,7 +665,7 @@ sec:x509CertificateChain a rdf:Property, owl:DeprecatedProperty ;
     rdfs:domain sec:Signature ;
     rdfs:range sec:Signature ;
     rdfs:label "X509 Certificate chain" ;
-    rdfs:comment """<div lang='en'>The x509CertificateChain property is used to associate a chain of X.509 Certificates with a proof. The value of this property is an ordered list where each value in the list is an X.509 Certificate expressed as a DER PKIX format, that is encoded with multibase using the base64pad variant. The certificate directly associated to the verification method used to verify the proof MUST be the first element in the list. Subsequent certificates in the list MAY be included where each one MUST certify the previous one.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The x509CertificateChain property is used to associate a chain of X.509 Certificates with a proof. The value of this property is an ordered list where each value in the list is an X.509 Certificate expressed as a DER PKIX format, that is encoded with multibase using the base64pad variant. The certificate directly associated to the verification method used to verify the proof MUST be the first element in the list. Subsequent certificates in the list MAY be included where each one MUST certify the previous one.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://tools.ietf.org/html/rfc5280>, <https://tools.ietf.org/id/draft-multiformats-multibase-00.html> ;
 .
@@ -675,7 +675,7 @@ sec:x509CertificateFingerprint a rdf:Property, owl:DeprecatedProperty ;
     rdfs:domain sec:Signature ;
     rdfs:range sec:Signature ;
     rdfs:label "X509 Certificate fingerprint" ;
-    rdfs:comment """<div lang='en'>The x509CertificateFingerprint property is used to associate an X.509 Certificate with a proof via its fingerprint. The value is a multihash encoded then multibase encoded value using the base64pad variant. It is RECOMMENDED that the fingerprint value be the SHA-256 hash of the X.509 Certificate.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The x509CertificateFingerprint property is used to associate an X.509 Certificate with a proof via its fingerprint. The value is a multihash encoded then multibase encoded value using the base64pad variant. It is RECOMMENDED that the fingerprint value be the SHA-256 hash of the X.509 Certificate.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://tools.ietf.org/html/rfc5280>, <https://tools.ietf.org/id/draft-multiformats-multibase-00.html> ;
 .
@@ -683,7 +683,7 @@ sec:x509CertificateFingerprint a rdf:Property, owl:DeprecatedProperty ;
 sec:allowedAction a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:label "Allowed action" ;
-    rdfs:comment """<div lang='en'>An action that the controller of a capability may take when invoking the capability.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An action that the controller of a capability may take when invoking the capability.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#delegated-capability> ;
 .
@@ -691,7 +691,7 @@ sec:allowedAction a rdf:Property, owl:DeprecatedProperty ;
 sec:capabilityChain a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:label "Capability chain" ;
-    rdfs:comment """<div lang='en'>An list of delegated capabilities from a delegator to a delegatee.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An list of delegated capabilities from a delegator to a delegatee.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#delegation> ;
 .
@@ -699,7 +699,7 @@ sec:capabilityChain a rdf:Property, owl:DeprecatedProperty ;
 sec:capabilityAction a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:label "Capability action" ;
-    rdfs:comment """<div lang='en'>An action that can be taken given a capability.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An action that can be taken given a capability.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#invoking-root-capability> ;
 .
@@ -707,7 +707,7 @@ sec:capabilityAction a rdf:Property, owl:DeprecatedProperty ;
 sec:caveat a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:label "Caveat" ;
-    rdfs:comment """<div lang='en'>A restriction on the way the capability may be used.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A restriction on the way the capability may be used.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#caveats> ;
 .
@@ -715,7 +715,7 @@ sec:caveat a rdf:Property, owl:DeprecatedProperty ;
 sec:delegator a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:label "Delegator" ;
-    rdfs:comment """<div lang='en'>An entity that delegates a capability to a delegatee.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An entity that delegates a capability to a delegatee.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#delegation> ;
 .
@@ -723,7 +723,7 @@ sec:delegator a rdf:Property, owl:DeprecatedProperty ;
 sec:invocationTarget a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:label "Invocation target" ;
-    rdfs:comment """<div lang='en'>An invocation target identifies where a capability may be invoked, and identifies the target object for which the root capability expresses authority.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An invocation target identifies where a capability may be invoked, and identifies the target object for which the root capability expresses authority.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#root-capability> ;
 .
@@ -731,7 +731,7 @@ sec:invocationTarget a rdf:Property, owl:DeprecatedProperty ;
 sec:invoker a rdf:Property, owl:DeprecatedProperty ;
     owl:deprecated true ;
     rdfs:label "Invoker" ;
-    rdfs:comment """<div lang='en'>An identifier to cryptographic material that can invoke a capability.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>An identifier to cryptographic material that can invoke a capability.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#invocation> ;
 .
