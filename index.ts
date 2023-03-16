@@ -1,10 +1,10 @@
-import { Vocab, ValidationError }  from './lib/common';
-import { getData }                from "./lib/convert";
-import { toTurtle }               from "./lib/turtle";
-import { toJSONLD }               from './lib/jsonld';
-import { toHTML }                 from './lib/html';
-import { toContext }              from './lib/context';
-import { promises as fs }          from 'fs';
+import { Vocab }          from './lib/common';
+import { getData }        from "./lib/convert";
+import { toTurtle }       from "./lib/turtle";
+import { toJSONLD }       from './lib/jsonld';
+import { toHTML }         from './lib/html';
+import { toContext }      from './lib/context';
+import { promises as fs } from 'fs';
 
 
 /**

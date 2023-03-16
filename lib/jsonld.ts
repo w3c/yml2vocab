@@ -5,17 +5,13 @@
  * @packageDocumentation
  */
 
-import { Vocab, global, textualComment, RDFTerm, Link } from './common';
+import { Vocab, global, RDFTerm, Link } from './common';
 
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
 const generic_context = {
-    "dc:title":                 { "@container": "@language" },
-    "dc:description":           { "@container": "@language" },
     "dc:date":                  { "@type": "xsd:date" },
-    "rdfs:comment":             { "@container": "@language" },
     "rdfs:domain":              { "@type": "@id" },
-    "rdfs:label":               { "@container": "@language" },
     "rdfs:range":               { "@type": "@id" },
     "rdfs:seeAlso":             { "@type": "@id" },
     "rdfs:subClassOf":          { "@type": "@id" },
@@ -27,7 +23,7 @@ const generic_context = {
     "owl:imports":              { "@type": "@id" },
     "owl:versionInfo":          { "@type": "@id" },
     "owl:inverseOf":            { "@type": "@vocab" },
-    "owl:unionOf":              { "@type": "@vocab", "@container": "@list" },
+    "owl:unionOf":              { "@container": "@list", "@type": "@vocab" },
     "rdfs_classes":             { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_properties":          { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_instances":           { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
@@ -79,11 +75,10 @@ export function toJSONLD(vocab: Vocab): string {
 
     // Factoring out the common fields
     const commonFields = (target: any, entry: RDFTerm): void => {
-        target["rdfs:label"] = {
-            "en" : entry.label
-        }
+        target["rdfs:label"]  = entry.label ;
         target["rdfs:comment"] = {
-            "en" : textualComment(entry.comment),
+            "@value" : `<div>${entry.comment}</div>`,
+            "@type"  : "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
         }
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map( (link: Link): string => link.url);
@@ -144,7 +139,6 @@ export function toJSONLD(vocab: Vocab): string {
     }
 
     {
-
         // Get the properties
         const properties: any[] = [];
         for (const prop of vocab.properties) {

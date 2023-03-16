@@ -37,15 +37,15 @@ export interface Example {
 * the common classes defined in common.ts in this module
 */
 export interface RawVocabEntry {
-    id          : string;
+    id           : string;
     property    ?: string;
     value       ?: string;
-    label       : string;
+    label        : string;
     upper_value ?: string[];
     domain      ?: string[];
     range       ?: string[];
     deprecated  ?: boolean;
-    comment     : string;
+    comment      : string;
     see_also    ?: Link[];
     example     ?: Example[];
     dataset     ?: boolean;
@@ -74,8 +74,8 @@ export interface ValidationResults {
      * If the content is valid, the error array is empty. Otherwise, the vocab field is null, and
      * the validation error(s) are returned.
      */
-    vocab: RawVocab | null,
-    error: ValidationError[];
+    vocab : RawVocab | null,
+    error : ValidationError[];
 }
 
 /**
@@ -157,37 +157,5 @@ export interface Vocab {
     classes             : RDFClass[],
     properties          : RDFProperty[],
     individuals         : RDFIndividual[],
-}
-
-
-/* ------------------------ Utility functions used by the various serializers... ------------------- */
-import { JSDOM } from 'jsdom';
-
-/**
- * Turn a text field with HTML tags and line breaks into a single text.
- * 
- * @param text 
- * @returns transformed text
- */
-export function textualComment(text: string): string {
-    /** Remove the HTML tags */
-    const de_html  = (txt: string): string => {
-        const dom = new JSDOM(`<!DOCTYPE html><section>${txt}</section>`);
-        if (dom) {
-            const p = dom.window.document.querySelector("section");
-            const retval = p?.textContent;
-            return (retval) ? retval : ""; 
-        } else {
-            return ""
-        }    
-    };
-    /** Turn the line feed characters into spaces */
-    const de_break = (txt: string): string => {
-        const regex = /\\n/g;
-        return txt.replace(regex, ' ');
-    };
-
-    const pure_txt = de_html(text);
-    return de_break(pure_txt);
 }
 

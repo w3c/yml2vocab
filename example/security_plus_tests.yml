@@ -675,3 +675,21 @@ property:
     see_also:
       - label: Authorization Capabilities
         url: https://w3c-ccg.github.io/zcap-spec/#invocation
+
+individual:
+  - id: SomeIndividual
+    upper_value: cred:ABCD 
+    label: Testing the individuals
+    comment: A longer description for this individual
+    see_also:
+      label: the description 
+      url: https://www.example.org/namivan/
+
+  - id: DeprecatedIndividual
+    upper_value: cred:XYXX 
+    label: Testing the deprecated individuals
+    comment: A longer description for this deprecated individual
+    deprecated: true
+    see_also:
+      label: the description 
+      url: https://www.example.org/namivan/deprecated
