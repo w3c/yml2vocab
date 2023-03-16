@@ -12,7 +12,7 @@ cred: a owl:Ontology ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs
 """ ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2023-03-23"^^xsd:date ;
+    dc:date "2023-03-16"^^xsd:date ;
 .
 
 # Class definitions
@@ -362,18 +362,18 @@ sec:assertionMethod a rdfs:Property ;
 sec:capabilityDelegation a rdfs:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Capability Delegation Method" ;
-    rdfs:comment """<div>A `capabilityDelegation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of delegating capabilities.
-A `verificationMethod` may be referenced by its identifier (a URL) or expressed in full.
-The aforementioned proofs are created to prove that some entity is delegating the authority to take some action to another entity. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityDelegation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that has a property of `capabilityDelegation` that references the `verificationMethod`. This indicates that the controller has authorized it for the expressed `proofPurpose`.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div><p>A `capabilityDelegation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of delegating capabilities.</p>
+<p>A `verificationMethod` may be referenced by its identifier (a URL) or expressed in full.</p>
+<p>The aforementioned proofs are created to prove that some entity is delegating the authority to take some action to another entity. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityDelegation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that has a property of `capabilityDelegation` that references the `verificationMethod`. This indicates that the controller has authorized it for the expressed `proofPurpose`.</p></div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
 sec:capabilityInvocation a rdfs:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Capability Invocation Method" ;
-    rdfs:comment """<div>A `capabilityInvocation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of invoking capabilities.
-A `verificationMethod` MAY be referenced by its identifier (a URL) or expressed in full.
-The aforementioned proofs are created to prove that some entity is attempting to exercise some authority they possess to take an action. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityInvocation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that, when dereferenced, has a property of `capabilityInvocation` that references the `verificationMethod.` This indicates that the controller has authorized it for the expressed `proofPurpose`.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div><p>A `capabilityInvocation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of invoking capabilities.</p>
+<p>A `verificationMethod` MAY be referenced by its identifier (a URL) or expressed in full.</p>
+<p>The aforementioned proofs are created to prove that some entity is attempting to exercise some authority they possess to take an action. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityInvocation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that, when dereferenced, has a property of `capabilityInvocation` that references the `verificationMethod.` This indicates that the controller has authorized it for the expressed `proofPurpose`.</p></div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
 .
 
@@ -397,10 +397,12 @@ sec:publicKeyMultibase a rdfs:Property, owl:DatatypeProperty ;
     rdfs:domain sec:VerificationMethod ;
     rdfs:range xsd:string ;
     rdfs:label "Public key multibase" ;
-    rdfs:comment """<div>The public key multibase property is used to specify the multibase-encoded version of a public key. The contents of the property are defined by specifications such as ED25519-2020 and listed in the Linked Data Cryptosuite Registry. Most public key type definitions are expected to:
-• Specify only a single encoding base per public key type as it reduces implementation burden and increases the chances of reaching broad interoperability.
-• Specify a multicodec header on the encoded public key to aid encoding and decoding applications in confirming that they are serializing and deserializing an expected public key type.
-• Use compressed binary formats to ensure efficient key sizes.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div><p>The public key multibase property is used to specify the multibase-encoded version of a public key. The contents of the property are defined by specifications such as ED25519-2020 and listed in the Linked Data Cryptosuite Registry. Most public key type definitions are expected to:</p>
+<ul>
+<li>Specify only a single encoding base per public key type as it reduces implementation burden and increases the chances of reaching broad interoperability.
+<li>Specify a multicodec header on the encoded public key to aid encoding and decoding applications in confirming that they are serializing and deserializing an expected public key type.
+<li>Use compressed binary formats to ensure efficient key sizes.
+</ul></div>"""^^rdf:HTML ;
     rdfs:isDefinedBy cred: ;
     rdfs:seeAlso <https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03>, <https://w3c-ccg.github.io/ld-cryptosuite-registry/>, <https://github.com/multiformats/multicodec/blob/master/table.csv>, <https://w3c-ccg.github.io/lds-ed25519-2020/> ;
 .

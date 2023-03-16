@@ -73,7 +73,7 @@
         "en": "vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs\n"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2023-03-23",
+    "dc:date": "2023-03-16",
     "rdfs_classes": [
         {
             "@id": "sec:Proof",
@@ -729,7 +729,7 @@
             "rdfs:range": "VerificationMethod",
             "rdfs:label": "Capability Delegation Method",
             "rdfs:comment": {
-                "@value": "<div>A `capabilityDelegation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of delegating capabilities.\nA `verificationMethod` may be referenced by its identifier (a URL) or expressed in full.\nThe aforementioned proofs are created to prove that some entity is delegating the authority to take some action to another entity. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityDelegation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that has a property of `capabilityDelegation` that references the `verificationMethod`. This indicates that the controller has authorized it for the expressed `proofPurpose`.</div>",
+                "@value": "<div><p>A `capabilityDelegation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of delegating capabilities.</p>\n<p>A `verificationMethod` may be referenced by its identifier (a URL) or expressed in full.</p>\n<p>The aforementioned proofs are created to prove that some entity is delegating the authority to take some action to another entity. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityDelegation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that has a property of `capabilityDelegation` that references the `verificationMethod`. This indicates that the controller has authorized it for the expressed `proofPurpose`.</p></div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             }
         },
@@ -739,7 +739,7 @@
             "rdfs:range": "VerificationMethod",
             "rdfs:label": "Capability Invocation Method",
             "rdfs:comment": {
-                "@value": "<div>A `capabilityInvocation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of invoking capabilities.\nA `verificationMethod` MAY be referenced by its identifier (a URL) or expressed in full.\nThe aforementioned proofs are created to prove that some entity is attempting to exercise some authority they possess to take an action. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityInvocation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that, when dereferenced, has a property of `capabilityInvocation` that references the `verificationMethod.` This indicates that the controller has authorized it for the expressed `proofPurpose`.</div>",
+                "@value": "<div><p>A `capabilityInvocation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of invoking capabilities.</p>\n<p>A `verificationMethod` MAY be referenced by its identifier (a URL) or expressed in full.</p>\n<p>The aforementioned proofs are created to prove that some entity is attempting to exercise some authority they possess to take an action. A verifier of the proof should expect the proof to express a `proofPurpose` of `capabilityInvocation` and reference a `verificationMethod` to verify it. The dereferenced `verificationMethod` MUST have a controller property that, when dereferenced, has a property of `capabilityInvocation` that references the `verificationMethod.` This indicates that the controller has authorized it for the expressed `proofPurpose`.</p></div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             }
         },
@@ -780,7 +780,7 @@
             "rdfs:range": "xsd:string",
             "rdfs:label": "Public key multibase",
             "rdfs:comment": {
-                "@value": "<div>The public key multibase property is used to specify the multibase-encoded version of a public key. The contents of the property are defined by specifications such as ED25519-2020 and listed in the Linked Data Cryptosuite Registry. Most public key type definitions are expected to:\n• Specify only a single encoding base per public key type as it reduces implementation burden and increases the chances of reaching broad interoperability.\n• Specify a multicodec header on the encoded public key to aid encoding and decoding applications in confirming that they are serializing and deserializing an expected public key type.\n• Use compressed binary formats to ensure efficient key sizes.</div>",
+                "@value": "<div><p>The public key multibase property is used to specify the multibase-encoded version of a public key. The contents of the property are defined by specifications such as ED25519-2020 and listed in the Linked Data Cryptosuite Registry. Most public key type definitions are expected to:</p>\n<ul>\n<li>Specify only a single encoding base per public key type as it reduces implementation burden and increases the chances of reaching broad interoperability.\n<li>Specify a multicodec header on the encoded public key to aid encoding and decoding applications in confirming that they are serializing and deserializing an expected public key type.\n<li>Use compressed binary formats to ensure efficient key sizes.\n</ul></div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
             "rdfs:seeAlso": [
