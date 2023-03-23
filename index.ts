@@ -4,7 +4,7 @@ import { toTurtle }       from "./lib/turtle";
 import { toJSONLD }       from './lib/jsonld';
 import { toHTML }         from './lib/html';
 import { toContext }      from './lib/context';
-import { promises as fs } from 'fs';
+import { promises as fs } from 'node:fs';
 
 
 /**
@@ -106,7 +106,11 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
     }
 }
 
+//
+// This function is left for historical reasons, before the naming conventions have been changed to camel case for functions.
+// Older usage may rely on this format, and there is no reason to make them invalid...
+//
 export async function generate_vocabulary_files(yaml_file_name: string, template_file_name: string, context: boolean): Promise<void> {
-    return generateVocabularyFiles(yaml_file_name, template_file_name, context);
+    return await generateVocabularyFiles(yaml_file_name, template_file_name, context);
 }
 

@@ -21,7 +21,7 @@ const isURL = (value:string): boolean => {
     try {
         new URL(value);
         return true;
-    } catch(e) {
+    } catch(_e) {
         return false;
     }
 }
@@ -92,14 +92,14 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     };
 
     // The "toSeeAlso" structure needs some special treatment and should also be turned into an array
-    const toSeeAlso = (val: undefined|any|any[]) : undefined|Link[] => {
+    const toSeeAlso = (val: undefined|Link|Link[]) : undefined|Link[] => {
         if (val === undefined) {
             return undefined
         } else if (Array.isArray(val) && val.length === 0) {
             return undefined
         } else {
             if (Array.isArray(val)) {
-                return val.map((raw: any): Link => {
+                return val.map((raw): Link => {
                     return {
                         label : raw.label,
                         url   : raw.url
@@ -115,14 +115,14 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     }
 
     // The "toSeeAlso" structure needs some special treatment and should also be turned into an array
-    const toExample = (val: undefined|any|any[]) : undefined|Example[] => {
+    const toExample = (val: undefined|Example|Example[]) : undefined|Example[] => {
         if (val === undefined) {
             return undefined
         } else if (Array.isArray(val) && val.length === 0) {
             return undefined
         } else {
             if (Array.isArray(val)) {
-                return val.map((raw: any): Example => {
+                return val.map((raw): Example => {
                     return {
                         label : raw.label,
                         json  : raw.json
