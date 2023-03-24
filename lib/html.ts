@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
-import { Vocab, Link, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual } from './common';
+import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual } from './common';
 import { JSDOM }  from 'jsdom';
 
 /* ---------------- Utility functions ------------------------- */
@@ -116,7 +116,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             const span = addChild(section, 'span');
             span.setAttribute('property', 'owl:deprecated');
             span.setAttribute('datatype', 'xsd:boolean');
-            span.style.display = 'none';
+            span.setAttribute('style', 'display: none');
             addText('true', span);
         }
     }

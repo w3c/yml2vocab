@@ -73,15 +73,12 @@ function toContext(vocab) {
         // The domain field in the property structure contains
         // the prefixed version of the class ID...
         const prefixed_id = `${common_1.global.vocab_prefix}:${cl.id}`;
-        // Flag signalling whether there is any embedded properties at all
-        let embedded_properties = false;
         // Get all the properties that have this class in its domain
         for (const prop of vocab.properties) {
             if (prop.domain && prop.domain.includes(prefixed_id)) {
                 // bingo, this property can be added here
                 embedded[prop.id] = propertyContext(prop);
                 class_properties.add(prop.id);
-                embedded_properties = true;
             }
         }
         // If no properties are added, then the embedded context is unnecessary

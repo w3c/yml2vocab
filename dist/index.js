@@ -6,7 +6,7 @@ const turtle_1 = require("./lib/turtle");
 const jsonld_1 = require("./lib/jsonld");
 const html_1 = require("./lib/html");
 const context_1 = require("./lib/context");
-const fs_1 = require("fs");
+const node_fs_1 = require("node:fs");
 /**
  * Conversion class for YAML to the various syntaxes.
  */
@@ -70,34 +70,60 @@ exports.VocabGeneration = VocabGeneration;
  * @param yaml_file_name - the vocabulary file in YAML
  * @param template_file_name - the HTML template file
  * @param context - whether the JSON-LD context file should also be generated
+ * @throws on error situation in reading the input files, in yml validation, or when writing the result
  */
 async function generateVocabularyFiles(yaml_file_name, template_file_name, context) {
     // This trick allows the user to give the full yaml file name, or only the common base
     const basename = yaml_file_name.endsWith('.yml') ? yaml_file_name.slice(0, -4) : yaml_file_name;
     // Get the two files from the file system (at some point, this can be extended
-    // to URL-s using fetch)
-    const [yaml, template] = await Promise.all([
-        fs_1.promises.readFile(`${basename}.yml`, 'utf-8'),
-        fs_1.promises.readFile(template_file_name, 'utf-8')
+    // to URL-s using fetch instead of an fs.read but, so far, there was no need)
+    let yaml = '', template = '';
+    let errors = '';
+    const reads = await Promise.allSettled([
+        node_fs_1.promises.readFile(`${basename}.yml`, 'utf-8'),
+        node_fs_1.promises.readFile(template_file_name, 'utf-8')
     ]);
-    try {
-        const conversion = new VocabGeneration(yaml);
+    if (reads[0].status === "fulfilled") {
+        yaml = reads[0].value;
+    }
+    else {
+        errors = reads[0].reason;
+    }
+    if (reads[1].status === "fulfilled") {
+        template = reads[1].value;
+    }
+    else {
+        errors = `${errors}\n${reads[1].reason}`;
+    }
+    if (errors !== '') {
+        // One of the two files could not be read, we should abort here:
+        throw (errors);
+    }
+    const conversion = new VocabGeneration(yaml);
+    {
         const fs_writes = [
-            fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
-            fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-            fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template)),
+            node_fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
+            node_fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
+            node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template)),
         ];
         if (context) {
-            fs_writes.push(fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.getContext()));
+            fs_writes.push(node_fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.getContext()));
         }
-        await Promise.all(fs_writes);
-    }
-    catch (e) {
-        console.error(`Validation error in the YAML file:\n${JSON.stringify(e, null, 4)}`);
+        const errors = (await Promise.allSettled(fs_writes))
+            .filter((result) => result.status === "rejected")
+            .map((result) => (result.status === "rejected" ? result.reason : ''));
+        if (errors.length != 0) {
+            // One or more files could not be written, we should throw an exception...
+            throw (errors.join('\n'));
+        }
     }
 }
 exports.generateVocabularyFiles = generateVocabularyFiles;
+//
+// This function is retained for historical reasons, before the naming conventions have been changed to camel case for functions.
+// Older usage may rely on this format, and there is no reason to make them invalid...
+//
 async function generate_vocabulary_files(yaml_file_name, template_file_name, context) {
-    return generateVocabularyFiles(yaml_file_name, template_file_name, context);
+    return await generateVocabularyFiles(yaml_file_name, template_file_name, context);
 }
 exports.generate_vocabulary_files = generate_vocabulary_files;

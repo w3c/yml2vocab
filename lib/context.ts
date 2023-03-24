@@ -28,7 +28,7 @@ const preamble: Context = {
  */
 export function toContext(vocab: Vocab): string {
     // Generation of a unit for properties
-    const propertyContext = (property: RDFProperty, for_class: boolean = true): Context|string => {
+    const propertyContext = (property: RDFProperty, for_class = true): Context|string => {
         // the real id of the property...
         const url = `${global.vocab_url}${property.id}`
         const retval: Context = {
@@ -83,15 +83,12 @@ export function toContext(vocab: Vocab): string {
         // The domain field in the property structure contains
         // the prefixed version of the class ID...
         const prefixed_id = `${global.vocab_prefix}:${cl.id}`;
-        // Flag signalling whether there is any embedded properties at all
-        let embedded_properties: boolean = false;
         // Get all the properties that have this class in its domain
         for (const prop of vocab.properties) {
             if (prop.domain && prop.domain.includes(prefixed_id)) {
                 // bingo, this property can be added here
                 embedded[prop.id] = propertyContext(prop);
                 class_properties.add(prop.id);
-                embedded_properties = true;
             }
         }
 
