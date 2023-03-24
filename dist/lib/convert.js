@@ -22,7 +22,7 @@ const isURL = (value) => {
         new URL(value);
         return true;
     }
-    catch (e) {
+    catch (_e) {
         return false;
     }
 };

@@ -5,6 +5,16 @@ exports.validateWithSchema = void 0;
 const _2019_1 = require("ajv/dist/2019");
 const ajv_formats_1 = require("ajv-formats");
 const yaml = require("yaml");
+// const sch = require('./vocab.schema.json');
+// console.log(sch);
+/**
+ * @internal
+ */
+function get_schema() {
+    console.log(__filename);
+    return {};
+}
+// const sch = get_schema();
 const schema = {
     "$id": "https://github.com/w3c/yml2vocab/lib/schema",
     "$comment": "This schema depends on JSON Schema draft-2019-09 version",
@@ -255,7 +265,7 @@ const schema = {
     }
 };
 /**
- * Perfom a JSON Schema validation on the YAML content. Done by converting the YAML content into
+ * Perform a JSON Schema validation on the YAML content. Done by converting the YAML content into
  * a Javascript object (using the YAML parser) and checking the object against a schema.
  *
  * @param yaml_raw_content The raw textual content of the YAML file (i.e, presumably after reading the file itself)

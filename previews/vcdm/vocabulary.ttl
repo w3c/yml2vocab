@@ -11,7 +11,7 @@ cred: a owl:Ontology ;
     dc:title """Verifiable Credentials Vocabulary v2.0""" ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]""" ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2023-03-23"^^xsd:date ;
+    dc:date "2023-03-24"^^xsd:date ;
 .
 
 # Class definitions

@@ -6,7 +6,7 @@ const turtle_1 = require("./lib/turtle");
 const jsonld_1 = require("./lib/jsonld");
 const html_1 = require("./lib/html");
 const context_1 = require("./lib/context");
-const fs_1 = require("fs");
+const node_fs_1 = require("node:fs");
 /**
  * Conversion class for YAML to the various syntaxes.
  */
@@ -77,9 +77,10 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
     // Get the two files from the file system (at some point, this can be extended
     // to URL-s using fetch)
     const [yaml, template] = await Promise.all([
-        fs_1.promises.readFile(`${basename}.yml`, 'utf-8'),
-        fs_1.promises.readFile(template_file_name, 'utf-8')
+        node_fs_1.promises.readFile(`${basename}.yml`, 'utf-8'),
+        node_fs_1.promises.readFile(template_file_name, 'utf-8')
     ]);
+<<<<<<< code-improvement
     try {
         const conversion = new VocabGeneration(yaml);
         const fs_writes = [
@@ -94,7 +95,30 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
     }
     catch (e) {
         console.error(`Validation error in the YAML file:\n${JSON.stringify(e, null, 4)}`);
+=======
+    // try {
+    const conversion = new VocabGeneration(yaml);
+    const fs_writes = [
+        node_fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
+        node_fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
+        node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template)),
+    ];
+    if (context) {
+        fs_writes.push(node_fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.getContext()));
+>>>>>>> Separate schema file from schema handler
     }
+    await Promise.all(fs_writes);
+    // } catch(e: any) {
+    //     console.error(`Validation error in the YAML file:\n${JSON.stringify(e,null,4)}`);
+    // }
+}
+exports.generateVocabularyFiles = generateVocabularyFiles;
+//
+// This function is left for historical reasons, before the naming conventions have been changed to camel case for functions.
+// Older usage may rely on this format, and there is no reason to make them invalid...
+//
+async function generate_vocabulary_files(yaml_file_name, template_file_name, context) {
+    return await generateVocabularyFiles(yaml_file_name, template_file_name, context);
 }
 exports.generateVocabularyFiles = generateVocabularyFiles;
 async function generate_vocabulary_files(yaml_file_name, template_file_name, context) {
