@@ -89,7 +89,7 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
         fs.readFile(template_file_name, 'utf-8')
     ]);
 
-    try {
+    // try {
         const conversion: VocabGeneration = new VocabGeneration(yaml);
 
         const fs_writes: Promise<void>[] = [
@@ -101,9 +101,9 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
             fs_writes.push(fs.writeFile(`${basename}_context.jsonld`, conversion.getContext()))
         }
         await Promise.all(fs_writes);    
-    } catch(e: any) {
-        console.error(`Validation error in the YAML file:\n${JSON.stringify(e,null,4)}`);
-    }
+    // } catch(e: any) {
+    //     console.error(`Validation error in the YAML file:\n${JSON.stringify(e,null,4)}`);
+    // }
 }
 
 //

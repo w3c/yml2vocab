@@ -110,7 +110,7 @@ function toHTML(vocab, template_text) {
             const span = addChild(section, 'span');
             span.setAttribute('property', 'owl:deprecated');
             span.setAttribute('datatype', 'xsd:boolean');
-            span.style.display = 'none';
+            span.setAttribute('style', 'display: none');
             addText('true', span);
         }
     };
