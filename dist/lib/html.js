@@ -110,11 +110,7 @@ function toHTML(vocab, template_text) {
             const span = addChild(section, 'span');
             span.setAttribute('property', 'owl:deprecated');
             span.setAttribute('datatype', 'xsd:boolean');
-<<<<<<< code-improvement
-            span.style.display = 'none';
-=======
             span.setAttribute('style', 'display: none');
->>>>>>> Separate schema file from schema handler
             addText('true', span);
         }
     };

@@ -80,22 +80,6 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
         node_fs_1.promises.readFile(`${basename}.yml`, 'utf-8'),
         node_fs_1.promises.readFile(template_file_name, 'utf-8')
     ]);
-<<<<<<< code-improvement
-    try {
-        const conversion = new VocabGeneration(yaml);
-        const fs_writes = [
-            fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
-            fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-            fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template)),
-        ];
-        if (context) {
-            fs_writes.push(fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.getContext()));
-        }
-        await Promise.all(fs_writes);
-    }
-    catch (e) {
-        console.error(`Validation error in the YAML file:\n${JSON.stringify(e, null, 4)}`);
-=======
     // try {
     const conversion = new VocabGeneration(yaml);
     const fs_writes = [
@@ -105,7 +89,6 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
     ];
     if (context) {
         fs_writes.push(node_fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.getContext()));
->>>>>>> Separate schema file from schema handler
     }
     await Promise.all(fs_writes);
     // } catch(e: any) {
@@ -119,9 +102,5 @@ exports.generateVocabularyFiles = generateVocabularyFiles;
 //
 async function generate_vocabulary_files(yaml_file_name, template_file_name, context) {
     return await generateVocabularyFiles(yaml_file_name, template_file_name, context);
-}
-exports.generateVocabularyFiles = generateVocabularyFiles;
-async function generate_vocabulary_files(yaml_file_name, template_file_name, context) {
-    return generateVocabularyFiles(yaml_file_name, template_file_name, context);
 }
 exports.generate_vocabulary_files = generate_vocabulary_files;
