@@ -7,6 +7,8 @@
 
 import { Vocab, global, RDFTerm, Link } from './common';
 
+type JSON = Record<string,unknown>;
+
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
 const generic_context = {
@@ -51,7 +53,7 @@ export function toJSONLD(vocab: Vocab): string {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct; factored it here to make the 
     // code more readable.
-    const multiDomain = (value: string[]): any => {
+    const multiDomain = (value: string[]): unknown => {
         if (value.length === 1) {
             return value[0];
         } else {
@@ -62,7 +64,7 @@ export function toJSONLD(vocab: Vocab): string {
     }
 
     // This is just for symmetry v.a.v. the domain...
-    const multiRange = (value: string[]): any => {
+    const multiRange = (value: string[]): unknown => {
         if (value.length === 1) {
             return value[0];
         } else {
@@ -71,10 +73,10 @@ export function toJSONLD(vocab: Vocab): string {
     }
  
     // This is the target object
-    const jsonld: any = {}
+    const jsonld: JSON = {}
 
     // Factoring out the common fields
-    const commonFields = (target: any, entry: RDFTerm): void => {
+    const commonFields = (target: JSON, entry: RDFTerm): void => {
         target["rdfs:label"]  = entry.label ;
         target["rdfs:comment"] = {
             "@value" : `<div>${entry.comment}</div>`,
@@ -89,7 +91,7 @@ export function toJSONLD(vocab: Vocab): string {
     // Creation of the context: take the prefixes from the vocabulary definition
     // and add the generic context
     {
-        let context: any = {};
+        let context: JSON = {};
         for (const prefix of vocab.prefixes) {
             context[prefix.prefix] = prefix.url
         }
@@ -117,9 +119,9 @@ export function toJSONLD(vocab: Vocab): string {
 
     {
         // Get the classes
-        const classes: any[] = [];
+        const classes: JSON[] = [];
         for (const cl of vocab.classes) {
-            const cl_object: any = {};
+            const cl_object: JSON = {};
             cl_object["@id"]   = `${global.vocab_prefix}:${cl.id}`;
             if (cl.type.length === 1) {
                 cl_object["@type"] = cl.type[0]
@@ -140,9 +142,9 @@ export function toJSONLD(vocab: Vocab): string {
 
     {
         // Get the properties
-        const properties: any[] = [];
+        const properties: JSON[] = [];
         for (const prop of vocab.properties) {
-            const pr_object: any = {}
+            const pr_object: JSON = {}
             pr_object["@id"]   = `${global.vocab_prefix}:${prop.id}`;
             if (prop.type.length === 1) {
                 pr_object["@type"] = prop.type[0]
@@ -169,9 +171,9 @@ export function toJSONLD(vocab: Vocab): string {
 
     {
         // Get the individuals
-        const individuals: any[] = [];
+        const individuals: JSON[] = [];
         for (const ind of vocab.individuals) {
-            const ind_object: any = {}
+            const ind_object: JSON = {}
             ind_object["@id"]   = `${global.vocab_prefix}:${ind.id}`;
             if (ind.type.length === 1) {
                 ind_object["@type"] = ind.type[0]

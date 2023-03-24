@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.get_data = void 0;
+exports.getData = void 0;
 /**
  * Convert the raw YAML description of the vocabulary into an internal representation
  * (see the 'Vocab' interface).
@@ -22,7 +22,7 @@ const isURL = (value) => {
         new URL(value);
         return true;
     }
-    catch (e) {
+    catch (_e) {
         return false;
     }
 };
@@ -31,7 +31,7 @@ const isURL = (value) => {
  *
  * @internal
  */
-const default_prefixes = [
+const defaultPrefixes = [
     {
         prefix: "dc",
         url: "http://purl.org/dc/terms/",
@@ -57,7 +57,7 @@ const default_prefixes = [
  * These ontology properties are added no matter what; they are not vocabulary specific
  * @internal
  */
-const default_ontology_properties = [
+const defaultOntologyProperties = [
     {
         property: "dc:date",
         value: (new Date()).toISOString().split('T')[0],
@@ -73,7 +73,7 @@ const default_ontology_properties = [
  * @returns a "real" RawVocabEntry instance
  * @internal
  */
-function finalize_raw_entry(raw) {
+function finalizeRawEntry(raw) {
     // Some entries are to be put into an array, even if there is only one item
     const toArray = (val) => {
         if (val === undefined) {
@@ -141,7 +141,7 @@ function finalize_raw_entry(raw) {
     };
     // In some cases the YAML parser puts an extra `\n` character at the end of the comment line,
     // this is removed
-    const clean_comment = (val) => {
+    const cleanComment = (val) => {
         let final = val.endsWith('\n') ? val.slice(0, -1) : val;
         if (final.endsWith('"') && final.startsWith('"')) {
             final = final.slice(1, -1);
@@ -160,7 +160,7 @@ function finalize_raw_entry(raw) {
         domain: toArray(raw.domain),
         range: toArray(raw.range),
         deprecated: (raw.deprecated === undefined) ? false : raw.deprecated,
-        comment: (raw.comment) ? clean_comment(raw.comment) : "",
+        comment: (raw.comment) ? cleanComment(raw.comment) : "",
         see_also: toSeeAlso(raw.see_also),
         example: toExample(raw.example),
         dataset: (raw.dataset === undefined) ? false : raw.dataset,
@@ -173,7 +173,7 @@ function finalize_raw_entry(raw) {
  * @param raw
  * @returns
  */
-function finalize_raw_vocab(raw) {
+function finalizeRawVocab(raw) {
     // Check whether the required entries (vocab and ontology) are present
     if (raw.vocab === undefined) {
         throw ("No 'vocab' section in the vocabulary specification.");
@@ -185,12 +185,12 @@ function finalize_raw_vocab(raw) {
     if (!Array.isArray(raw.vocab))
         raw.vocab = [raw.vocab];
     return {
-        vocab: raw.vocab.map(finalize_raw_entry),
-        prefix: raw.prefix?.map(finalize_raw_entry),
-        ontology: raw.ontology?.map(finalize_raw_entry),
-        class: raw.class?.map(finalize_raw_entry),
-        property: raw.property?.map(finalize_raw_entry),
-        individual: raw.individual?.map(finalize_raw_entry),
+        vocab: raw.vocab.map(finalizeRawEntry),
+        prefix: raw.prefix?.map(finalizeRawEntry),
+        ontology: raw.ontology?.map(finalizeRawEntry),
+        class: raw.class?.map(finalizeRawEntry),
+        property: raw.property?.map(finalizeRawEntry),
+        individual: raw.individual?.map(finalizeRawEntry),
     };
 }
 /******************************************* External entry point **********************************/
@@ -208,12 +208,12 @@ function finalize_raw_vocab(raw) {
  *
  * @throws {ValidationError} Error in the schema validation or when parsing the YAML content
  */
-function get_data(vocab_source) {
-    const validation_results = (0, schema_1.validate_with_schema)(vocab_source);
+function getData(vocab_source) {
+    const validation_results = (0, schema_1.validateWithSchema)(vocab_source);
     if (validation_results.vocab === null) {
         throw (validation_results.error);
     }
-    const vocab = finalize_raw_vocab(validation_results.vocab);
+    const vocab = finalizeRawVocab(validation_results.vocab);
     // Convert all the raw structures into their respective internal representations for 
     // prefixes, ontology properties, classes, etc.
     // Get the extra prefixes and combine them with the defaults. Note that the 'vocab' category
@@ -242,7 +242,7 @@ function get_data(vocab_source) {
                 };
             })
             : []),
-        ...default_prefixes
+        ...defaultPrefixes
     ];
     // Get the ontology properties. Note that there are also default ontology properties
     // that are added to what the YAML input provides
@@ -254,7 +254,7 @@ function get_data(vocab_source) {
                 url: (raw.value) ? isURL(raw.value) : false,
             };
         }),
-        ...default_ontology_properties,
+        ...defaultOntologyProperties,
     ];
     // Get the classes. Note the special treatment for deprecated classes...
     const classes = (vocab.class !== undefined) ?
@@ -323,4 +323,4 @@ function get_data(vocab_source) {
         }) : [];
     return { prefixes, ontology_properties, classes, properties, individuals };
 }
-exports.get_data = get_data;
+exports.getData = getData;

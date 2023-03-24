@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.to_turtle = void 0;
+exports.toTurtle = void 0;
 /**
  * Convert the internal representation of the vocabulary into turtle
  * (see the 'Vocab' interface).
@@ -16,11 +16,11 @@ const common_1 = require("./common");
  * @returns
  * @async
  */
-function to_turtle(vocab) {
+function toTurtle(vocab) {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct if there are several domains; factored it here to make the 
     // code more readable.
-    const multi_domain = (value) => {
+    const multiDomain = (value) => {
         if (value.length === 1) {
             return value[0];
         }
@@ -29,7 +29,7 @@ function to_turtle(vocab) {
         }
     };
     // This is just for symmetry v.a.v. the domain...
-    const multi_range = (value) => {
+    const multiRange = (value) => {
         if (value.length === 1) {
             return value[0];
         }
@@ -40,9 +40,9 @@ function to_turtle(vocab) {
     // This will be the output...
     let turtle = "";
     // Factoring out the common fields
-    const common_fields = (entry) => {
+    const commonFields = (entry) => {
         turtle += `    rdfs:label "${entry.label}" ;\n`;
-        turtle += `    rdfs:comment """${(0, common_1.text_comment)(entry.comment)}"""@en ;\n`;
+        turtle += `    rdfs:comment """<div>${entry.comment}</div>"""^^rdf:HTML ;\n`;
         turtle += `    rdfs:isDefinedBy cred: ;\n`;
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map((link) => `<${link.url}>`).join(", ");
@@ -71,7 +71,7 @@ function to_turtle(vocab) {
                     turtle += `    ${ont.property} <${ont.value}> ;\n`;
                 }
                 else {
-                    turtle += `    ${ont.property} """${ont.value}"""@en ;\n`;
+                    turtle += `    ${ont.property} """${ont.value}""" ;\n`;
                 }
             }
         }
@@ -87,7 +87,7 @@ function to_turtle(vocab) {
             if (cl.subClassOf && cl.subClassOf.length > 0) {
                 turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
             }
-            common_fields(cl);
+            commonFields(cl);
         }
         turtle += "\n\n";
     }
@@ -102,12 +102,12 @@ function to_turtle(vocab) {
                 turtle += `    rdfs:subPropertyOf ${prop.subPropertyOf.join(", ")} ;\n`;
             }
             if (prop.domain) {
-                turtle += `    rdfs:domain ${multi_domain(prop.domain)} ;\n`;
+                turtle += `    rdfs:domain ${multiDomain(prop.domain)} ;\n`;
             }
             if (prop.range) {
-                turtle += `    rdfs:range ${multi_range(prop.range)} ;\n`;
+                turtle += `    rdfs:range ${multiRange(prop.range)} ;\n`;
             }
-            common_fields(prop);
+            commonFields(prop);
         }
     }
     if (vocab.individuals.length > 0) {
@@ -117,9 +117,9 @@ function to_turtle(vocab) {
             if (ind.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
             }
-            common_fields(ind);
+            commonFields(ind);
         }
     }
     return turtle;
 }
-exports.to_turtle = to_turtle;
+exports.toTurtle = toTurtle;

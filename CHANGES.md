@@ -1,4 +1,4 @@
-## Version 1.3
+## Version 1.3.0
 
 ### Major changes
 
@@ -6,7 +6,7 @@
     The RDF version of the ontologies use the `rdf:HTML` data type and therefore keep those structures in the official RDF definition, too.
 
 
-## Version 1.2
+## Version 1.2.0
 
 ### Major changes
 

@@ -1,6 +1,6 @@
 {
   "name": "yml2vocab",
-  "version": "1.3",
+  "version": "1.3.0",
   "description": "Generation of vocabulary files starting by YAML",
   "homepage": "https://github.com/w3c/yml2vocab",
   "repository": {
@@ -28,8 +28,8 @@
     "test_vcdm": "node_modules/.bin/ts-node main.ts -v example/credentials.yml -t example/template.html -c",
     "docs": "./node_modules/.bin/typedoc main.js index.ts lib/*",
     "distribute": "tsc; git commit -a -m \"New distribution\" ; git push",
-    "preview_vcdm": "node_modules/.bin/ts-node main.ts -v previews/vcdm/vocabulary.yml -t previews/vcdm/template.html", 
-    "preview_di": "node_modules/.bin/ts-node main.ts -v previews/di/vocabulary.yml -t previews/di/template.html" 
+    "preview_vcdm": "node_modules/.bin/ts-node main.ts -v previews/vcdm/vocabulary.yml -t previews/vcdm/template.html",
+    "preview_di": "node_modules/.bin/ts-node main.ts -v previews/di/vocabulary.yml -t previews/di/template.html"
   },
   "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
   "license": "W3C-20150513",
@@ -41,14 +41,14 @@
     "yaml": "^2.1.3"
   },
   "devDependencies": {
-    "@types/jsdom": "^20.0.0",
     "@types/commander": "^2.12.2",
-    "@types/node": "^18.7.17",
+    "@types/jsdom": "^20.0.0",
+    "@types/node": "^18.15.7",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
+    "typescript": "^5.0.2",
     "eslint": "^8.23.1",
     "ts-node": "^10.9.1",
-    "typescript": "^4.6.3",
     "typedoc": "^0.23.22"
   }
 }
