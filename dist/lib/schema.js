@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validate_with_schema = void 0;
+exports.validateWithSchema = void 0;
 // import Ajv from 'ajv';
 const _2019_1 = require("ajv/dist/2019");
 const ajv_formats_1 = require("ajv-formats");
@@ -261,7 +261,7 @@ const schema = {
  * @param yaml_raw_content The raw textual content of the YAML file (i.e, presumably after reading the file itself)
  * @returns
  */
-function validate_with_schema(yaml_raw_content) {
+function validateWithSchema(yaml_raw_content) {
     try {
         const yaml_content = yaml.parse(yaml_raw_content);
         const ajv = new _2019_1.default({ allErrors: true, verbose: true });
@@ -296,4 +296,4 @@ function validate_with_schema(yaml_raw_content) {
         };
     }
 }
-exports.validate_with_schema = validate_with_schema;
+exports.validateWithSchema = validateWithSchema;

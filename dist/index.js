@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generate_vocabulary_files = exports.VocabGeneration = void 0;
+exports.generate_vocabulary_files = exports.generateVocabularyFiles = exports.VocabGeneration = void 0;
 const convert_1 = require("./lib/convert");
 const turtle_1 = require("./lib/turtle");
 const jsonld_1 = require("./lib/jsonld");
@@ -18,40 +18,45 @@ class VocabGeneration {
      * @throws {ValidationError} Error raised by either the YAML parser or the Schema Validator
      */
     constructor(yml_content) {
-        this.vocab = (0, convert_1.get_data)(yml_content);
+        this.vocab = (0, convert_1.getData)(yml_content);
     }
     /**
      * Get the Turtle representation of the vocabulary
      *
      * @returns The Turtle content
      */
-    get_turtle() {
-        return (0, turtle_1.to_turtle)(this.vocab);
+    getTurtle() {
+        return (0, turtle_1.toTurtle)(this.vocab);
     }
     /**
      * Get the JSON-LD representation of the vocabulary
      *
      * @returns The JSON-LD content
      */
-    get_jsonld() {
-        return (0, jsonld_1.to_jsonld)(this.vocab);
+    getJSONLD() {
+        return (0, jsonld_1.toJSONLD)(this.vocab);
     }
     /**
      * Get the minimal JSON-LD Context file for the vocabulary
      *
      * @returns The JSON-LD content
      */
-    get_context() {
-        return (0, context_1.to_context)(this.vocab);
+    getContext() {
+        return (0, context_1.toContext)(this.vocab);
     }
     /**
      * Get the HTML/RDFa representation of the vocabulary based on an HTML template
      * @param template - Textual version of the vocabulary template
      * @returns
      */
-    get_html(template) {
-        return (0, html_1.to_html)(this.vocab, template);
+    getHTML(template) {
+        return (0, html_1.toHTML)(this.vocab, template);
     }
+    /* Deprecated; these are just to avoid problems for users of earlier versions */
+    get_turtle() { return this.getTurtle(); }
+    get_jsonld() { return this.getJSONLD(); }
+    get_html(template) { return this.getHTML(template); }
+    get_context() { return this.getContext(); }
 }
 exports.VocabGeneration = VocabGeneration;
 /**
@@ -66,7 +71,7 @@ exports.VocabGeneration = VocabGeneration;
  * @param template_file_name - the HTML template file
  * @param context - whether the JSON-LD context file should also be generated
  */
-async function generate_vocabulary_files(yaml_file_name, template_file_name, context) {
+async function generateVocabularyFiles(yaml_file_name, template_file_name, context) {
     // This trick allows the user to give the full yaml file name, or only the common base
     const basename = yaml_file_name.endsWith('.yml') ? yaml_file_name.slice(0, -4) : yaml_file_name;
     // Get the two files from the file system (at some point, this can be extended
@@ -78,17 +83,21 @@ async function generate_vocabulary_files(yaml_file_name, template_file_name, con
     try {
         const conversion = new VocabGeneration(yaml);
         const fs_writes = [
-            fs_1.promises.writeFile(`${basename}.ttl`, conversion.get_turtle()),
-            fs_1.promises.writeFile(`${basename}.jsonld`, conversion.get_jsonld()),
-            fs_1.promises.writeFile(`${basename}.html`, conversion.get_html(template)),
+            fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
+            fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
+            fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template)),
         ];
         if (context) {
-            fs_writes.push(fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.get_context()));
+            fs_writes.push(fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.getContext()));
         }
         await Promise.all(fs_writes);
     }
     catch (e) {
         console.error(`Validation error in the YAML file:\n${JSON.stringify(e, null, 4)}`);
     }
+}
+exports.generateVocabularyFiles = generateVocabularyFiles;
+async function generate_vocabulary_files(yaml_file_name, template_file_name, context) {
+    return generateVocabularyFiles(yaml_file_name, template_file_name, context);
 }
 exports.generate_vocabulary_files = generate_vocabulary_files;

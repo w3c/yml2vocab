@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.to_context = void 0;
+exports.toContext = void 0;
 const common_1 = require("./common");
 // These are the context statements appearing in all 
 // embedded contexts, as well as the top level one.
@@ -21,9 +21,9 @@ const preamble = {
  * @param vocab - The internal representation of the vocabulary
  * @returns
  */
-function to_context(vocab) {
+function toContext(vocab) {
     // Generation of a unit for properties
-    const pr_context = (property, for_class = true) => {
+    const propertyContext = (property, for_class = true) => {
         // the real id of the property...
         const url = `${common_1.global.vocab_url}${property.id}`;
         const retval = {
@@ -79,7 +79,7 @@ function to_context(vocab) {
         for (const prop of vocab.properties) {
             if (prop.domain && prop.domain.includes(prefixed_id)) {
                 // bingo, this property can be added here
-                embedded[prop.id] = pr_context(prop);
+                embedded[prop.id] = propertyContext(prop);
                 class_properties.add(prop.id);
                 embedded_properties = true;
             }
@@ -92,7 +92,7 @@ function to_context(vocab) {
     // previous step
     for (const prop of vocab.properties) {
         if (!class_properties.has(prop.id)) {
-            top_level[prop.id] = pr_context(prop, false);
+            top_level[prop.id] = propertyContext(prop, false);
         }
     }
     // Finally, add the individuals
@@ -102,4 +102,4 @@ function to_context(vocab) {
     // That is it... return the nicely formatted JSON text 
     return JSON.stringify({ "@context": top_level }, null, 4);
 }
-exports.to_context = to_context;
+exports.toContext = toContext;

@@ -6,17 +6,13 @@
  * @packageDocumentation
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.to_jsonld = void 0;
+exports.toJSONLD = void 0;
 const common_1 = require("./common");
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
 const generic_context = {
-    "dc:title": { "@container": "@language" },
-    "dc:description": { "@container": "@language" },
     "dc:date": { "@type": "xsd:date" },
-    "rdfs:comment": { "@container": "@language" },
     "rdfs:domain": { "@type": "@id" },
-    "rdfs:label": { "@container": "@language" },
     "rdfs:range": { "@type": "@id" },
     "rdfs:seeAlso": { "@type": "@id" },
     "rdfs:subClassOf": { "@type": "@id" },
@@ -28,7 +24,7 @@ const generic_context = {
     "owl:imports": { "@type": "@id" },
     "owl:versionInfo": { "@type": "@id" },
     "owl:inverseOf": { "@type": "@vocab" },
-    "owl:unionOf": { "@type": "@vocab", "@container": "@list" },
+    "owl:unionOf": { "@container": "@list", "@type": "@vocab" },
     "rdfs_classes": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_properties": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_instances": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
@@ -51,11 +47,11 @@ const generic_context = {
  * @param vocab - The internal representation of the vocabulary
  * @returns
  */
-function to_jsonld(vocab) {
+function toJSONLD(vocab) {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct; factored it here to make the 
     // code more readable.
-    const multi_domain = (value) => {
+    const multiDomain = (value) => {
         if (value.length === 1) {
             return value[0];
         }
@@ -66,7 +62,7 @@ function to_jsonld(vocab) {
         }
     };
     // This is just for symmetry v.a.v. the domain...
-    const multi_range = (value) => {
+    const multiRange = (value) => {
         if (value.length === 1) {
             return value[0];
         }
@@ -77,12 +73,11 @@ function to_jsonld(vocab) {
     // This is the target object
     const jsonld = {};
     // Factoring out the common fields
-    const common_fields = (target, entry) => {
-        target["rdfs:label"] = {
-            "en": entry.label
-        };
+    const commonFields = (target, entry) => {
+        target["rdfs:label"] = entry.label;
         target["rdfs:comment"] = {
-            "en": (0, common_1.text_comment)(entry.comment),
+            "@value": `<div>${entry.comment}</div>`,
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
         };
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map((link) => link.url);
@@ -134,7 +129,7 @@ function to_jsonld(vocab) {
             if (cl.subClassOf && cl.subClassOf.length > 0) {
                 cl_object["rdfs:subClassOf"] = cl.subClassOf;
             }
-            common_fields(cl_object, cl);
+            commonFields(cl_object, cl);
             classes.push(cl_object);
         }
         if (classes.length > 0)
@@ -159,12 +154,12 @@ function to_jsonld(vocab) {
                 pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf;
             }
             if (prop.domain) {
-                pr_object["rdfs:domain"] = multi_domain(prop.domain);
+                pr_object["rdfs:domain"] = multiDomain(prop.domain);
             }
             if (prop.range) {
-                pr_object["rdfs:range"] = multi_range(prop.range);
+                pr_object["rdfs:range"] = multiRange(prop.range);
             }
-            common_fields(pr_object, prop);
+            commonFields(pr_object, prop);
             properties.push(pr_object);
         }
         if (properties.length > 0)
@@ -185,7 +180,7 @@ function to_jsonld(vocab) {
             if (ind.deprecated) {
                 ind_object["owl:deprecated"] = true;
             }
-            common_fields(ind_object, ind);
+            commonFields(ind_object, ind);
             individuals.push(ind_object);
         }
         if (individuals.length > 0)
@@ -193,4 +188,4 @@ function to_jsonld(vocab) {
     }
     return JSON.stringify(jsonld, null, 4);
 }
-exports.to_jsonld = to_jsonld;
+exports.toJSONLD = toJSONLD;
