@@ -1,3 +1,7 @@
+## Version 1.3.1
+
+- Minor code improvements: separating the schema into its own files, better error handling through `Promise.allSettled`, and also retrofitting some changes required by the `deno` version (which is more strict than the standard `tsc`)
+
 ## Version 1.3.0
 
 ### Major changes
