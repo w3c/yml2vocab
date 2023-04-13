@@ -30,6 +30,12 @@ export interface Example {
     json   : string;
 }
 
+export enum Status {
+    stable     = "stable", 
+    unstable   = "unstable", 
+    deprecated = "deprecated"
+}
+
 /** 
 * Superset of all YAML entries expressed in TS. Look at the Readme.md file for what they are meant for.
 *
@@ -45,6 +51,7 @@ export interface RawVocabEntry {
     domain      ?: string[];
     range       ?: string[];
     deprecated  ?: boolean;
+    status      ?: Status;
     comment      : string;
     see_also    ?: Link[];
     example     ?: Example[];
@@ -88,6 +95,7 @@ export interface ValidationError {
     data    ?: any,
 }
 
+
 /**
  * Top level class for a term in general. Pretty much self-explanatory...
  */
@@ -98,6 +106,7 @@ export interface RDFTerm {
     comment     : string;
     see_also   ?: Link[];
     deprecated ?: boolean;
+    status     ?: Status;
     example    ?: Example[];
 }
 

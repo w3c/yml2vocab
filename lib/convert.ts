@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
- import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Example, global} from './common';
+ import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, global} from './common';
  import { RawVocabEntry, RawVocab, ValidationResults } from './common';
  import { validateWithSchema } from './schema';
 
@@ -150,6 +150,21 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         return final;
     }
 
+    // The deprecation flag, as a separate value, is kept also for reasons of backward compatibility,
+    // but this makes the interpretation of the value(s) in the vocabulary a bit awkward. Later version
+    // (maybe even next version) would remove the deprecated flag from existing vocabularies, ie,
+    // switch to status, and all this will go away.
+
+    const {status, deprecated} = ((): {status: Status, deprecated: boolean} => {
+        if (raw.status !== undefined) {
+            return { status : raw.status, deprecated : raw.status === Status.deprecated }
+        } else if (raw.deprecated != undefined) {
+            return { status : raw.deprecated ? Status.deprecated: Status.stable, deprecated : raw.deprecated }
+        } else {
+            return { status: Status.stable, deprecated : false }
+        }
+    })();
+
     return {
         id          : (raw.id) ? raw.id : "Vocabulary definition error: no ID provided.",
         property    : raw.property,
@@ -158,7 +173,8 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         upper_value : toArray(raw.upper_value),
         domain      : toArray(raw.domain),
         range       : toArray(raw.range),
-        deprecated  : (raw.deprecated === undefined) ? false : raw.deprecated,
+        deprecated  : deprecated,
+        status      : status,
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
@@ -274,6 +290,7 @@ export function getData(vocab_source: string): Vocab {
                 label      : raw.label,
                 comment    : raw.comment,
                 deprecated : raw.deprecated,
+                status     : raw.status,
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
                 example    : raw.example,
@@ -307,6 +324,7 @@ export function getData(vocab_source: string): Vocab {
                 label         : raw.label,
                 comment       : raw.comment,
                 deprecated    : raw.deprecated,
+                status        : raw.status,
                 subPropertyOf : raw.upper_value,
                 see_also      : raw.see_also,
                 range         : range,
@@ -324,6 +342,7 @@ export function getData(vocab_source: string): Vocab {
                 label         : raw.label,
                 comment       : raw.comment,
                 deprecated    : raw.deprecated,
+                status        : raw.status,
                 type          : (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also      : raw.see_also,
                 example       : raw.example,
