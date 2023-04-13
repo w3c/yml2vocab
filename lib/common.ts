@@ -106,7 +106,11 @@ export interface RDFTerm {
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
-    subClassOf ?: string[];
+    subClassOf            ?: string[];
+    range_of              : string[];
+    domain_of             : string[];
+    included_in_domain_of : string[];
+    includes_range_of     : string[];
 }
 
 /**

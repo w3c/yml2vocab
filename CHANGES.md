@@ -1,3 +1,10 @@
+## Version 1.3.2
+
+- Added more cross-references to the HTML output, to make the end result more useful:
+  - the class definitions include a further set of information about the properties (in the same vocabulary) that refer to that class either through the range or the domain statements
+  - the references to classes and properties (e.g., in range or subproperty statements) are now hyperlinks. That is also true if external vocabularies are used with a prefix
+
+
 ## Version 1.3.1
 
 - Minor code improvements: separating the schema into its own files, better error handling through `Promise.allSettled`, and also retrofitting some changes required by the `deno` version (which is more strict than the standard `tsc`)

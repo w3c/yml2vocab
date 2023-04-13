@@ -1,0 +1,244 @@
+{
+    "@context": {
+        "@protected": true,
+        "id": "@id",
+        "type": "@type",
+        "Proof": {
+            "@id": "https://w3id.org/security/v1Proof",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "domain": {
+                    "@id": "https://w3id.org/security/v1domain",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "challenge": {
+                    "@id": "https://w3id.org/security/v1challenge",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "proofPurpose": {
+                    "@id": "https://w3id.org/security/v1proofPurpose",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "proofValue": {
+                    "@id": "https://w3id.org/security/v1proofValue",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "expirationDate": {
+                    "@id": "https://w3id.org/security/v1expirationDate",
+                    "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+                }
+            }
+        },
+        "ProofGraph": "https://w3id.org/security/v1ProofGraph",
+        "VerificationMethod": {
+            "@id": "https://w3id.org/security/v1VerificationMethod",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "controller": {
+                    "@id": "https://w3id.org/security/v1controller",
+                    "@type": "@id"
+                },
+                "publicKeyMultibase": {
+                    "@id": "https://w3id.org/security/v1publicKeyMultibase",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "publicKeyJwk": {
+                    "@id": "https://w3id.org/security/v1publicKeyJwk",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                }
+            }
+        },
+        "DataIntegrityProof": {
+            "@id": "https://w3id.org/security/v1DataIntegrityProof",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "cryptosuite": {
+                    "@id": "https://w3id.org/security/v1cryptosuite",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                }
+            }
+        },
+        "Ed25519Signature2020": "https://w3id.org/security/v1Ed25519Signature2020",
+        "Key": {
+            "@id": "https://w3id.org/security/v1Key",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "privateKeyPem": {
+                    "@id": "https://w3id.org/security/v1privateKeyPem",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "publicKey": {
+                    "@id": "https://w3id.org/security/v1publicKey",
+                    "@type": "@id"
+                },
+                "publicKeyBase58": {
+                    "@id": "https://w3id.org/security/v1publicKeyBase58",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "publicKeyPem": {
+                    "@id": "https://w3id.org/security/v1publicKeyPem",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "publicKeyHex": {
+                    "@id": "https://w3id.org/security/v1publicKeyHex",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                }
+            }
+        },
+        "Signature": {
+            "@id": "https://w3id.org/security/v1Signature",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "nonce": {
+                    "@id": "https://w3id.org/security/v1nonce",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "canonicalizationAlgorithm": {
+                    "@id": "https://w3id.org/security/v1canonicalizationAlgorithm",
+                    "@type": "@id"
+                },
+                "signatureValue": {
+                    "@id": "https://w3id.org/security/v1signatureValue",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "signatureAlgorithm": {
+                    "@id": "https://w3id.org/security/v1signatureAlgorithm",
+                    "@type": "@id"
+                },
+                "service": {
+                    "@id": "https://w3id.org/security/v1service",
+                    "@type": "@id"
+                },
+                "serviceEndpoint": {
+                    "@id": "https://w3id.org/security/v1serviceEndpoint",
+                    "@type": "@id"
+                },
+                "x509CertificateChain": {
+                    "@id": "https://w3id.org/security/v1x509CertificateChain",
+                    "@type": "@id"
+                },
+                "x509CertificateFingerprint": {
+                    "@id": "https://w3id.org/security/v1x509CertificateFingerprint",
+                    "@type": "@id"
+                }
+            }
+        },
+        "SignatureGraph": "https://w3id.org/security/v1SignatureGraph",
+        "EcdsaSecp256k1Signature2019": "https://w3id.org/security/v1EcdsaSecp256k1Signature2019",
+        "EcdsaSecp256k1Signature2020": "https://w3id.org/security/v1EcdsaSecp256k1Signature2020",
+        "EcdsaSecp256k1RecoverySignature2020": "https://w3id.org/security/v1EcdsaSecp256k1RecoverySignature2020",
+        "EcdsaSecp256k1VerificationKey2019": "https://w3id.org/security/v1EcdsaSecp256k1VerificationKey2019",
+        "EcdsaSecp256k1RecoveryMethod2020": "https://w3id.org/security/v1EcdsaSecp256k1RecoveryMethod2020",
+        "RsaSignature2018": "https://w3id.org/security/v1RsaSignature2018",
+        "RsaVerificationKey2018": "https://w3id.org/security/v1RsaVerificationKey2018",
+        "SchnorrSecp256k1Signature2019": "https://w3id.org/security/v1SchnorrSecp256k1Signature2019",
+        "SchnorrSecp256k1VerificationKey2019": "https://w3id.org/security/v1SchnorrSecp256k1VerificationKey2019",
+        "ServiceEndpointProxyService": "https://w3id.org/security/v1ServiceEndpointProxyService",
+        "Digest": "https://w3id.org/security/v1Digest",
+        "EncryptedMessage": {
+            "@id": "https://w3id.org/security/v1EncryptedMessage",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "cipherAlgorithm": {
+                    "@id": "https://w3id.org/security/v1cipherAlgorithm",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "cipherData": {
+                    "@id": "https://w3id.org/security/v1cipherData",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "cipherKey": {
+                    "@id": "https://w3id.org/security/v1cipherKey",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                },
+                "initializationVector": {
+                    "@id": "https://w3id.org/security/v1initializationVector",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
+                }
+            }
+        },
+        "GraphSignature2012": "https://w3id.org/security/v1GraphSignature2012",
+        "LinkedDataSignature2015": "https://w3id.org/security/v1LinkedDataSignature2015",
+        "LinkedDataSignature2016": "https://w3id.org/security/v1LinkedDataSignature2016",
+        "MerkleProof2019": "https://w3id.org/security/v1MerkleProof2019",
+        "X25519KeyAgreementKey2019": "https://w3id.org/security/v1X25519KeyAgreementKey2019",
+        "Ed25519VerificationKey2018": "https://w3id.org/security/v1Ed25519VerificationKey2018",
+        "Ed25519VerificationKey2020": "https://w3id.org/security/v1Ed25519VerificationKey2020",
+        "JsonWebKey2020": "https://w3id.org/security/v1JsonWebKey2020",
+        "JsonWebSignature2020": "https://w3id.org/security/v1JsonWebSignature2020",
+        "BbsBlsSignature2020": "https://w3id.org/security/v1BbsBlsSignature2020",
+        "BbsBlsSignatureProof2020": "https://w3id.org/security/v1BbsBlsSignatureProof2020",
+        "Bls12381G1Key2020": "https://w3id.org/security/v1Bls12381G1Key2020",
+        "Bls12381G2Key2020": "https://w3id.org/security/v1Bls12381G2Key2020",
+        "verificationMethod": "https://w3id.org/security/v1verificationMethod",
+        "proof": "https://w3id.org/security/v1proof",
+        "proofChain": {
+            "@id": "https://w3id.org/security/v1proofChain",
+            "@container": "@list"
+        },
+        "authentication": "https://w3id.org/security/v1authentication",
+        "assertionMethod": "https://w3id.org/security/v1assertionMethod",
+        "capabilityDelegation": "https://w3id.org/security/v1capabilityDelegation",
+        "capabilityInvocation": "https://w3id.org/security/v1capabilityInvocation",
+        "keyAgreement": "https://w3id.org/security/v1keyAgreement",
+        "digestAlgorithm": {
+            "@id": "https://w3id.org/security/v1digestAlgorithm",
+            "@type": "http://www.w3.org/2001/XMLSchema#string"
+        },
+        "digestValue": {
+            "@id": "https://w3id.org/security/v1digestValue",
+            "@type": "http://www.w3.org/2001/XMLSchema#string"
+        },
+        "blockchainAccountId": {
+            "@id": "https://w3id.org/security/v1blockchainAccountId",
+            "@type": "http://www.w3.org/2001/XMLSchema#string"
+        },
+        "ethereumAddress": {
+            "@id": "https://w3id.org/security/v1ethereumAddress",
+            "@type": "http://www.w3.org/2001/XMLSchema#string"
+        },
+        "expires": {
+            "@id": "https://w3id.org/security/v1expires",
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+        },
+        "owner": {
+            "@id": "https://w3id.org/security/v1owner",
+            "@type": "@id"
+        },
+        "password": {
+            "@id": "https://w3id.org/security/v1password",
+            "@type": "http://www.w3.org/2001/XMLSchema#string"
+        },
+        "publicKeyService": {
+            "@id": "https://w3id.org/security/v1publicKeyService",
+            "@type": "@id"
+        },
+        "revoked": {
+            "@id": "https://w3id.org/security/v1revoked",
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+        },
+        "jws": "https://w3id.org/security/v1jws",
+        "signature": "https://w3id.org/security/v1signature",
+        "allowedAction": "https://w3id.org/security/v1allowedAction",
+        "capabilityChain": "https://w3id.org/security/v1capabilityChain",
+        "capabilityAction": "https://w3id.org/security/v1capabilityAction",
+        "caveat": "https://w3id.org/security/v1caveat",
+        "delegator": "https://w3id.org/security/v1delegator",
+        "invocationTarget": "https://w3id.org/security/v1invocationTarget",
+        "invoker": "https://w3id.org/security/v1invoker",
+        "SomeIndividual": "https://w3id.org/security/v1SomeIndividual",
+        "DeprecatedIndividual": "https://w3id.org/security/v1DeprecatedIndividual"
+    }
+}
