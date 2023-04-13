@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
-import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual } from './common';
+import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status } from './common';
 import { JSDOM }  from 'jsdom';
 
 /* ---------------- Utility functions ------------------------- */
@@ -50,9 +50,6 @@ const bnode = (): string => {
     idnum++;
     return retval
 }
-
-
-
 
 /**
  * Generate the HTML representation of the vocabulary, based on an HTML template file. The
@@ -112,10 +109,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const h = addChild(section,'h4', `<code>${item.id}</code>`);
         const term = addChild(section, 'p', `<em>${item.label}</code>`);
         term.setAttribute('property', 'rdfs:label');
-        if (item.deprecated) {
+        if (item.status !== Status.stable) {
             const span = addChild(term, 'span');
             span.className = 'bold';
-            addChild(span, 'em', ' (deprecated)');
+            addChild(span, 'em', ` (${item.status})`);
         }
 
         // let explanation = addBreak(item.comment);
@@ -143,6 +140,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const span = addChild(section, 'span');
         span.setAttribute('property', 'rdfs:isDefinedBy');
         span.setAttribute('resource', `${vocab_prefix}:`);
+
+        const status_span = addChild(section, 'span');
+        status_span.setAttribute('style', 'display: none');
+        status_span.setAttribute('property', 'vs:term_status');
+        addText(`${item.status}`, status_span);
 
         if (item.deprecated) {
             const span = addChild(section, 'span');
@@ -222,17 +224,33 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
+
+    // Prefixes that are used to differentiate among stable, unstable, and deprecated values
+    const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
+        switch (status) {
+            case Status.deprecated : 
+                return { id_prefix : 'deprecated_', intro_prefix: '<em><strong>deprecated</strong></em>' };
+            case Status.unstable :
+                return { id_prefix : 'unstable_', intro_prefix: '<em><strong>unstable</strong></em>' };
+            case Status.stable :
+                return { id_prefix : '', intro_prefix : '' };
+                
+        }
+    }
+
     // Generation of the section content for classes: a big table, with a row per class
     // There is a check for a possible template error and also whether there are class
     // definitions in the first place.
     //
     // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
     // that makes things fairly confusing :-(
-    const classes = (cl_list: RDFClass[], deprecated: boolean) => {
-        const section = document.getElementById(`${deprecated ? 'deprecated_' : ''}class_definitions`);
+    const classes = (cl_list: RDFClass[], statusFilter: Status) => {
+        const { id_prefix, intro_prefix } = statusSignals(statusFilter);
+
+        const section = document.getElementById(`${id_prefix}class_definitions`);
         if (section) {
             if (cl_list.length > 0) {
-                addChild(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} class definitions in the <code>${vocab_prefix}</code> namespace:`)
+                addChild(section, 'p', `The following are ${intro_prefix} class definitions in the <code>${vocab_prefix}</code> namespace:`)
 
                 for (const item of cl_list) {
                     const cl_section = addChild(section, 'section');
@@ -295,7 +313,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 if (section.parentElement) section.parentElement.removeChild(section);
             }
         }  else {
-            console.log(`Template error: no section prepared for ${deprecated ? 'deprecated' : ''} classes!`)
+            console.log(`Template error: no section prepared for ${id_prefix} classes!`)
         }
     }
 
@@ -305,11 +323,12 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     //
     // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
     // that makes things fairly confusing :-(
-    const properties = (pr_list: RDFProperty[], deprecated: boolean) => {
-        const section = document.getElementById(`${deprecated ? 'deprecated_' : ''}property_definitions`);
+    const properties = (pr_list: RDFProperty[], statusFilter: Status) => {
+        const { id_prefix, intro_prefix } = statusSignals(statusFilter);
+        const section = document.getElementById(`${id_prefix}property_definitions`);
         if (section) {
             if (pr_list.length > 0) {
-                addChild(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} property definitions in the <code>${vocab_prefix}</code> namespace:`)
+                addChild(section, 'p', `The following are ${intro_prefix} property definitions in the <code>${vocab_prefix}</code> namespace:`)
 
                 for (const item of pr_list) {
                     const pr_section = addChild(section, 'section');
@@ -386,7 +405,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 if (section.parentElement) section.parentElement.removeChild(section);
             }
         } else {
-            console.log(`Template error: no section prepared for ${deprecated ? 'deprecated' : ''} properties!`)
+            console.log(`Template error: no section prepared for ${id_prefix} properties!`)
         }
     }
 
@@ -396,11 +415,12 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     //
     // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
     // that makes things fairly confusing :-(
-    const individuals = (ind_list: RDFIndividual[], deprecated: boolean) => {
-        const section = document.getElementById(`${deprecated ? 'deprecated_' : ''}individual_definitions`);
+    const individuals = (ind_list: RDFIndividual[], statusFilter: Status) => {
+        const { id_prefix, intro_prefix } = statusSignals(statusFilter);
+        const section = document.getElementById(`${id_prefix}individual_definitions`);
         if (section) {
             if (ind_list.length > 0) {
-                addChild(section, 'p', `The following are definitions for ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} individuals in the <code>${vocab_prefix}</code> namespace:`)
+                addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace:`)
 
                 for (const item of ind_list) {
                     const ind_section = addChild(section, 'section');
@@ -423,7 +443,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 if (section.parentElement) section.parentElement.removeChild(section);
             }
         } else {
-            console.log(`Template error: no section prepared for ${deprecated ? 'deprecated' : ''} individuals!`)
+            console.log(`Template error: no section prepared for ${id_prefix} individuals!`)
         }
     }
 
@@ -446,24 +466,34 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     prefixes();
 
     // 4. Sections on classes
-    const actual_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.deprecated === false)
-    const deprecated_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.deprecated === true)
-    classes(actual_classes, false)
-    classes(deprecated_classes, true)
+    const actual_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === Status.stable);
+    const unstable_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === Status.unstable);
+    const deprecated_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === Status.deprecated);
+    classes(actual_classes, Status.stable)
+    classes(unstable_classes, Status.unstable)
+    classes(deprecated_classes, Status.deprecated)
 
     // 5. Sections on properties
-    const actual_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.deprecated === false)
-    const deprecated_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.deprecated === true)
-    properties(actual_properties, false);
-    properties(deprecated_properties, true);
+    const actual_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === Status.stable);
+    const unstable_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === Status.unstable);
+    const deprecated_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === Status.deprecated);
+    properties(actual_properties, Status.stable);
+    properties(unstable_properties, Status.unstable);
+    properties(deprecated_properties, Status.deprecated);
 
     // 6. Sections on individuals
-    const actual_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.deprecated === false)
-    const deprecated_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.deprecated === true)
-    individuals(actual_individuals, false);
-    individuals(deprecated_individuals, true);
+    const actual_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === Status.stable)
+    const unstable_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === Status.unstable)
+    const deprecated_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === Status.deprecated)
+    individuals(actual_individuals, Status.stable);
+    individuals(unstable_individuals, Status.unstable);
+    individuals(deprecated_individuals, Status.deprecated);
 
-    // 7. Remove the section on deprecation in case there aren't any...
+    // 7. Remove the sections on unstable/deprecation in case there aren't any...
+    if ((unstable_classes.length + unstable_properties.length + unstable_individuals.length) === 0) {
+        const section = document.getElementById('unstable_term_definitions');
+        if (section !== null && section.parentElement) section.parentElement.removeChild(section);
+    }
     if ((deprecated_classes.length + deprecated_properties.length + deprecated_individuals.length) === 0) {
         const section = document.getElementById('deprecated_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
