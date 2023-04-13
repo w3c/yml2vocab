@@ -246,7 +246,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     // that makes things fairly confusing :-(
     const classes = (cl_list: RDFClass[], statusFilter: Status) => {
         const { id_prefix, intro_prefix } = statusSignals(statusFilter);
-
         const section = document.getElementById(`${id_prefix}class_definitions`);
         if (section) {
             if (cl_list.length > 0) {
@@ -312,8 +311,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 // Remove section from the DOM
                 if (section.parentElement) section.parentElement.removeChild(section);
             }
-        }  else {
-            console.log(`Template error: no section prepared for ${id_prefix} classes!`)
         }
     }
 
@@ -404,8 +401,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             } else {
                 if (section.parentElement) section.parentElement.removeChild(section);
             }
-        } else {
-            console.log(`Template error: no section prepared for ${id_prefix} properties!`)
         }
     }
 
@@ -442,8 +437,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 // removing the section from the DOM
                 if (section.parentElement) section.parentElement.removeChild(section);
             }
-        } else {
-            console.log(`Template error: no section prepared for ${id_prefix} individuals!`)
         }
     }
 
@@ -495,6 +488,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const section = document.getElementById('unstable_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }
+    
     if ((number_of_classes[2] + number_of_properties[2] + number_of_individuals[2]) === 0) {
         const section = document.getElementById('deprecated_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
