@@ -176,10 +176,10 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
 function finalizeRawVocab(raw: RawVocab) : RawVocab {
     // Check whether the required entries (vocab and ontology) are present
     if (raw.vocab === undefined) {
-        throw("No 'vocab' section in the vocabulary specification.")
+        throw(new Error("No 'vocab' section in the vocabulary specification."));
     }
     if (raw.ontology === undefined) {
-        throw("No 'ontology' section in the vocabulary specification.")
+        throw(new Error("No 'ontology' section in the vocabulary specification."));
     }
 
     // It is perfectly fine if the vocab is not encoded as an array in YAML
@@ -213,7 +213,8 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
 export function getData(vocab_source: string): Vocab {
     const validation_results: ValidationResults = validateWithSchema(vocab_source);
     if (validation_results.vocab === null) {
-        throw(validation_results.error);
+        const error = JSON.stringify(validation_results,null,4);
+        throw(new TypeError(`JSON Schema validation error`, {cause: error}));
     }
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
 
@@ -226,10 +227,10 @@ export function getData(vocab_source: string): Vocab {
     const prefixes: RDFPrefix[] = [
         ...vocab.vocab.map((raw: RawVocabEntry): RDFPrefix => {
             if (raw.id === undefined) {
-                throw "The vocabulary has no prefix"
+                throw(new Error("The vocabulary has no prefix"));
             }
             if (raw.value === undefined) {
-                throw "The vocabulary has no identifier"
+                throw(new Error("The vocabulary has no identifier"));
             }
             global.vocab_prefix = raw.id;
             global.vocab_url = raw.value;
