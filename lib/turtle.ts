@@ -43,7 +43,7 @@ export function toTurtle(vocab: Vocab): string {
     const commonFields = (entry: RDFTerm): void => {
         turtle += `    rdfs:label "${entry.label}" ;\n`;
         turtle += `    rdfs:comment """<div>${entry.comment}</div>"""^^rdf:HTML ;\n`;
-        turtle += `    rdfs:isDefinedBy cred: ;\n`;
+        turtle += `    rdfs:isDefinedBy <${global.vocab_url}> ;\n`;
         turtle += `    vs:term_status "${entry.status}" ;\n`;
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map( (link: Link): string => `<${link.url}>`).join(", ");
@@ -64,7 +64,7 @@ export function toTurtle(vocab: Vocab): string {
     {
         // Block for the top level ontology entries
         turtle += "# Ontology definition\n";
-        turtle += "cred: a owl:Ontology ;\n";
+        turtle += `${global.vocab_prefix}: a owl:Ontology ;\n`;
         for (const ont of vocab.ontology_properties) {
             if (ont.property === 'dc:date') {
                 turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`
