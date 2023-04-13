@@ -280,24 +280,7 @@ export function getData(vocab_source: string): Vocab {
         ...defaultOntologyProperties,
     ];
 
-    // Get the classes. Note the special treatment for deprecated classes...
-    const classes: RDFClass[] = (vocab.class !== undefined) ? 
-        vocab.class.map((raw: RawVocabEntry): RDFClass => {
-            const types: string[] = (raw.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
-            return {
-                id         : raw.id,
-                type       : types,
-                label      : raw.label,
-                comment    : raw.comment,
-                deprecated : raw.deprecated,
-                status     : raw.status,
-                subClassOf : raw.upper_value,
-                see_also   : raw.see_also,
-                example    : raw.example,
-            }
-        }) : [];
-
-    // Get the classes. Note the special treatment for deprecated properties, as well as 
+    // Get the properties. Note the special treatment for deprecated properties, as well as 
     // the extra owl types added depending on the range
     const properties: RDFProperty[] = (vocab.property !== undefined) ?
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
@@ -331,6 +314,46 @@ export function getData(vocab_source: string): Vocab {
                 domain        : raw.domain,
                 example       : raw.example,
                 dataset       : raw.dataset,
+            }
+        }) : [];
+
+    // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
+    const classes: RDFClass[] = (vocab.class !== undefined) ? 
+        vocab.class.map((raw: RawVocabEntry): RDFClass => {
+            const types: string[] = (raw.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
+            const range_of: string[] = [];
+            const domain_of: string[] = [];
+            const included_in_domain_of: string[] = [];
+            const includes_range_of: string[] = [];
+
+            // Get all domain/range cross references
+            for (const property of properties) {
+                const crossref = (refs: string[], single_ref: string[], multi_ref: string[]): void => {
+                    if( refs ) {
+                        // Remove the (possible) namespace reference from the CURIE
+                        const pure_refs = refs.map((range:string): string => {
+                            const terms = range.split(':');
+                            return terms.length === 1 ? range : terms[1]
+                        });
+                        if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
+                            (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id)
+                        }
+                    }
+                }
+                crossref(property.range, range_of, includes_range_of);
+                crossref(property.domain, domain_of, included_in_domain_of);
+            }
+
+            return {
+                id         : raw.id,
+                type       : types,
+                label      : raw.label,
+                comment    : raw.comment,
+                deprecated : raw.deprecated,
+                subClassOf : raw.upper_value,
+                see_also   : raw.see_also,
+                example    : raw.example,
+                range_of, domain_of, included_in_domain_of, includes_range_of
             }
         }) : [];
 

@@ -736,3 +736,19 @@ sec:invoker a rdf:Property, owl:DeprecatedProperty ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#invocation> ;
 .
 
+# Definitions of individuals
+sec:SomeIndividual a cred:ABCD ;
+    rdfs:label "Testing the individuals" ;
+    rdfs:comment """<div>A longer description for this individual</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy cred: ;
+    rdfs:seeAlso <https://www.example.org/namivan/> ;
+.
+
+sec:DeprecatedIndividual a cred:XYXX ;
+    owl:deprecated true ;
+    rdfs:label "Testing the deprecated individuals" ;
+    rdfs:comment """<div>A longer description for this deprecated individual</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy cred: ;
+    rdfs:seeAlso <https://www.example.org/namivan/deprecated> ;
+.
+
