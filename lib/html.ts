@@ -466,35 +466,36 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     prefixes();
 
     // 4. Sections on classes
-    const actual_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === Status.stable);
-    const unstable_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === Status.unstable);
-    const deprecated_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === Status.deprecated);
-    classes(actual_classes, Status.stable)
-    classes(unstable_classes, Status.unstable)
-    classes(deprecated_classes, Status.deprecated)
+    const number_of_classes: number[]  = Object.values(Status).map((filter: Status): number => {
+            const actual_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === filter);
+            classes(actual_classes, filter);
+            return actual_classes.length
+        });
 
     // 5. Sections on properties
-    const actual_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === Status.stable);
-    const unstable_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === Status.unstable);
-    const deprecated_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === Status.deprecated);
-    properties(actual_properties, Status.stable);
-    properties(unstable_properties, Status.unstable);
-    properties(deprecated_properties, Status.deprecated);
+    const number_of_properties: number[] = Object.values(Status).map((filter: Status): number => {
+            const actual_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === filter);
+            properties(actual_properties, filter);
+            return actual_properties.length
+        });
 
     // 6. Sections on individuals
-    const actual_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === Status.stable)
-    const unstable_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === Status.unstable)
-    const deprecated_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === Status.deprecated)
-    individuals(actual_individuals, Status.stable);
-    individuals(unstable_individuals, Status.unstable);
-    individuals(deprecated_individuals, Status.deprecated);
+    const number_of_individuals: number[] = Object.values(Status).map((filter: Status): number => {
+            const actual_individuals = vocab.properties.filter((entry: RDFIndividual): boolean => entry.status === filter);
+            individuals(actual_individuals, filter);
+            return actual_individuals.length
+        });
+
+    // console.log(`Actual: ${number_of_classes[0] + number_of_properties[0] + number_of_individuals[0]}`)
+    // console.log(`Unstable: ${number_of_classes[1] + number_of_properties[1] + number_of_individuals[1]}`)
+    // console.log(`Deprecated: ${number_of_classes[2] + number_of_properties[2] + number_of_individuals[2]}`)
 
     // 7. Remove the sections on unstable/deprecation in case there aren't any...
-    if ((unstable_classes.length + unstable_properties.length + unstable_individuals.length) === 0) {
+    if ((number_of_classes[1] + number_of_properties[1] + number_of_individuals[1]) === 0) {
         const section = document.getElementById('unstable_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }
-    if ((deprecated_classes.length + deprecated_properties.length + deprecated_individuals.length) === 0) {
+    if ((number_of_classes[2] + number_of_properties[2] + number_of_individuals[2]) === 0) {
         const section = document.getElementById('deprecated_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }
