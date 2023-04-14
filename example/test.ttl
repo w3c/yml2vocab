@@ -13,7 +13,7 @@ sec: a owl:Ontology ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs 
 """ ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2023-04-13"^^xsd:date ;
+    dc:date "2023-04-14"^^xsd:date ;
 .
 
 # Class definitions

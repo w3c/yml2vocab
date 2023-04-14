@@ -4,9 +4,9 @@
  * 
  * @packageDocumentation
  */
- import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, global} from './common';
- import { RawVocabEntry, RawVocab, ValidationResults } from './common';
- import { validateWithSchema } from './schema';
+ import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example} from './common';
+ import { RawVocabEntry, RawVocab, ValidationResults, global }                                             from './common';
+ import { validateWithSchema }                                                                             from './schema';
 
 /************************************************ Helper functions and constants **********************************/
 
@@ -289,6 +289,8 @@ export function getData(vocab_source: string): Vocab {
     const properties: RDFProperty[] = (vocab.property !== undefined) ?
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
             const types: string[] = (raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdfs:Property"];
+            // Calculate the number of entries in various categories
+            global.status_counter.add(raw.status);
             let range = raw.range;
             if (range && range.length > 0) {
                 if (range.length === 1 && (range[0].toUpperCase() === "IRI" || range[0].toUpperCase() === "URL")) {
@@ -329,6 +331,9 @@ export function getData(vocab_source: string): Vocab {
             const domain_of: string[] = [];
             const included_in_domain_of: string[] = [];
             const includes_range_of: string[] = [];
+
+            // Calculate the number of entries in various categories
+            global.status_counter.add(raw.status);
 
             // Get all domain/range cross references
             for (const property of properties) {

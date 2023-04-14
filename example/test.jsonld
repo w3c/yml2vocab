@@ -74,7 +74,7 @@
         "en": "vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs \n"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2023-04-13",
+    "dc:date": "2023-04-14",
     "rdfs_classes": [
         {
             "@id": "sec:Proof",
