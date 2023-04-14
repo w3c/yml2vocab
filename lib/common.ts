@@ -11,14 +11,10 @@
  * handled/
  */
 export interface Global {
-    vocab_prefix : string;
-    vocab_url    : string;
+    vocab_prefix   : string;
+    vocab_url      : string;
+    status_counter : StatusCounter;
 }
-
-export const global = {
-    vocab_prefix : "",
-    vocab_url    : ""
-} 
 
 export interface Link {
     label : string;
@@ -35,6 +31,42 @@ export enum Status {
     unstable   = "unstable", 
     deprecated = "deprecated"
 }
+
+export class StatusCounter {
+    private stableNum    = 0;
+    private unstableNum  = 0;
+    private deprecateNum = 0;
+
+    add(status: Status): void {
+        switch (status) {
+            case Status.stable: {
+                this.stableNum++; 
+                return;
+            }
+            case Status.unstable: {
+                this.unstableNum++; 
+                return;
+            }
+            case Status.deprecated: {
+                this.deprecateNum++; 
+                return;
+            }
+        }
+    }
+    counter(status: Status): number {
+        switch (status) {
+            case Status.stable: return this.stableNum; 
+            case Status.unstable: return this.unstableNum;
+            case Status.deprecated: return this.deprecateNum;
+        }
+    }
+}
+
+export const global = {
+    vocab_prefix   : "",
+    vocab_url      : "",
+    status_counter : new StatusCounter(), 
+} 
 
 /** 
 * Superset of all YAML entries expressed in TS. Look at the Readme.md file for what they are meant for.
