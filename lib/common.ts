@@ -6,33 +6,16 @@
 
 
 /**
- * Placeholder for global data. At the moment, the only thing
- * it holds is the prefix and the URL of the URL that is being 
- * handled/
+ * Characterization of a class/property/individual on whether it is stable or not.
  */
-export interface Global {
-    vocab_prefix   : string;
-    vocab_url      : string;
-    status_counter : StatusCounter;
-}
-
-export interface Link {
-    label : string;
-    url   : string;
-}
-
-export interface Example {
-    label ?: string;
-    json   : string;
-}
-
 export enum Status {
     stable     = "stable", 
     unstable   = "unstable", 
     deprecated = "deprecated"
 }
 
-export class StatusCounter {
+// Simple counter to track how many terms are defined as stable, unstable, or deprecated.
+class StatusCounter {
     private stableNum    = 0;
     private unstableNum  = 0;
     private deprecateNum = 0;
@@ -62,17 +45,43 @@ export class StatusCounter {
     }
 }
 
+/**
+ * Placeholder for some global data. 
+ */
 export const global = {
+    /** Vocabulary prefix for the vocabulary being handled */
     vocab_prefix   : "",
+    /** Vocabulary URL for the vocabulary being handled */
     vocab_url      : "",
+    /** 
+     * Counter for the terms with various status values.
+     * Some serializers (eg HTML) may optimize/improve the final
+     * output if one of the categories have no entries whatsoever.
+     */
     status_counter : new StatusCounter(), 
 } 
+
+/**
+ * Generic structure for a hyperlink
+ */
+export interface Link {
+    label : string;
+    url   : string;
+}
+
+/**
+ * Common structure for an example that can be added to the code and shown in the HTML version of the data.
+ */
+export interface Example {
+    label ?: string;
+    json   : string;
+}
 
 /** 
 * Superset of all YAML entries expressed in TS. Look at the Readme.md file for what they are meant for.
 *
-* This is used to induce some extra checks by TS compile time; the classes are converted into
-* the common classes defined in common.ts in this module
+* Used to induce some extra checks by TS compile time; the classes are converted into
+* the common classes in this module
 */
 export interface RawVocabEntry {
     id           : string;
@@ -91,7 +100,7 @@ export interface RawVocabEntry {
 };
 
 /**
- * This is the structure of the YAML file itself. Note that vocab and ontology is required, everything else is optional
+ * This is the structure of the YAML file itself. Note that only vocab and ontology is required, everything else is optional
  */
 export interface RawVocab {
     vocab       : RawVocabEntry[];
@@ -126,7 +135,6 @@ export interface ValidationError {
     params  ?: any,
     data    ?: any,
 }
-
 
 /**
  * Top level class for a term in general. Pretty much self-explanatory...

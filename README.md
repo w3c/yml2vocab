@@ -143,4 +143,4 @@ The following files and directories are generated/modified by either the script 
 
 ## Acknowledgement
 
-The original idea, structure, and script (in Ruby) was created by Gregg Kellogg for v1 of the Credentials Vocabulary and with a vocabulary definition using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript.
+The original idea, structure, and script (in Ruby) was created by Gregg Kellogg for v1 of the Credentials Vocabulary and with a vocabulary definition using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript (and developed further since).
