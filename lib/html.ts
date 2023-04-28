@@ -225,13 +225,13 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     }
 
 
-    // Prefixes that are used to differentiate among stable, unstable, and deprecated values
+    // Prefixes that are used to differentiate among stable, reserved, and deprecated values
     const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
         switch (status) {
             case Status.deprecated : 
                 return { id_prefix : 'deprecated_', intro_prefix: '<em><strong>deprecated</strong></em>' };
-            case Status.unstable :
-                return { id_prefix : 'unstable_', intro_prefix: '<em><strong>unstable</strong></em>' };
+            case Status.reserved :
+                return { id_prefix : 'reserved_', intro_prefix: '<em><strong>reserved</strong></em>' };
             case Status.stable :
                 return { id_prefix : '', intro_prefix : '' };
                 
@@ -249,7 +249,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const section = document.getElementById(`${id_prefix}class_definitions`);
         if (section) {
             if (cl_list.length > 0) {
-                addChild(section, 'p', `The following are ${intro_prefix} class definitions in the <code>${vocab_prefix}</code> namespace:`)
+                addChild(section, 'p', `The following are ${intro_prefix} class definitions in the <code>${vocab_prefix}</code> namespace.`)
 
                 for (const item of cl_list) {
                     const cl_section = addChild(section, 'section');
@@ -325,7 +325,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const section = document.getElementById(`${id_prefix}property_definitions`);
         if (section) {
             if (pr_list.length > 0) {
-                addChild(section, 'p', `The following are ${intro_prefix} property definitions in the <code>${vocab_prefix}</code> namespace:`)
+                addChild(section, 'p', `The following are ${intro_prefix} property definitions in the <code>${vocab_prefix}</code> namespace.`)
 
                 for (const item of pr_list) {
                     const pr_section = addChild(section, 'section');
@@ -415,7 +415,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const section = document.getElementById(`${id_prefix}individual_definitions`);
         if (section) {
             if (ind_list.length > 0) {
-                addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace:`)
+                addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace.`)
 
                 for (const item of ind_list) {
                     const ind_section = addChild(section, 'section');
@@ -476,9 +476,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         individuals(actual_individuals, filter);
     });
 
-    // 7. Remove the sections on unstable/deprecation in case there aren't any...
-    if (global.status_counter.counter(Status.unstable) === 0) {
-        const section = document.getElementById('unstable_term_definitions');
+    // 7. Remove the sections on reserved/deprecation in case there aren't any...
+    if (global.status_counter.counter(Status.reserved) === 0) {
+        const section = document.getElementById('reserved_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }
     

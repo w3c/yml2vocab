@@ -1,6 +1,6 @@
 ## Version 1.4.0
 
-- Instead of the (binary) `deprecated` flag this version uses the `status` value in the yml file whose value can be `stable`, `unstable`, and `deprecated`. The terms are marked up as such in the final vocabulary, and the HTML output separates these three classes into separate to-level sections.
+- Instead of the (binary) `deprecated` flag this version uses the `status` value in the yml file whose value can be `stable`, `reserved`, and `deprecated`. The terms are marked up as such in the final vocabulary, and the HTML output separates these three classes into separate to-level sections.
 
     This feature is backward compatible with `deprecated`; older vocabularies that use that flag would still work, but the value of `status` has a higher priority.
 

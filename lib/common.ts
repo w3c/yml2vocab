@@ -10,7 +10,7 @@
  */
 export enum Status {
     stable     = "stable", 
-    unstable   = "unstable", 
+    reserved   = "reserved", 
     deprecated = "deprecated"
 }
 
@@ -26,7 +26,7 @@ class StatusCounter {
                 this.stableNum++; 
                 return;
             }
-            case Status.unstable: {
+            case Status.reserved: {
                 this.unstableNum++; 
                 return;
             }
@@ -39,7 +39,7 @@ class StatusCounter {
     counter(status: Status): number {
         switch (status) {
             case Status.stable: return this.stableNum; 
-            case Status.unstable: return this.unstableNum;
+            case Status.reserved: return this.unstableNum;
             case Status.deprecated: return this.deprecateNum;
         }
     }

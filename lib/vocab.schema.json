@@ -134,7 +134,7 @@
                 },
                 "status" : {
                     "type": "string",
-                    "enum": ["stable", "unstable", "deprecated"]
+                    "enum": ["stable", "reserved", "deprecated"]
                 },
                 "example": {
                     "$ref": "#/$defs/ExampleUnion"
