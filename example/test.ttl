@@ -28,7 +28,7 @@ sec:ProofGraph a rdfs:Class ;
     rdfs:label "An RDF Graph for a digital proof" ;
     rdfs:comment """<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Proof.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "stable" ;
+    vs:term_status "unstable" ;
 .
 
 sec:VerificationMethod a rdfs:Class ;
@@ -822,5 +822,23 @@ sec:invoker a rdf:Property, owl:DeprecatedProperty ;
     rdfs:isDefinedBy <https://w3id.org/security/v1> ;
     vs:term_status "deprecated" ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#invocation> ;
+.
+
+# Definitions of individuals
+sec:SomeIndividual a cred:ABCD ;
+    rdfs:label "Testing the individuals" ;
+    rdfs:comment """<div>A longer description for this individual</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://www.example.org/namivan/> ;
+.
+
+sec:DeprecatedIndividual a cred:XYXX ;
+    owl:deprecated true ;
+    rdfs:label "Testing the deprecated individuals" ;
+    rdfs:comment """<div>A longer description for this deprecated individual</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://www.example.org/namivan/deprecated> ;
 .
 

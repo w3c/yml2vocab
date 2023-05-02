@@ -132,6 +132,10 @@
                 "deprecated": {
                     "type": "boolean"
                 },
+                "status" : {
+                    "type": "string",
+                    "enum": ["stable", "reserved", "deprecated"]
+                },
                 "example": {
                     "$ref": "#/$defs/ExampleUnion"
                 }

@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
-import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual } from './common';
+import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status } from './common';
 import { JSDOM }  from 'jsdom';
 
 /* ---------------- Utility functions ------------------------- */
@@ -51,7 +51,6 @@ const bnode = (): string => {
     return retval
 }
 
-
 /**
  * Generate the HTML representation of the vocabulary, based on an HTML template file. The
  * template file is parsed to create a DOM, which is manipulated using the standard
@@ -72,6 +71,36 @@ const bnode = (): string => {
  * @returns
  */
 export function toHTML(vocab: Vocab, template_text: string): string {
+    // This is used to generate cross links, possible to external entities, too
+    const resolveCurie = (curie: string): string => {
+        const components = curie.split(':');
+        if (components.length === 1) {
+            return `<a href="#${curie}"><code>${curie}</code></a>`;
+        } else if (components[0] === vocab.prefixes[0].prefix) {
+            return `<a href="#${components[1]}"><code>${components[1]}</code></a>`;
+        } else {
+            // The curse of CURIE-s: bona fide URL prefixes should not be touched
+            const bona_fide_prefixes = ['http', 'https', 'mailto', 'urn', 'doi', 'ftp', 'did'];
+            if (bona_fide_prefixes.includes(components[0])) {
+                // Do not touch that!!!!
+                return `<a href="${curie}"><code>${curie}</code></a>`;
+            } else {
+                // it is fairly unnecessary to make references to some of the core
+                // vocabularies, like rdf or xsd, which do not have a proper HTML target
+                // anyway...
+                const no_url = ['rdf', 'xsd', 'rdfs', 'owl'];
+                if (no_url.includes(components[0]) === false) {
+                    for (const prefix_def of vocab.prefixes.slice(1)) {
+                        if (prefix_def.prefix === components[0]) {
+                            return `<a href="${prefix_def.url}${components[1]}"><code>${curie}</code></a>`;
+                        }
+                    }    
+                }
+                return `<code>${curie}</code>`;
+            }
+        }
+    };
+
     // Factor out all common fields for the terms
     const commonFields = (section: HTMLElement, item: RDFTerm): void => {        
         section.setAttribute('resource',`${vocab_prefix}:${item.id}`);
@@ -80,10 +109,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const h = addChild(section,'h4', `<code>${item.id}</code>`);
         const term = addChild(section, 'p', `<em>${item.label}</code>`);
         term.setAttribute('property', 'rdfs:label');
-        if (item.deprecated) {
+        if (item.status !== Status.stable) {
             const span = addChild(term, 'span');
             span.className = 'bold';
-            addChild(span, 'em', ' (deprecated)');
+            addChild(span, 'em', ` (${item.status})`);
         }
 
         // let explanation = addBreak(item.comment);
@@ -111,6 +140,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const span = addChild(section, 'span');
         span.setAttribute('property', 'rdfs:isDefinedBy');
         span.setAttribute('resource', `${vocab_prefix}:`);
+
+        const status_span = addChild(section, 'span');
+        status_span.setAttribute('style', 'display: none');
+        status_span.setAttribute('property', 'vs:term_status');
+        addText(`${item.status}`, status_span);
 
         if (item.deprecated) {
             const span = addChild(section, 'span');
@@ -190,17 +224,32 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
+
+    // Prefixes that are used to differentiate among stable, reserved, and deprecated values
+    const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
+        switch (status) {
+            case Status.deprecated : 
+                return { id_prefix : 'deprecated_', intro_prefix: '<em><strong>deprecated</strong></em>' };
+            case Status.reserved :
+                return { id_prefix : 'reserved_', intro_prefix: '<em><strong>reserved</strong></em>' };
+            case Status.stable :
+                return { id_prefix : '', intro_prefix : '' };
+                
+        }
+    }
+
     // Generation of the section content for classes: a big table, with a row per class
     // There is a check for a possible template error and also whether there are class
     // definitions in the first place.
     //
     // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
     // that makes things fairly confusing :-(
-    const classes = (cl_list: RDFClass[], deprecated: boolean) => {
-        const section = document.getElementById(`${deprecated ? 'deprecated_' : ''}class_definitions`);
+    const classes = (cl_list: RDFClass[], statusFilter: Status) => {
+        const { id_prefix, intro_prefix } = statusSignals(statusFilter);
+        const section = document.getElementById(`${id_prefix}class_definitions`);
         if (section) {
             if (cl_list.length > 0) {
-                addChild(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} class definitions in the <code>${vocab_prefix}</code> namespace:`)
+                addChild(section, 'p', `The following are ${intro_prefix} class definitions in the <code>${vocab_prefix}</code> namespace.`)
 
                 for (const item of cl_list) {
                     const cl_section = addChild(section, 'section');
@@ -213,10 +262,47 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                         addChild(dl, 'dt', 'Subclass of:')
                         const dd = addChild(dl, 'dd');
                         for (const superclass of item.subClassOf) {
-                            const code = addChild(dd, 'code', superclass)
-                            code.setAttribute('property', 'rdfs:subClassOf');
-                            code.setAttribute('resource', superclass);
-                            addChild(dd, 'br')
+                            const span = addChild(dd,'span');
+                            span.innerHTML = resolveCurie(superclass);
+                            span.setAttribute('property', 'rdfs:subClassOf');
+                            span.setAttribute('resource', superclass);
+                        }
+                    }
+                    // Again an extra list for range/domain references, if applicable
+                    if ((item.range_of.length > 0 || 
+                        item.domain_of.length > 0 || 
+                        item.includes_range_of.length > 0 || 
+                        item.included_in_domain_of.length > 0)) {
+                        
+                        // This for the creation of a list of property references, each
+                        // a hyperlink to the property's definition.
+                        const prop_names = (ids: string[]): string => {
+                            const names = ids.map(resolveCurie);
+                            return names.join(', ');
+                        }
+                        
+                        const dl = addChild(cl_section, 'dl');
+                        dl.className = 'terms';
+
+                        if (item.range_of.length > 0) {
+                            addChild(dl, 'dt', "Range of:");
+                            const dd = addChild(dl, 'dd');
+                            dd.innerHTML = prop_names(item.range_of);
+                        }
+                        if (item.includes_range_of.length > 0) {
+                            addChild(dl, 'dt', "Includes the range of:");
+                            const dd = addChild(dl, 'dd');
+                            dd.innerHTML = prop_names(item.includes_range_of);
+                        }
+                        if (item.domain_of.length > 0) {
+                            addChild(dl, 'dt', "Domain of:");
+                            const dd = addChild(dl, 'dd');
+                            dd.innerHTML = prop_names(item.domain_of);
+                        }
+                        if (item.included_in_domain_of.length > 0) {
+                            addChild(dl, 'dt', "In the domain of:");
+                            const dd = addChild(dl, 'dd');
+                            dd.innerHTML = prop_names(item.included_in_domain_of);
                         }
                     }
                     setExample(cl_section, item);
@@ -225,8 +311,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 // Remove section from the DOM
                 if (section.parentElement) section.parentElement.removeChild(section);
             }
-        }  else {
-            console.log(`Template error: no section prepared for ${deprecated ? 'deprecated' : ''} classes!`)
         }
     }
 
@@ -236,11 +320,12 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     //
     // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
     // that makes things fairly confusing :-(
-    const properties = (pr_list: RDFProperty[], deprecated: boolean) => {
-        const section = document.getElementById(`${deprecated ? 'deprecated_' : ''}property_definitions`);
+    const properties = (pr_list: RDFProperty[], statusFilter: Status) => {
+        const { id_prefix, intro_prefix } = statusSignals(statusFilter);
+        const section = document.getElementById(`${id_prefix}property_definitions`);
         if (section) {
             if (pr_list.length > 0) {
-                addChild(section, 'p', `The following are ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} property definitions in the <code>${vocab_prefix}</code> namespace:`)
+                addChild(section, 'p', `The following are ${intro_prefix} property definitions in the <code>${vocab_prefix}</code> namespace.`)
 
                 for (const item of pr_list) {
                     const pr_section = addChild(section, 'section');
@@ -253,9 +338,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                         addChild(dl, 'dt', 'Subproperty of:')
                         const dd = addChild(dl, 'dd');
                         for (const superproperty of item.subPropertyOf) {
-                            const code = addChild(dd, 'code', superproperty)
-                            code.setAttribute('property', 'rdfs:subPropertyOf');
-                            code.setAttribute('resource', superproperty);
+                            const span = addChild(dd, 'span');
+                            span.innerHTML = resolveCurie(superproperty);
+                            span.setAttribute('property', 'rdfs:subPropertyOf');
+                            span.setAttribute('resource', superproperty);
                             addChild(dd, 'br');
                         }
                     }
@@ -271,14 +357,14 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             dd.setAttribute('property', 'rdfs:range');
                             if (item.range.length === 1) {
                                 dd.setAttribute('resource',item.range[0])
-                                addChild(dd, 'code', item.range[0]);
+                                dd.innerHTML = resolveCurie(item.range[0]);
                             } else {
                                 addText('Intersection of:', dd)
                                 addChild(dd, 'br')
                                 for (const entry of item.range) {
                                     const r_span = addChild(dd, 'span')
                                     r_span.setAttribute('resource', entry);
-                                    addChild(r_span, 'code', ` ${entry}`);
+                                    r_span.innerHTML = resolveCurie(entry);
                                     addChild(dd, 'br')
                                 }
                             }
@@ -290,7 +376,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             dd.setAttribute('property', 'rdfs:domain')
                             if (item.domain.length === 1) {
                                 dd.setAttribute('resource',item.domain[0])
-                                addChild(dd, 'code', item.domain[0]);
+                                dd.innerHTML = resolveCurie(item.domain[0]);
                             } else {
                                 // The union-of list is to be enclosed in a bnode in RDF
                                 // this has to be added to the RDFa manually...
@@ -304,7 +390,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                                     sp.setAttribute('inlist', 'true');
                                     sp.setAttribute('property', 'owl:unionOf');
                                     sp.setAttribute('resource', entry);
-                                    addChild(sp, 'code', ` ${entry}`);
+                                    sp.innerHTML = resolveCurie(entry);
                                     addChild(dd, 'br')
                                 }
                             }
@@ -315,8 +401,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             } else {
                 if (section.parentElement) section.parentElement.removeChild(section);
             }
-        } else {
-            console.log(`Template error: no section prepared for ${deprecated ? 'deprecated' : ''} properties!`)
         }
     }
 
@@ -326,11 +410,12 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     //
     // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
     // that makes things fairly confusing :-(
-    const individuals = (ind_list: RDFIndividual[], deprecated: boolean) => {
-        const section = document.getElementById(`${deprecated ? 'deprecated_' : ''}individual_definitions`);
+    const individuals = (ind_list: RDFIndividual[], statusFilter: Status) => {
+        const { id_prefix, intro_prefix } = statusSignals(statusFilter);
+        const section = document.getElementById(`${id_prefix}individual_definitions`);
         if (section) {
             if (ind_list.length > 0) {
-                addChild(section, 'p', `The following are definitions for ${deprecated ? '<em><strong>deprecated</strong></em>' : ''} individuals in the <code>${vocab_prefix}</code> namespace:`)
+                addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace.`)
 
                 for (const item of ind_list) {
                     const ind_section = addChild(section, 'section');
@@ -342,7 +427,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                         addChild(dl, 'dt', 'Type')
                         const dd = addChild(dl, 'dd');
                         for (const itype of item.type) {
-                            addChild(dd, 'code', itype);
+                            addChild(dd, 'span', resolveCurie(itype));
                             addChild(dd, 'br')    
                         }
                     }
@@ -352,8 +437,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 // removing the section from the DOM
                 if (section.parentElement) section.parentElement.removeChild(section);
             }
-        } else {
-            console.log(`Template error: no section prepared for ${deprecated ? 'deprecated' : ''} individuals!`)
         }
     }
 
@@ -376,25 +459,30 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     prefixes();
 
     // 4. Sections on classes
-    const actual_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.deprecated === false)
-    const deprecated_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.deprecated === true)
-    classes(actual_classes, false)
-    classes(deprecated_classes, true)
+    Object.values(Status).map((filter: Status): void => {
+        const actual_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === filter);
+        classes(actual_classes, filter);
+    });
 
     // 5. Sections on properties
-    const actual_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.deprecated === false)
-    const deprecated_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.deprecated === true)
-    properties(actual_properties, false);
-    properties(deprecated_properties, true);
+    Object.values(Status).map((filter: Status): void => {
+        const actual_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === filter);
+        properties(actual_properties, filter);
+    });
 
     // 6. Sections on individuals
-    const actual_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.deprecated === false)
-    const deprecated_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.deprecated === true)
-    individuals(actual_individuals, false);
-    individuals(deprecated_individuals, true);
+    Object.values(Status).map((filter: Status): void => {
+        const actual_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === filter);
+        individuals(actual_individuals, filter);
+    });
 
-    // 7. Remove the section on deprecation in case there aren't any...
-    if ((deprecated_classes.length + deprecated_properties.length + deprecated_individuals.length) === 0) {
+    // 7. Remove the sections on reserved/deprecation in case there aren't any...
+    if (global.status_counter.counter(Status.reserved) === 0) {
+        const section = document.getElementById('reserved_term_definitions');
+        if (section !== null && section.parentElement) section.parentElement.removeChild(section);
+    }
+    
+    if (global.status_counter.counter(Status.deprecated) === 0) {
         const section = document.getElementById('deprecated_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }

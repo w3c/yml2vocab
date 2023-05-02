@@ -1,3 +1,18 @@
+## Version 1.4.0
+
+- Instead of the (binary) `deprecated` flag this version uses the `status` value in the yml file whose value can be `stable`, `reserved`, and `deprecated`. The terms are marked up as such in the final vocabulary, and the HTML output separates these three classes into separate to-level sections.
+
+    This feature is backward compatible with `deprecated`; older vocabularies that use that flag would still work, but the value of `status` has a higher priority.
+
+
+## Version 1.3.2
+
+- Added more cross-references to the HTML output, to make the end result more useful:
+  - the class definitions include a further set of information about the properties (in the same vocabulary) that refer to that class either through the range or the domain statements
+  - the references to classes and properties (e.g., in range or subproperty statements) are now hyperlinks. That is also true if external vocabularies are used with a prefix
+- Handled a bug whereby the generated turtle always referred to the same top level vocabulary instead of using the one set in the vocabulary description itself.
+
+
 ## Version 1.3.1
 
 - Minor code improvements: separating the schema into its own files, better error handling through `Promise.allSettled`, and also retrofitting some changes required by the `deno` version (which is more strict than the standard `tsc`)

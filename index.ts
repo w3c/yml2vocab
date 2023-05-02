@@ -106,29 +106,34 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
 
     if (read_errors.length !== 0) {
         // One of the two files could not be read, we should abort here:
-        throw(read_errors.join('\n'));
+        throw(new AggregateError(read_errors.join('\n')));
     }
 
-    const conversion: VocabGeneration = new VocabGeneration(yaml);
+    try {
 
-    {
-        const fs_writes: Promise<void>[] = [
-            fs.writeFile(`${basename}.ttl`, conversion.getTurtle()),
-            fs.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-            fs.writeFile(`${basename}.html`, conversion.getHTML(template)),
-        ];
-        if (context) {
-            fs_writes.push(fs.writeFile(`${basename}_context.jsonld`, conversion.getContext()))
-        }
-        const write_errors = (await Promise.allSettled(fs_writes))
-            .filter((result): boolean => result.status === "rejected")
-            .map((result): string => (result.status === "rejected" ? result.reason : ''));
+        const conversion: VocabGeneration = new VocabGeneration(yaml);
 
-        if (write_errors.length != 0) {
-            // One or more files could not be written, we should throw an exception...
-            throw (write_errors.join('\n'));
+        {
+            const fs_writes: Promise<void>[] = [
+                fs.writeFile(`${basename}.ttl`, conversion.getTurtle()),
+                fs.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
+                fs.writeFile(`${basename}.html`, conversion.getHTML(template)),
+            ];
+            if (context) {
+                fs_writes.push(fs.writeFile(`${basename}_context.jsonld`, conversion.getContext()))
+            }
+            const write_errors = (await Promise.allSettled(fs_writes))
+                .filter((result): boolean => result.status === "rejected")
+                .map((result): string => (result.status === "rejected" ? result.reason : ''));
+
+            if (write_errors.length != 0) {
+                // One or more files could not be written, we should throw an exception...
+                throw(new AggregateError(write_errors.join('\n')));
+            }
         }
-    }  
+    } catch(e) {
+        console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}`);
+    }
 }
 
 //

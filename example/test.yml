@@ -25,6 +25,7 @@ class:
 
   - id: ProofGraph
     label: An RDF Graph for a digital proof
+    status: reserved
     comment: Instances of this class are RDF Graphs, where each of these graphs must include exactly one Proof.
 
   - id: VerificationMethod

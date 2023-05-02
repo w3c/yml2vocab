@@ -94,7 +94,7 @@
                 "@value": "<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Proof.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
-            "vs:term_status": "stable"
+            "vs:term_status": "unstable"
         },
         {
             "@id": "sec:VerificationMethod",
@@ -1497,6 +1497,35 @@
             "vs:term_status": "deprecated",
             "rdfs:seeAlso": [
                 "https://w3c-ccg.github.io/zcap-spec/#invocation"
+            ]
+        }
+    ],
+    "rdfs_individuals": [
+        {
+            "@id": "sec:SomeIndividual",
+            "@type": "cred:ABCD",
+            "rdfs:label": "Testing the individuals",
+            "rdfs:comment": {
+                "@value": "<div>A longer description for this individual</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "vs:term_status": "stable",
+            "rdfs:seeAlso": [
+                "https://www.example.org/namivan/"
+            ]
+        },
+        {
+            "@id": "sec:DeprecatedIndividual",
+            "@type": "cred:XYXX",
+            "owl:deprecated": true,
+            "rdfs:label": "Testing the deprecated individuals",
+            "rdfs:comment": {
+                "@value": "<div>A longer description for this deprecated individual</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "vs:term_status": "deprecated",
+            "rdfs:seeAlso": [
+                "https://www.example.org/namivan/deprecated"
             ]
         }
     ]

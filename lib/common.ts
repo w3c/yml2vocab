@@ -6,25 +6,72 @@
 
 
 /**
- * Placeholder for global data. At the moment, the only thing
- * it holds is the prefix and the URL of the URL that is being 
- * handled/
+ * Characterization of a class/property/individual on whether it is stable or not.
  */
-export interface Global {
-    vocab_prefix : string;
-    vocab_url    : string;
+export enum Status {
+    stable     = "stable", 
+    reserved   = "reserved", 
+    deprecated = "deprecated"
 }
 
+// Simple counter to track how many terms are defined as stable, unstable, or deprecated.
+class StatusCounter {
+    private stableNum    = 0;
+    private unstableNum  = 0;
+    private deprecateNum = 0;
+
+    add(status: Status): void {
+        switch (status) {
+            case Status.stable: {
+                this.stableNum++; 
+                return;
+            }
+            case Status.reserved: {
+                this.unstableNum++; 
+                return;
+            }
+            case Status.deprecated: {
+                this.deprecateNum++; 
+                return;
+            }
+        }
+    }
+    counter(status: Status): number {
+        switch (status) {
+            case Status.stable: return this.stableNum; 
+            case Status.reserved: return this.unstableNum;
+            case Status.deprecated: return this.deprecateNum;
+        }
+    }
+}
+
+/**
+ * Placeholder for some global data. 
+ */
 export const global = {
-    vocab_prefix : "",
-    vocab_url    : ""
+    /** Vocabulary prefix for the vocabulary being handled */
+    vocab_prefix   : "",
+    /** Vocabulary URL for the vocabulary being handled */
+    vocab_url      : "",
+    /** 
+     * Counter for the terms with various status values.
+     * Some serializers (eg HTML) may optimize/improve the final
+     * output if one of the categories have no entries whatsoever.
+     */
+    status_counter : new StatusCounter(), 
 } 
 
+/**
+ * Generic structure for a hyperlink
+ */
 export interface Link {
     label : string;
     url   : string;
 }
 
+/**
+ * Common structure for an example that can be added to the code and shown in the HTML version of the data.
+ */
 export interface Example {
     label ?: string;
     json   : string;
@@ -33,8 +80,8 @@ export interface Example {
 /** 
 * Superset of all YAML entries expressed in TS. Look at the Readme.md file for what they are meant for.
 *
-* This is used to induce some extra checks by TS compile time; the classes are converted into
-* the common classes defined in common.ts in this module
+* Used to induce some extra checks by TS compile time; the classes are converted into
+* the common classes in this module
 */
 export interface RawVocabEntry {
     id           : string;
@@ -45,6 +92,7 @@ export interface RawVocabEntry {
     domain      ?: string[];
     range       ?: string[];
     deprecated  ?: boolean;
+    status      ?: Status;
     comment      : string;
     see_also    ?: Link[];
     example     ?: Example[];
@@ -52,7 +100,7 @@ export interface RawVocabEntry {
 };
 
 /**
- * This is the structure of the YAML file itself. Note that vocab and ontology is required, everything else is optional
+ * This is the structure of the YAML file itself. Note that only vocab and ontology is required, everything else is optional
  */
 export interface RawVocab {
     vocab       : RawVocabEntry[];
@@ -98,6 +146,7 @@ export interface RDFTerm {
     comment     : string;
     see_also   ?: Link[];
     deprecated ?: boolean;
+    status     ?: Status;
     example    ?: Example[];
 }
 
@@ -106,7 +155,11 @@ export interface RDFTerm {
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
-    subClassOf ?: string[];
+    subClassOf            ?: string[];
+    range_of              : string[];
+    domain_of             : string[];
+    included_in_domain_of : string[];
+    includes_range_of     : string[];
 }
 
 /**
