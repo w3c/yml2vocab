@@ -5,7 +5,7 @@
  * @packageDocumentation
  */
 
-import { Vocab, global, RDFTerm, Link } from './common';
+import { Vocab, global, RDFTerm, Link, Status } from './common';
 
 type JSON = Record<string,unknown>;
 
@@ -77,11 +77,12 @@ export function toJSONLD(vocab: Vocab): string {
 
     // Factoring out the common fields
     const commonFields = (target: JSON, entry: RDFTerm): void => {
-        target["rdfs:label"]  = entry.label ;
+        target["rdfs:label"]  = entry.label;
         target["rdfs:comment"] = {
             "@value" : `<div>${entry.comment}</div>`,
             "@type"  : "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
         }
+        target["vs:term_status"] = `${entry.status}`;
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map( (link: Link): string => link.url);
             target["rdfs:seeAlso"] = urls;
@@ -128,7 +129,7 @@ export function toJSONLD(vocab: Vocab): string {
             } else {
                 cl_object["@type"] = cl.type;
             }
-            if (cl.deprecated) {
+            if (cl.status === Status.deprecated) {
                 cl_object["owl:deprecated"] = true
             }
             if (cl.subClassOf && cl.subClassOf.length > 0) {
@@ -151,7 +152,7 @@ export function toJSONLD(vocab: Vocab): string {
             } else {
                 pr_object["@type"] = prop.type;
             }
-            if (prop.deprecated) {
+            if (prop.status === Status.deprecated) {
                 pr_object["owl:deprecated"] = true
             }
             if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
@@ -180,7 +181,7 @@ export function toJSONLD(vocab: Vocab): string {
             } else {
                 ind_object["@type"] = ind.type;
             }
-            if (ind.deprecated) {
+            if (ind.status === Status.deprecated) {
                 ind_object["owl:deprecated"] = true
             }
             commonFields(ind_object,ind);
