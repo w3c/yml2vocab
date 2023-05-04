@@ -4,9 +4,9 @@
  * @packageDocumentation
  */
 
-import Ajv2019, { ErrorObject} from 'ajv/dist/2019';
-import addFormats from 'ajv-formats';
-import * as yaml from 'yaml';
+import Ajv2019, { ErrorObject}                          from 'ajv/dist/2019';
+import addFormats                                       from 'ajv-formats';
+import * as yaml                                        from 'yaml';
 import { RawVocab, ValidationError, ValidationResults } from './common';
 
 const schema = require('./vocab.schema.json');

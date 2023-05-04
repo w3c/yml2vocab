@@ -123,6 +123,10 @@
                 "comment": {
                     "type": "string"
                 },
+                "defined_by": {
+                    "type": "string",
+                    "format": "uri"
+                },
                 "see_also": {
                     "$ref": "#/$defs/SeeAlso"
                 },
@@ -141,9 +145,12 @@
                 }
             },
             "required": [
-                "comment",
                 "id",
                 "label"
+            ],
+            "anyOf": [
+                { "required": ["comment"]    },
+                { "required": ["defined_by"] }
             ]
         },
 

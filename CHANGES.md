@@ -3,6 +3,7 @@
 - Instead of the (binary) `deprecated` flag this version uses the `status` value in the yml file whose value can be `stable`, `reserved`, and `deprecated`. The terms are marked up as such in the final vocabulary, and the HTML output separates these three classes into separate to-level sections.
 
     This feature is backward compatible with `deprecated`; older vocabularies that use that flag would still work, but the value of `status` has a higher priority.
+- Introduction of a `defined_by` term: a URL referring to the formal definition of the term in another document.
 
 
 ## Version 1.3.2
