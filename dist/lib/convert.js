@@ -8,6 +8,7 @@ exports.getData = void 0;
  * @packageDocumentation
  */
 const common_1 = require("./common");
+const common_2 = require("./common");
 const schema_1 = require("./schema");
 /************************************************ Helper functions and constants **********************************/
 /**
@@ -51,6 +52,10 @@ const defaultPrefixes = [
     {
         prefix: "xsd",
         url: "http://www.w3.org/2001/XMLSchema#"
+    },
+    {
+        prefix: "vs",
+        url: "http://www.w3.org/2003/06/sw-vocab-status/ns#"
     }
 ];
 /**
@@ -151,15 +156,32 @@ function finalizeRawEntry(raw) {
         }
         return final;
     };
+    // The deprecation flag, as a separate value, is kept also for reasons of backward compatibility,
+    // but this makes the interpretation of the value(s) in the vocabulary a bit awkward. Later version
+    // (maybe even next version) would remove the deprecated flag from existing vocabularies, ie,
+    // switch to status, and all this will go away.
+    const { status, deprecated } = (() => {
+        if (raw.status !== undefined) {
+            return { status: raw.status, deprecated: raw.status === common_1.Status.deprecated };
+        }
+        else if (raw.deprecated != undefined) {
+            return { status: raw.deprecated ? common_1.Status.deprecated : common_1.Status.reserved, deprecated: raw.deprecated };
+        }
+        else {
+            return { status: common_1.Status.reserved, deprecated: false };
+        }
+    })();
     return {
-        id: (raw.id) ? raw.id : "Vocabulary definition error: no ID provided.",
+        id: (raw.id) ? raw.id : "",
         property: raw.property,
         value: raw.value,
-        label: (raw.label) ? raw.label : "Vocabulary definition error: no label provided.",
+        label: (raw.label) ? raw.label : "",
         upper_value: toArray(raw.upper_value),
         domain: toArray(raw.domain),
         range: toArray(raw.range),
-        deprecated: (raw.deprecated === undefined) ? false : raw.deprecated,
+        deprecated: deprecated,
+        defined_by: (raw.defined_by) ? raw.defined_by : "",
+        status: status,
         comment: (raw.comment) ? cleanComment(raw.comment) : "",
         see_also: toSeeAlso(raw.see_also),
         example: toExample(raw.example),
@@ -176,10 +198,10 @@ function finalizeRawEntry(raw) {
 function finalizeRawVocab(raw) {
     // Check whether the required entries (vocab and ontology) are present
     if (raw.vocab === undefined) {
-        throw ("No 'vocab' section in the vocabulary specification.");
+        throw (new Error("No 'vocab' section in the vocabulary specification."));
     }
     if (raw.ontology === undefined) {
-        throw ("No 'ontology' section in the vocabulary specification.");
+        throw (new Error("No 'ontology' section in the vocabulary specification."));
     }
     // It is perfectly fine if the vocab is not encoded as an array in YAML
     if (!Array.isArray(raw.vocab))
@@ -211,7 +233,8 @@ function finalizeRawVocab(raw) {
 function getData(vocab_source) {
     const validation_results = (0, schema_1.validateWithSchema)(vocab_source);
     if (validation_results.vocab === null) {
-        throw (validation_results.error);
+        const error = JSON.stringify(validation_results, null, 4);
+        throw (new TypeError(`JSON Schema validation error`, { cause: error }));
     }
     const vocab = finalizeRawVocab(validation_results.vocab);
     // Convert all the raw structures into their respective internal representations for 
@@ -222,13 +245,13 @@ function getData(vocab_source) {
     const prefixes = [
         ...vocab.vocab.map((raw) => {
             if (raw.id === undefined) {
-                throw "The vocabulary has no prefix";
+                throw (new Error("The vocabulary has no prefix"));
             }
             if (raw.value === undefined) {
-                throw "The vocabulary has no identifier";
+                throw (new Error("The vocabulary has no identifier"));
             }
-            common_1.global.vocab_prefix = raw.id;
-            common_1.global.vocab_url = raw.value;
+            common_2.global.vocab_prefix = raw.id;
+            common_2.global.vocab_url = raw.value;
             return {
                 prefix: raw.id,
                 url: raw.value,
@@ -256,26 +279,13 @@ function getData(vocab_source) {
         }),
         ...defaultOntologyProperties,
     ];
-    // Get the classes. Note the special treatment for deprecated classes...
-    const classes = (vocab.class !== undefined) ?
-        vocab.class.map((raw) => {
-            const types = (raw.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
-            return {
-                id: raw.id,
-                type: types,
-                label: raw.label,
-                comment: raw.comment,
-                deprecated: raw.deprecated,
-                subClassOf: raw.upper_value,
-                see_also: raw.see_also,
-                example: raw.example,
-            };
-        }) : [];
-    // Get the classes. Note the special treatment for deprecated properties, as well as 
+    // Get the properties. Note the special treatment for deprecated properties, as well as 
     // the extra owl types added depending on the range
     const properties = (vocab.property !== undefined) ?
         vocab.property.map((raw) => {
-            const types = (raw.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdfs:Property"];
+            const types = (raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdfs:Property"];
+            // Calculate the number of entries in various categories
+            common_2.global.status_counter.add(raw.status);
             let range = raw.range;
             if (range && range.length > 0) {
                 if (range.length === 1 && (range[0].toUpperCase() === "IRI" || range[0].toUpperCase() === "URL")) {
@@ -300,12 +310,55 @@ function getData(vocab_source) {
                 label: raw.label,
                 comment: raw.comment,
                 deprecated: raw.deprecated,
+                defined_by: raw.defined_by,
+                status: raw.status,
                 subPropertyOf: raw.upper_value,
                 see_also: raw.see_also,
                 range: range,
                 domain: raw.domain,
                 example: raw.example,
                 dataset: raw.dataset,
+            };
+        }) : [];
+    // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
+    const classes = (vocab.class !== undefined) ?
+        vocab.class.map((raw) => {
+            const types = (raw.status === common_1.Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
+            const range_of = [];
+            const domain_of = [];
+            const included_in_domain_of = [];
+            const includes_range_of = [];
+            // Calculate the number of entries in various categories
+            common_2.global.status_counter.add(raw.status);
+            // Get all domain/range cross references
+            for (const property of properties) {
+                const crossref = (refs, single_ref, multi_ref) => {
+                    if (refs) {
+                        // Remove the (possible) namespace reference from the CURIE
+                        const pure_refs = refs.map((range) => {
+                            const terms = range.split(':');
+                            return terms.length === 1 ? range : terms[1];
+                        });
+                        if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
+                            (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id);
+                        }
+                    }
+                };
+                crossref(property.range, range_of, includes_range_of);
+                crossref(property.domain, domain_of, included_in_domain_of);
+            }
+            return {
+                id: raw.id,
+                type: types,
+                label: raw.label,
+                comment: raw.comment,
+                deprecated: raw.deprecated,
+                defined_by: raw.defined_by,
+                status: raw.status,
+                subClassOf: raw.upper_value,
+                see_also: raw.see_also,
+                example: raw.example,
+                range_of, domain_of, included_in_domain_of, includes_range_of
             };
         }) : [];
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
@@ -316,6 +369,8 @@ function getData(vocab_source) {
                 label: raw.label,
                 comment: raw.comment,
                 deprecated: raw.deprecated,
+                defined_by: raw.defined_by,
+                status: raw.status,
                 type: (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also: raw.see_also,
                 example: raw.example,

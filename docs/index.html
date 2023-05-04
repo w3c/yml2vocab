@@ -27,17 +27,19 @@
   <h2>Definition of the vocabulary in the YAML file</h2>
 </a>
 <p>The vocabulary is defined in a YAML file, which contains several block sequences with the following keys: <code>vocab</code>, <code>prefix</code>, <code>ontology</code>, <code>class</code>, <code>property</code>, and <code>individual</code>. Only the <code>vocab</code> and <code>ontology</code> blocks are <em>required</em>, all others are optional.</p>
-<p>Each block sequence consists of blocks with the following keys:<code>id</code>, <code>property</code>, <code>value</code>, <code>label</code>, <code>upper_value</code>, <code>domain</code>, <code>range</code>, <code>deprecated</code>, <code>comment</code>, and <code>see_also</code>. The interpretation of these key/value pairs may depend on the top level block where they reside, but some have a common interpretation.</p>
+<p>Each block sequence consists of blocks with the following keys:<code>id</code>, <code>property</code>, <code>value</code>, <code>label</code>, <code>upper_value</code>, <code>domain</code>, <code>range</code>, <code>deprecated</code>, <code>comment</code>, <code>status</code>, <code>defined_by</code>, and <code>see_also</code>. The interpretation of these key/value pairs may depend on the top level block where they reside, but some have a common interpretation.</p>
 <ul>
 <li><p>Common key/value pairs for the <code>class</code>, <code>property</code>, and <code>individual</code> blocks:</p>
 <ul>
 <li><code>label</code> refers to a short header label to the term.</li>
 <li><code>comment</code> refers to a longer description of the term, and can be used for blocks in the <code>class</code>, <code>property</code> and <code>individual</code> top-level blocks. It may include <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories">HTML Flow content elements</a>. The comment will be encapsulated into an HTML <code>&lt;div&gt;</code> element and will then be displayed verbatim in the HTML version of the vocabulary, and as a literal of type <code>rdf:HTML</code> in the JSON-LD and Turtle versions. Note that the Markdown syntax for simple formatting, like the use of &quot;<code>&quot; for </code>&lt;code.../&gt;`, may also be used.</li>
+<li><code>defined_by</code> should be a URL, referring to the formal definition of the term.</li>
 <li><code>see_also</code> refers to one or more blocks with <code>label</code> and <code>url</code> keys, providing a human readable title and a URL, respectively, to an external document that can be referred to by the description of the term. (These are translated into an <code>rdfs:seeAlso</code> term in the vocabulary.)</li>
-<li>The <code>status</code> key refers to a string that can be <code>stable</code>, <code>unstable</code>, or <code>deprecated</code>. The terms are divided, in the HTML output, into these three sections.    </li>
+<li>The <code>status</code> key refers to a string that can be <code>stable</code>, <code>reserved</code>, or <code>deprecated</code>. The terms are divided, in the HTML output, into these three sections. <code>stable</code> is the default.</li>
 <li>The <code>deprecated</code> key refers to a boolean, signaling whether term is deprecated or not. Default is <code>false</code>. This property is a leftover from earlier version and is overwritten, if applicable, by the value of <code>status</code>.</li>
 <li>The <code>example</code> key refers to on or more blocks with <code>label</code> and <code>json</code> keys, providing a (JSON) example with a title. These examples are placed, in the HTML version, to the end of the section referring to a term (the examples are ignored in the Turtle and the JSON-LD versions). Care should be taken to use the <code>&quot;|&quot;</code> <a href="https://yaml-multiline.info">block style indicator</a> in the YAML file for the examples.</li>
 </ul>
+<p>For these blocks the <code>id</code> key, and either the <code>comment</code> or the <code>defined_by</code> keys, are <em>required</em>. All the others are optional.</p>
 </li>
 <li><p>Top level blocks:</p>
 <ul>
@@ -149,7 +151,7 @@
 <a href="#acknowledgement" id="acknowledgement" style="color: inherit; text-decoration: none;">
   <h2>Acknowledgement</h2>
 </a>
-<p>The original idea, structure, and script (in Ruby) was created by Gregg Kellogg for v1 of the Credentials Vocabulary and with a vocabulary definition using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript.</p>
+<p>The original idea, structure, and script (in Ruby) was created by Gregg Kellogg for v1 of the Credentials Vocabulary and with a vocabulary definition using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript (and developed further since).</p>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">

@@ -78,7 +78,7 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
     // Get the two files from the file system (at some point, this can be extended
     // to URL-s using fetch instead of an fs.read but, so far, there was no need)
     let yaml = '', template = '';
-    let errors = '';
+    const read_errors = [];
     const reads = await Promise.allSettled([
         node_fs_1.promises.readFile(`${basename}.yml`, 'utf-8'),
         node_fs_1.promises.readFile(template_file_name, 'utf-8')
@@ -87,35 +87,40 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
         yaml = reads[0].value;
     }
     else {
-        errors = reads[0].reason;
+        read_errors[0] = reads[0].reason;
     }
     if (reads[1].status === "fulfilled") {
         template = reads[1].value;
     }
     else {
-        errors = `${errors}\n${reads[1].reason}`;
+        read_errors.push(reads[1].reason);
     }
-    if (errors !== '') {
+    if (read_errors.length !== 0) {
         // One of the two files could not be read, we should abort here:
-        throw (errors);
+        throw (new AggregateError(read_errors.join('\n')));
     }
-    const conversion = new VocabGeneration(yaml);
-    {
-        const fs_writes = [
-            node_fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
-            node_fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-            node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template)),
-        ];
-        if (context) {
-            fs_writes.push(node_fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.getContext()));
+    try {
+        const conversion = new VocabGeneration(yaml);
+        {
+            const fs_writes = [
+                node_fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
+                node_fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
+                node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template)),
+            ];
+            if (context) {
+                fs_writes.push(node_fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.getContext()));
+            }
+            const write_errors = (await Promise.allSettled(fs_writes))
+                .filter((result) => result.status === "rejected")
+                .map((result) => (result.status === "rejected" ? result.reason : ''));
+            if (write_errors.length != 0) {
+                // One or more files could not be written, we should throw an exception...
+                throw (new AggregateError(write_errors.join('\n')));
+            }
         }
-        const errors = (await Promise.allSettled(fs_writes))
-            .filter((result) => result.status === "rejected")
-            .map((result) => (result.status === "rejected" ? result.reason : ''));
-        if (errors.length != 0) {
-            // One or more files could not be written, we should throw an exception...
-            throw (errors.join('\n'));
-        }
+    }
+    catch (e) {
+        console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}`);
     }
 }
 exports.generateVocabularyFiles = generateVocabularyFiles;

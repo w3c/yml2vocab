@@ -42,8 +42,16 @@ function toTurtle(vocab) {
     // Factoring out the common fields
     const commonFields = (entry) => {
         turtle += `    rdfs:label "${entry.label}" ;\n`;
-        turtle += `    rdfs:comment """<div>${entry.comment}</div>"""^^rdf:HTML ;\n`;
-        turtle += `    rdfs:isDefinedBy cred: ;\n`;
+        if (entry.comment !== '') {
+            turtle += `    rdfs:comment """<div>${entry.comment}</div>"""^^rdf:HTML ;\n`;
+        }
+        if (entry.defined_by !== '') {
+            turtle += `    rdfs:isDefinedBy <${entry.defined_by}>, <${common_1.global.vocab_url}> ;\n`;
+        }
+        else {
+            turtle += `    rdfs:isDefinedBy <${common_1.global.vocab_url}> ;\n`;
+        }
+        turtle += `    vs:term_status "${entry.status}" ;\n`;
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map((link) => `<${link.url}>`).join(", ");
             turtle += `    rdfs:seeAlso ${urls} ;\n`;
@@ -61,7 +69,7 @@ function toTurtle(vocab) {
     {
         // Block for the top level ontology entries
         turtle += "# Ontology definition\n";
-        turtle += "cred: a owl:Ontology ;\n";
+        turtle += `${common_1.global.vocab_prefix}: a owl:Ontology ;\n`;
         for (const ont of vocab.ontology_properties) {
             if (ont.property === 'dc:date') {
                 turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`;
@@ -81,7 +89,7 @@ function toTurtle(vocab) {
         turtle += "# Class definitions\n";
         for (const cl of vocab.classes) {
             turtle += `${common_1.global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
-            if (cl.deprecated) {
+            if (cl.status === common_1.Status.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
             }
             if (cl.subClassOf && cl.subClassOf.length > 0) {
@@ -95,7 +103,7 @@ function toTurtle(vocab) {
         turtle += "# Property definitions\n";
         for (const prop of vocab.properties) {
             turtle += `${common_1.global.vocab_prefix}:${prop.id} a ${prop.type.join(", ")} ;\n`;
-            if (prop.deprecated) {
+            if (prop.status === common_1.Status.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
             }
             if (prop.subPropertyOf) {
@@ -114,7 +122,7 @@ function toTurtle(vocab) {
         turtle += "# Definitions of individuals\n";
         for (const ind of vocab.individuals) {
             turtle += `${common_1.global.vocab_prefix}:${ind.id} a ${ind.type.join(", ")} ;\n`;
-            if (ind.deprecated) {
+            if (ind.status === common_1.Status.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
             }
             commonFields(ind);

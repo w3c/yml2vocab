@@ -14,8 +14,10 @@ export enum Status {
     deprecated = "deprecated"
 }
 
-// Simple counter to track how many terms are defined as stable, unstable, or deprecated.
-class StatusCounter {
+/**
+* Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
+*/
+export class StatusCounter {
     private stableNum    = 0;
     private reservedNum  = 0;
     private deprecateNum = 0;

@@ -5,9 +5,61 @@
  * @packageDocumentation
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.global = void 0;
+exports.global = exports.StatusCounter = exports.Status = void 0;
+/**
+ * Characterization of a class/property/individual on whether it is stable or not.
+ */
+var Status;
+(function (Status) {
+    Status["stable"] = "stable";
+    Status["reserved"] = "reserved";
+    Status["deprecated"] = "deprecated";
+})(Status = exports.Status || (exports.Status = {}));
+/**
+* Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
+*/
+class StatusCounter {
+    stableNum = 0;
+    reservedNum = 0;
+    deprecateNum = 0;
+    add(status) {
+        switch (status) {
+            case Status.stable: {
+                this.stableNum++;
+                return;
+            }
+            case Status.reserved: {
+                this.reservedNum++;
+                return;
+            }
+            case Status.deprecated: {
+                this.deprecateNum++;
+                return;
+            }
+        }
+    }
+    counter(status) {
+        switch (status) {
+            case Status.stable: return this.stableNum;
+            case Status.reserved: return this.reservedNum;
+            case Status.deprecated: return this.deprecateNum;
+        }
+    }
+}
+exports.StatusCounter = StatusCounter;
+/**
+ * Placeholder for some global data.
+ */
 exports.global = {
+    /** Vocabulary prefix for the vocabulary being handled */
     vocab_prefix: "",
-    vocab_url: ""
+    /** Vocabulary URL for the vocabulary being handled */
+    vocab_url: "",
+    /**
+     * Counter for the terms with various status values.
+     * Some serializers (eg HTML) may optimize/improve the final
+     * output if one of the categories have no entries whatsoever.
+     */
+    status_counter: new StatusCounter(),
 };
 ;

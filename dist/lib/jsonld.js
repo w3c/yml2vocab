@@ -75,10 +75,16 @@ function toJSONLD(vocab) {
     // Factoring out the common fields
     const commonFields = (target, entry) => {
         target["rdfs:label"] = entry.label;
-        target["rdfs:comment"] = {
-            "@value": `<div>${entry.comment}</div>`,
-            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-        };
+        if (entry.comment !== '') {
+            target["rdfs:comment"] = {
+                "@value": `<div>${entry.comment}</div>`,
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            };
+        }
+        if (entry.defined_by !== '') {
+            target["rdfs:isDefinedBy"] = `${entry.defined_by}`;
+        }
+        target["vs:term_status"] = `${entry.status}`;
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map((link) => link.url);
             target["rdfs:seeAlso"] = urls;
@@ -123,7 +129,7 @@ function toJSONLD(vocab) {
             else {
                 cl_object["@type"] = cl.type;
             }
-            if (cl.deprecated) {
+            if (cl.status === common_1.Status.deprecated) {
                 cl_object["owl:deprecated"] = true;
             }
             if (cl.subClassOf && cl.subClassOf.length > 0) {
@@ -147,7 +153,7 @@ function toJSONLD(vocab) {
             else {
                 pr_object["@type"] = prop.type;
             }
-            if (prop.deprecated) {
+            if (prop.status === common_1.Status.deprecated) {
                 pr_object["owl:deprecated"] = true;
             }
             if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
@@ -177,7 +183,7 @@ function toJSONLD(vocab) {
             else {
                 ind_object["@type"] = ind.type;
             }
-            if (ind.deprecated) {
+            if (ind.status === common_1.Status.deprecated) {
                 ind_object["owl:deprecated"] = true;
             }
             commonFields(ind_object, ind);
