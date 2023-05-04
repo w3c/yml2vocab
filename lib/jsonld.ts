@@ -78,9 +78,14 @@ export function toJSONLD(vocab: Vocab): string {
     // Factoring out the common fields
     const commonFields = (target: JSON, entry: RDFTerm): void => {
         target["rdfs:label"]  = entry.label;
-        target["rdfs:comment"] = {
-            "@value" : `<div>${entry.comment}</div>`,
-            "@type"  : "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        if (entry.comment !== '') {
+            target["rdfs:comment"] = {
+                "@value" : `<div>${entry.comment}</div>`,
+                "@type"  : "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            }
+        }
+        if (entry.defined_by !== '') {
+            target["rdfs:isDefinedBy"] = `${entry.defined_by}`;
         }
         target["vs:term_status"] = `${entry.status}`;
         if (entry.see_also && entry.see_also.length > 0) {

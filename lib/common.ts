@@ -17,7 +17,7 @@ export enum Status {
 // Simple counter to track how many terms are defined as stable, unstable, or deprecated.
 class StatusCounter {
     private stableNum    = 0;
-    private unstableNum  = 0;
+    private reservedNum  = 0;
     private deprecateNum = 0;
 
     add(status: Status): void {
@@ -27,7 +27,7 @@ class StatusCounter {
                 return;
             }
             case Status.reserved: {
-                this.unstableNum++; 
+                this.reservedNum++; 
                 return;
             }
             case Status.deprecated: {
@@ -39,7 +39,7 @@ class StatusCounter {
     counter(status: Status): number {
         switch (status) {
             case Status.stable: return this.stableNum; 
-            case Status.reserved: return this.unstableNum;
+            case Status.reserved: return this.reservedNum;
             case Status.deprecated: return this.deprecateNum;
         }
     }
@@ -93,7 +93,8 @@ export interface RawVocabEntry {
     range       ?: string[];
     deprecated  ?: boolean;
     status      ?: Status;
-    comment      : string;
+    defined_by  ?: string;
+    comment     ?: string;
     see_also    ?: Link[];
     example     ?: Example[];
     dataset     ?: boolean;
@@ -143,7 +144,8 @@ export interface RDFTerm {
     id          : string;
     type        : string[];
     label       : string;
-    comment     : string;
+    comment    ?: string;
+    defined_by ?: string;
     see_also   ?: Link[];
     deprecated ?: boolean;
     status     ?: Status;

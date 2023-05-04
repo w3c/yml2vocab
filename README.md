@@ -11,15 +11,18 @@ When running, the script relies on two files:
 
 The vocabulary is defined in a YAML file, which contains several block sequences with the following keys: `vocab`, `prefix`, `ontology`, `class`, `property`, and `individual`. Only the `vocab` and `ontology` blocks are _required_, all others are optional.
 
-Each block sequence consists of blocks with the following keys:`id`, `property`, `value`, `label`, `upper_value`, `domain`, `range`, `deprecated`, `comment`, and `see_also`. The interpretation of these key/value pairs may depend on the top level block where they reside, but some have a common interpretation.
+Each block sequence consists of blocks with the following keys:`id`, `property`, `value`, `label`, `upper_value`, `domain`, `range`, `deprecated`, `comment`, `status`, `defined_by`, and `see_also`. The interpretation of these key/value pairs may depend on the top level block where they reside, but some have a common interpretation.
 
 - Common key/value pairs for the `class`, `property`, and `individual` blocks:
   - `label` refers to a short header label to the term.
   - `comment` refers to a longer description of the term, and can be used for blocks in the `class`, `property` and `individual` top-level blocks. It may include [HTML Flow content elements](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories). The comment will be encapsulated into an HTML `<div>` element and will then be displayed verbatim in the HTML version of the vocabulary, and as a literal of type `rdf:HTML` in the JSON-LD and Turtle versions. Note that the Markdown syntax for simple formatting, like the use of "`" for `<code.../>`, may also be used.
+  - `defined_by` should be a URL, referring to the formal definition of the term.
   - `see_also` refers to one or more blocks with `label` and `url` keys, providing a human readable title and a URL, respectively, to an external document that can be referred to by the description of the term. (These are translated into an `rdfs:seeAlso` term in the vocabulary.)
   - The `status` key refers to a string that can be `stable`, `reserved`, or `deprecated`. The terms are divided, in the HTML output, into these three sections. `stable` is the default.
   - The `deprecated` key refers to a boolean, signaling whether term is deprecated or not. Default is `false`. This property is a leftover from earlier version and is overwritten, if applicable, by the value of `status`.
-  - The `example` key refers to on or more blocks with `label` and `json` keys, providing a (JSON) example with a title. These examples are placed, in the HTML version, to the end of the section referring to a term (the examples are ignored in the Turtle and the JSON-LD versions). Care should be taken to use the `"|"` [block style indicator](https://yaml-multiline.info) in the YAML file for the examples. 
+  - The `example` key refers to on or more blocks with `label` and `json` keys, providing a (JSON) example with a title. These examples are placed, in the HTML version, to the end of the section referring to a term (the examples are ignored in the Turtle and the JSON-LD versions). Care should be taken to use the `"|"` [block style indicator](https://yaml-multiline.info) in the YAML file for the examples.
+
+  For these blocks the `id` key, and either the `comment` or the `defined_by` keys, are _required_. All the others are optional.
 
 - Top level blocks:
   - `vocab`: a block with the `prefix` and the `value` keys defining the prefix and the URL of the vocabulary, respectively. The prefix can be used in the vocabulary descriptions, e.g., for cross references.

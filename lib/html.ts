@@ -115,14 +115,21 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             addChild(span, 'em', ` (${item.status})`);
         }
 
-        // let explanation = addBreak(item.comment);
-        let description = item.comment;
-        if (item.type.includes("owl:ObjectProperty")) {
-            description += "<br><br>The property's value should be a URL, i.e., not a literal."
+        if (item.defined_by !== "") {
+            addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by}">formal definition of the term</a>.`);
         }
-        const div = addChild(section, 'div', description);
-        div.setAttribute('property', 'rdfs:comment');
-        div.setAttribute('datatype', 'rdf:HTML')
+
+        if (item.comment !== "") {
+            let description = item.comment;
+            if (item.type.includes("owl:ObjectProperty")) {
+                description += "<br><br>The property's value should be a URL, i.e., not a literal."
+            }
+            const div = addChild(section, 'div', description);
+            div.setAttribute('property', 'rdfs:comment');
+            div.setAttribute('datatype', 'rdf:HTML')
+        } else if (item.type.includes("owl:ObjectProperty")) {
+            addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
+        }
 
         if (item.see_also && item.see_also.length > 0) {
             const dl = addChild(section, 'dl');

@@ -163,21 +163,22 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         if (raw.status !== undefined) {
             return { status : raw.status, deprecated : raw.status === Status.deprecated }
         } else if (raw.deprecated != undefined) {
-            return { status : raw.deprecated ? Status.deprecated: Status.stable, deprecated : raw.deprecated }
+            return { status : raw.deprecated ? Status.deprecated: Status.reserved, deprecated : raw.deprecated }
         } else {
-            return { status: Status.stable, deprecated : false }
+            return { status: Status.reserved, deprecated : false }
         }
     })();
 
     return {
-        id          : (raw.id) ? raw.id : "Vocabulary definition error: no ID provided.",
+        id          : (raw.id) ? raw.id : "",
         property    : raw.property,
         value       : raw.value,
-        label       : (raw.label) ? raw.label : "Vocabulary definition error: no label provided.",
+        label       : (raw.label) ? raw.label : "",
         upper_value : toArray(raw.upper_value),
         domain      : toArray(raw.domain),
         range       : toArray(raw.range),
         deprecated  : deprecated,
+        defined_by  : (raw.defined_by) ? raw.defined_by : "",
         status      : status,
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
@@ -313,6 +314,7 @@ export function getData(vocab_source: string): Vocab {
                 label         : raw.label,
                 comment       : raw.comment,
                 deprecated    : raw.deprecated,
+                defined_by    : raw.defined_by,
                 status        : raw.status,
                 subPropertyOf : raw.upper_value,
                 see_also      : raw.see_also,
@@ -359,6 +361,7 @@ export function getData(vocab_source: string): Vocab {
                 label      : raw.label,
                 comment    : raw.comment,
                 deprecated : raw.deprecated,
+                defined_by : raw.defined_by,
                 status     : raw.status,
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
@@ -375,6 +378,7 @@ export function getData(vocab_source: string): Vocab {
                 label         : raw.label,
                 comment       : raw.comment,
                 deprecated    : raw.deprecated,
+                defined_by    : raw.defined_by,
                 status        : raw.status,
                 type          : (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also      : raw.see_also,
