@@ -1,3 +1,7 @@
+## Version 1.4.1
+
+- The default value set for `status` was set to `reserved`, rather than `stable`. 
+
 ## Version 1.4.0
 
 - Instead of the (binary) `deprecated` flag this version uses the `status` value in the yml file whose value can be `stable`, `reserved`, and `deprecated`. The terms are marked up as such in the final vocabulary, and the HTML output separates these three classes into separate to-level sections.

@@ -118,7 +118,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         }
     }
 
-    // The "toSeeAlso" structure needs some special treatment and should also be turned into an array
+    // The "toExample" structure needs some special treatment and should also be turned into an array
     const toExample = (val: undefined|Example|Example[]) : undefined|Example[] => {
         if (val === undefined) {
             return undefined
@@ -161,11 +161,20 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
 
     const {status, deprecated} = ((): {status: Status, deprecated: boolean} => {
         if (raw.status !== undefined) {
-            return { status : raw.status, deprecated : raw.status === Status.deprecated }
+            return { 
+                status     : raw.status, 
+                deprecated : raw.status === Status.deprecated
+            }
         } else if (raw.deprecated != undefined) {
-            return { status : raw.deprecated ? Status.deprecated: Status.reserved, deprecated : raw.deprecated }
+            return { 
+                status     : raw.deprecated ? Status.deprecated : Status.reserved, 
+                deprecated : raw.deprecated 
+            }
         } else {
-            return { status: Status.reserved, deprecated : false }
+            return { 
+                status     : Status.stable, 
+                deprecated : false 
+            }
         }
     })();
 
