@@ -119,7 +119,7 @@ function finalizeRawEntry(raw) {
             }
         }
     };
-    // The "toSeeAlso" structure needs some special treatment and should also be turned into an array
+    // The "toExample" structure needs some special treatment and should also be turned into an array
     const toExample = (val) => {
         if (val === undefined) {
             return undefined;
@@ -162,13 +162,22 @@ function finalizeRawEntry(raw) {
     // switch to status, and all this will go away.
     const { status, deprecated } = (() => {
         if (raw.status !== undefined) {
-            return { status: raw.status, deprecated: raw.status === common_1.Status.deprecated };
+            return {
+                status: raw.status,
+                deprecated: raw.status === common_1.Status.deprecated
+            };
         }
         else if (raw.deprecated != undefined) {
-            return { status: raw.deprecated ? common_1.Status.deprecated : common_1.Status.reserved, deprecated: raw.deprecated };
+            return {
+                status: raw.deprecated ? common_1.Status.deprecated : common_1.Status.reserved,
+                deprecated: raw.deprecated
+            };
         }
         else {
-            return { status: common_1.Status.reserved, deprecated: false };
+            return {
+                status: common_1.Status.stable,
+                deprecated: false
+            };
         }
     })();
     return {
