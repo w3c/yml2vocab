@@ -1,12 +1,12 @@
 {
     "@context": {
         "cred": "https://w3.org/2018/credentials#",
-        "odrl": "http://www.w3.org/ns/odrl/2/",
         "dc": "http://purl.org/dc/terms/",
         "owl": "http://www.w3.org/2002/07/owl#",
         "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "vs": "http://www.w3.org/2003/06/sw-vocab-status/ns#",
         "dc:date": {
             "@type": "xsd:date"
         },
@@ -73,102 +73,95 @@
         "en": "RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-model-2.0/",
-    "dc:date": "2023-03-24",
+    "dc:date": "2023-07-19",
     "rdfs_classes": [
         {
-            "@id": "cred:JsonSchemaValidator2018",
-            "@type": [
-                "rdfs:Class",
-                "owl:DeprecatedClass"
-            ],
-            "owl:deprecated": true,
-            "rdfs:subClassOf": [
-                "cred:CredentialSchema"
-            ],
-            "rdfs:label": "Json schema validator 2018",
-            "rdfs:comment": {
-                "@value": "<div>A type of validator that can be used to syntactically validate JSON documents using the JSON Schema language.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
-        },
-        {
-            "@id": "cred:ManualRefreshService2018",
-            "@type": [
-                "rdfs:Class",
-                "owl:DeprecatedClass"
-            ],
-            "owl:deprecated": true,
-            "rdfs:subClassOf": [
-                "cred:RefreshService"
-            ],
-            "rdfs:label": "Manual refresh service 2018",
-            "rdfs:comment": {
-                "@value": "<div>A type of Refresh Service that must be interacted with in a manual fashion.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
-        },
-        {
-            "@id": "cred:RefreshService",
+            "@id": "cred:CredentialEvidence",
             "@type": "rdfs:Class",
-            "rdfs:label": "Refresh service",
+            "rdfs:label": "Credential Evidence",
             "rdfs:comment": {
-                "@value": "<div>A Refresh Service is a mechanism that can be utilized by software agents to retrieve an updated copy of a Verifiable Credential.</div>",
+                "@value": "<div>A Credential Evidence provides evidence schemes that are used by the <a href=\"#evidence\">evidence</a> property. This class serves as a supertype for specific evidence types.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:CredentialSchema",
             "@type": "rdfs:Class",
             "rdfs:label": "Credential schema",
             "rdfs:comment": {
-                "@value": "<div>A Credential Schema provides verifiers with enough information to determine if the provided data conforms to the provided schema.</div>",
+                "@value": "<div>A Credential Schema provides verifiers with enough information to determine if the provided data conforms to the provided schema. This class serves as a supertype for specific schemas (e.g., <a href=\"#JsonSchema2023\">JsonSchema2023</a>).</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:CredentialStatus",
             "@type": "rdfs:Class",
             "rdfs:label": "Credential status",
             "rdfs:comment": {
-                "@value": "<div>A Credential Status provides enough information to determine the current status of the credential (for example, suspended or revoked). It MUST include the `id` property, which MUST be a URL, and the `type` property, which expresses the credential status type (also referred to as the credential status scheme)</div>",
+                "@value": "<div>A Credential Status provides enough information to determine the current status of the credential (for example, suspended or revoked). This class serves as a supertype for specific status types.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "vs:term_status": "stable"
         },
         {
-            "@id": "cred:CredentialEvidence",
+            "@id": "cred:JsonSchema2023",
             "@type": "rdfs:Class",
-            "rdfs:label": "Credential evidence",
+            "rdfs:subClassOf": [
+                "cred:CredentialSchema"
+            ],
+            "rdfs:label": "JSON schema validator 2023",
             "rdfs:comment": {
-                "@value": "<div>A Credential Evidence scheme provides enough information to a verifier to determine whether the evidence gathered meets their requirements for issuing a credential. The precise content of each evidence scheme is determined by the specific evidence type definition.</div>",
+                "@value": "<div>A type of validator for the validation of <a href=\"#VerifiableCredential\">Verifiable Credentials</a>, based on JSON Schema.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-json-schema/#jsonschema2023",
+            "vs:term_status": "stable"
+        },
+        {
+            "@id": "cred:RefreshService",
+            "@type": "rdfs:Class",
+            "rdfs:label": "Refresh service",
+            "rdfs:comment": {
+                "@value": "<div>A Refresh Service is a mechanism that can be utilized by software agents to retrieve an updated copy of a Verifiable Credential. This class serves as a supertype for specific refresh service types.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "vs:term_status": "stable"
+        },
+        {
+            "@id": "cred:TermsOfUse",
+            "@type": "rdfs:Class",
+            "rdfs:label": "Terms of use",
+            "rdfs:comment": {
+                "@value": "<div>Policy under which the creator issued the credential or presentation. This class serves as a supertype for specific types for terms of use.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:VerifiableCredential",
             "@type": "rdfs:Class",
             "rdfs:label": "Verifiable credential",
-            "rdfs:comment": {
-                "@value": "<div>A Credential is a set of one or more claims made by an issuer. A Verifiable Credential is a tamper-evident credential that has authorship that can be cryptographically verified. Verifiable Credentials can be used to build Verifiable Presentations, which can also be cryptographically verified.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#credentials",
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:VerifiableCredentialGraph",
             "@type": "rdfs:Class",
             "rdfs:label": "Verifiable credential graph",
             "rdfs:comment": {
-                "@value": "<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Verifiable Credential</div>",
+                "@value": "<div>Instances of this class are <a href=\"https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph\">RDF Graphs</a> [[RDF12-CONCEPTS]], where each of these graphs must include exactly one <a href=\"#VerifiableCredential\">Verifiable Credential</a>.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:VerifiablePresentation",
             "@type": "rdfs:Class",
             "rdfs:label": "Verifiable presentation",
-            "rdfs:comment": {
-                "@value": "<div>A Presentation is data derived from one or more Credentials, issued by one or more `issuers`, that is shared with a specific `verifier`. A Verifiable Presentation is a tamper-evident Presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs).</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#presentations",
+            "vs:term_status": "stable"
         }
     ],
     "rdfs_properties": [
@@ -178,10 +171,8 @@
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "cred:CredentialSchema",
             "rdfs:label": "Credential schema",
-            "rdfs:comment": {
-                "@value": "<div>The value of the `credentialSchema` property MUST be one or more <a href=\"#CredentialSchema\">Credential schema</a> instances.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSchema",
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:credentialStatus",
@@ -189,10 +180,8 @@
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "cred:CredentialStatus",
             "rdfs:label": "Credential status",
-            "rdfs:comment": {
-                "@value": "<div>The value of the `credentialStatus` property MUST be an instance of a <a href=\"#CredentialStatus\">Credential status</a>.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialStatus",
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:credentialSubject",
@@ -205,7 +194,9 @@
             "rdfs:comment": {
                 "@value": "<div>An entity about which claims are made.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSubject",
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:evidence",
@@ -213,10 +204,8 @@
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "cred:CredentialEvidence",
             "rdfs:label": "Evidence",
-            "rdfs:comment": {
-                "@value": "<div>The value of the `evidence` property MUST be one or more <a href=\"#CredentialEvidence\">Credential evidence</a> instances.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-evidence",
+            "vs:term_status": "reserved"
         },
         {
             "@id": "cred:expirationDate",
@@ -230,9 +219,11 @@
             "rdfs:range": "xsd:dateTime",
             "rdfs:label": "Expiration date",
             "rdfs:comment": {
-                "@value": "<div>The value of the `expirationDate` property was used to express the date and time the credential ceases to be valid. It has been deprecated in favor of <a href=\"#validUntil\">`validUntil`</a></div>",
+                "@value": "<div>The value of the property was used to express the date and time the credential ceases to be valid. It has been deprecated in favor of <a href=\"#validUntil\">validUntil</a></div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model/#expiration",
+            "vs:term_status": "deprecated"
         },
         {
             "@id": "cred:holder",
@@ -240,17 +231,10 @@
                 "rdfs:Property",
                 "owl:ObjectProperty"
             ],
-            "rdfs:domain": {
-                "owl:unionOf": [
-                    "cred:VerifiableCredential",
-                    "cred:VerifiablePresentation"
-                ]
-            },
+            "rdfs:domain": "cred:VerifiablePresentation",
             "rdfs:label": "Holder",
-            "rdfs:comment": {
-                "@value": "<div>The value of the `holder` property MUST be a URI. It is RECOMMENDED that dereferencing the URI results in a document containing machine-readable information about the holder that can be used to verify the information expressed in the credential.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-holder",
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:issuanceDate",
@@ -264,23 +248,11 @@
             "rdfs:range": "xsd:dateTime",
             "rdfs:label": "Issuance date",
             "rdfs:comment": {
-                "@value": "<div>The value of the `issuanceDate` property was used to represents the earliest date when the information associated with the <a href=\"#credentialSubject\">`credentialSubject`</a> property became valid. This property has been deprecated in favour of <a href=\"#validFrom\">`validFrom`</a>.</div>",
+                "@value": "<div>The value of the property was used to represent the earliest date when the information associated with the <a href=\"#credentialSubject\">credentialSubject</a> property became valid. This property has been deprecated in favor of <a href=\"#validFrom\">validFrom</a>.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
-        },
-        {
-            "@id": "cred:issued",
-            "@type": [
-                "rdfs:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:range": "xsd:dateTime",
-            "rdfs:label": "issue date",
-            "rdfs:comment": {
-                "@value": "<div>The value of the `issued` property MUST be a string value of an ISO8601 combined date and time string representing the date and time the credential was issued. Note that this date represents the earliest date when the information associated with the <a href=\"#credentialSubject>`credentialSubject`</a> property became valid.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model/#issuance-date",
+            "vs:term_status": "deprecated"
         },
         {
             "@id": "cred:issuer",
@@ -289,22 +261,34 @@
                 "owl:ObjectProperty"
             ],
             "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:label": "issuer",
+            "rdfs:label": "Issuer",
             "rdfs:comment": {
-                "@value": "<div>The value of the `issuer` property MUST be a URI. It is RECOMMENDED that dereferencing the URI results in a document containing machine-readable information about the issuer that can be used to verify the information expressed in the credential.</div>",
+                "@value": "<div>The value of the property must be a URL uniquely identifying the issuer.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-issuer",
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:refreshService",
             "@type": "rdfs:Property",
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "cred:RefreshService",
-            "rdfs:label": "refresh service",
+            "rdfs:label": "Refresh service",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-refreshService",
+            "vs:term_status": "reserved"
+        },
+        {
+            "@id": "cred:renderMethod",
+            "@type": "rdfs:Property",
+            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:range": "cred:RefreshService",
+            "rdfs:label": "Render method",
             "rdfs:comment": {
-                "@value": "<div>The value of the `refreshService` property MUST be one or more Refresh Service instances such that the holder can refresh the credential.</div>",
+                "@value": "<div>A property used for specifying how to render a credential into a visual, auditory, or haptic format.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "vs:term_status": "reserved"
         },
         {
             "@id": "cred:serviceEndpoint",
@@ -313,22 +297,26 @@
                 "owl:ObjectProperty"
             ],
             "rdfs:domain": "cred:RefreshService",
-            "rdfs:label": "service endpoint",
+            "rdfs:label": "Service endpoint",
             "rdfs:comment": {
-                "@value": "<div>The value of the `serviceEndpoint` property MUST be a URL to the service endpoint associated with the subject.</div>",
+                "@value": "<div>The value of the property must be a URL to the service endpoint associated with the subject.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:termsOfUse",
             "@type": "rdfs:Property",
-            "rdfs:domain": "cred:VerifiableCredential,cred:VerifiablePresentation",
-            "rdfs:range": "odrl:Policy",
-            "rdfs:label": "terms of use",
-            "rdfs:comment": {
-                "@value": "<div>If specified, the value of the optional `termsOfUse` property MUST specify one or more terms of use policies under which the issuer issued the credential or presentation. Each `termsOfUse` policy MUST specify its type (for example, `IssuerPolicy`) and MAY specify its instance `id`. The precise content of each term of use is determined by the specific `TermsOfUse` type definition. If the recipient (a holder or verifier) violates the specified terms of use, the responsibility is their own, and such violation may incur legal liability.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "cred:VerifiableCredential",
+                    "cred:VerifiablePresentation"
+                ]
+            },
+            "rdfs:range": "TermsOfUse",
+            "rdfs:label": "Terms of use",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-termsOfUse",
+            "vs:term_status": "reserved"
         },
         {
             "@id": "cred:validFrom",
@@ -339,10 +327,8 @@
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "xsd:dateTime",
             "rdfs:label": "Valid from",
-            "rdfs:comment": {
-                "@value": "<div>The value of the `validFrom` property MUST be a string value of an ISO8601 combined date and time string representing the date and time the credential was issued. Note that this date represents the earliest date when the information associated with the <a href=\"#credentialSubject>`credentialSubject`</a> property became valid.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-validFrom",
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:validUntil",
@@ -353,21 +339,21 @@
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "xsd:dateTime",
             "rdfs:label": "Valid until",
-            "rdfs:comment": {
-                "@value": "<div>The value of the `validUntil` property MUST be a string value of an ISO8601 combined date and time string representing the date and time the credential ceases to be valid.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-validUntil",
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:verifiableCredential",
             "@type": "rdfs:Property",
             "rdfs:domain": "cred:VerifiablePresentation",
             "rdfs:range": "cred:VerifiableCredentialGraph",
-            "rdfs:label": "verifiable credential",
+            "rdfs:label": "Verifiable credential",
             "rdfs:comment": {
-                "@value": "<div>The value of the `verifiableCredential` property MUST identify a <a href=\"#VerifiableCredentialGraph\">Verifiable credential graph</a> (informally, it indirectly identifies a <a href=\"#VerifiableCredential\">Verifiable credential</a> contained in a separate graph).</div>",
+                "@value": "<div>The value of the property must identify a <a href=\"#VerifiableCredentialGraph\">Verifiable credential graph</a> (informally, it indirectly identifies a <a href=\"#VerifiableCredential\">Verifiable credential</a> contained in a separate graph).</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            }
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential",
+            "vs:term_status": "stable"
         }
     ]
 }
