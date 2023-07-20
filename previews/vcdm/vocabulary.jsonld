@@ -73,7 +73,7 @@
         "en": "RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-model-2.0/",
-    "dc:date": "2023-07-19",
+    "dc:date": "2023-07-20",
     "rdfs_classes": [
         {
             "@id": "cred:CredentialEvidence",
@@ -324,7 +324,12 @@
                 "rdfs:Property",
                 "owl:DatatypeProperty"
             ],
-            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "cred:VerifiableCredential",
+                    "cred:VerifiablePresentation"
+                ]
+            },
             "rdfs:range": "xsd:dateTime",
             "rdfs:label": "Valid from",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-validFrom",
@@ -336,7 +341,12 @@
                 "rdfs:Property",
                 "owl:DatatypeProperty"
             ],
-            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "cred:VerifiableCredential",
+                    "cred:VerifiablePresentation"
+                ]
+            },
             "rdfs:range": "xsd:dateTime",
             "rdfs:label": "Valid until",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-validUntil",
