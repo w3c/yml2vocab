@@ -24,12 +24,14 @@
   },
   "scripts": {
     "generate": "node_modules/.bin/ts-node main.ts",
-    "test_security": "node_modules/.bin/ts-node main.ts -v example/security.yml -t example/security_template.html -c",
-    "test_vcdm": "node_modules/.bin/ts-node main.ts -v example/credentials.yml -t example/template.html -c",
-    "test": "node_modules/.bin/ts-node main.ts -v example/test.yml -t example/test_template.html -c",
-    "test_local": "node_modules/.bin/ts-node main.ts -v local/tests/test.yml -t local/tests/test_template.html",
     "docs": "./node_modules/.bin/typedoc main.js index.ts lib/*",
     "distribute": "tsc; git commit -a -m \"New distribution\" ; git push",
+    "test_di": "node_modules/.bin/ts-node main.ts -v example/security.yml -t example/security_template.html -c",
+    "test_vcdm": "node_modules/.bin/ts-node main.ts -v example/credentials.yml -t example/template.html -c",
+    "test": "node_modules/.bin/ts-node main.ts -v example/test.yml -t example/test_template.html -c",
+    "local_test": "node_modules/.bin/ts-node main.ts -v local/tests/test.yml -t local/tests/test_template.html",
+    "local_vcdm": "node_modules/.bin/ts-node main.ts -v local/vcdm/vocabulary.yml -t local/vcdm/template.html",
+    "local_di": "node_modules/.bin/ts-node main.ts -v local/di/vocabulary.yml -t local/di/template.html",
     "preview_vcdm": "node_modules/.bin/ts-node main.ts -v previews/vcdm/vocabulary.yml -t previews/vcdm/template.html",
     "preview_di": "node_modules/.bin/ts-node main.ts -v previews/di/vocabulary.yml -t previews/di/template.html"
   },
