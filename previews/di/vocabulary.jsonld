@@ -74,7 +74,7 @@
         "en": "vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs\n"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2023-07-20",
+    "dc:date": "2023-07-21",
     "rdfs_classes": [
         {
             "@id": "sec:Proof",
@@ -131,7 +131,7 @@
             "@type": "rdfs:Class",
             "rdfs:label": "Cryptographic key",
             "rdfs:comment": {
-                "@value": "<div>This class represents a cryptographic key that may be used for encryption, decryption, or digitally signing data. This class serves as a supertype for specific types for terms of use.</div>",
+                "@value": "<div>This class represents a cryptographic key that may be used for encryption, decryption, or digitally signing data. This class serves as a supertype for specific key types.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
             "vs:term_status": "stable"
@@ -214,9 +214,6 @@
                 "owl:DeprecatedClass"
             ],
             "owl:deprecated": true,
-            "rdfs:subClassOf": [
-                "sec:Key"
-            ],
             "rdfs:label": "ecdsa-secp256k1 recovery method, 2020 version",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverymethod2020",
             "vs:term_status": "deprecated"
@@ -239,9 +236,6 @@
                 "owl:DeprecatedClass"
             ],
             "owl:deprecated": true,
-            "rdfs:subClassOf": [
-                "sec:Key"
-            ],
             "rdfs:label": "X25519 Key Agreement Key, 2019 version",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#X25519KeyAgreementKey2019",
             "vs:term_status": "deprecated"
@@ -253,9 +247,6 @@
                 "owl:DeprecatedClass"
             ],
             "owl:deprecated": true,
-            "rdfs:subClassOf": [
-                "sec:Key"
-            ],
             "rdfs:label": "ED2559 Verification Key, 2018 version",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519",
             "vs:term_status": "deprecated"
@@ -267,9 +258,6 @@
                 "owl:DeprecatedClass"
             ],
             "owl:deprecated": true,
-            "rdfs:subClassOf": [
-                "sec:Key"
-            ],
             "rdfs:label": "JSON Web Key, 2020 version",
             "rdfs:comment": {
                 "@value": "<div>A linked data proof suite verification method type used with <a href=\"#JsonWebSignature2020\">`JsonWebSignature2020`</a></div>",
@@ -318,9 +306,6 @@
                 "owl:DeprecatedClass"
             ],
             "owl:deprecated": true,
-            "rdfs:subClassOf": [
-                "sec:Key"
-            ],
             "rdfs:label": "BLS 12381 G1 Signature Key, 2020 version",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#Bls12381G1Key2020",
             "vs:term_status": "deprecated"
@@ -332,9 +317,6 @@
                 "owl:DeprecatedClass"
             ],
             "owl:deprecated": true,
-            "rdfs:subClassOf": [
-                "sec:Key"
-            ],
             "rdfs:label": "BLS 12381 G2 Signature Key, 2020 version",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#Bls12381G2Key2020",
             "vs:term_status": "deprecated"
@@ -645,7 +627,6 @@
                 "owl:DatatypeProperty"
             ],
             "owl:deprecated": true,
-            "rdfs:domain": "sec:Key",
             "rdfs:range": "xsd:string",
             "rdfs:label": "Base58-encoded Public Key",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#publicKeyBase58",
@@ -659,7 +640,6 @@
                 "owl:DatatypeProperty"
             ],
             "owl:deprecated": true,
-            "rdfs:domain": "sec:Key",
             "rdfs:range": "xsd:string",
             "rdfs:label": "Public key PEM",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#publicKeyPem",
@@ -673,7 +653,6 @@
                 "owl:DatatypeProperty"
             ],
             "owl:deprecated": true,
-            "rdfs:domain": "sec:Key",
             "rdfs:range": "xsd:string",
             "rdfs:label": "Hex-encoded version of public Key",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#publicKeyHex",
