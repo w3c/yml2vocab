@@ -78,7 +78,7 @@ export function toTurtle(vocab: Vocab): string {
                 if (ont.url) {
                     turtle += `    ${ont.property} <${ont.value}> ;\n`;
                 } else {
-                    turtle += `    ${ont.property} """${ont.value}""" ;\n`;
+                    turtle += `    ${ont.property} """${ont.value}"""@en ;\n`;
                 }
             }
         }
