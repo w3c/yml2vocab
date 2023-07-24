@@ -11,20 +11,20 @@ cred: a owl:Ontology ;
     dc:title """Verifiable Credentials Vocabulary v2.0""" ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]""" ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2023-07-21"^^xsd:date ;
+    dc:date "2023-07-24"^^xsd:date ;
 .
 
 # Class definitions
 cred:CredentialEvidence a rdfs:Class ;
     rdfs:label "Credential Evidence" ;
-    rdfs:comment """<div>A Credential Evidence provides evidence schemes that are used by the <a href="#evidence">evidence</a> property. This class serves as a supertype for specific evidence types.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Credential Evidence provides an evidence scheme that is used by the <a href="#evidence">evidence</a> property. This class serves as a supertype for specific evidence types.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:CredentialSchema a rdfs:Class ;
     rdfs:label "Credential schema" ;
-    rdfs:comment """<div>A Credential Schema provides verifiers with enough information to determine if the provided data conforms to the provided schema. This class serves as a supertype for specific schemas (e.g., <a href="#JsonSchema2023">JsonSchema2023</a>).</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Credential Schema provides a verifier with enough information to determine if the provided data conforms to the provided schema. This class serves as a supertype for specific schemas (e.g., <a href="#JsonSchema2023">JsonSchema2023</a>).</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
@@ -46,14 +46,14 @@ cred:JsonSchema2023 a rdfs:Class ;
 
 cred:RefreshService a rdfs:Class ;
     rdfs:label "Refresh service" ;
-    rdfs:comment """<div>A Refresh Service is a mechanism that can be utilized by software agents to retrieve an updated copy of a Verifiable Credential. This class serves as a supertype for specific refresh service types.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Refresh Service is a mechanism that can be used by a software agent to retrieve an updated copy of a Verifiable Credential. This class serves as a supertype for specific refresh service types.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:TermsOfUse a rdfs:Class ;
     rdfs:label "Terms of use" ;
-    rdfs:comment """<div>Policy under which the creator issued the credential or presentation. This class serves as a supertype for specific types for terms of use.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>Terms of use reflect the policy/ies under which the issuer issued the credential or presentation. This class serves as a supertype for specific types of terms of use.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
@@ -124,7 +124,7 @@ cred:expirationDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty
     owl:deprecated true ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Expiration date" ;
-    rdfs:comment """<div>The value of the property was used to express the date and time the credential ceases to be valid. It has been deprecated in favor of <a href="#validUntil">validUntil</a></div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The value of this property was used in the past to express the date and time the credential ceased to be valid. It has been deprecated in favor of <a href="#validUntil">validUntil</a></div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#expiration>, <https://w3.org/2018/credentials#> ;
     vs:term_status "deprecated" ;
 .
@@ -140,7 +140,7 @@ cred:issuanceDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     owl:deprecated true ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Issuance date" ;
-    rdfs:comment """<div>The value of the property was used to represent the earliest date when the information associated with the <a href="#credentialSubject">credentialSubject</a> property became valid. This property has been deprecated in favor of <a href="#validFrom">validFrom</a>.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The value of this property was used in the past to represent the earliest date when the information associated with the <a href="#credentialSubject">credentialSubject</a> property became valid. This property has been deprecated in favor of <a href="#validFrom">validFrom</a>.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#issuance-date>, <https://w3.org/2018/credentials#> ;
     vs:term_status "deprecated" ;
 .
@@ -148,7 +148,7 @@ cred:issuanceDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
 cred:issuer a rdfs:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:label "Issuer" ;
-    rdfs:comment """<div>The value of the property must be a URL uniquely identifying the issuer.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The value of this property must be a URL uniquely identifying the issuer.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-issuer>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
@@ -172,7 +172,7 @@ cred:renderMethod a rdfs:Property ;
 cred:serviceEndpoint a rdfs:Property, owl:ObjectProperty ;
     rdfs:domain cred:RefreshService ;
     rdfs:label "Service endpoint" ;
-    rdfs:comment """<div>The value of the property must be a URL to the service endpoint associated with the subject. <b><em>There is no URL yet in a VCWG document to <em>define</em> this term.</em></b></div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The value of this property must be a URL to the service endpoint associated with the subject. <b><em>There is no URL yet in a VCWG document to <em>define</em> this term.</em></b></div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
@@ -205,7 +205,7 @@ cred:verifiableCredential a rdfs:Property ;
     rdfs:domain cred:VerifiablePresentation ;
     rdfs:range cred:VerifiableCredentialGraph ;
     rdfs:label "Verifiable credential" ;
-    rdfs:comment """<div>The value of the property must identify a <a href="#VerifiableCredentialGraph">Verifiable credential graph</a> (informally, it indirectly identifies a <a href="#VerifiableCredential">Verifiable credential</a> contained in a separate graph).</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>The value of this property identifies a <a href="#VerifiableCredentialGraph">Verifiable credential graph</a>. (Informally, it indirectly identifies a <a href="#VerifiableCredential">Verifiable credential</a> contained in a separate graph.)</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
