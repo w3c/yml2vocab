@@ -182,6 +182,10 @@
             "@id": "cred:VerifiablePresentation",
             "@type": "rdfs:Class",
             "rdfs:label": "Verifiable presentation",
+            "rdfs:comment": {
+                "@value": "<div>A Presentation is data derived from one or more Credentials, issued by one or more `issuers`, that is shared with a specific `verifier`. A Verifiable Presentation is a tamper-evident Presentation encoded in such a way that authorship of the data can be trusted after a process of cryptographic verification. Certain types of verifiable presentations might contain data that is synthesized from, but do not contain, the original verifiable credentials (for example, zero-knowledge proofs).</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#presentations",
             "vs:term_status": "stable"
         }
@@ -330,7 +334,7 @@
                     "cred:VerifiablePresentation"
                 ]
             },
-            "rdfs:range": "TermsOfUse",
+            "rdfs:range": "cred:TermsOfUse",
             "rdfs:label": "Terms of use",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-termsOfUse",
             "vs:term_status": "reserved"
