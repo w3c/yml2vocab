@@ -1,3 +1,7 @@
+## Version 1.4.2
+
+- Minor improvement on the generated JSON vs language handling (thanks to @pchampin).
+
 ## Version 1.4.1
 
 - The default value set for `status` was set to `reserved`, rather than `stable`. 

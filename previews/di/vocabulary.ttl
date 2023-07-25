@@ -9,11 +9,11 @@
 
 # Ontology definition
 sec: a owl:Ontology ;
-    dc:title """Security Vocabulary""" ;
+    dc:title """Security Vocabulary"""@en ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs
-""" ;
+"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2023-07-24"^^xsd:date ;
+    dc:date "2023-07-25"^^xsd:date ;
 .
 
 # Class definitions

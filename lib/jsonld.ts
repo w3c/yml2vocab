@@ -119,7 +119,8 @@ export function toJSONLD(vocab: Vocab): string {
                 jsonld[ont.property] = ont.value;
             } else {
                 jsonld[ont.property] = {
-                    en : ont.value
+                    "@value" : ont.value,
+                    "@language" : "en"
                 }
             }
         }

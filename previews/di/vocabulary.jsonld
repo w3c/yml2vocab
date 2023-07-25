@@ -63,18 +63,26 @@
         "rdfs_instances": {
             "@reverse": "rdfs:isDefinedBy",
             "@type": "@id"
+        },
+        "dc:title": {
+            "@container": "@language"
+        },
+        "dc:description": {
+            "@container": "@language"
         }
     },
     "@id": "https://w3id.org/security#",
     "@type": "owl:Ontology",
     "dc:title": {
-        "en": "Security Vocabulary"
+        "@value": "Security Vocabulary",
+        "@language": "en"
     },
     "dc:description": {
-        "en": "vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs\n"
+        "@value": "vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs\n",
+        "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2023-07-24",
+    "dc:date": "2023-07-25",
     "rdfs_classes": [
         {
             "@id": "sec:Proof",

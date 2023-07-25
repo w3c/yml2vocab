@@ -28,6 +28,8 @@ const generic_context = {
     "rdfs_classes": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_properties": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_instances": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
+    "dc:title": { "@container": "@language" },
+    "dc:description": { "@container": "@language" },
 };
 /**
  * Generate the JSON-LD representation of the vocabulary.
@@ -112,7 +114,8 @@ function toJSONLD(vocab) {
             }
             else {
                 jsonld[ont.property] = {
-                    en: ont.value
+                    "@value": ont.value,
+                    "@language": "en"
                 };
             }
         }

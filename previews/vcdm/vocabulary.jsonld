@@ -62,18 +62,26 @@
         "rdfs_instances": {
             "@reverse": "rdfs:isDefinedBy",
             "@type": "@id"
+        },
+        "dc:title": {
+            "@container": "@language"
+        },
+        "dc:description": {
+            "@container": "@language"
         }
     },
     "@id": "https://w3.org/2018/credentials#",
     "@type": "owl:Ontology",
     "dc:title": {
-        "en": "Verifiable Credentials Vocabulary v2.0"
+        "@value": "Verifiable Credentials Vocabulary v2.0",
+        "@language": "en"
     },
     "dc:description": {
-        "en": "RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]"
+        "@value": "RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]",
+        "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-model-2.0/",
-    "dc:date": "2023-07-24",
+    "dc:date": "2023-07-25",
     "rdfs_classes": [
         {
             "@id": "cred:CredentialEvidence",

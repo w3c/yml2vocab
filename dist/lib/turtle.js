@@ -79,7 +79,7 @@ function toTurtle(vocab) {
                     turtle += `    ${ont.property} <${ont.value}> ;\n`;
                 }
                 else {
-                    turtle += `    ${ont.property} """${ont.value}""" ;\n`;
+                    turtle += `    ${ont.property} """${ont.value}"""@en ;\n`;
                 }
             }
         }
