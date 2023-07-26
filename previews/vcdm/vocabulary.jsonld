@@ -81,7 +81,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-model-2.0/",
-    "dc:date": "2023-07-25",
+    "dc:date": "2023-07-26",
     "rdfs_classes": [
         {
             "@id": "cred:CredentialEvidence",
