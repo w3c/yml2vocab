@@ -1,6 +1,6 @@
 {
   "name": "yml2vocab",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Generation of vocabulary files starting by YAML",
   "homepage": "https://github.com/w3c/yml2vocab",
   "repository": {
@@ -25,7 +25,7 @@
   "scripts": {
     "generate": "node_modules/.bin/ts-node main.ts",
     "docs": "./node_modules/.bin/typedoc main.js index.ts lib/*",
-    "distribute": "tsc; git commit -a -m \"New distribution\" ; git push",
+    "dist": "tsc; cp lib/vocab.schema.json dist/lib/vocab.schema.json",
     "test_di": "node_modules/.bin/ts-node main.ts -v example/security.yml -t example/security_template.html -c",
     "test_vcdm": "node_modules/.bin/ts-node main.ts -v example/credentials.yml -t example/template.html -c",
     "test": "node_modules/.bin/ts-node main.ts -v example/test.yml -t example/test_template.html -c",

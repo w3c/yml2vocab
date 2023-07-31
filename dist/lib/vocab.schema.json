@@ -123,6 +123,10 @@
                 "comment": {
                     "type": "string"
                 },
+                "defined_by": {
+                    "type": "string",
+                    "format": "uri"
+                },
                 "see_also": {
                     "$ref": "#/$defs/SeeAlso"
                 },
@@ -132,14 +136,21 @@
                 "deprecated": {
                     "type": "boolean"
                 },
+                "status" : {
+                    "type": "string",
+                    "enum": ["stable", "reserved", "deprecated"]
+                },
                 "example": {
                     "$ref": "#/$defs/ExampleUnion"
                 }
             },
             "required": [
-                "comment",
                 "id",
                 "label"
+            ],
+            "anyOf": [
+                { "required": ["comment"]    },
+                { "required": ["defined_by"] }
             ]
         },
 
