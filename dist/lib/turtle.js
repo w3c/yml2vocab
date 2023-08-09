@@ -128,6 +128,19 @@ function toTurtle(vocab) {
             commonFields(ind);
         }
     }
+    if (vocab.datatypes.length > 0) {
+        turtle += "# Definitions of datatypes\n";
+        for (const dt of vocab.datatypes) {
+            turtle += `${common_1.global.vocab_prefix}:${dt.id} a rdfs:Datatype ;\n`;
+            if (dt.status === common_1.Status.deprecated) {
+                turtle += `    owl:deprecated true ;\n`;
+            }
+            if (dt.subClassOf && dt.subClassOf.length > 0) {
+                turtle += `    rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
+            }
+            commonFields(dt);
+        }
+    }
     return turtle;
 }
 exports.toTurtle = toTurtle;

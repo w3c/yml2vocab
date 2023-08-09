@@ -250,7 +250,7 @@ export function getData(vocab_source: string): Vocab {
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
 
 
-    // Looks for cross references from properties to classes or datatypes; used
+    // Calculates cross references from properties to classes or datatypes; used
     // to make the cross references for the property ranges and domains
     const crossref = (raw: RawVocabEntry, property: RDFProperty, refs: string[], single_ref: string[], multi_ref: string[]): void => {
         if (refs) {
@@ -365,18 +365,6 @@ export function getData(vocab_source: string): Vocab {
 
             // Get all domain/range cross references
             for (const property of properties) {
-                // const crossref = (refs: string[], single_ref: string[], multi_ref: string[]): void => {
-                //     if( refs ) {
-                //         // Remove the (possible) namespace reference from the CURIE
-                //         const pure_refs = refs.map((range: string): string => {
-                //             const terms = range.split(':');
-                //             return terms.length === 1 ? range : terms[1]
-                //         });
-                //         if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
-                //             (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id)
-                //         }
-                //     }
-                // }
                 crossref(raw, property, property.range, range_of, includes_range_of);
                 crossref(raw, property, property.domain, domain_of, included_in_domain_of);
             }
@@ -412,12 +400,13 @@ export function getData(vocab_source: string): Vocab {
             }
         }) : [];
 
-    // Get the datatypes. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
+    // Get the datatypes. 
     const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
         vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
             const range_of: string[] = [];
             const includes_range_of: string[] = [];
 
+            // Get the range cross-references
             for (const property of properties) {
                 crossref(raw, property, property.range, range_of, includes_range_of);
             }

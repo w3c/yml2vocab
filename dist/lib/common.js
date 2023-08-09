@@ -14,7 +14,7 @@ var Status;
     Status["stable"] = "stable";
     Status["reserved"] = "reserved";
     Status["deprecated"] = "deprecated";
-})(Status || (exports.Status = Status = {}));
+})(Status = exports.Status || (exports.Status = {}));
 /**
 * Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
 */

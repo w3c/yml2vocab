@@ -157,6 +157,7 @@ export interface RDFTerm {
 
 /**
  * Extra information necessary for a class: its superclasses.
+ * The cross references for domains and ranges are calculated.
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
@@ -187,7 +188,8 @@ export interface RDFIndividual extends RDFTerm {
 }
 
 /**
- * Extra information is necessary: possible superclasses
+ * Extra optional information is the superclass (ie, the datatypes that was used to derive this one).
+ * The cross references for domains and ranges are calculated.
  */
 export interface RDFDatatype extends RDFTerm {
     subClassOf        ?: string[],
@@ -218,7 +220,7 @@ export interface OntologyProperty {
 
 /**
  * A vocabulary consists of prefixes, top level (ontology) properties, classes, properties and,
- * possibly, individuals…
+ * possibly, datatypes and individuals…
  */
 export interface Vocab {
     prefixes            : RDFPrefix[],

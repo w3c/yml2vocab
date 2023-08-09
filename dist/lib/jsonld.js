@@ -28,6 +28,7 @@ const generic_context = {
     "rdfs_classes": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_properties": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_instances": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
+    "rdfs_datatypes": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "dc:title": { "@container": "@language" },
     "dc:description": { "@container": "@language" },
 };
@@ -194,6 +195,22 @@ function toJSONLD(vocab) {
         }
         if (individuals.length > 0)
             jsonld.rdfs_individuals = individuals;
+    }
+    {
+        // Get the datatypes
+        const datatypes = [];
+        for (const dt of vocab.datatypes) {
+            const dt_object = {};
+            dt_object["@id"] = `${common_1.global.vocab_prefix}:${dt.id}`;
+            dt_object["@type"] = `rdfs:Datatype`;
+            if (dt.subClassOf && dt.subClassOf.length > 0) {
+                dt_object["rdfs:subClassOf"] = dt.subClassOf;
+            }
+            commonFields(dt_object, dt);
+            datatypes.push(dt_object);
+        }
+        if (datatypes.length > 0)
+            jsonld.rdfs_datatypes = datatypes;
     }
     return JSON.stringify(jsonld, null, 4);
 }
