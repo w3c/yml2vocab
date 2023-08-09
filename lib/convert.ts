@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
- import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example} from './common';
+ import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype } from './common';
  import { RawVocabEntry, RawVocab, ValidationResults, global }                                             from './common';
  import { validateWithSchema }                                                                             from './schema';
 
@@ -222,6 +222,7 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
         class      : raw.class?.map(finalizeRawEntry),
         property   : raw.property?.map(finalizeRawEntry),
         individual : raw.individual?.map(finalizeRawEntry),
+        datatype   : raw.datatype?.map(finalizeRawEntry),
     }
 }
 
@@ -247,6 +248,22 @@ export function getData(vocab_source: string): Vocab {
         throw(new TypeError(`JSON Schema validation error`, {cause: error}));
     }
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
+
+
+    // Looks for cross references from properties to classes or datatypes; used
+    // to make the cross references for the property ranges and domains
+    const crossref = (raw: RawVocabEntry, property: RDFProperty, refs: string[], single_ref: string[], multi_ref: string[]): void => {
+        if (refs) {
+            // Remove the (possible) namespace reference from the CURIE
+            const pure_refs = refs.map((range: string): string => {
+                const terms = range.split(':');
+                return terms.length === 1 ? range : terms[1];
+            });
+            if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
+                (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id);
+            }
+        }
+    }
 
     // Convert all the raw structures into their respective internal representations for 
     // prefixes, ontology properties, classes, etc.
@@ -348,20 +365,20 @@ export function getData(vocab_source: string): Vocab {
 
             // Get all domain/range cross references
             for (const property of properties) {
-                const crossref = (refs: string[], single_ref: string[], multi_ref: string[]): void => {
-                    if( refs ) {
-                        // Remove the (possible) namespace reference from the CURIE
-                        const pure_refs = refs.map((range:string): string => {
-                            const terms = range.split(':');
-                            return terms.length === 1 ? range : terms[1]
-                        });
-                        if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
-                            (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id)
-                        }
-                    }
-                }
-                crossref(property.range, range_of, includes_range_of);
-                crossref(property.domain, domain_of, included_in_domain_of);
+                // const crossref = (refs: string[], single_ref: string[], multi_ref: string[]): void => {
+                //     if( refs ) {
+                //         // Remove the (possible) namespace reference from the CURIE
+                //         const pure_refs = refs.map((range: string): string => {
+                //             const terms = range.split(':');
+                //             return terms.length === 1 ? range : terms[1]
+                //         });
+                //         if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
+                //             (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id)
+                //         }
+                //     }
+                // }
+                crossref(raw, property, property.range, range_of, includes_range_of);
+                crossref(raw, property, property.domain, domain_of, included_in_domain_of);
             }
 
             return {
@@ -395,5 +412,30 @@ export function getData(vocab_source: string): Vocab {
             }
         }) : [];
 
-    return {prefixes, ontology_properties, classes, properties, individuals}
+    // Get the datatypes. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
+    const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
+        vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
+            const range_of: string[] = [];
+            const includes_range_of: string[] = [];
+
+            for (const property of properties) {
+                crossref(raw, property, property.range, range_of, includes_range_of);
+            }
+
+            return {
+                id: raw.id,
+                subClassOf: (raw.upper_value !== undefined) ? raw.upper_value : [],
+                label      : raw.label,
+                comment    : raw.comment,
+                deprecated : raw.deprecated,
+                defined_by : raw.defined_by,
+                status     : raw.status,
+                type       : (raw.upper_value !== undefined) ? raw.upper_value : [],
+                see_also   : raw.see_also,
+                example    : raw.example,
+                range_of, includes_range_of
+            };
+        }) : [];
+
+    return {prefixes, ontology_properties, classes, properties, individuals, datatypes}
 }

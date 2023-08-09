@@ -112,6 +112,7 @@ export interface RawVocab {
     class      ?: RawVocabEntry[];
     property   ?: RawVocabEntry[];
     individual ?: RawVocabEntry[];
+    datatype   ?: RawVocabEntry[];
 }
 
 /**
@@ -179,10 +180,21 @@ export interface RDFProperty extends RDFTerm {
 
 /**
  * No extra information is necessary for an individual, but it makes the code
- * more readable if there is a separate interface for it.
+ * more readable if there is a separate interface for it. And one may never
+ * know how things will evolve...
  */
 export interface RDFIndividual extends RDFTerm {
 }
+
+/**
+ * Extra information is necessary: possible superclasses
+ */
+export interface RDFDatatype extends RDFTerm {
+    subClassOf        ?: string[],
+    range_of          : string[];
+    includes_range_of : string[];
+}
+
 
 /**
  * Information for a prefix (to be used either as a prefix in Turtle or in the context of a JSON-LD).
@@ -214,5 +226,6 @@ export interface Vocab {
     classes             : RDFClass[],
     properties          : RDFProperty[],
     individuals         : RDFIndividual[],
+    datatypes           : RDFDatatype[],
 }
 

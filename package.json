@@ -1,6 +1,6 @@
 {
   "name": "yml2vocab",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Generation of vocabulary files starting by YAML",
   "homepage": "https://github.com/w3c/yml2vocab",
   "repository": {

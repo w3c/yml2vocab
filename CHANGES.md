@@ -1,3 +1,11 @@
+## Version 1.4.4
+
+- Adding the possibility to define datatypes
+
+## Version 1.4.3
+
+- Bug handling...
+
 ## Version 1.4.2
 
 - Minor improvement on the generated JSON vs language handling (thanks to @pchampin).

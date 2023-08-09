@@ -131,5 +131,19 @@ export function toTurtle(vocab: Vocab): string {
         }
     }
 
+    if (vocab.datatypes.length > 0) {
+        turtle += "# Definitions of datatypes\n"
+        for (const dt of vocab.datatypes) {
+            turtle += `${global.vocab_prefix}:${dt.id} a rdfs:Datatype ;\n`
+            if (dt.status === Status.deprecated) {
+                turtle += `    owl:deprecated true ;\n`;
+            }
+            if (dt.subClassOf && dt.subClassOf.length > 0) {
+                turtle += `    rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
+            }
+            commonFields(dt);
+        }
+    }
+
     return turtle;
 }

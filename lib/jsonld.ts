@@ -29,6 +29,7 @@ const generic_context = {
     "rdfs_classes":             { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_properties":          { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_instances":           { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
+    "rdfs_datatypes":           { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "dc:title":                 { "@container": "@language" },
     "dc:description":           { "@container": "@language" },
 }
@@ -182,7 +183,7 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the individuals
         const individuals: JSON[] = [];
         for (const ind of vocab.individuals) {
-            const ind_object: JSON = {}
+            const ind_object: JSON = {};
             ind_object["@id"]   = `${global.vocab_prefix}:${ind.id}`;
             if (ind.type.length === 1) {
                 ind_object["@type"] = ind.type[0]
@@ -196,6 +197,23 @@ export function toJSONLD(vocab: Vocab): string {
             individuals.push(ind_object);
         }
         if (individuals.length > 0) jsonld.rdfs_individuals = individuals;
+    }
+
+    {
+        // Get the datatypes
+        const datatypes: JSON[] = [];
+        for (const dt of vocab.datatypes) {
+            const dt_object: JSON = {};
+            dt_object["@id"] = `${global.vocab_prefix}:${dt.id}`;
+            dt_object["@type"] = `rdfs:Datatype`;
+            if (dt.subClassOf && dt.subClassOf.length > 0) {
+                dt_object["rdfs:subClassOf"] = dt.subClassOf;
+            }
+            commonFields(dt_object,dt);
+            datatypes.push(dt_object);
+        }
+        if (datatypes.length > 0) jsonld.rdfs_datatypes = datatypes;
+
     }
 
     return JSON.stringify(jsonld, null, 4);
