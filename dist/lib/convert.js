@@ -249,6 +249,9 @@ function getData(vocab_source) {
     const vocab = finalizeRawVocab(validation_results.vocab);
     // Calculates cross references from properties to classes or datatypes; used
     // to make the cross references for the property ranges and domains
+    // @param raw: raw entry for the class or datatype
+    // @param refs: the range or domain array of the property
+    // @return: whether the class/datatype is indeed in the range of the property
     const crossref = (raw, property, refs, single_ref, multi_ref) => {
         if (refs) {
             // Remove the (possible) namespace reference from the CURIE
@@ -258,8 +261,10 @@ function getData(vocab_source) {
             });
             if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
                 (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id);
+                return true;
             }
         }
+        return false;
     };
     // Convert all the raw structures into their respective internal representations for 
     // prefixes, ontology properties, classes, etc.
@@ -319,7 +324,7 @@ function getData(vocab_source) {
                 else {
                     let isDTProperty = true;
                     for (const rg of range) {
-                        if (rg.startsWith("xsd") === false) {
+                        if (rg.startsWith("xsd") === false && rg !== "rdf.JSON" && rg !== "rdf.HTML") {
                             isDTProperty = false;
                             break;
                         }
@@ -395,7 +400,11 @@ function getData(vocab_source) {
             const includes_range_of = [];
             // Get the range cross-references
             for (const property of properties) {
-                crossref(raw, property, property.range, range_of, includes_range_of);
+                const is_dt_property = crossref(raw, property, property.range, range_of, includes_range_of);
+                if (is_dt_property) {
+                    // a bit convoluted, but trying to avoid repeating the extra entry
+                    property.type = [...((new Set(property.type)).add('owl:DatatypeProperty'))];
+                }
             }
             return {
                 id: raw.id,
