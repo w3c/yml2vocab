@@ -325,7 +325,7 @@ function getData(vocab_source) {
                 else {
                     let isDTProperty = true;
                     for (const rg of range) {
-                        if (!(rg.startsWith("xsd") === true || common_3.EXTRA_DATATYPES.find((entry) => entry === rg))) {
+                        if (!(rg.startsWith("xsd") === true || common_3.EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined)) {
                             isDTProperty = false;
                             break;
                         }

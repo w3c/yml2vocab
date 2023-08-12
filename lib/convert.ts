@@ -332,7 +332,7 @@ export function getData(vocab_source: string): Vocab {
                 } else {
                     let isDTProperty = true;
                     for (const rg of range) {
-                        if (!(rg.startsWith("xsd") === true || EXTRA_DATATYPES.find((entry) => entry === rg))) {
+                        if (!(rg.startsWith("xsd") === true || EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined)) {
                             isDTProperty = false;
                             break;
                         }
