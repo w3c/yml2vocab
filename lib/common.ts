@@ -4,6 +4,17 @@
  * @packageDocumentation
  */
 
+/**
+ * List of datatypes that are formally defined in the RDF World, and are beyond the
+ * list of core, XSD datatypes
+ */
+export const EXTRA_DATATYPES: string[] = [
+    "rdf:JSON",
+    "rdf:HTML",
+    "rdf:XMLLiteral",
+    "rdf:PlainLiteral",
+    "rdf:langString"
+]
 
 /**
  * Characterization of a class/property/individual on whether it is stable or not.

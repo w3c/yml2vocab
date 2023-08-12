@@ -5,8 +5,9 @@
  * @packageDocumentation
  */
  import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype } from './common';
- import { RawVocabEntry, RawVocab, ValidationResults, global }                                             from './common';
- import { validateWithSchema }                                                                             from './schema';
+ import { RawVocabEntry, RawVocab, ValidationResults, global }                                                           from './common';
+import { EXTRA_DATATYPES }                                                                                                from "./common";
+ import { validateWithSchema }                                                                                           from './schema';
 
 /************************************************ Helper functions and constants **********************************/
 
@@ -331,10 +332,10 @@ export function getData(vocab_source: string): Vocab {
                 } else {
                     let isDTProperty = true;
                     for (const rg of range) {
-                        if (rg.startsWith("xsd") === false && rg !== "rdf.JSON" && rg !== "rdf.HTML") {
+                        if (!(rg.startsWith("xsd") === true || EXTRA_DATATYPES.find((entry) => entry === rg))) {
                             isDTProperty = false;
                             break;
-                        }  
+                        }
                     }
                     if (isDTProperty) types.push("owl:DatatypeProperty");
                 }

@@ -9,6 +9,7 @@ exports.getData = void 0;
  */
 const common_1 = require("./common");
 const common_2 = require("./common");
+const common_3 = require("./common");
 const schema_1 = require("./schema");
 /************************************************ Helper functions and constants **********************************/
 /**
@@ -324,7 +325,7 @@ function getData(vocab_source) {
                 else {
                     let isDTProperty = true;
                     for (const rg of range) {
-                        if (rg.startsWith("xsd") === false && rg !== "rdf.JSON" && rg !== "rdf.HTML") {
+                        if (!(rg.startsWith("xsd") === true || common_3.EXTRA_DATATYPES.find((entry) => entry === rg))) {
                             isDTProperty = false;
                             break;
                         }
