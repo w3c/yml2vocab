@@ -11,20 +11,20 @@ cred: a owl:Ontology ;
     dc:title """Verifiable Credentials Vocabulary v2.0"""@en ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2023-07-26"^^xsd:date ;
+    dc:date "2023-08-14"^^xsd:date ;
 .
 
 # Class definitions
 cred:CredentialEvidence a rdfs:Class ;
     rdfs:label "Credential Evidence" ;
-    rdfs:comment """<div>A Credential Evidence provides an evidence scheme that is used by the <a href="#evidence">evidence</a> property. This class serves as a supertype for specific evidence types.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Credential Evidence provides evidence schemes that are used by the <a href="#evidence">evidence</a> property. This class serves as a supertype for specific evidence types.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:CredentialSchema a rdfs:Class ;
     rdfs:label "Credential schema" ;
-    rdfs:comment """<div>A Credential Schema provides a verifier with enough information to determine if the provided data conforms to the provided schema. This class serves as a supertype for specific schemas (e.g., <a href="#JsonSchema2023">JsonSchema2023</a>).</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Credential Schema provides verifiers with enough information to determine if the provided data conforms to the provided schema. This class serves as a supertype for specific schemas (e.g., <a href="#JsonSchema">JsonSchema</a>).</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
@@ -36,34 +36,32 @@ cred:CredentialStatus a rdfs:Class ;
     vs:term_status "stable" ;
 .
 
-cred:JsonSchema2023 a rdfs:Class ;
+cred:JsonSchema a rdfs:Class ;
     rdfs:subClassOf cred:CredentialSchema ;
-    rdfs:label "JSON schema validator 2023" ;
-    rdfs:comment """<div>A type of validator for the validation of <a href="#VerifiableCredential">Verifiable Credentials</a> that are based on JSON Schema.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-json-schema/#jsonschema2023>, <https://w3.org/2018/credentials#> ;
+    rdfs:label "JSON schema validator" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-json-schema/#jsonschema>, <https://w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
+.
+
+cred:JsonSchemaCredential a rdfs:Class ;
+    rdfs:subClassOf cred:VerifiableCredential ;
+    rdfs:label "JSON schema validator with schema contained in a credential" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-json-schema/#jsonschemacredential>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:RefreshService a rdfs:Class ;
     rdfs:label "Refresh service" ;
-    rdfs:comment """<div>A Refresh Service is a mechanism that can be used by a software agent to retrieve an updated copy of a Verifiable Credential. This class serves as a supertype for specific refresh service types.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A Refresh Service is a mechanism that can be utilized by software agents to retrieve an updated copy of a Verifiable Credential. This class serves as a supertype for specific refresh service types.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:TermsOfUse a rdfs:Class ;
     rdfs:label "Terms of use" ;
-    rdfs:comment """<div>Terms of use reflect the policy/ies under which the issuer issued the credential or presentation. This class serves as a supertype for specific types of terms of use.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>Policy under which the creator issued the credential or presentation. This class serves as a supertype for specific types for terms of use.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
-.
-
-cred:StatusList2021Entry a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "Status List 2021 Entry" ;
-    rdfs:comment """<div>A Status List 2021 Entry provides issuers with a mechanism to provide status information for verifiable credentials. <b><em>Placeholder for now; this item may change to something else.</em></b></div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
-    vs:term_status "deprecated" ;
 .
 
 cred:VerifiableCredential a rdfs:Class ;
@@ -167,14 +165,6 @@ cred:renderMethod a rdfs:Property ;
     rdfs:label "Render method" ;
     rdfs:isDefinedBy <https://w3c-ccg.github.io/vc-render-method/#the-rendermethod-property>, <https://w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
-.
-
-cred:serviceEndpoint a rdfs:Property, owl:ObjectProperty ;
-    rdfs:domain cred:RefreshService ;
-    rdfs:label "Service endpoint" ;
-    rdfs:comment """<div>The value of this property must be a URL to the service endpoint associated with the subject. <b><em>There is no URL yet in a VCWG document to <em>define</em> this term.</em></b></div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
-    vs:term_status "stable" ;
 .
 
 cred:termsOfUse a rdfs:Property ;
