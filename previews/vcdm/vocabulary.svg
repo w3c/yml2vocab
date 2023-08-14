@@ -11,7 +11,8 @@
      xmlns:xlink="http://www.w3.org/1999/xlink"
      xmlns="http://www.w3.org/2000/svg"
      xmlns:svg="http://www.w3.org/2000/svg"
-     xmlns:xhtml="http://www.w3.org/1999/xhtml">
+     xmlns:xhtml="http://www.w3.org/1999/xhtml"
+     xhtml:aria-details="#vocabulary-diagram-alt">
     <sodipodi:namedview
          id="namedview70"
          pagecolor="#ffffff"
