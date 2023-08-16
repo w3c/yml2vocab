@@ -101,6 +101,21 @@
                 ],
                 "unevaluatedProperties": false
             }
+        },
+
+        "datatype" : {
+            "title": "Definition of datatypes",
+            "$comment": "The use of 'unevaluatedProperties' is the schema 2019 idiom to disallow additional properties.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/$defs/CommonTerm"
+                    }
+                ],
+                "unevaluatedProperties": false
+            }
         }
     },
 

@@ -5,7 +5,18 @@
  * @packageDocumentation
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.global = exports.StatusCounter = exports.Status = void 0;
+exports.global = exports.StatusCounter = exports.Status = exports.EXTRA_DATATYPES = void 0;
+/**
+ * List of datatypes that are formally defined in the RDF World, and are beyond the
+ * list of core, XSD datatypes
+ */
+exports.EXTRA_DATATYPES = [
+    "rdf:JSON",
+    "rdf:HTML",
+    "rdf:XMLLiteral",
+    "rdf:PlainLiteral",
+    "rdf:langString"
+];
 /**
  * Characterization of a class/property/individual on whether it is stable or not.
  */
@@ -14,7 +25,7 @@ var Status;
     Status["stable"] = "stable";
     Status["reserved"] = "reserved";
     Status["deprecated"] = "deprecated";
-})(Status || (exports.Status = Status = {}));
+})(Status = exports.Status || (exports.Status = {}));
 /**
 * Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
 */

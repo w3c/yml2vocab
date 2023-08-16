@@ -9,6 +9,7 @@ exports.getData = void 0;
  */
 const common_1 = require("./common");
 const common_2 = require("./common");
+const common_3 = require("./common");
 const schema_1 = require("./schema");
 /************************************************ Helper functions and constants **********************************/
 /**
@@ -222,6 +223,7 @@ function finalizeRawVocab(raw) {
         class: raw.class?.map(finalizeRawEntry),
         property: raw.property?.map(finalizeRawEntry),
         individual: raw.individual?.map(finalizeRawEntry),
+        datatype: raw.datatype?.map(finalizeRawEntry),
     };
 }
 /******************************************* External entry point **********************************/
@@ -246,6 +248,25 @@ function getData(vocab_source) {
         throw (new TypeError(`JSON Schema validation error`, { cause: error }));
     }
     const vocab = finalizeRawVocab(validation_results.vocab);
+    // Calculates cross references from properties to classes or datatypes; used
+    // to make the cross references for the property ranges and domains
+    // @param raw: raw entry for the class or datatype
+    // @param refs: the range or domain array of the property
+    // @return: whether the class/datatype is indeed in the range of the property
+    const crossref = (raw, property, refs, single_ref, multi_ref) => {
+        if (refs) {
+            // Remove the (possible) namespace reference from the CURIE
+            const pure_refs = refs.map((range) => {
+                const terms = range.split(':');
+                return terms.length === 1 ? range : terms[1];
+            });
+            if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
+                (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id);
+                return true;
+            }
+        }
+        return false;
+    };
     // Convert all the raw structures into their respective internal representations for 
     // prefixes, ontology properties, classes, etc.
     // Get the extra prefixes and combine them with the defaults. Note that the 'vocab' category
@@ -304,7 +325,7 @@ function getData(vocab_source) {
                 else {
                     let isDTProperty = true;
                     for (const rg of range) {
-                        if (rg.startsWith("xsd") === false) {
+                        if (!(rg.startsWith("xsd") === true || common_3.EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined)) {
                             isDTProperty = false;
                             break;
                         }
@@ -341,20 +362,8 @@ function getData(vocab_source) {
             common_2.global.status_counter.add(raw.status);
             // Get all domain/range cross references
             for (const property of properties) {
-                const crossref = (refs, single_ref, multi_ref) => {
-                    if (refs) {
-                        // Remove the (possible) namespace reference from the CURIE
-                        const pure_refs = refs.map((range) => {
-                            const terms = range.split(':');
-                            return terms.length === 1 ? range : terms[1];
-                        });
-                        if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
-                            (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id);
-                        }
-                    }
-                };
-                crossref(property.range, range_of, includes_range_of);
-                crossref(property.domain, domain_of, included_in_domain_of);
+                crossref(raw, property, property.range, range_of, includes_range_of);
+                crossref(raw, property, property.domain, domain_of, included_in_domain_of);
             }
             return {
                 id: raw.id,
@@ -385,6 +394,33 @@ function getData(vocab_source) {
                 example: raw.example,
             };
         }) : [];
-    return { prefixes, ontology_properties, classes, properties, individuals };
+    // Get the datatypes. 
+    const datatypes = (vocab.datatype !== undefined) ?
+        vocab.datatype.map((raw) => {
+            const range_of = [];
+            const includes_range_of = [];
+            // Get the range cross-references
+            for (const property of properties) {
+                const is_dt_property = crossref(raw, property, property.range, range_of, includes_range_of);
+                if (is_dt_property) {
+                    // a bit convoluted, but trying to avoid repeating the extra entry
+                    property.type = [...((new Set(property.type)).add('owl:DatatypeProperty'))];
+                }
+            }
+            return {
+                id: raw.id,
+                subClassOf: (raw.upper_value !== undefined) ? raw.upper_value : [],
+                label: raw.label,
+                comment: raw.comment,
+                deprecated: raw.deprecated,
+                defined_by: raw.defined_by,
+                status: raw.status,
+                type: (raw.upper_value !== undefined) ? raw.upper_value : [],
+                see_also: raw.see_also,
+                example: raw.example,
+                range_of, includes_range_of
+            };
+        }) : [];
+    return { prefixes, ontology_properties, classes, properties, individuals, datatypes };
 }
 exports.getData = getData;

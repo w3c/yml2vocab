@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
-import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status } from './common';
+import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status, RDFDatatype } from './common';
 import { JSDOM }  from 'jsdom';
 
 /* ---------------- Utility functions ------------------------- */
@@ -256,12 +256,12 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const section = document.getElementById(`${id_prefix}class_definitions`);
         if (section) {
             if (cl_list.length > 0) {
-                addChild(section, 'p', `The following are ${intro_prefix} class definitions in the <code>${vocab_prefix}</code> namespace.`)
+                addChild(section, 'p', `The following are ${intro_prefix} class definitions in the <code>${vocab_prefix}</code> namespace.`);
 
                 for (const item of cl_list) {
                     const cl_section = addChild(section, 'section');
                     cl_section.id = item.id;
-                    commonFields(cl_section,item);
+                    commonFields(cl_section, item);
                     // Extra list of superclasses, if applicable
                     if (item.subClassOf && item.subClassOf.length > 0) {
                         const dl = addChild(cl_section, 'dl');
@@ -276,10 +276,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                         }
                     }
                     // Again an extra list for range/domain references, if applicable
-                    if ((item.range_of.length > 0 || 
+                    if (item.range_of.length > 0 || 
                         item.domain_of.length > 0 || 
                         item.includes_range_of.length > 0 || 
-                        item.included_in_domain_of.length > 0)) {
+                        item.included_in_domain_of.length > 0) {
                         
                         // This for the creation of a list of property references, each
                         // a hyperlink to the property's definition.
@@ -332,7 +332,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const section = document.getElementById(`${id_prefix}property_definitions`);
         if (section) {
             if (pr_list.length > 0) {
-                addChild(section, 'p', `The following are ${intro_prefix} property definitions in the <code>${vocab_prefix}</code> namespace.`)
+                addChild(section, 'p', `The following are ${intro_prefix} property definitions in the <code>${vocab_prefix}</code> namespace.`);
 
                 for (const item of pr_list) {
                     const pr_section = addChild(section, 'section');
@@ -422,7 +422,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         const section = document.getElementById(`${id_prefix}individual_definitions`);
         if (section) {
             if (ind_list.length > 0) {
-                addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace.`)
+                addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace.`);
 
                 for (const item of ind_list) {
                     const ind_section = addChild(section, 'section');
@@ -446,6 +446,68 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             }
         }
     }
+
+    // Generation of the section content for datatypes: a big table, with a row per datatype
+    // There is a check for a possible template error and also whether there are individual
+    // definitions in the first place.
+    //
+    // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
+    // that makes things fairly confusing :-(
+    const datatypes = (dt_list: RDFDatatype[], statusFilter: Status) => {
+        const { id_prefix, intro_prefix } = statusSignals(statusFilter);
+        const section = document.getElementById(`${id_prefix}datatype_definitions`);
+        if (section) {
+            if (dt_list.length > 0) {
+                addChild(section, 'p', `The following are ${intro_prefix} datatype definitions in the <code>${vocab_prefix}</code> namespace.`);
+
+                for (const item of dt_list) {
+                    const dt_section = addChild(section, 'section');
+                    dt_section.id = item.id;
+                    commonFields(dt_section, item);
+
+                    if (item.subClassOf && item.subClassOf.length > 0) {
+                        const dl = addChild(dt_section, 'dl');
+                        dl.className = 'terms';
+                        addChild(dl, 'dt', 'Derived from:');
+                        const dd = addChild(dl, 'dd');
+                        for (const superclass of item.subClassOf) {
+                            const span = addChild(dd, 'span');
+                            span.innerHTML = resolveCurie(superclass);
+                            span.setAttribute('property', 'rdfs:subClassOf');
+                            span.setAttribute('resource', superclass);
+                        }
+                    }
+                    if (item.range_of.length > 0 || item.includes_range_of.length > 0) {
+                        // This for the creation of a list of property references, each
+                        // a hyperlink to the property's definition.
+                        const prop_names = (ids: string[]): string => {
+                            const names = ids.map(resolveCurie);
+                            return names.join(', ');
+                        }
+                        const dl = addChild(dt_section, 'dl');
+                        dl.className = 'terms';
+                        if (item.range_of.length > 0) {
+                            addChild(dl, 'dt', "Range of:");
+                            const dd = addChild(dl, 'dd');
+                            dd.innerHTML = prop_names(item.range_of);
+                        }
+                        if (item.includes_range_of.length > 0) {
+                            addChild(dl, 'dt', "Includes the range of:");
+                            const dd = addChild(dl, 'dd');
+                            dd.innerHTML = prop_names(item.includes_range_of);
+                        }
+                    }
+                    setExample(dt_section, item);
+                }
+
+            } else {
+                // removing the section from the DOM
+                if (section.parentElement) section.parentElement.removeChild(section);
+            }
+        }   
+    }
+
+
 
     /* *********************** The real processing part ****************** */
     // Get the DOM of the template
@@ -483,7 +545,13 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         individuals(actual_individuals, filter);
     });
 
-    // 7. Remove the sections on reserved/deprecation in case there aren't any...
+    // 7. Sections on datatypes
+    Object.values(Status).map((filter: Status): void => {
+        const actual_datatypes = vocab.datatypes.filter((entry: RDFDatatype): boolean => entry.status === filter);
+        datatypes(actual_datatypes, filter);
+    });
+
+    // 8. Remove the sections on reserved/deprecation in case there aren't any...
     if (global.status_counter.counter(Status.reserved) === 0) {
         const section = document.getElementById('reserved_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);

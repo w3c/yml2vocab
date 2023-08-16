@@ -92,9 +92,13 @@ function toContext(vocab) {
             top_level[prop.id] = propertyContext(prop, false);
         }
     }
-    // Finally, add the individuals
+    // Add the individuals
     for (const individual of vocab.individuals) {
         top_level[individual.id] = `${common_1.global.vocab_url}${individual.id}`;
+    }
+    // Add the individuals
+    for (const datatype of vocab.datatypes) {
+        top_level[datatype.id] = `${common_1.global.vocab_url}${datatype.id}`;
     }
     // That is it... return the nicely formatted JSON text 
     return JSON.stringify({ "@context": top_level }, null, 4);

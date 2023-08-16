@@ -47,6 +47,8 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
   
   - `individual`: blocks of definitions of individuals, i.e., a single resources defined in the vocabulary. For each individual the `id` key defines the property name (no prefix should be used here); the possible types are defined in the block for `upper_value` as a single term, or a sequence of terms.
 
+  - `datatype`: blocks of datatype definitions. For each datatype the `id` key defines the datatype name (no prefix should be used here); the possible types are defined in the block for `upper_value` as a single term for possible datatype this is derived from.
+
 There are some examples in the [example directory on github](https://github.com/w3c/yml2vocab/tree/main/example) that illustrate all of these terms.
 
 ## Installation and use

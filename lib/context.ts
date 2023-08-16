@@ -105,10 +105,16 @@ export function toContext(vocab: Vocab): string {
         }
     }
 
-    // Finally, add the individuals
+    // Add the individuals
     for (const individual of vocab.individuals) {
         top_level[individual.id] = `${global.vocab_url}${individual.id}`
     }
+
+    // Add the individuals
+    for (const datatype of vocab.datatypes) {
+        top_level[datatype.id] = `${global.vocab_url}${datatype.id}`;
+    }
+
 
     // That is it... return the nicely formatted JSON text 
     return JSON.stringify({"@context" : top_level}, null, 4);

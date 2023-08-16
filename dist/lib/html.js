@@ -263,10 +263,10 @@ function toHTML(vocab, template_text) {
                         }
                     }
                     // Again an extra list for range/domain references, if applicable
-                    if ((item.range_of.length > 0 ||
+                    if (item.range_of.length > 0 ||
                         item.domain_of.length > 0 ||
                         item.includes_range_of.length > 0 ||
-                        item.included_in_domain_of.length > 0)) {
+                        item.included_in_domain_of.length > 0) {
                         // This for the creation of a list of property references, each
                         // a hyperlink to the property's definition.
                         const prop_names = (ids) => {
@@ -431,6 +431,64 @@ function toHTML(vocab, template_text) {
             }
         }
     };
+    // Generation of the section content for datatypes: a big table, with a row per datatype
+    // There is a check for a possible template error and also whether there are individual
+    // definitions in the first place.
+    //
+    // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
+    // that makes things fairly confusing :-(
+    const datatypes = (dt_list, statusFilter) => {
+        const { id_prefix, intro_prefix } = statusSignals(statusFilter);
+        const section = document.getElementById(`${id_prefix}datatype_definitions`);
+        if (section) {
+            if (dt_list.length > 0) {
+                addChild(section, 'p', `The following are ${intro_prefix} datatype definitions in the <code>${vocab_prefix}</code> namespace.`);
+                for (const item of dt_list) {
+                    const dt_section = addChild(section, 'section');
+                    dt_section.id = item.id;
+                    commonFields(dt_section, item);
+                    if (item.subClassOf && item.subClassOf.length > 0) {
+                        const dl = addChild(dt_section, 'dl');
+                        dl.className = 'terms';
+                        addChild(dl, 'dt', 'Derived from:');
+                        const dd = addChild(dl, 'dd');
+                        for (const superclass of item.subClassOf) {
+                            const span = addChild(dd, 'span');
+                            span.innerHTML = resolveCurie(superclass);
+                            span.setAttribute('property', 'rdfs:subClassOf');
+                            span.setAttribute('resource', superclass);
+                        }
+                    }
+                    if (item.range_of.length > 0 || item.includes_range_of.length > 0) {
+                        // This for the creation of a list of property references, each
+                        // a hyperlink to the property's definition.
+                        const prop_names = (ids) => {
+                            const names = ids.map(resolveCurie);
+                            return names.join(', ');
+                        };
+                        const dl = addChild(dt_section, 'dl');
+                        dl.className = 'terms';
+                        if (item.range_of.length > 0) {
+                            addChild(dl, 'dt', "Range of:");
+                            const dd = addChild(dl, 'dd');
+                            dd.innerHTML = prop_names(item.range_of);
+                        }
+                        if (item.includes_range_of.length > 0) {
+                            addChild(dl, 'dt', "Includes the range of:");
+                            const dd = addChild(dl, 'dd');
+                            dd.innerHTML = prop_names(item.includes_range_of);
+                        }
+                    }
+                    setExample(dt_section, item);
+                }
+            }
+            else {
+                // removing the section from the DOM
+                if (section.parentElement)
+                    section.parentElement.removeChild(section);
+            }
+        }
+    };
     /* *********************** The real processing part ****************** */
     // Get the DOM of the template
     const document = (new jsdom_1.JSDOM(template_text)).window.document;
@@ -459,7 +517,12 @@ function toHTML(vocab, template_text) {
         const actual_individuals = vocab.individuals.filter((entry) => entry.status === filter);
         individuals(actual_individuals, filter);
     });
-    // 7. Remove the sections on reserved/deprecation in case there aren't any...
+    // 7. Sections on datatypes
+    Object.values(common_1.Status).map((filter) => {
+        const actual_datatypes = vocab.datatypes.filter((entry) => entry.status === filter);
+        datatypes(actual_datatypes, filter);
+    });
+    // 8. Remove the sections on reserved/deprecation in case there aren't any...
     if (common_1.global.status_counter.counter(common_1.Status.reserved) === 0) {
         const section = document.getElementById('reserved_term_definitions');
         if (section !== null && section.parentElement)

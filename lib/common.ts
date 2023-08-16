@@ -4,6 +4,17 @@
  * @packageDocumentation
  */
 
+/**
+ * List of datatypes that are formally defined in the RDF World, and are beyond the
+ * list of core, XSD datatypes
+ */
+export const EXTRA_DATATYPES: string[] = [
+    "rdf:JSON",
+    "rdf:HTML",
+    "rdf:XMLLiteral",
+    "rdf:PlainLiteral",
+    "rdf:langString"
+]
 
 /**
  * Characterization of a class/property/individual on whether it is stable or not.
@@ -112,6 +123,7 @@ export interface RawVocab {
     class      ?: RawVocabEntry[];
     property   ?: RawVocabEntry[];
     individual ?: RawVocabEntry[];
+    datatype   ?: RawVocabEntry[];
 }
 
 /**
@@ -156,6 +168,7 @@ export interface RDFTerm {
 
 /**
  * Extra information necessary for a class: its superclasses.
+ * The cross references for domains and ranges are calculated.
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
@@ -179,10 +192,22 @@ export interface RDFProperty extends RDFTerm {
 
 /**
  * No extra information is necessary for an individual, but it makes the code
- * more readable if there is a separate interface for it.
+ * more readable if there is a separate interface for it. And one may never
+ * know how things will evolve...
  */
 export interface RDFIndividual extends RDFTerm {
 }
+
+/**
+ * Extra optional information is the superclass (ie, the datatypes that was used to derive this one).
+ * The cross references for domains and ranges are calculated.
+ */
+export interface RDFDatatype extends RDFTerm {
+    subClassOf        ?: string[],
+    range_of          : string[];
+    includes_range_of : string[];
+}
+
 
 /**
  * Information for a prefix (to be used either as a prefix in Turtle or in the context of a JSON-LD).
@@ -206,7 +231,7 @@ export interface OntologyProperty {
 
 /**
  * A vocabulary consists of prefixes, top level (ontology) properties, classes, properties and,
- * possibly, individuals…
+ * possibly, datatypes and individuals…
  */
 export interface Vocab {
     prefixes            : RDFPrefix[],
@@ -214,5 +239,6 @@ export interface Vocab {
     classes             : RDFClass[],
     properties          : RDFProperty[],
     individuals         : RDFIndividual[],
+    datatypes           : RDFDatatype[],
 }
 
