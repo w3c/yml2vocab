@@ -11,7 +11,7 @@ cred: a owl:Ontology ;
     dc:title """Verifiable Credentials Vocabulary v2.0"""@en ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2023-08-16"^^xsd:date ;
+    dc:date "2023-08-19"^^xsd:date ;
 .
 
 # Class definitions
@@ -34,6 +34,12 @@ cred:CredentialStatus a rdfs:Class ;
     rdfs:comment """<div>A Credential Status provides enough information to determine the current status of the credential (for example, suspended or revoked). This class serves as a supertype for specific status types.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
+.
+
+cred:ConfidenceMethod a rdfs:Class ;
+    rdfs:label "Confidence method" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/confidence-method-spec/>, <https://w3.org/2018/credentials#> ;
+    vs:term_status "reserved" ;
 .
 
 cred:JsonSchema a rdfs:Class ;
@@ -100,6 +106,13 @@ cred:credentialStatus a rdfs:Property ;
     rdfs:label "Credential status" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialStatus>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
+.
+
+cred:confidenceMethod a rdfs:Property ;
+    rdfs:range cred:ConfidenceMethod ;
+    rdfs:label "Confidence method" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/confidence-method-spec/>, <https://w3.org/2018/credentials#> ;
+    vs:term_status "reserved" ;
 .
 
 cred:credentialSubject a rdfs:Property, owl:ObjectProperty ;
