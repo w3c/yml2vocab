@@ -86,7 +86,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2023-08-19",
+    "dc:date": "2023-08-20",
     "rdfs_classes": [
         {
             "@id": "sec:Proof",
@@ -438,6 +438,18 @@
             "rdfs:range": "xsd:string",
             "rdfs:label": "Proof value",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-proofvalue",
+            "vs:term_status": "stable"
+        },
+        {
+            "@id": "sec:created",
+            "@type": [
+                "rdfs:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:Proof",
+            "rdfs:range": "xsd:dateTime",
+            "rdfs:label": "Proof creation time",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-created",
             "vs:term_status": "stable"
         },
         {
