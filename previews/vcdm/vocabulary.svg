@@ -7,7 +7,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     verifiableCredential
                                 </font>
                             </i>
@@ -26,7 +26,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     VerifiableCredential
                                 </font>
                             </i>
@@ -45,7 +45,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     JsonSchemaCredential
                                 </font>
                             </i>
@@ -64,7 +64,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     VerifiablePresentation
                                 </font>
                             </i>
@@ -89,7 +89,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     VerifiableCredentialGraph
                                 </font>
                             </i>
@@ -102,22 +102,6 @@
     </a>
     <path fill="none" stroke="#000" stroke-dasharray="2 8" stroke-miterlimit="10" stroke-width="2" d="M237.5 317.11 348.81 63.17" pointer-events="stroke"/>
     <path fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2" d="m351.82 56.3-.96 10.5-2.05-3.63-4.05.95Z" pointer-events="all"/>
-    <switch transform="translate(-.5 -.5)">
-        <foreignObject width="100%" height="100%" pointer-events="none" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow:visible;text-align:left">
-            <div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;align-items:unsafe center;justify-content:unsafe center;width:1px;height:1px;padding-top:176px;margin-left:302px">
-                <div data-drawio-colors="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);" style="box-sizing:border-box;font-size:0;text-align:center">
-                    <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;background-color:#fff;white-space:nowrap">
-                        <font style="font-size:13px">
-                            <i>
-                                contains
-                            </i>
-                        </font>
-                    </div>
-                </div>
-            </div>
-        </foreignObject>
-        <text xmlns="http://www.w3.org/2000/svg" x="302" y="180" font-family="Helvetica" font-size="16" text-anchor="middle">contains</text>
-    </switch>
     <a xlink:href="https://w3.org/2018/credentials/#credentialSchema">
         <rect width="171" height="27.21" x="722" y="85.02" fill="#fff2cc" stroke="#000" stroke-width="2" pointer-events="all" rx="4.08" ry="4.08"/>
         <switch transform="translate(-.5 -.5)">
@@ -126,7 +110,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     credentialSchema
                                 </font>
                             </i>
@@ -145,7 +129,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     credentialStatus
                                 </font>
                             </i>
@@ -164,7 +148,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     credentialSubject
                                 </font>
                             </i>
@@ -183,7 +167,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     issuer
                                 </font>
                             </i>
@@ -202,7 +186,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     evidence
                                 </font>
                             </i>
@@ -221,7 +205,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     refreshService
                                 </font>
                             </i>
@@ -240,7 +224,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     renderMethod
                                 </font>
                             </i>
@@ -259,7 +243,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     confidenceMethod
                                 </font>
                             </i>
@@ -278,7 +262,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     termsOfUse
                                 </font>
                             </i>
@@ -297,7 +281,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     validFrom
                                 </font>
                             </i>
@@ -316,7 +300,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     validUntil
                                 </font>
                             </i>
@@ -335,7 +319,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     holder
                                 </font>
                             </i>
@@ -391,7 +375,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     RenderMethod
                                 </font>
                             </i>
@@ -410,7 +394,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     CredentialEvidence
                                 </font>
                             </i>
@@ -429,7 +413,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     RefreshService
                                 </font>
                             </i>
@@ -448,7 +432,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     ConfidenceMethod
                                 </font>
                             </i>
@@ -467,7 +451,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     TermsOfUse
                                 </font>
                             </i>
@@ -486,7 +470,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     CredentialSchema
                                 </font>
                             </i>
@@ -505,7 +489,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     CredentialStatus
                                 </font>
                             </i>
@@ -538,7 +522,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:all;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#f33">
+                                <font color="#bd0000">
                                     JsonSchema
                                 </font>
                             </i>
