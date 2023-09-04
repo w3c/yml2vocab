@@ -348,13 +348,17 @@
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m719.92 433.94-11.14 1.01 4.16-3.74-.51-5.57Z" pointer-events="all"/>
     <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M431 60.22q-29 256.89 282.44 425.92" pointer-events="stroke"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m720.03 489.71-11.17-.37 4.58-3.2.19-5.59Z" pointer-events="all"/>
-    <circle cx="428" cy="603" r="5" fill="#c00" pointer-events="all"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M427 759.28 428 608M431 60.22 428 598M433 603l279.26-.17" pointer-events="stroke"/>
-    <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m719.76 602.83-9.99 5 2.49-5-2.5-5Z" pointer-events="all"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M433 603q129-53.8 279.27-56.05" pointer-events="stroke"/>
-    <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m719.76 546.84-9.92 5.15 2.43-5.04-2.58-4.96Z" pointer-events="all"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M433 603q130 55.85 279.26 55.85" pointer-events="stroke"/>
-    <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m719.76 658.85-10 5 2.5-5-2.5-5Z" pointer-events="all"/>
+    <circle cx="537" cy="603" r="5" fill="#c00" pointer-events="all"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M427 759.28Q463 650 528.53 612.81" pointer-events="stroke"/>
+    <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m535.06 609.1-6.23 9.29-.3-5.58-4.64-3.12Z" pointer-events="all"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M431 60.22Q393 350 532.11 589.58" pointer-events="stroke"/>
+    <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m535.88 596.07-9.35-6.14 5.58-.35 3.07-4.67Z" pointer-events="all"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="m542 603 170.26-.17" pointer-events="stroke"/>
+    <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m719.76 602.83-9.99 5.01 2.49-5.01-2.5-4.99Z" pointer-events="all"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M542 603q91-43 170.37-54.77" pointer-events="stroke"/>
+    <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m719.79 547.13-9.16 6.41 1.74-5.31-3.21-4.58Z" pointer-events="all"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M542 603q81 47 170.3 54.98" pointer-events="stroke"/>
+    <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m719.77 658.65-10.4 4.09 2.93-4.76-2.04-5.2Z" pointer-events="all"/>
     <a xlink:href="https://w3.org/2018/credentials/#RenderMethod">
         <ellipse cx="1121" cy="434.76" fill="#d5e8d4" stroke="#360" stroke-dasharray="2 4" stroke-width="2" pointer-events="all" rx="109" ry="19.608"/>
         <switch transform="translate(-.5 -.5)">
