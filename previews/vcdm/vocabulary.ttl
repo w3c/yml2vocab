@@ -11,7 +11,7 @@ cred: a owl:Ontology ;
     dc:title """Verifiable Credentials Vocabulary v2.0"""@en ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2023-08-21"^^xsd:date ;
+    dc:date "2023-09-06"^^xsd:date ;
 .
 
 # Class definitions
@@ -154,6 +154,14 @@ cred:holder a rdfs:Property, owl:ObjectProperty ;
     vs:term_status "stable" ;
 .
 
+cred:jsonSchema a rdfs:Property, owl:DatatypeProperty ;
+    rdfs:domain cred:JsonSchema ;
+    rdfs:range rdf:JSON ;
+    rdfs:label "Referring to a Json Schema" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-json-schema/#jsonschema-0>, <https://w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
+.
+
 cred:issuanceDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     owl:deprecated true ;
     rdfs:range xsd:dateTime ;
@@ -214,7 +222,7 @@ cred:validUntil a rdfs:Property, owl:DatatypeProperty ;
 cred:verifiableCredential a rdfs:Property ;
     rdfs:domain cred:VerifiablePresentation ;
     rdfs:range cred:VerifiableCredentialGraph ;
-    rdfs:label "Verifiable credential" ;
+    rdfs:label "Verifiable credential graph" ;
     rdfs:comment """<div>The value of this property identifies a <a href="#VerifiableCredentialGraph">Verifiable credential graph</a>. (Informally, it indirectly identifies a <a href="#VerifiableCredential">Verifiable credential</a> contained in a separate graph.)</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
