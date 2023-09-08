@@ -612,6 +612,21 @@
             "vs:term_status": "stable"
         },
         {
+            "@id": "sec:digestMultibase",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:range": "multibase",
+            "rdfs:label": "Digest multibase",
+            "rdfs:comment": {
+                "@value": "<div><b><i>(Feature at Risk)</i></b> The Working Group is currently attempting to determine whether cryptographic hash expression formats can be unified across all of the VCWG core specifications. Candidates for this mechanism include `digestSRI` and `digestMultibase`.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-digestmultibase",
+            "vs:term_status": "stable"
+        },
+        {
             "@id": "sec:allowedAction",
             "@type": "rdf:Property",
             "rdfs:label": "Allowed action",

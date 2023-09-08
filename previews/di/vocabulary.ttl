@@ -363,6 +363,14 @@ sec:revoked a rdf:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
+sec:digestMultibase a rdf:Property, owl:DatatypeProperty ;
+    rdfs:range multibase ;
+    rdfs:label "Digest multibase" ;
+    rdfs:comment """<div><b><i>(Feature at Risk)</i></b> The Working Group is currently attempting to determine whether cryptographic hash expression formats can be unified across all of the VCWG core specifications. Candidates for this mechanism include `digestSRI` and `digestMultibase`.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-digestmultibase>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
 sec:allowedAction a rdf:Property ;
     rdfs:label "Allowed action" ;
     rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#delegated-capability>, <https://w3id.org/security#> ;

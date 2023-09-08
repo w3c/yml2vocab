@@ -158,24 +158,24 @@
             <text xmlns="http://www.w3.org/2000/svg" x="933" y="366" font-family="Helvetica" font-size="16" text-anchor="middle">revoked</text>
         </switch>
     </a>
-    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 117.27q-60-16.27-106.74-50.61"/>
-    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1298.21 62.22 11.02 1.89-4.97 2.55-.95 5.51Z"/>
-    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 165.11q-70-44.11-108.79-96.4"/>
-    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1297.74 62.69 9.97 5.05-5.5.97-2.53 4.99Z"/>
-    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 212.96Q1341 141 1301.14 69.4"/>
-    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1297.5 62.85 9.23 6.3-5.59.25-3.15 4.62Z"/>
-    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 260.81Q1331 151 1299.9 69.98"/>
-    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1297.21 62.98 8.25 7.54-5.56-.54-3.77 4.13Z"/>
-    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 308.66Q1321 181 1298.36 70.43"/>
-    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1296.86 63.08 6.9 8.8-5.4-1.45-4.4 3.45Z"/>
-    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 356.5Q1301 201 1296.73 70.62"/>
-    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1296.48 63.13 5.33 9.83-5.08-2.34-4.92 2.67Z"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M1020.66 301.77Q1121 171 1147.66 60.89"/>
+    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 117.27q-60-16.27-106.25-50.69"/>
+    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1298.74 62.11 11 1.95-4.99 2.52-.98 5.51Z"/>
+    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 165.11q-70-44.11-108.31-96.48"/>
+    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1298.26 62.58 9.94 5.11-5.51.94-2.56 4.97Z"/>
+    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 212.96Q1341 141 1301.63 69.31"/>
+    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1298.02 62.73 9.19 6.36-5.58.22-3.18 4.59Z"/>
+    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 260.81Q1331 151 1300.38 69.88"/>
+    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1297.73 62.86 8.21 7.59-5.56-.57-3.8 4.1Z"/>
+    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 308.66Q1321 181 1298.85 70.32"/>
+    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1297.38 62.96 6.87 8.83-5.4-1.47-4.41 3.43Z"/>
+    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M1411 356.5q-110-155.5-113.78-286"/>
+    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m1297.01 63.01 5.28 9.85-5.07-2.36-4.92 2.65Z"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M1020.66 301.77Q1121 171 1147.13 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m1016.1 307.72 2.12-10.98 2.44 5.03 5.49 1.06Z"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M1020.76 353.63Q1141 201 1147.66 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M1020.76 353.63Q1141 201 1147.13 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m1016.12 359.52 2.26-10.95 2.38 5.06 5.47 1.13Z"/>
     <a xlink:href="https://w3id.org/security/#Ed25519VerificationKey2020">
-        <ellipse cx="1231.51" cy="401.56" fill="#d5e8d4" stroke="#360" stroke-width="2" pointer-events="all" rx="113.84" ry="23.445"/>
+        <ellipse cx="1231.51" cy="401.55" fill="#d5e8d4" stroke="#360" stroke-width="2" pointer-events="all" rx="113.84" ry="23.445"/>
         <switch transform="translate(-.5 -.5)">
             <foreignObject width="100%" height="100%" pointer-events="none" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow:visible;text-align:left">
                 <div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;align-items:unsafe center;justify-content:unsafe center;width:226px;height:1px;padding-top:402px;margin-left:1119px">
@@ -207,7 +207,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:none;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#bd0000">
+                                <font color="#f33">
                                     Proof
                                 </font>
                             </i>
@@ -226,7 +226,7 @@
                     <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
                         <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:none;white-space:normal;overflow-wrap:normal">
                             <i>
-                                <font color="#bd0000">
+                                <font color="#f33">
                                     ProofGraph
                                 </font>
                             </i>
@@ -237,8 +237,8 @@
             <text xmlns="http://www.w3.org/2000/svg" x="180" y="183" font-family="Helvetica" font-size="16" text-anchor="middle">ProofGraph</text>
         </switch>
     </a>
-    <path fill="none" stroke="#000" stroke-dasharray="2 8" stroke-miterlimit="10" stroke-width="2" d="m179.94 154.97 90.96-87.33"/>
-    <path fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2" d="m276.31 62.44-3.75 10.53-1.66-5.33-5.27-1.88Z"/>
+    <path fill="none" stroke="#000" stroke-dasharray="2 8" stroke-miterlimit="10" stroke-width="2" d="m179.94 154.97 90.45-87.43"/>
+    <path fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2" d="m275.78 62.33-3.72 10.54-1.67-5.33-5.28-1.86Z"/>
     <a xlink:href="https://w3id.org/security/#proof">
         <rect width="163.73" height="32.54" x="98.56" y="308.09" fill="#fff2cc" stroke="#000" stroke-width="2" pointer-events="all" rx="4.88" ry="4.88"/>
         <switch transform="translate(-.5 -.5)">
@@ -414,21 +414,21 @@
             <text xmlns="http://www.w3.org/2000/svg" x="646" y="437" font-family="Helvetica" font-size="16" text-anchor="middle">created</text>
         </switch>
     </a>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M555.4 172.52Q481 131 426.67 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M555.4 172.52Q481 131 427.2 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m561.95 176.18-11.17-.51 4.62-3.15.25-5.58Z"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M558.53 268.15Q481 151 426.67 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M558.53 268.15Q481 151 427.2 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m562.66 274.4-9.68-5.58 5.55-.67 2.79-4.85Z"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M554.55 126.54Q501 111 426.67 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M554.55 126.54Q501 111 427.2 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m561.75 128.63-11 2.02 3.8-4.11-1.01-5.49Z"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M558.88 322.48Q481 193 426.67 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M558.88 322.48Q481 193 427.2 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m562.75 328.9-9.44-5.99 5.57-.43 3-4.72Z"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M558.66 472.06Q411 241 426.67 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M558.66 472.06Q411 241 427.2 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m562.69 478.38-9.59-5.73 5.56-.59 2.86-4.8Z"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M841.29 251.89Q541 271 426.67 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M841.29 251.89Q541 271 427.2 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m848.78 251.41-9.66 5.63 2.17-5.15-2.81-4.83Z"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M558.04 376.49Q471 261 426.67 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M558.04 376.49Q471 261 427.2 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m562.55 382.48-10.01-4.97 5.5-1.02 2.49-5Z"/>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M557.82 424.66Q451 291 426.67 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M557.82 424.66Q451 291 427.2 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m562.5 430.52-10.15-4.69 5.47-1.17 2.35-5.07Z"/>
     <a xlink:href="https://w3id.org/security/#DataIntegrityProof">
         <ellipse cx="352.29" cy="475.08" fill="#d5e8d4" stroke="#360" stroke-width="2" pointer-events="all" rx="104.367" ry="23.445"/>
@@ -512,7 +512,7 @@
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m352.75 547.96-5.09-9.95 5.02 2.45 4.98-2.55Z"/>
     <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="m352.77 582.73-.4 50.56"/>
     <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m352.31 640.79-4.92-10.04 4.98 2.54 5.02-2.46Z"/>
-    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M727.63 129.26Q761 129.3 761 86.85q0-42.45-294.6-42.41"/>
+    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M727.63 129.26q33.37.07 33.37-42.39 0-42.47-294.6-42.43"/>
     <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m458.9 44.45 9.99-5.01-2.49 5 2.5 5Z"/>
     <a xlink:href="https://w3id.org/security/#verificationMethod">
         <rect width="163.73" height="32.54" x="1411" y="101" fill="#fff2cc" stroke="#000" stroke-width="2" pointer-events="all" rx="4.88" ry="4.88"/>
@@ -645,7 +645,7 @@
             <text xmlns="http://www.w3.org/2000/svg" x="798" y="662" font-family="Helvetica" font-size="16" text-anchor="middle">multibase</text>
         </switch>
     </a>
-    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M727.63 480.27q70.27.03 70.24 153.02"/>
+    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M727.63 480.27q70.3 0 70.24 153.02"/>
     <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m797.86 640.79-4.99-10.01 5 2.51 5-2.5Z"/>
     <a xlink:href="https://w3id.org/security/#Multikey">
         <ellipse cx="1047.87" cy="466.45" fill="#d5e8d4" stroke="#360" stroke-width="2" pointer-events="all" rx="104.367" ry="23.445"/>
@@ -793,6 +793,27 @@
             <text xmlns="http://www.w3.org/2000/svg" x="1529" y="561" font-family="Helvetica" font-size="16" text-anchor="middle">publicKeyJwk</text>
         </switch>
     </a>
-    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M1021.14 243.93Q1111 141 1147.66 60.89"/>
+    <path fill="none" stroke="#c00" stroke-dasharray="10 4 4 4" stroke-miterlimit="10" stroke-width="2" d="M1021.14 243.93Q1111 141 1147.13 60.77"/>
     <path fill="#c00" stroke="#c00" stroke-miterlimit="10" stroke-width="2" d="m1016.21 249.58 2.81-10.82 2.12 5.17 5.41 1.41Z"/>
+    <a xlink:href="https://w3.org/2018/credentials/#digestMultibase">
+        <rect width="163.73" height="32.54" x="563.9" y="550.2" fill="#fff2cc" stroke="#000" stroke-width="2" pointer-events="all" rx="4.88" ry="4.88"/>
+        <switch transform="translate(-.5 -.5)">
+            <foreignObject width="100%" height="100%" pointer-events="none" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow:visible;text-align:left">
+                <div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;align-items:unsafe center;justify-content:unsafe center;width:162px;height:1px;padding-top:566px;margin-left:565px">
+                    <div data-drawio-colors="color: rgb(0, 0, 0);" style="box-sizing:border-box;font-size:0;text-align:center">
+                        <div style="display:inline-block;font-size:16px;font-family:Helvetica;color:#000;line-height:1.2;pointer-events:none;white-space:normal;overflow-wrap:normal">
+                            <i>
+                                <font color="#bd0000">
+                                    digestMultibase
+                                </font>
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </foreignObject>
+            <text xmlns="http://www.w3.org/2000/svg" x="646" y="571" font-family="Helvetica" font-size="16" text-anchor="middle">digestMultibase</text>
+        </switch>
+    </a>
+    <path fill="none" stroke="#009" stroke-dasharray="6 6" stroke-miterlimit="10" stroke-width="2" d="M645.76 582.73q.04 74.74 67.68 74.66"/>
+    <path fill="#009" stroke="#009" stroke-miterlimit="10" stroke-width="2" d="m720.94 657.38-9.99 5.01 2.49-5-2.5-5Z"/>
 </svg>
