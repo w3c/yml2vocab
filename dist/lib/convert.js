@@ -313,7 +313,7 @@ function getData(vocab_source) {
     // the extra owl types added depending on the range
     const properties = (vocab.property !== undefined) ?
         vocab.property.map((raw) => {
-            const types = (raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdfs:Property"];
+            const types = (raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"];
             // Calculate the number of entries in various categories
             common_2.global.status_counter.add(raw.status);
             let range = raw.range;

@@ -321,7 +321,7 @@ export function getData(vocab_source: string): Vocab {
     // the extra owl types added depending on the range
     const properties: RDFProperty[] = (vocab.property !== undefined) ?
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
-            const types: string[] = (raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdfs:Property"];
+            const types: string[] = (raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"];
             // Calculate the number of entries in various categories
             global.status_counter.add(raw.status);
             let range = raw.range;

@@ -86,7 +86,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2023-08-20",
+    "dc:date": "2023-09-08",
     "rdfs_classes": [
         {
             "@id": "sec:Proof",
@@ -355,7 +355,7 @@
     "rdfs_properties": [
         {
             "@id": "sec:verificationMethod",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Verification method",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-verificationmethod",
@@ -367,7 +367,7 @@
         {
             "@id": "sec:controller",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:ObjectProperty"
             ],
             "rdfs:domain": "sec:VerificationMethod",
@@ -377,7 +377,7 @@
         },
         {
             "@id": "sec:proof",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "sec:ProofGraph",
             "rdfs:label": "Proof sets",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#proof-sets",
@@ -386,7 +386,7 @@
         {
             "@id": "sec:domain",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
@@ -398,7 +398,7 @@
         {
             "@id": "sec:challenge",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
@@ -409,7 +409,7 @@
         },
         {
             "@id": "sec:previousProof",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:domain": "sec:Proof",
             "rdfs:range": "sec:Proof",
             "rdfs:label": "Previous proof",
@@ -419,7 +419,7 @@
         {
             "@id": "sec:proofPurpose",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
@@ -431,11 +431,11 @@
         {
             "@id": "sec:proofValue",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
-            "rdfs:range": "xsd:string",
+            "rdfs:range": "sec:multibase",
             "rdfs:label": "Proof value",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-proofvalue",
             "vs:term_status": "stable"
@@ -443,7 +443,7 @@
         {
             "@id": "sec:created",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
@@ -455,19 +455,24 @@
         {
             "@id": "sec:expires",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
-            "rdfs:domain": "sec:Proof",
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "sec:Proof",
+                    "sec:VerificationMethod"
+                ]
+            },
             "rdfs:range": "xsd:dateTime",
-            "rdfs:label": "Proof expiration time",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-expires",
+            "rdfs:label": "Expiration time for a proof or verification method",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:nonce",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
@@ -478,7 +483,7 @@
         },
         {
             "@id": "sec:authentication",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Authentication method",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-authentication",
@@ -486,7 +491,7 @@
         },
         {
             "@id": "sec:assertionMethod",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Assertion method",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-assertionmethod",
@@ -494,7 +499,7 @@
         },
         {
             "@id": "sec:capabilityDelegation",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Capability delegation method",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilitydelegation",
@@ -502,7 +507,7 @@
         },
         {
             "@id": "sec:capabilityInvocation",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Capability invocation method",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilityinvocation",
@@ -510,7 +515,7 @@
         },
         {
             "@id": "sec:keyAgreement",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Key agreement protocols",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-keyagreement",
@@ -519,7 +524,7 @@
         {
             "@id": "sec:cryptosuite",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:DataIntegrityProof",
@@ -531,11 +536,11 @@
         {
             "@id": "sec:publicKeyMultibase",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Multikey",
-            "rdfs:range": "xsd:string",
+            "rdfs:range": "sec:multibase",
             "rdfs:label": "Public key multibase",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-publickeymultibase",
             "vs:term_status": "stable",
@@ -548,11 +553,11 @@
         {
             "@id": "sec:secretKeyMultibase",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Multikey",
-            "rdfs:range": "xsd:string",
+            "rdfs:range": "sec:multibase",
             "rdfs:label": "Secret key multibase",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeymultibase",
             "vs:term_status": "stable",
@@ -565,7 +570,7 @@
         {
             "@id": "sec:publicKeyJwk",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:JsonWebKey",
@@ -581,7 +586,7 @@
         {
             "@id": "sec:secretKeyJwk",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:JsonWebKey",
@@ -597,7 +602,7 @@
         {
             "@id": "sec:revoked",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:VerificationMethod",
@@ -608,49 +613,49 @@
         },
         {
             "@id": "sec:allowedAction",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:label": "Allowed action",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#delegated-capability",
             "vs:term_status": "reserved"
         },
         {
             "@id": "sec:capabilityChain",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:label": "Capability chain",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#delegation",
             "vs:term_status": "reserved"
         },
         {
             "@id": "sec:capabilityAction",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:label": "Capability action",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#invoking-root-capability",
             "vs:term_status": "reserved"
         },
         {
             "@id": "sec:caveat",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:label": "Caveat",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#caveats",
             "vs:term_status": "reserved"
         },
         {
             "@id": "sec:delegator",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:label": "Delegator",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#delegation",
             "vs:term_status": "reserved"
         },
         {
             "@id": "sec:invocationTarget",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:label": "Invocation target",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#root-capability",
             "vs:term_status": "reserved"
         },
         {
             "@id": "sec:invoker",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:label": "Invoker",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#invocation",
             "vs:term_status": "reserved"
@@ -823,6 +828,16 @@
             ],
             "rdfs:label": "Datatype for cryptosuite Identifiers",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#cryptosuiteString",
+            "vs:term_status": "stable"
+        },
+        {
+            "@id": "sec:multibase",
+            "@type": "rdfs:Datatype",
+            "rdfs:subClassOf": [
+                "xsd:string"
+            ],
+            "rdfs:label": "Datatype for multibase values",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#multibase",
             "vs:term_status": "stable"
         }
     ]
