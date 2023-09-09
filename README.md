@@ -40,6 +40,8 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
   - `class`: blocks of a class definitions. For each class he `id` key defines the class name (no prefix should be used here). Possible superclasses are defined by the `upper_value` key as a single term, or a sequence of terms.
  
   - `property`: blocks of a property definitions. For each property the `id` key defines the property name (no prefix should be used here); possible superproperties are defined in the by the `upper_value` as a single term, or as a sequence of terms. The domain and range classes can also be provided as a single term, or as a sequence of terms, through the `domain` and `range` keys, respectively.
+   
+    Note that both the `domain` and the `range` keys can take an array of class references as values. For the former this means the resulting domain is the _union_ of the referred classes, whereas for the latter it is the _intersection_.
   
     The `range` key may also use the (single) `IRI` (or `URL`) term instead of class references. This keyword denotes a property that has no explicit range, but whose objects are expected to be IRI references. The generated vocabulary annotates these properties as belonging to the `owl:ObjectProperty` class, which is the term reserved for properties whose objects are not supposed to be literals.
 
