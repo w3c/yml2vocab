@@ -11,34 +11,31 @@ cred: a owl:Ontology ;
     dc:title """Verifiable Credentials Vocabulary v2.0"""@en ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2023-09-06"^^xsd:date ;
+    dc:date "2023-09-30"^^xsd:date ;
 .
 
 # Class definitions
 cred:CredentialEvidence a rdfs:Class ;
     rdfs:label "Credential Evidence" ;
-    rdfs:comment """<div>A credential evidence provides evidence schemes that are used by the <a href="#evidence">evidence</a> property. This class serves as a supertype for specific evidence types.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-evidence>, <https://w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
 .
 
 cred:CredentialSchema a rdfs:Class ;
     rdfs:label "Credential schema" ;
-    rdfs:comment """<div>A credential schema provides verifiers with enough information to determine if the provided data conforms to the provided schema. This class serves as a supertype for specific schemas (e.g., <a href="#JsonSchema">JsonSchema</a>).</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-schema>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:CredentialStatus a rdfs:Class ;
     rdfs:label "Credential status" ;
-    rdfs:comment """<div>A credential status provides enough information to determine the current status of the credential (for example, suspended or revoked). This class serves as a supertype for specific status types.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-status>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:ConfidenceMethod a rdfs:Class ;
     rdfs:label "Confidence method" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/confidence-method-spec/>, <https://w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-confidence-method>, <https://w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
 .
 
@@ -58,22 +55,19 @@ cred:JsonSchemaCredential a rdfs:Class ;
 
 cred:RefreshService a rdfs:Class ;
     rdfs:label "Refresh service" ;
-    rdfs:comment """<div>A refresh service is a mechanism that can be utilized by software agents to retrieve an updated copy of a Verifiable Credential. This class serves as a supertype for specific refresh service types.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-refresh-service>, <https://w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
 .
 
 cred:RenderMethod a rdfs:Class ;
     rdfs:label "Render method" ;
-    rdfs:comment """<div>A specific render method specifies how a software expresses the verifiable credential using a visual, auditory, or haptic mechanism. This class serves as a supertype for specific render method types.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-render-method>, <https://w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
 .
 
 cred:TermsOfUse a rdfs:Class ;
     rdfs:label "Terms of use" ;
-    rdfs:comment """<div>Policy under which the creator issued the credential or presentation. This class serves as a supertype for specific types for terms of use.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-terms-of-use>, <https://w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
 .
 
@@ -85,8 +79,8 @@ cred:VerifiableCredential a rdfs:Class ;
 
 cred:VerifiableCredentialGraph a rdfs:Class ;
     rdfs:label "Verifiable credential graph" ;
-    rdfs:comment """<div>Instances of this class are <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a> [[RDF12-CONCEPTS]], where each of these graphs must include exactly one <a href="#VerifiableCredential">Verifiable Credential</a>.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3.org/2018/credentials#> ;
+    rdfs:comment """<div>Instances of this class are <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a> [[RDF12-CONCEPTS]].</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiablecredentialgraph>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
@@ -99,7 +93,7 @@ cred:VerifiablePresentation a rdfs:Class ;
 
 
 # Property definitions
-cred:credentialSchema a rdfs:Property ;
+cred:credentialSchema a rdf:Property ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:CredentialSchema ;
     rdfs:label "Credential schema" ;
@@ -107,7 +101,7 @@ cred:credentialSchema a rdfs:Property ;
     vs:term_status "stable" ;
 .
 
-cred:credentialStatus a rdfs:Property ;
+cred:credentialStatus a rdf:Property ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:CredentialStatus ;
     rdfs:label "Credential status" ;
@@ -115,14 +109,14 @@ cred:credentialStatus a rdfs:Property ;
     vs:term_status "stable" ;
 .
 
-cred:confidenceMethod a rdfs:Property ;
+cred:confidenceMethod a rdf:Property ;
     rdfs:range cred:ConfidenceMethod ;
     rdfs:label "Confidence method" ;
     rdfs:isDefinedBy <https://w3c-ccg.github.io/confidence-method-spec/>, <https://w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
 .
 
-cred:credentialSubject a rdfs:Property, owl:ObjectProperty ;
+cred:credentialSubject a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:label "Credential subject" ;
     rdfs:comment """<div>An entity about which claims are made.</div>"""^^rdf:HTML ;
@@ -130,7 +124,15 @@ cred:credentialSubject a rdfs:Property, owl:ObjectProperty ;
     vs:term_status "stable" ;
 .
 
-cred:evidence a rdfs:Property ;
+cred:digestSRI a rdf:Property, owl:DatatypeProperty ;
+    rdfs:range cred:sristring ;
+    rdfs:label "Subresource integrity digest" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-digestSRI>, <https://w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://www.w3.org/TR/SRI/#the-integrity-attribute> ;
+.
+
+cred:evidence a rdf:Property ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:CredentialEvidence ;
     rdfs:label "Evidence" ;
@@ -147,14 +149,14 @@ cred:expirationDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty
     vs:term_status "deprecated" ;
 .
 
-cred:holder a rdfs:Property, owl:ObjectProperty ;
+cred:holder a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiablePresentation ;
     rdfs:label "Holder" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-holder>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
-cred:jsonSchema a rdfs:Property, owl:DatatypeProperty ;
+cred:jsonSchema a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain cred:JsonSchema ;
     rdfs:range rdf:JSON ;
     rdfs:label "Referring to a Json Schema" ;
@@ -171,7 +173,7 @@ cred:issuanceDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     vs:term_status "deprecated" ;
 .
 
-cred:issuer a rdfs:Property, owl:ObjectProperty ;
+cred:issuer a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:label "Issuer" ;
     rdfs:comment """<div>The value of this property must be a URL uniquely identifying the issuer.</div>"""^^rdf:HTML ;
@@ -179,7 +181,7 @@ cred:issuer a rdfs:Property, owl:ObjectProperty ;
     vs:term_status "stable" ;
 .
 
-cred:refreshService a rdfs:Property ;
+cred:refreshService a rdf:Property ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:RefreshService ;
     rdfs:label "Refresh service" ;
@@ -187,7 +189,7 @@ cred:refreshService a rdfs:Property ;
     vs:term_status "reserved" ;
 .
 
-cred:renderMethod a rdfs:Property ;
+cred:renderMethod a rdf:Property ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:RenderMethod ;
     rdfs:label "Render method" ;
@@ -195,7 +197,14 @@ cred:renderMethod a rdfs:Property ;
     vs:term_status "reserved" ;
 .
 
-cred:termsOfUse a rdfs:Property ;
+cred:relatedResource a rdf:Property, owl:ObjectProperty ;
+    rdfs:domain cred:VerifiableCredential ;
+    rdfs:label "Related resource" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/vc-render-method/#defn-relatedResource>, <https://w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
+.
+
+cred:termsOfUse a rdf:Property ;
     rdfs:domain [ owl:unionOf (cred:VerifiableCredential cred:VerifiablePresentation) ] ;
     rdfs:range cred:TermsOfUse ;
     rdfs:label "Terms of use" ;
@@ -203,7 +212,7 @@ cred:termsOfUse a rdfs:Property ;
     vs:term_status "reserved" ;
 .
 
-cred:validFrom a rdfs:Property, owl:DatatypeProperty ;
+cred:validFrom a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain [ owl:unionOf (cred:VerifiableCredential cred:VerifiablePresentation) ] ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Valid from" ;
@@ -211,7 +220,7 @@ cred:validFrom a rdfs:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-cred:validUntil a rdfs:Property, owl:DatatypeProperty ;
+cred:validUntil a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain [ owl:unionOf (cred:VerifiableCredential cred:VerifiablePresentation) ] ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Valid until" ;
@@ -219,12 +228,21 @@ cred:validUntil a rdfs:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-cred:verifiableCredential a rdfs:Property ;
+cred:verifiableCredential a rdf:Property ;
     rdfs:domain cred:VerifiablePresentation ;
     rdfs:range cred:VerifiableCredentialGraph ;
     rdfs:label "Verifiable credential graph" ;
     rdfs:comment """<div>The value of this property identifies a <a href="#VerifiableCredentialGraph">Verifiable credential graph</a>. (Informally, it indirectly identifies a <a href="#VerifiableCredential">Verifiable credential</a> contained in a separate graph.)</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
+.
+
+# Definitions of datatypes
+cred:sristring a rdfs:Datatype ;
+    rdfs:subClassOf xsd:string ;
+    rdfs:label "Datatype for digest SRI values" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#the-sristring-datatype>, <https://w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://www.w3.org/TR/SRI/#the-integrity-attribute> ;
 .
 
