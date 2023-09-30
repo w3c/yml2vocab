@@ -230,7 +230,7 @@
                 "rdf:Property",
                 "owl:DatatypeProperty"
             ],
-            "rdfs:range": "cred:sristring",
+            "rdfs:range": "cred:sriString",
             "rdfs:label": "Subresource integrity digest",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-digestSRI",
             "vs:term_status": "stable",
@@ -412,7 +412,7 @@
     ],
     "rdfs_datatypes": [
         {
-            "@id": "cred:sristring",
+            "@id": "cred:sriString",
             "@type": "rdfs:Datatype",
             "rdfs:subClassOf": [
                 "xsd:string"

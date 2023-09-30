@@ -125,7 +125,7 @@ cred:credentialSubject a rdf:Property, owl:ObjectProperty ;
 .
 
 cred:digestSRI a rdf:Property, owl:DatatypeProperty ;
-    rdfs:range cred:sristring ;
+    rdfs:range cred:sriString ;
     rdfs:label "Subresource integrity digest" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-digestSRI>, <https://w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
@@ -238,7 +238,7 @@ cred:verifiableCredential a rdf:Property ;
 .
 
 # Definitions of datatypes
-cred:sristring a rdfs:Datatype ;
+cred:sriString a rdfs:Datatype ;
     rdfs:subClassOf xsd:string ;
     rdfs:label "Datatype for digest SRI values" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#the-sristring-datatype>, <https://w3.org/2018/credentials#> ;
