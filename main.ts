@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import * as yml2vocab from './index';
 import { Command }    from 'commander';
+import * as process   from 'node:process';
 
 /**
  * Entry point for running the script on the command line: 

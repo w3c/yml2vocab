@@ -4,10 +4,10 @@
  * 
  * @packageDocumentation
  */
- import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype } from './common';
- import { RawVocabEntry, RawVocab, ValidationResults, global }                                                           from './common';
-import { EXTRA_DATATYPES }                                                                                                from "./common";
- import { validateWithSchema }                                                                                           from './schema';
+import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype } from './common';
+import { RawVocabEntry, RawVocab, ValidationResults, global }                                                           from './common';
+import { EXTRA_DATATYPES }                                                                                              from "./common";
+import { validateWithSchema }                                                                                           from './schema';
 
 /************************************************ Helper functions and constants **********************************/
 
@@ -256,7 +256,7 @@ export function getData(vocab_source: string): Vocab {
     // @param raw: raw entry for the class or datatype
     // @param refs: the range or domain array of the property
     // @return: whether the class/datatype is indeed in the range of the property
-    const crossref = (raw: RawVocabEntry, property: RDFProperty, refs: string[], single_ref: string[], multi_ref: string[]): boolean => {
+    const crossref = (raw: RawVocabEntry, property: RDFProperty, refs: undefined|string[], single_ref: string[], multi_ref: string[]): boolean => {
         if (refs) {
             // Remove the (possible) namespace reference from the CURIE
             const pure_refs = refs.map((range: string): string => {
@@ -323,7 +323,9 @@ export function getData(vocab_source: string): Vocab {
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
             const types: string[] = (raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"];
             // Calculate the number of entries in various categories
-            global.status_counter.add(raw.status);
+            // The conditional assignment is actually unnecessary per the earlier processing,
+            // but the deno typescript checker complains...
+            global.status_counter.add(raw.status ? raw.status : Status.stable);
             let range = raw.range;
             if (range && range.length > 0) {
                 if (range.length === 1 && (range[0].toUpperCase() === "IRI" || range[0].toUpperCase() === "URL")) {
@@ -367,7 +369,9 @@ export function getData(vocab_source: string): Vocab {
             const includes_range_of: string[] = [];
 
             // Calculate the number of entries in various categories
-            global.status_counter.add(raw.status);
+            // The conditional assignment is actually unnecessary per the earlier processing,
+            // but the deno typescript checker complains...
+            global.status_counter.add(raw.status ? raw.status : Status.stable);
 
             // Get all domain/range cross references
             for (const property of properties) {

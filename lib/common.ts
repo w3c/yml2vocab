@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 /**
  * Common types and variables.
  * 
@@ -195,6 +196,7 @@ export interface RDFProperty extends RDFTerm {
  * more readable if there is a separate interface for it. And one may never
  * know how things will evolve...
  */
+// deno-lint-ignore no-empty-interface
 export interface RDFIndividual extends RDFTerm {
 }
 
