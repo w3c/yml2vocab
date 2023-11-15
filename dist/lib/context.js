@@ -25,7 +25,17 @@ function toContext(vocab) {
     // Generation of a unit for properties
     const propertyContext = (property, for_class = true) => {
         // the real id of the property...
-        const url = `${common_1.global.vocab_url}${property.id}`;
+        let url = `${common_1.global.vocab_url}${property.id}`;
+        // if defined_by is set, we have a foreign property definition, so use
+        // its URL instead.
+        if ("defined_by" in property) {
+            // possibly expand prefixes
+            for (let prefix of vocab.prefixes) {
+                if (property.defined_by.indexOf(`${prefix.prefix}:`) > -1) {
+                    url = property.defined_by.replace(`${prefix.prefix}:`, prefix.url);
+                }
+            }
+        }
         const retval = {
             "@id": url
         };
