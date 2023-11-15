@@ -315,7 +315,9 @@ function getData(vocab_source) {
         vocab.property.map((raw) => {
             const types = (raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"];
             // Calculate the number of entries in various categories
-            common_2.global.status_counter.add(raw.status);
+            // The conditional assignment is actually unnecessary per the earlier processing,
+            // but the deno typescript checker complains...
+            common_2.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
             let range = raw.range;
             if (range && range.length > 0) {
                 if (range.length === 1 && (range[0].toUpperCase() === "IRI" || range[0].toUpperCase() === "URL")) {
@@ -359,7 +361,9 @@ function getData(vocab_source) {
             const included_in_domain_of = [];
             const includes_range_of = [];
             // Calculate the number of entries in various categories
-            common_2.global.status_counter.add(raw.status);
+            // The conditional assignment is actually unnecessary per the earlier processing,
+            // but the deno typescript checker complains...
+            common_2.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
             // Get all domain/range cross references
             for (const property of properties) {
                 crossref(raw, property, property.range, range_of, includes_range_of);

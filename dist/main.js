@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const yml2vocab = require("./index");
 const commander_1 = require("commander");
+const process = require("node:process");
 /**
  * Entry point for running the script on the command line:
  *
