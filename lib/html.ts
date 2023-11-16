@@ -116,6 +116,12 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
 
         if (item.defined_by !== "") {
+            // possibly expand prefixes
+            for (let prefix of vocab.prefixes) {
+                if (item.defined_by.indexOf(`${prefix.prefix}:`) > -1) {
+                    item.defined_by = item.defined_by.replace(`${prefix.prefix}:`, prefix.url);
+                }
+            }
             addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by}">formal definition of the term</a>.`);
         }
 
