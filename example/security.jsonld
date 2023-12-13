@@ -63,18 +63,30 @@
         "rdfs_instances": {
             "@reverse": "rdfs:isDefinedBy",
             "@type": "@id"
+        },
+        "rdfs_datatypes": {
+            "@reverse": "rdfs:isDefinedBy",
+            "@type": "@id"
+        },
+        "dc:title": {
+            "@container": "@language"
+        },
+        "dc:description": {
+            "@container": "@language"
         }
     },
     "@id": "https://w3id.org/security/v1",
     "@type": "owl:Ontology",
     "dc:title": {
-        "en": "Security Vocabulary"
+        "@value": "Security Vocabulary",
+        "@language": "en"
     },
     "dc:description": {
-        "en": "vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs \n"
+        "@value": "vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs \n",
+        "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2023-04-14",
+    "dc:date": "2023-12-13",
     "rdfs_classes": [
         {
             "@id": "sec:Proof",
@@ -636,7 +648,7 @@
     "rdfs_properties": [
         {
             "@id": "sec:verificationMethod",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Verification method",
             "rdfs:comment": {
@@ -651,7 +663,7 @@
         {
             "@id": "sec:domain",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
@@ -666,7 +678,7 @@
         {
             "@id": "sec:challenge",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
@@ -681,7 +693,7 @@
         {
             "@id": "sec:proofPurpose",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
@@ -696,7 +708,7 @@
         {
             "@id": "sec:proofValue",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:Proof",
@@ -710,7 +722,7 @@
         },
         {
             "@id": "sec:proof",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "sec:ProofGraph",
             "rdfs:label": "Proof sets",
             "rdfs:comment": {
@@ -721,7 +733,7 @@
         },
         {
             "@id": "sec:proofChain",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "rdf:List",
             "rdfs:label": "Proof chain",
             "rdfs:comment": {
@@ -733,7 +745,7 @@
         {
             "@id": "sec:controller",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:ObjectProperty"
             ],
             "rdfs:domain": "sec:VerificationMethod",
@@ -746,7 +758,7 @@
         },
         {
             "@id": "sec:authentication",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "VerificationMethod",
             "rdfs:label": "Authentication method",
             "rdfs:comment": {
@@ -757,7 +769,7 @@
         },
         {
             "@id": "sec:assertionMethod",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "VerificationMethod",
             "rdfs:label": "Assertion method",
             "rdfs:comment": {
@@ -768,7 +780,7 @@
         },
         {
             "@id": "sec:capabilityDelegation",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "VerificationMethod",
             "rdfs:label": "Capability Delegation Method",
             "rdfs:comment": {
@@ -779,7 +791,7 @@
         },
         {
             "@id": "sec:capabilityInvocation",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "VerificationMethod",
             "rdfs:label": "Capability Invocation Method",
             "rdfs:comment": {
@@ -790,7 +802,7 @@
         },
         {
             "@id": "sec:keyAgreement",
-            "@type": "rdfs:Property",
+            "@type": "rdf:Property",
             "rdfs:range": "VerificationMethod",
             "rdfs:label": "Key agreement protocols",
             "rdfs:comment": {
@@ -802,7 +814,7 @@
         {
             "@id": "sec:cryptosuite",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:DataIntegrityProof",
@@ -820,7 +832,7 @@
         {
             "@id": "sec:publicKeyMultibase",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:VerificationMethod",
@@ -841,7 +853,7 @@
         {
             "@id": "sec:publicKeyJwk",
             "@type": [
-                "rdfs:Property",
+                "rdf:Property",
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "sec:VerificationMethod",
