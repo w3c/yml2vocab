@@ -101,7 +101,7 @@ export interface RawVocabEntry {
     id           : string;
     property    ?: string;
     value       ?: string;
-    label        : string;
+    label       ?: string;
     upper_value ?: string[];
     domain      ?: string[];
     range       ?: string[];

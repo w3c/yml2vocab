@@ -179,11 +179,20 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         }
     })();
 
+    const label = ((str: string|undefined): string => {
+        if (str) {
+            return str;
+        } else if (raw.id && raw.id.length > 0) {
+            return raw.id[0].toLocaleUpperCase() + raw.id.substring(1);
+        } else {
+            return ""
+        }
+    })(raw.label);
     return {
         id          : (raw.id) ? raw.id : "",
         property    : raw.property,
         value       : raw.value,
-        label       : (raw.label) ? raw.label : "",
+        label       : label,
         upper_value : toArray(raw.upper_value),
         domain      : toArray(raw.domain),
         range       : toArray(raw.range),
