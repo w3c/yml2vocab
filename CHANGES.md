@@ -1,3 +1,8 @@
+## Version 1.4.6
+
+- Label is now optional
+
+
 ## Version 1.4.5
 
 - Error in the namespace for `Property` (see https://github.com/w3c/yml2vocab/issues/16)

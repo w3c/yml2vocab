@@ -1,4 +1,5 @@
 "use strict";
+// deno-lint-ignore-file no-explicit-any
 /**
  * Common types and variables.
  *
