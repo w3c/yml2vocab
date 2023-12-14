@@ -20,7 +20,7 @@
   "types": "dist/index.d.ts",
   "bin": "dist/main.js",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=21.0.0"
   },
   "scripts": {
     "generate": "node_modules/.bin/ts-node main.ts",
@@ -29,9 +29,9 @@
     "test_di": "node_modules/.bin/ts-node main.ts -v example/security.yml -t example/security_template.html -c",
     "test_vcdm": "node_modules/.bin/ts-node main.ts -v example/credentials.yml -t example/template.html -c",
     "test": "node_modules/.bin/ts-node main.ts -v example/test.yml -t example/test_template.html -c",
-    "local_test": "node_modules/.bin/ts-node main.ts -v local/tests/test.yml -t local/tests/test_template.html",
-    "local_vcdm": "node_modules/.bin/ts-node main.ts -v local/vcdm/vocabulary.yml -t local/vcdm/template.html",
-    "local_di": "node_modules/.bin/ts-node main.ts -v local/di/vocabulary.yml -t local/di/template.html",
+    "local_test": "node_modules/.bin/ts-node main.ts -v local/tests/test.yml -t local/tests/test_template.html -c",
+    "local_vcdm": "node_modules/.bin/ts-node main.ts -v local/vcdm/vocabulary.yml -t local/vcdm/template.html -c",
+    "local_di": "node_modules/.bin/ts-node main.ts -v local/di/vocabulary.yml -t local/di/template.html -c",
     "preview_vcdm": "node_modules/.bin/ts-node main.ts -v previews/vcdm/vocabulary.yml -t previews/vcdm/template.html",
     "preview_di": "node_modules/.bin/ts-node main.ts -v previews/di/vocabulary.yml -t previews/di/template.html"
   },
