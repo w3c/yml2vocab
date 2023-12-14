@@ -1,1 +1,12 @@
 node_modules/
+local/
+example/*.ttl
+example/*.json
+example/*.jsonld
+example/credentials.html
+example/security.html
+example/test.html
+publish
+package-lock.json
+.vscode/
+
