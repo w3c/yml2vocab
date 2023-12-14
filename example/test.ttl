@@ -9,11 +9,11 @@
 
 # Ontology definition
 sec: a owl:Ontology ;
-    dc:title """Security Vocabulary""" ;
+    dc:title """Security Vocabulary"""@en ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs 
-""" ;
+"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2023-04-14"^^xsd:date ;
+    dc:date "2023-12-13"^^xsd:date ;
 .
 
 # Class definitions
@@ -28,7 +28,7 @@ sec:ProofGraph a rdfs:Class ;
     rdfs:label "An RDF Graph for a digital proof" ;
     rdfs:comment """<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Proof.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "unstable" ;
+    vs:term_status "reserved" ;
 .
 
 sec:VerificationMethod a rdfs:Class ;
@@ -317,7 +317,7 @@ sec:Bls12381G2Key2020 a rdfs:Class, owl:DeprecatedClass ;
 
 
 # Property definitions
-sec:verificationMethod a rdfs:Property ;
+sec:verificationMethod a rdf:Property ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Verification method" ;
     rdfs:comment """<div>A `verificationMethod` property is used to specify a URL that contains information used for proof verification.</div>"""^^rdf:HTML ;
@@ -326,7 +326,7 @@ sec:verificationMethod a rdfs:Property ;
     rdfs:seeAlso <https://www.w3.org/TR/did-core/#verification-methods> ;
 .
 
-sec:domain a rdfs:Property, owl:DatatypeProperty ;
+sec:domain a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Domain of a proof" ;
@@ -335,7 +335,7 @@ sec:domain a rdfs:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-sec:challenge a rdfs:Property, owl:DatatypeProperty ;
+sec:challenge a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Challenge with a proof" ;
@@ -344,7 +344,7 @@ sec:challenge a rdfs:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-sec:proofPurpose a rdfs:Property, owl:DatatypeProperty ;
+sec:proofPurpose a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Proof purpose" ;
@@ -353,7 +353,7 @@ sec:proofPurpose a rdfs:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-sec:proofValue a rdfs:Property, owl:DatatypeProperty ;
+sec:proofValue a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Proof value" ;
@@ -362,7 +362,7 @@ sec:proofValue a rdfs:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-sec:proof a rdfs:Property ;
+sec:proof a rdf:Property ;
     rdfs:range sec:ProofGraph ;
     rdfs:label "Proof sets" ;
     rdfs:comment """<div>The value of the `proof` property MUST identify <a href=”#ProofGraph”>`ProofGraph` instances</a> (informally, it indirectly identifies <a href=”#Proof”>`Proof` instances</a>, each contained in a separate graph). The property is used to associate a proof with a graph of information. The proof property is typically not included in the canonicalized graphs that are then digested and digitally signed. The order of the proofs is not relevant.</div>"""^^rdf:HTML ;
@@ -370,7 +370,7 @@ sec:proof a rdfs:Property ;
     vs:term_status "stable" ;
 .
 
-sec:proofChain a rdfs:Property ;
+sec:proofChain a rdf:Property ;
     rdfs:range rdf:List ;
     rdfs:label "Proof chain" ;
     rdfs:comment """<div>The value of the `proofChain` property MUST identify a sequence of <a href=”#ProofGraph”>`ProofGraph` instances</a> (informally, it indirectly identifies a series of <a href=”#Proof”>`Proof` instances</a>, each contained in a separate graph). The property is used to provide a sequence of multiple proofs where the order of when the proofs occurred matters. The proof chain property is typically not included in the canonicalized graphs that are then separately digested and digitally signed.</div>"""^^rdf:HTML ;
@@ -378,7 +378,7 @@ sec:proofChain a rdfs:Property ;
     vs:term_status "stable" ;
 .
 
-sec:controller a rdfs:Property, owl:ObjectProperty ;
+sec:controller a rdf:Property, owl:ObjectProperty ;
     rdfs:domain sec:VerificationMethod ;
     rdfs:label "Controller" ;
     rdfs:comment """<div>A controller is an entity that claims control over a particular resource. Note that control is best validated as a two-way relationship, where the controller claims control over a particular resource, and the resource clearly identifies its controller.</div>"""^^rdf:HTML ;
@@ -386,7 +386,7 @@ sec:controller a rdfs:Property, owl:ObjectProperty ;
     vs:term_status "stable" ;
 .
 
-sec:authentication a rdfs:Property ;
+sec:authentication a rdf:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Authentication method" ;
     rdfs:comment """<div>An `authentication` property is used to specify a URL that contains information about a `verificationMethod` used for authentication.</div>"""^^rdf:HTML ;
@@ -394,7 +394,7 @@ sec:authentication a rdfs:Property ;
     vs:term_status "stable" ;
 .
 
-sec:assertionMethod a rdfs:Property ;
+sec:assertionMethod a rdf:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Assertion method" ;
     rdfs:comment """<div>An `assertionMethod` property is used to specify a URL that contains information about a `verificationMethod` used for assertions.</div>"""^^rdf:HTML ;
@@ -402,7 +402,7 @@ sec:assertionMethod a rdfs:Property ;
     vs:term_status "stable" ;
 .
 
-sec:capabilityDelegation a rdfs:Property ;
+sec:capabilityDelegation a rdf:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Capability Delegation Method" ;
     rdfs:comment """<div><p>A `capabilityDelegation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of delegating capabilities.</p>
@@ -412,7 +412,7 @@ sec:capabilityDelegation a rdfs:Property ;
     vs:term_status "stable" ;
 .
 
-sec:capabilityInvocation a rdfs:Property ;
+sec:capabilityInvocation a rdf:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Capability Invocation Method" ;
     rdfs:comment """<div><p>A `capabilityInvocation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of invoking capabilities.</p>
@@ -422,7 +422,7 @@ sec:capabilityInvocation a rdfs:Property ;
     vs:term_status "stable" ;
 .
 
-sec:keyAgreement a rdfs:Property ;
+sec:keyAgreement a rdf:Property ;
     rdfs:range VerificationMethod ;
     rdfs:label "Key agreement protocols" ;
     rdfs:comment """<div>Indicates that a proof is used for for key agreement protocols, such as Elliptic Curve Diffie Hellman key agreement used by popular encryption libraries.</div>"""^^rdf:HTML ;
@@ -430,7 +430,7 @@ sec:keyAgreement a rdfs:Property ;
     vs:term_status "stable" ;
 .
 
-sec:cryptosuite a rdfs:Property, owl:DatatypeProperty ;
+sec:cryptosuite a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain sec:DataIntegrityProof ;
     rdfs:range xsd:string ;
     rdfs:label "Cryptographic suite" ;
@@ -440,7 +440,7 @@ sec:cryptosuite a rdfs:Property, owl:DatatypeProperty ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof> ;
 .
 
-sec:publicKeyMultibase a rdfs:Property, owl:DatatypeProperty ;
+sec:publicKeyMultibase a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain sec:VerificationMethod ;
     rdfs:range xsd:string ;
     rdfs:label "Public key multibase" ;
@@ -455,7 +455,7 @@ sec:publicKeyMultibase a rdfs:Property, owl:DatatypeProperty ;
     rdfs:seeAlso <https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03>, <https://w3c-ccg.github.io/ld-cryptosuite-registry/>, <https://github.com/multiformats/multicodec/blob/master/table.csv>, <https://w3c-ccg.github.io/lds-ed25519-2020/> ;
 .
 
-sec:publicKeyJwk a rdfs:Property, owl:DatatypeProperty ;
+sec:publicKeyJwk a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain sec:VerificationMethod ;
     rdfs:range xsd:string ;
     rdfs:label "Public key JWK" ;
