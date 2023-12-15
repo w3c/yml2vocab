@@ -31,7 +31,6 @@ export class VocabGeneration {
         return toTurtle(this.vocab);
     }
 
-
     /**
      * Get the JSON-LD representation of the vocabulary
      * 
@@ -110,7 +109,6 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
     }
 
     try {
-
         const conversion: VocabGeneration = new VocabGeneration(yaml);
 
         {

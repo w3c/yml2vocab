@@ -185,7 +185,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         } else if (raw.id && raw.id.length > 0) {
             return raw.id[0].toLocaleUpperCase() + raw.id.substring(1);
         } else {
-            return ""
+            return "";
         }
     })(raw.label);
     return {

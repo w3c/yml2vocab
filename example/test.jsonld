@@ -86,7 +86,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2023-12-13",
+    "dc:date": "2023-12-15",
     "rdfs_classes": [
         {
             "@id": "sec:Proof",

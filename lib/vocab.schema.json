@@ -1,5 +1,6 @@
  {
     "$id": "https://github.com/w3c/yml2vocab/lib/schema",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
     "$comment": "This schema depends on JSON Schema draft-2019-09 version",
     "title": "Schema for the vocabulary definition using YAML",
     "description": "See https://w3c.github.io/yml2vocab for a human readable version of the format.",
