@@ -32,6 +32,7 @@
     "local_test": "node_modules/.bin/ts-node main.ts -v local/tests/test.yml -t local/tests/test_template.html -c",
     "local_vcdm": "node_modules/.bin/ts-node main.ts -v local/vcdm/vocabulary.yml -t local/vcdm/template.html -c",
     "local_di": "node_modules/.bin/ts-node main.ts -v local/di/vocabulary.yml -t local/di/template.html -c",
+    "local_sl": "node_modules/.bin/ts-node main.ts -v local/sl/vocabulary.yml -t local/sl/template.html -c",
     "preview_vcdm": "node_modules/.bin/ts-node main.ts -v previews/vcdm/vocabulary.yml -t previews/vcdm/template.html",
     "preview_di": "node_modules/.bin/ts-node main.ts -v previews/di/vocabulary.yml -t previews/di/template.html"
   },
