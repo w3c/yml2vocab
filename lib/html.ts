@@ -125,12 +125,14 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         span.setAttribute('property', 'rdfs:isDefinedBy');
         span.setAttribute('resource', `${vocab_prefix}:`);
 
+        // This does not display, it is only here for RDFa's sake!
         const status_span = document.addChild(section, 'span');
         status_span.setAttribute('style', 'display: none');
         status_span.setAttribute('property', 'vs:term_status');
         document.addText(`${item.status}`, status_span);
 
         if (item.deprecated) {
+            // This does not display, it is only here for RDFa's sake!
             const span = document.addChild(section, 'span');
             span.setAttribute('property', 'owl:deprecated');
             span.setAttribute('datatype', 'xsd:boolean');
@@ -208,6 +210,25 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
+    const contexts = () => {
+        const ctx_ul = document.getElementById('contexts');
+        if (ctx_ul) {
+            if (global.context_set.size > 0) {
+                for (const ctx of global.context_set) {
+                    const ctx_ref = `<a href="${ctx}"><code>${ctx}</code></a>`;
+                    document.addChild(ctx_ul, 'li', ctx_ref);
+                }
+            } else {
+                // The extra condition checks are imposed by Typescript. In a DOM and
+                // knowing the templates, these parent elements are always present.
+                const section = ctx_ul.parentElement;
+                if (section) {
+                    section.parentElement?.removeChild(section);
+                }
+            }
+        } 
+    }
+
 
     // Prefixes that are used to differentiate among stable, reserved, and deprecated values
     const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
@@ -219,6 +240,19 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             case Status.stable :
                 return { id_prefix : '', intro_prefix : '' };
                 
+        }
+    }
+
+    // Add the references to the context files (if any)
+    const contextReferences = (section: Element, item: RDFTerm): void => {
+        if (item.context?.length > 0) {
+            const dl = document.addChild(section, 'dl');
+            dl.className = 'terms';
+            document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);
+            const dd = document.addChild(dl, 'dd');
+            dd.innerHTML = item.context.map((ctx: string): string => {
+                return `<a href="${ctx}"><code>${ctx}</code></a>`;
+            }).join(", ");
         }
     }
 
@@ -289,6 +323,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             dd.innerHTML = prop_names(item.included_in_domain_of);
                         }
                     }
+
+                    contextReferences(cl_section, item);
+
                     setExample(cl_section, item);
                 }                
             } else {
@@ -380,6 +417,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             }
                         }
                     }
+
+                    contextReferences(pr_section, item);
+
                     setExample(pr_section, item);
                 }
             } else {
@@ -415,6 +455,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             document.addChild(dd, 'br')    
                         }
                     }
+
+                    contextReferences(ind_section, item);
+
                     setExample(ind_section, item);
                 }
             } else {
@@ -474,6 +517,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             dd.innerHTML = prop_names(item.includes_range_of);
                         }
                     }
+
+                    contextReferences(dt_section, item);
+
                     setExample(dt_section, item);
                 }
 
@@ -500,31 +546,34 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     // 3. The introductory list of prefixes used in the document
     prefixes();
 
-    // 4. Sections on classes
+    // 4. The introductory list of contexts used in the document
+    contexts();
+
+    // 5. Sections on classes
     Object.values(Status).map((filter: Status): void => {
         const actual_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === filter);
         classes(actual_classes, filter);
     });
 
-    // 5. Sections on properties
+    // 6. Sections on properties
     Object.values(Status).map((filter: Status): void => {
         const actual_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === filter);
         properties(actual_properties, filter);
     });
 
-    // 6. Sections on individuals
+    // 7. Sections on individuals
     Object.values(Status).map((filter: Status): void => {
         const actual_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === filter);
         individuals(actual_individuals, filter);
     });
 
-    // 7. Sections on datatypes
+    // 8. Sections on datatypes
     Object.values(Status).map((filter: Status): void => {
         const actual_datatypes = vocab.datatypes.filter((entry: RDFDatatype): boolean => entry.status === filter);
         datatypes(actual_datatypes, filter);
     });
 
-    // 8. Remove the sections on reserved/deprecation in case there aren't any...
+    // 9. Remove the sections on reserved/deprecation in case there aren't any...
     if (global.status_counter.counter(Status.reserved) === 0) {
         const section = document.getElementById('reserved_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);

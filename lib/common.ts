@@ -67,12 +67,18 @@ export const global = {
     vocab_prefix   : "",
     /** Vocabulary URL for the vocabulary being handled */
     vocab_url      : "",
+    /** Default context URL for the vocabulary being handled */
+    vocab_context  : "",
     /** 
      * Counter for the terms with various status values.
      * Some serializers (eg HTML) may optimize/improve the final
      * output if one of the categories have no entries whatsoever.
      */
-    status_counter : new StatusCounter(), 
+    status_counter : new StatusCounter(),
+    /**
+     * Set of context URL-s that appear in the vocabulary references
+     */
+    context_set    : new Set<string>,
 } 
 
 /**
@@ -112,6 +118,7 @@ export interface RawVocabEntry {
     see_also    ?: Link[];
     example     ?: Example[];
     dataset     ?: boolean;
+    context     ?: boolean | string[];
 };
 
 /**
@@ -165,6 +172,7 @@ export interface RDFTerm {
     deprecated ?: boolean;
     status     ?: Status;
     example    ?: Example[];
+    context    ?: string[];
 }
 
 /**

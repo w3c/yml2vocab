@@ -9,7 +9,7 @@ import { JSDOM } from 'jsdom';
  * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
  * the JSDOM and Deno's DOM WASM implementations; higher layers should not depend on these.
  * 
- * This version is on top of the Deno implementation.
+ * This version is on top of the Node/JSDOM implementation.
  * 
  */
 export class MiniDOM {

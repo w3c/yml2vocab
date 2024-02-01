@@ -84,9 +84,11 @@ const defaultOntologyProperties: OntologyProperty[] = [
  */
 function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     // Some entries are to be put into an array, even if there is only one item
-    const toArray = (val: undefined|string|string[]) : undefined|string[] => {
+    const toArray = (val: undefined|boolean|string|string[]) : undefined|boolean|string[] => {
         if (val === undefined) {
             return undefined
+        } else if (typeof val === "boolean") {
+            return val;
         } else if (val.length === 0) {
             return undefined
         } else if ( typeof val === "string") {
@@ -193,9 +195,9 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         property    : raw.property,
         value       : raw.value,
         label       : label,
-        upper_value : toArray(raw.upper_value),
-        domain      : toArray(raw.domain),
-        range       : toArray(raw.range),
+        upper_value : toArray(raw.upper_value) as undefined | string[],
+        domain      : toArray(raw.domain) as undefined | string[],
+        range       : toArray(raw.range) as undefined | string[],
         deprecated  : deprecated,
         defined_by  : (raw.defined_by) ? raw.defined_by : "",
         status      : status,
@@ -203,6 +205,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
         dataset     : (raw.dataset === undefined) ? false : raw.dataset,
+        context     : toArray(raw.context)
     }
 }
 
@@ -259,6 +262,24 @@ export function getData(vocab_source: string): Vocab {
     }
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
 
+    // Establish the context reference(s), if any, for a term.
+    const final_contexts = (val: undefined|boolean|string[]): undefined|string[] => {
+        // If the value is set to a boolean (any value, actually), then there should be no
+        // reference to any context
+        if (typeof val === "boolean") {
+            return undefined;
+        }
+
+        // If the value is valid in terms of strings, then that is a local setting to values, use it
+        if (val && val.length > 0) {
+            for (const v of val) global.context_set.add(v);
+            return val;
+        }
+
+        // If there is a global setting, then that should prevail. Note that it may be undefined as well
+        return (global.vocab_context === undefined) ? undefined : [global.vocab_context]
+    }
+
 
     // Calculates cross references from properties to classes or datatypes; used
     // to make the cross references for the property ranges and domains
@@ -294,8 +315,12 @@ export function getData(vocab_source: string): Vocab {
             if (raw.value === undefined) {
                 throw(new Error("The vocabulary has no identifier"));
             }
-            global.vocab_prefix = raw.id;
-            global.vocab_url = raw.value;
+            global.vocab_prefix  = raw.id;
+            global.vocab_url     = raw.value;
+            global.vocab_context = (raw.context === undefined || typeof raw.context === "boolean") ? undefined : raw.context[0];
+            if (global.vocab_context) {
+                global.context_set.add(global.vocab_context);
+            }
             return {
                 prefix : raw.id,
                 url    : raw.value,
@@ -365,6 +390,7 @@ export function getData(vocab_source: string): Vocab {
                 domain        : raw.domain,
                 example       : raw.example,
                 dataset       : raw.dataset,
+                context       : final_contexts(raw.context),
             }
         }) : [];
 
@@ -399,6 +425,7 @@ export function getData(vocab_source: string): Vocab {
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
                 example    : raw.example,
+                context    : final_contexts(raw.context),
                 range_of, domain_of, included_in_domain_of, includes_range_of
             }
         }) : [];
@@ -416,6 +443,7 @@ export function getData(vocab_source: string): Vocab {
                 type          : (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also      : raw.see_also,
                 example       : raw.example,
+                context       : final_contexts(raw.context),
             }
         }) : [];
 
@@ -445,9 +473,10 @@ export function getData(vocab_source: string): Vocab {
                 type       : (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also   : raw.see_also,
                 example    : raw.example,
+                context    : final_contexts(raw.context),
                 range_of, includes_range_of
             };
         }) : [];
-
+        
     return {prefixes, ontology_properties, classes, properties, individuals, datatypes}
 }
