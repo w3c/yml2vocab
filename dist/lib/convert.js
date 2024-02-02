@@ -57,6 +57,14 @@ const defaultPrefixes = [
     {
         prefix: "vs",
         url: "http://www.w3.org/2003/06/sw-vocab-status/ns#"
+    },
+    {
+        prefix: "schema",
+        url: "http://schema.org/"
+    },
+    {
+        prefix: "jsonld",
+        url: "http://www.w3.org/ns/json-ld#"
     }
 ];
 /**
@@ -84,6 +92,9 @@ function finalizeRawEntry(raw) {
     const toArray = (val) => {
         if (val === undefined) {
             return undefined;
+        }
+        else if (typeof val === "boolean") {
+            return val;
         }
         else if (val.length === 0) {
             return undefined;
@@ -207,6 +218,7 @@ function finalizeRawEntry(raw) {
         see_also: toSeeAlso(raw.see_also),
         example: toExample(raw.example),
         dataset: (raw.dataset === undefined) ? false : raw.dataset,
+        context: toArray(raw.context)
     };
 }
 /**
@@ -259,6 +271,32 @@ function getData(vocab_source) {
         throw (new TypeError(`JSON Schema validation error`, { cause: error }));
     }
     const vocab = finalizeRawVocab(validation_results.vocab);
+    // Establish the context reference(s), if any, for a term.
+    // As a side effect, the 'inverse' info, ie, the list of terms per context, is
+    // created in the global data structure
+    const final_contexts = (raw) => {
+        const ctx_s = ((val) => {
+            // If the value is set to a boolean (any value, actually), then there should be no
+            // reference to any context
+            if (typeof val === "boolean") {
+                return (val === true) ? [common_2.global.vocab_context] : undefined;
+            }
+            // If the value is valid in terms of strings, then that is a local setting to values, use it
+            if (val && val.length > 0)
+                return val;
+            // If there is a global setting, then that should prevail. Note that it may be undefined as well.
+            return (common_2.global.vocab_context === undefined) ? undefined : [common_2.global.vocab_context];
+        })(raw.context);
+        if (ctx_s !== undefined) {
+            for (const ctx of ctx_s) {
+                if (ctx in common_2.global.context_mentions === false) {
+                    common_2.global.context_mentions[ctx] = [];
+                }
+                common_2.global.context_mentions[ctx].push(raw.id);
+            }
+        }
+        return ctx_s;
+    };
     // Calculates cross references from properties to classes or datatypes; used
     // to make the cross references for the property ranges and domains
     // @param raw: raw entry for the class or datatype
@@ -293,6 +331,10 @@ function getData(vocab_source) {
             }
             common_2.global.vocab_prefix = raw.id;
             common_2.global.vocab_url = raw.value;
+            common_2.global.vocab_context = (raw.context === undefined || typeof raw.context === "boolean") ? undefined : raw.context[0];
+            if (common_2.global.vocab_context) {
+                common_2.global.context_mentions[common_2.global.vocab_context] = [];
+            }
             return {
                 prefix: raw.id,
                 url: raw.value,
@@ -361,6 +403,7 @@ function getData(vocab_source) {
                 domain: raw.domain,
                 example: raw.example,
                 dataset: raw.dataset,
+                context: final_contexts(raw),
             };
         }) : [];
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
@@ -391,6 +434,7 @@ function getData(vocab_source) {
                 subClassOf: raw.upper_value,
                 see_also: raw.see_also,
                 example: raw.example,
+                context: final_contexts(raw),
                 range_of, domain_of, included_in_domain_of, includes_range_of
             };
         }) : [];
@@ -407,6 +451,7 @@ function getData(vocab_source) {
                 type: (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also: raw.see_also,
                 example: raw.example,
+                context: final_contexts(raw),
             };
         }) : [];
     // Get the datatypes. 
@@ -433,6 +478,7 @@ function getData(vocab_source) {
                 type: (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also: raw.see_also,
                 example: raw.example,
+                context: final_contexts(raw),
                 range_of, includes_range_of
             };
         }) : [];

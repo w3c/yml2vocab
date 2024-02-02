@@ -60,6 +60,13 @@ export class StatusCounter {
 }
 
 /**
+ * Context references
+ */
+export interface Contexts {
+    [ctx: string]: string[];
+}
+
+/**
  * Placeholder for some global data. 
  */
 export const global = {
@@ -225,13 +232,6 @@ export interface RDFDatatype extends RDFTerm {
 export interface RDFPrefix {
     prefix : string;
     url    : string;
-}
-
-/**
- * Context references
- */
-export interface Contexts {
-    [ctx: string]: string[];
 }
 
 /**

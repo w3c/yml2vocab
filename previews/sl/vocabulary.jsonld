@@ -1,0 +1,320 @@
+{
+    "@context": {
+        "cs": "https://www.w3.org/ns/credentials/status#",
+        "cred": "https://w3.org/2018/credentials#",
+        "sec": "https://w3id.org/security#",
+        "dc": "http://purl.org/dc/terms/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "vs": "http://www.w3.org/2003/06/sw-vocab-status/ns#",
+        "schema": "http://schema.org/",
+        "jsonld": "http://www.w3.org/ns/json-ld#",
+        "dc:date": {
+            "@type": "xsd:date"
+        },
+        "rdfs:domain": {
+            "@type": "@id"
+        },
+        "rdfs:range": {
+            "@type": "@id"
+        },
+        "rdfs:seeAlso": {
+            "@type": "@id"
+        },
+        "rdfs:subClassOf": {
+            "@type": "@id"
+        },
+        "rdfs:subPropertyOf": {
+            "@type": "@id"
+        },
+        "owl:equivalentClass": {
+            "@type": "@vocab"
+        },
+        "owl:equivalentProperty": {
+            "@type": "@vocab"
+        },
+        "owl:oneOf": {
+            "@container": "@list",
+            "@type": "@vocab"
+        },
+        "owl:deprecated": {
+            "@type": "xsd:boolean"
+        },
+        "owl:imports": {
+            "@type": "@id"
+        },
+        "owl:versionInfo": {
+            "@type": "@id"
+        },
+        "owl:inverseOf": {
+            "@type": "@vocab"
+        },
+        "owl:unionOf": {
+            "@container": "@list",
+            "@type": "@vocab"
+        },
+        "rdfs_classes": {
+            "@reverse": "rdfs:isDefinedBy",
+            "@type": "@id"
+        },
+        "rdfs_properties": {
+            "@reverse": "rdfs:isDefinedBy",
+            "@type": "@id"
+        },
+        "rdfs_instances": {
+            "@reverse": "rdfs:isDefinedBy",
+            "@type": "@id"
+        },
+        "rdfs_datatypes": {
+            "@reverse": "rdfs:isDefinedBy",
+            "@type": "@id"
+        },
+        "mentioned": {
+            "@reverse": "schema:mentions",
+            "@type": "@id"
+        },
+        "dc:title": {
+            "@container": "@language"
+        },
+        "dc:description": {
+            "@container": "@language"
+        }
+    },
+    "@id": "https://www.w3.org/ns/credentials/status#",
+    "@type": "owl:Ontology",
+    "dc:title": {
+        "@value": "Verifiable Credentials Bitstring Status List v1.0",
+        "@language": "en"
+    },
+    "dc:description": {
+        "@value": "RDFS [[RDF-SCHEMA]] vocabulary used by the [[[VC-BITSTRING-STATUS-LIST]]] [[VC-BITSTRING-STATUS-LIST]]",
+        "@language": "en"
+    },
+    "rdfs:seeAlso": "https://www.w3.org/TR/vc-bitstring-status-list/",
+    "dc:date": "2024-02-02",
+    "rdfs_properties": [
+        {
+            "@id": "cs:statusPurpose",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "cs:BitstringStatusList",
+                    "cs:BitstringStatusListEntry"
+                ]
+            },
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Status purpose",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusPurpose",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:statusListIndex",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "cs:BitstringStatusListEntry",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Status list index",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusListIndex",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:statusListCredential",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "cs:BitstringStatusListEntry",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Status list credential",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusListCredential",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:encodedList",
+            "@type": "rdf:Property",
+            "rdfs:domain": "cs:BitstringStatusList",
+            "rdfs:range": "sec:multibase",
+            "rdfs:label": "Encoded list",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#encodedList",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:ttl",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "cs:BitstringStatusList",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Time to live in milliseconds",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#ttl",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:statusSize",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "cs:BitstringStatusList",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Bitstring entry size in bits",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusSize",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:statusMessage",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "cs:BitstringStatusList",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Status messages",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusMessage",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:status",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Hexadecimal value of a status message",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#status",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:message",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Human-readable message of a status value",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#message",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:statusReference",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "cs:BitstringStatusList",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Reference documentation for status messages",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusReference",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        }
+    ],
+    "rdfs_classes": [
+        {
+            "@id": "cs:BitstringStatusList",
+            "@type": "rdfs:Class",
+            "rdfs:label": "Bitstring status list",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslist",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:BitstringStatusListEntry",
+            "@type": "rdfs:Class",
+            "rdfs:label": "Bitstring status list entry",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistentry",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:BitstringStatusListCredential",
+            "@type": "rdfs:Class",
+            "rdfs:label": "Bitstring status list credential",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistcredential",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        }
+    ]
+}

@@ -1,11 +1,13 @@
 @prefix sec: <https://w3id.org/security#> .
-@prefix cred: <https://w3.org/2018/credentials#> .
+@prefix cred: <https://www.w3.org/2018/credentials#> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix schema: <http://schema.org/> .
+@prefix jsonld: <http://www.w3.org/ns/json-ld#> .
 
 # Ontology definition
 sec: a owl:Ontology ;
@@ -13,181 +15,8 @@ sec: a owl:Ontology ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2023-09-08"^^xsd:date ;
+    dc:date "2024-02-02"^^xsd:date ;
 .
-
-# Class definitions
-sec:Proof a rdfs:Class ;
-    rdfs:label "Digital proof" ;
-    rdfs:comment """<div>This class represents a digital proof on serialized data.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-data-integrity-proof>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:ProofGraph a rdfs:Class ;
-    rdfs:label "An RDF Graph for a digital proof" ;
-    rdfs:comment """<div>Instances of this class are <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a> [[RDF12-CONCEPTS]], where each of these graphs must include exactly one <a href="#Proof">Proof</a> instance.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:VerificationMethod a rdfs:Class ;
-    rdfs:label "Verification method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#verification-methods>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:DataIntegrityProof a rdfs:Class ;
-    rdfs:subClassOf sec:Proof ;
-    rdfs:label "A Data Integrity Proof" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:Multikey a rdfs:Class ;
-    rdfs:subClassOf sec:VerificationMethod ;
-    rdfs:label "Multikey Verification Method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#multikey>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-    rdfs:seeAlso <https://www.w3.org/TR/vc-di-eddsa/#multikey> ;
-.
-
-sec:JsonWebKey a rdfs:Class ;
-    rdfs:subClassOf sec:VerificationMethod ;
-    rdfs:label "JSON Web Key Verification Method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#jsonwebkey>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:Ed25519VerificationKey2020 a rdfs:Class ;
-    rdfs:subClassOf sec:VerificationMethod ;
-    rdfs:label "ED2559 Verification Key, 2020 version" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-di-eddsa/#ed25519verificationkey2020>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:Ed25519Signature2020 a rdfs:Class ;
-    rdfs:subClassOf sec:Proof ;
-    rdfs:label "Ed25519 Signature Suite, 2020 version" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-di-eddsa/#ed25519signature2020>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:ProcessingError a rdfs:Class ;
-    rdfs:label "Processing error" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-di-eddsa/#errors>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:Key a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "Cryptographic key" ;
-    rdfs:comment """<div>This class represents a cryptographic key that may be used for encryption, decryption, or digitally signing data. This class serves as a supertype for specific key types.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:EcdsaSecp256k1Signature2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "ecdsa-sep256k1, 2019 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:EcdsaSecp256k1Signature2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "ecdsa-sep256k1, 2020 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:EcdsaSecp256k1VerificationKey2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "ecdsa-secp256k1 verification key, 2019 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverysignature2020>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:EcdsaSecp256k1RecoverySignature2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "ecdsa-secp256k1 recovery signature, 2020 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverysignature2020>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:EcdsaSecp256k1RecoveryMethod2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "ecdsa-secp256k1 recovery method, 2020 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverymethod2020>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:MerkleProof2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "Merkle Proof" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/lds-merkle-proof-2019/>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:X25519KeyAgreementKey2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "X25519 Key Agreement Key, 2019 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#X25519KeyAgreementKey2019>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:Ed25519VerificationKey2018 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "ED2559 Verification Key, 2018 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:JsonWebKey2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "JSON Web Key, 2020 version" ;
-    rdfs:comment """<div>A linked data proof suite verification method type used with <a href="#JsonWebSignature2020">`JsonWebSignature2020`</a></div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#JsonWebKey2020>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:JsonWebSignature2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "JSON Web Signature, 2020 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#JsonWebSignature2020>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:BbsBlsSignature2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "BBS Signature, 2020 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#BbsBlsSignature2020>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:BbsBlsSignatureProof2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "BBS Signature Proof, 2020 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#BbsBlsSignatureProof2020>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:Bls12381G1Key2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "BLS 12381 G1 Signature Key, 2020 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#Bls12381G1Key2020>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:Bls12381G2Key2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "BLS 12381 G2 Signature Key, 2020 version" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#Bls12381G2Key2020>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-
 
 # Property definitions
 sec:verificationMethod a rdf:Property ;
@@ -260,10 +89,11 @@ sec:created a rdf:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-sec:expires a rdf:Property, owl:DatatypeProperty ;
+sec:expiration a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain [ owl:unionOf (sec:Proof sec:VerificationMethod) ] ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Expiration time for a proof or verification method" ;
+    rdfs:comment """<div>Historically, this property has often been expressed using `expires` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`expires`) and the property identifier (`...#expiration`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
@@ -463,6 +293,179 @@ sec:jws a rdf:Property, owl:DeprecatedProperty ;
     rdfs:seeAlso <https://tools.ietf.org/html/rfc7797> ;
 .
 
+# Class definitions
+sec:Proof a rdfs:Class ;
+    rdfs:label "Digital proof" ;
+    rdfs:comment """<div>This class represents a digital proof on serialized data.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-data-integrity-proof>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:ProofGraph a rdfs:Class ;
+    rdfs:label "An RDF Graph for a digital proof" ;
+    rdfs:comment """<div>Instances of this class are <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a> [[RDF12-CONCEPTS]], where each of these graphs must include exactly one <a href="#Proof">Proof</a> instance.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:VerificationMethod a rdfs:Class ;
+    rdfs:label "Verification method" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#verification-methods>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:DataIntegrityProof a rdfs:Class ;
+    rdfs:subClassOf sec:Proof ;
+    rdfs:label "A Data Integrity Proof" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:Multikey a rdfs:Class ;
+    rdfs:subClassOf sec:VerificationMethod ;
+    rdfs:label "Multikey Verification Method" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#multikey>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://www.w3.org/TR/vc-di-eddsa/#multikey> ;
+.
+
+sec:JsonWebKey a rdfs:Class ;
+    rdfs:subClassOf sec:VerificationMethod ;
+    rdfs:label "JSON Web Key Verification Method" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#jsonwebkey>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:Ed25519VerificationKey2020 a rdfs:Class ;
+    rdfs:subClassOf sec:VerificationMethod ;
+    rdfs:label "ED2559 Verification Key, 2020 version" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-di-eddsa/#ed25519verificationkey2020>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:Ed25519Signature2020 a rdfs:Class ;
+    rdfs:subClassOf sec:Proof ;
+    rdfs:label "Ed25519 Signature Suite, 2020 version" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-di-eddsa/#ed25519signature2020>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:ProcessingError a rdfs:Class ;
+    rdfs:label "Processing error" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-di-eddsa/#errors>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:Key a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "Cryptographic key" ;
+    rdfs:comment """<div>This class represents a cryptographic key that may be used for encryption, decryption, or digitally signing data. This class serves as a supertype for specific key types.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:EcdsaSecp256k1Signature2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "ecdsa-sep256k1, 2019 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:EcdsaSecp256k1Signature2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "ecdsa-sep256k1, 2020 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:EcdsaSecp256k1VerificationKey2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "ecdsa-secp256k1 verification key, 2019 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverysignature2020>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:EcdsaSecp256k1RecoverySignature2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "ecdsa-secp256k1 recovery signature, 2020 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverysignature2020>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:EcdsaSecp256k1RecoveryMethod2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "ecdsa-secp256k1 recovery method, 2020 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverymethod2020>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:MerkleProof2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "Merkle Proof" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/lds-merkle-proof-2019/>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:X25519KeyAgreementKey2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "X25519 Key Agreement Key, 2019 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#X25519KeyAgreementKey2019>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:Ed25519VerificationKey2018 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "ED2559 Verification Key, 2018 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:JsonWebKey2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "JSON Web Key, 2020 version" ;
+    rdfs:comment """<div>A linked data proof suite verification method type used with <a href="#JsonWebSignature2020">`JsonWebSignature2020`</a></div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#JsonWebKey2020>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:JsonWebSignature2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "JSON Web Signature, 2020 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#JsonWebSignature2020>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:BbsBlsSignature2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "BBS Signature, 2020 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#BbsBlsSignature2020>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:BbsBlsSignatureProof2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "BBS Signature Proof, 2020 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#BbsBlsSignatureProof2020>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:Bls12381G1Key2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "BLS 12381 G1 Signature Key, 2020 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#Bls12381G1Key2020>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:Bls12381G2Key2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "BLS 12381 G2 Signature Key, 2020 version" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#Bls12381G2Key2020>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+
+
 # Definitions of individuals
 sec:PROOF_GENERATION_ERROR a sec:ProcessingError ;
     rdfs:label "Proof generation error" ;
@@ -538,4 +541,64 @@ sec:multibase a rdfs:Datatype ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#multibase>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
+
+# Context files and their mentions
+<https://w3id.org/security/data-integrity/v2> a jsonld:Context ;
+    schema:mentions
+        sec:verificationMethod,
+        sec:proof,
+        sec:domain,
+        sec:challenge,
+        sec:previousProof,
+        sec:proofPurpose,
+        sec:proofValue,
+        sec:created,
+        sec:expiration,
+        sec:nonce,
+        sec:authentication,
+        sec:assertionMethod,
+        sec:capabilityDelegation,
+        sec:capabilityInvocation,
+        sec:keyAgreement,
+        sec:cryptosuite,
+        sec:Proof,
+        sec:VerificationMethod,
+        sec:DataIntegrityProof,
+        sec:cryptosuiteString ;
+
+<https://www.w3.org/ns/credentials/v2> a jsonld:Context ;
+    schema:mentions
+        sec:verificationMethod,
+        sec:proof,
+        sec:domain,
+        sec:challenge,
+        sec:previousProof,
+        sec:proofPurpose,
+        sec:proofValue,
+        sec:expiration,
+        sec:nonce,
+        sec:authentication,
+        sec:assertionMethod,
+        sec:capabilityDelegation,
+        sec:capabilityInvocation,
+        sec:keyAgreement,
+        sec:cryptosuite,
+        sec:digestMultibase,
+        sec:DataIntegrityProof ;
+
+<https://w3id.org/security/multikey/v1> a jsonld:Context ;
+    schema:mentions
+        sec:controller,
+        sec:publicKeyMultibase,
+        sec:secretKeyMultibase,
+        sec:Multikey,
+        sec:multibase ;
+
+<https://w3id.org/security/jwk/v1> a jsonld:Context ;
+    schema:mentions
+        sec:controller,
+        sec:publicKeyJwk,
+        sec:secretKeyJwk,
+        sec:revoked,
+        sec:JsonWebKey ;
 

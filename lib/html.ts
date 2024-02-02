@@ -7,6 +7,11 @@
 import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status, RDFDatatype } from './common';
 // import { DOMParser, HTMLDocument, Element } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 
+// The "MiniDOM" reference was created to bridge the difference between the deno and the node version of the code
+// An artificial "abstract" interface to a fraction of the DOM functionality that this code uses
+// and is available for both systems
+// As of 2024.02.02 this is unnecessary, because Deno can finally run jsdom, but it would require unnecessary
+// trouble to change the code now... Oh well.
 import { MiniDOM } from "./sys/minidom_node";
 
 /* ---------------- Utility functions ------------------------- */

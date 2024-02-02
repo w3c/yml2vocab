@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html><head>
+    <meta charset="utf-8">
+    <title>Verifiable Credentials Bitstring Status List v1.0</title>
+    <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c"></script>
+    <script>
+      function remove_status_remark() {
+          const sotd = document.getElementById("sotd");
+          const p = sotd.getElementsByTagName('p')[0];
+          sotd.removeChild(p);
+      }
+    // Note: The vocabulary URL must be adapted for the given environment!!!!
+      function massageSVGLinks(utils, content, url) {
+        const retval = content
+          .replace('<svg', '<svg aria-details="#vocabulary-diagram-alt" ')
+          .replace(/xlink:href/g, 'href')
+          .replace(/href="https:\/\/www.w3.org\/ns\/credentials\/status#/g, 'href="#');
+        return retval;
+      }
+
+    </script>
+    <script class="remove">
+      var respecConfig = {
+        specStatus:  "base",
+        shortName:   "ns/credentials/status",
+        thisVersion: "https://www.w3.org/ns/credentials/status/",
+        doJsonLd:    true,
+        editors: [{
+          name:       "Ivan Herman",
+          url:        "https://www.w3.org/People/Ivan/",
+          company:    "W3C",
+          w3cid:      7382,
+          orcid:      "0000-0003-0782-2704",
+          companyURL: "https://www.w3.org",
+          note:       "v2.0"
+        },{
+          name:       "Manu Sporny",
+          url:        "http://manu.sporny.org/",
+          company:    "Digital Bazaar",
+          companyURL: "http://digitalbazaar.com/",
+          w3cid:      41758,
+          note:       "v1.0, v2.0"
+        }],
+        alternateFormats: [
+          {uri: "vocabulary.ttl", label: "Turtle"},
+          {uri: "vocabulary.jsonld", label: "JSON-LD"}
+        ],
+        postProcess : [remove_status_remark],
+        inlineCSS: true,
+        doRDFa: false,
+        noIDLIn: true,
+        noLegacyStyle: false
+      };
+    </script>
+    <style type="text/css">
+      dl.terms dt {
+        float: left;
+        clear: left;
+        width: 10vw;
+      }
+
+      dl.terms dd {
+        margin-left: 15vw;
+      }
+
+      dl.terms dd:after {
+          content: '';
+          display: block;
+          clear: both;
+          margin-bottom: 5px;
+      }
+      table.rdfs-definition td {
+        vertical-align: top;
+        margin-right: 2em;
+      }
+      .bold {
+        font-weight: bold;
+      }
+      /* code {
+        color: red;
+      } */
+
+      .term_definitions section {
+        border-bottom-style: solid ;
+        border-bottom-width: 1px;
+        border-bottom-color: darkgrey;
+      }
+
+      .annoy {
+        background: hsla(40,100%,50%,0.95);
+		    color: black;
+		    padding: .75em 1em;
+		    border: red;
+		    border-style: solid none;
+		    box-shadow: 0 2px 8px black;
+		    text-align: center;
+      }
+
+      summary {
+        font-weight: normal !important;
+      }
+
+    </style>
+  </head>
+  <body typeof="owl:Ontology" resource="https://www.w3.org/ns/credentials/status#" prefix="cs: https://www.w3.org/ns/credentials/status# cred: https://w3.org/2018/credentials# sec: https://w3id.org/security# dc: http://purl.org/dc/terms/ owl: http://www.w3.org/2002/07/owl# rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# xsd: http://www.w3.org/2001/XMLSchema# vs: http://www.w3.org/2003/06/sw-vocab-status/ns# schema: http://schema.org/ jsonld: http://www.w3.org/ns/json-ld#">
+    <section id="abstract">
+      <p>This document describes the <span property="dc:title" id="title">Verifiable Credentials Bitstring Status List v1.0</span>, i.e.,
+         the <span property="dc:description" id="description">RDFS [[RDF-SCHEMA]] vocabulary used by the [[[VC-BITSTRING-STATUS-LIST]]] [[VC-BITSTRING-STATUS-LIST]]</span>.
+      </p>
+      <p>Alternate versions of the vocabulary definition exist in
+        <a rel="alternate" href="vocabulary.ttl">Turtle</a> and
+        <a rel="alternate" href="vocabulary.jsonld">JSON-LD</a>.
+      </p>
+      <dl>
+        <dt>Published:</dt><dd><time property="dc:date" id="time">2024-02-02</time></dd>
+        <dt>Version Info:</dt>
+        <dd>1.0</dd>
+        <dt id="see_also">See Also: <a href="https://www.w3.org/TR/vc-bitstring-status-list/" property="rdfs:seeAlso">https://www.w3.org/TR/vc-bitstring-status-list/</a></dt>
+       </dl>
+    </section>
+    <section id="sotd">
+      <p>
+This vocabulary has been defined by the
+<a href="https://www.w3.org/2017/vc/WG/">
+W3C Verifiable Credentials Working Group</a> and provides the official RDFS
+vocabulary for
+<a href="https://www.w3.org/TR/vc-bitstring-status-list/">
+Bitstring Status Lists</a>. Comments regarding this document are welcome.
+Please file issues directly on
+<a href="https://github.com/w3c/vc-bitstring-status-list/issues/">GitHub</a>, or
+send them to
+<a href="mailto:public-vc-comments@w3.org">public-vc-comments@w3.org</a>
+(<a href="mailto:public-vc-comments-request@w3.org?subject=subscribe">
+subscribe</a>,
+<a href="https://lists.w3.org/Archives/Public/public-vc-comments/">
+archives</a>).
+      </p>
+    </section>
+    <section>
+      <h2>Specification of terms</h2>
+      <p>
+        In general, the terms — i.e., the properties and classes — used in
+        the VCDM are formally specified in Recommendation Track documents published by
+        the <a href="https://www.w3.org/groups/wg/vc">W3C Verifiable Credentials Working
+        Group</a>. In each case of such external definition, the term's description in
+        this document contains a link to the relevant specification. Additionally, the
+        `rdfs:definedBy` property in the RDFS representation(s) refers to the formal
+        specification.
+      </p>
+      <p>
+        In some cases, a local explanation is necessary to complement, or to replace,
+        the definition found in an external specification. For instance, this is so when
+        the term is needed to provide a consistent structure to the RDFS vocabulary,
+        such as when the term defines a common supertype for class instances that are
+        used as objects of specific properties. For such cases,
+        the extra definition is included in the current
+        document (and the `rdfs:comment` property is used to include them in the RDFS
+        representations).
+      </p>
+    </section>
+    <section>
+      <h2>Namespaces</h2>
+      <p>This specification makes use of the following namespaces:</p>
+      <dl class="terms" id="namespaces">
+      <dt><code>cs</code></dt><dd><code>https://www.w3.org/ns/credentials/status#</code></dd><dt><code>cred</code></dt><dd><code>https://w3.org/2018/credentials#</code></dd><dt><code>sec</code></dt><dd><code>https://w3id.org/security#</code></dd><dt><code>dc</code></dt><dd><code>http://purl.org/dc/terms/</code></dd><dt><code>owl</code></dt><dd><code>http://www.w3.org/2002/07/owl#</code></dd><dt><code>rdf</code></dt><dd><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></dd><dt><code>rdfs</code></dt><dd><code>http://www.w3.org/2000/01/rdf-schema#</code></dd><dt><code>xsd</code></dt><dd><code>http://www.w3.org/2001/XMLSchema#</code></dd><dt><code>vs</code></dt><dd><code>http://www.w3.org/2003/06/sw-vocab-status/ns#</code></dd><dt><code>schema</code></dt><dd><code>http://schema.org/</code></dd><dt><code>jsonld</code></dt><dd><code>http://www.w3.org/ns/json-ld#</code></dd></dl>
+    </section>
+
+    <section>
+      <h2><code>@context</code> files</h2>
+      <p>The following <code>@context</code> files make use of the terms defined in this specification:</p>
+      <ul id="contexts">
+      <li><a href="https://www.w3.org/ns/credentials/v2" typeof="jsonld:Context"><code>https://www.w3.org/ns/credentials/v2</code></a><details><summary>term list</summary><ul><li><a href="#statusPurpose"><code>statusPurpose<code></code></code></a></li><li><a href="#statusListIndex"><code>statusListIndex<code></code></code></a></li><li><a href="#statusListCredential"><code>statusListCredential<code></code></code></a></li><li><a href="#encodedList"><code>encodedList<code></code></code></a></li><li><a href="#ttl"><code>ttl<code></code></code></a></li><li><a href="#statusSize"><code>statusSize<code></code></code></a></li><li><a href="#statusMessage"><code>statusMessage<code></code></code></a></li><li><a href="#status"><code>status<code></code></code></a></li><li><a href="#message"><code>message<code></code></code></a></li><li><a href="#statusReference"><code>statusReference<code></code></code></a></li><li><a href="#BitstringStatusList"><code>BitstringStatusList<code></code></code></a></li><li><a href="#BitstringStatusListEntry"><code>BitstringStatusListEntry<code></code></code></a></li><li><a href="#BitstringStatusListCredential"><code>BitstringStatusListCredential<code></code></code></a></li></ul></details></li></ul>
+    </section>
+
+    <section id="term_definitions">
+      <h1>Regular terms</h1>
+      <section id="property_definitions" class="term_definitions">
+        <h2>Property definitions</h2>
+      <p>The following are  property definitions in the <code>cs</code> namespace.</p><section id="statusPurpose" resource="cs:statusPurpose" typeof="rdf:Property owl:DatatypeProperty"><h4><code>statusPurpose</code></h4><p property="rdfs:label"><em>Status purpose</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#statusPurpose">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:string"><code>xsd:string</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="_:a0">Union of: <br><span about="_:a0" inlist="true" property="owl:unionOf" resource="cs:BitstringStatusList"><a href="#BitstringStatusList"><code>BitstringStatusList</code></a></span><br><span about="_:a0" inlist="true" property="owl:unionOf" resource="cs:BitstringStatusListEntry"><a href="#BitstringStatusListEntry"><code>BitstringStatusListEntry</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="statusListIndex" resource="cs:statusListIndex" typeof="rdf:Property owl:DatatypeProperty"><h4><code>statusListIndex</code></h4><p property="rdfs:label"><em>Status list index</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#statusListIndex">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:string"><code>xsd:string</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cs:BitstringStatusListEntry"><a href="#BitstringStatusListEntry"><code>BitstringStatusListEntry</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="statusListCredential" resource="cs:statusListCredential" typeof="rdf:Property owl:DatatypeProperty"><h4><code>statusListCredential</code></h4><p property="rdfs:label"><em>Status list credential</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#statusListCredential">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:string"><code>xsd:string</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cs:BitstringStatusListEntry"><a href="#BitstringStatusListEntry"><code>BitstringStatusListEntry</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="encodedList" resource="cs:encodedList" typeof="rdf:Property"><h4><code>encodedList</code></h4><p property="rdfs:label"><em>Encoded list</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#encodedList">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="sec:multibase"><a href="https://w3id.org/security#multibase"><code>sec:multibase</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cs:BitstringStatusList"><a href="#BitstringStatusList"><code>BitstringStatusList</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="ttl" resource="cs:ttl" typeof="rdf:Property owl:DatatypeProperty"><h4><code>ttl</code></h4><p property="rdfs:label"><em>Time to live in milliseconds</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#ttl">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:string"><code>xsd:string</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cs:BitstringStatusList"><a href="#BitstringStatusList"><code>BitstringStatusList</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="statusSize" resource="cs:statusSize" typeof="rdf:Property owl:DatatypeProperty"><h4><code>statusSize</code></h4><p property="rdfs:label"><em>Bitstring entry size in bits</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#statusSize">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:string"><code>xsd:string</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cs:BitstringStatusList"><a href="#BitstringStatusList"><code>BitstringStatusList</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="statusMessage" resource="cs:statusMessage" typeof="rdf:Property owl:DatatypeProperty"><h4><code>statusMessage</code></h4><p property="rdfs:label"><em>Status messages</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#statusMessage">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:string"><code>xsd:string</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cs:BitstringStatusList"><a href="#BitstringStatusList"><code>BitstringStatusList</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="status" resource="cs:status" typeof="rdf:Property owl:DatatypeProperty"><h4><code>status</code></h4><p property="rdfs:label"><em>Hexadecimal value of a status message</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#status">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:string"><code>xsd:string</code></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="message" resource="cs:message" typeof="rdf:Property owl:DatatypeProperty"><h4><code>message</code></h4><p property="rdfs:label"><em>Human-readable message of a status value</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#message">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:string"><code>xsd:string</code></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="statusReference" resource="cs:statusReference" typeof="rdf:Property owl:DatatypeProperty"><h4><code>statusReference</code></h4><p property="rdfs:label"><em>Reference documentation for status messages</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#statusReference">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:string"><code>xsd:string</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cs:BitstringStatusList"><a href="#BitstringStatusList"><code>BitstringStatusList</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section></section>
+
+      <section id="class_definitions" class="term_definitions">
+        <h2>Class definitions</h2>
+      <p>The following are  class definitions in the <code>cs</code> namespace.</p><section id="BitstringStatusList" resource="cs:BitstringStatusList" typeof="rdfs:Class"><h4><code>BitstringStatusList</code></h4><p property="rdfs:label"><em>Bitstring status list</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslist">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain of:</dt><dd><a href="#encodedList"><code>encodedList</code></a>, <a href="#ttl"><code>ttl</code></a>, <a href="#statusSize"><code>statusSize</code></a>, <a href="#statusMessage"><code>statusMessage</code></a>, <a href="#statusReference"><code>statusReference</code></a></dd><dt>In the domain of:</dt><dd><a href="#statusPurpose"><code>statusPurpose</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="BitstringStatusListEntry" resource="cs:BitstringStatusListEntry" typeof="rdfs:Class"><h4><code>BitstringStatusListEntry</code></h4><p property="rdfs:label"><em>Bitstring status list entry</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistentry">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain of:</dt><dd><a href="#statusListIndex"><code>statusListIndex</code></a>, <a href="#statusListCredential"><code>statusListCredential</code></a></dd><dt>In the domain of:</dt><dd><a href="#statusPurpose"><code>statusPurpose</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="BitstringStatusListCredential" resource="cs:BitstringStatusListCredential" typeof="rdfs:Class"><h4><code>BitstringStatusListCredential</code></h4><p property="rdfs:label"><em>Bitstring status list credential</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistcredential">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cs:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section></section>
+
+      
+
+      
+    </section>
+
+    
+
+
+
+</body></html>

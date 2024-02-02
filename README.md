@@ -9,27 +9,28 @@ When running, the script relies on two files:
 
 ## Definition of the vocabulary in the YAML file
 
-The vocabulary is defined in a YAML file, which contains several block sequences with the following keys: `vocab`, `prefix`, `ontology`, `class`, `property`, and `individual`. Only the `vocab` and `ontology` blocks are _required_, all others are optional.
+The vocabulary is defined in a YAML file, which contains several block sequences with the following keys: `vocab`, `prefix`, `ontology`, `class`, `property`, `individual`, and `datatype`. Only the `vocab` and `ontology` blocks are _required_, all others are optional.
 
-Each block sequence consists of blocks with the following keys:`id`, `property`, `value`, `label`, `upper_value`, `domain`, `range`, `deprecated`, `comment`, `status`, `defined_by`, and `see_also`. The interpretation of these key/value pairs may depend on the top level block where they reside, but some have a common interpretation.
+Each block sequence consists of blocks with the following keys:`id`, `property`, `value`, `label`, `upper_value`, `domain`, `range`, `deprecated`, `comment`, `status`, `defined_by`, `context`, and `see_also`. The interpretation of these key/value pairs may depend on the top level block where they reside, but some have a common interpretation.
 
-- Common key/value pairs for the `class`, `property`, and `individual` blocks:
+- Common key/value pairs for the `class`, `property`, `datatype`, and `individual` blocks:
   - `label` refers to a short header label to the term. If missing, the capitalized value of `id` is used. 
   - `comment` refers to a longer description of the term, and can be used for blocks in the `class`, `property` and `individual` top-level blocks. It may include [HTML Flow content elements](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories). The comment will be encapsulated into an HTML `<div>` element and will then be displayed verbatim in the HTML version of the vocabulary, and as a literal of type `rdf:HTML` in the JSON-LD and Turtle versions. Note that the Markdown syntax for simple formatting, like the use of "`" for `<code.../>`, may also be used.
   - `defined_by` should be a URL, referring to the formal definition of the term.
   - `see_also` refers to one or more blocks with `label` and `url` keys, providing a human readable title and a URL, respectively, to an external document that can be referred to by the description of the term. (These are translated into an `rdfs:seeAlso` term in the vocabulary.)
   - The `status` key refers to a string that can be `stable`, `reserved`, or `deprecated`. The terms are divided, in the HTML output, into these three sections. `stable` is the default.
   - The `deprecated` key refers to a boolean, signaling whether term is deprecated or not. Default is `false`. This property is a leftover from earlier version and is overwritten, if applicable, by the value of `status`.
+  - The `context` key refers to either a boolean value or a list of URLs. Default is `true` and is used to add information on JSON-LD `@context` file(s) that "mention" the term. The list of URLs refer to the relevant `@context` file. If the value is a boolean `true`, and a global `@context` file has been defined in the `vocab` block, that "default" `@context` is used. Finally, if the value of the property is `false`, there is no context file reference for the term.
   - The `example` key refers to on or more blocks with `label` and `json` keys, providing a (JSON) example with a title. These examples are placed, in the HTML version, to the end of the section referring to a term (the examples are ignored in the Turtle and the JSON-LD versions). Care should be taken to use the `"|"` [block style indicator](https://yaml-multiline.info) in the YAML file for the examples.
 
   For these blocks the `id` key, and either the `comment` or the `defined_by` keys, are _required_. All the others are optional.
 
 - Top level blocks:
-  - `vocab`: a block with the `prefix` and the `value` keys defining the prefix and the URL of the vocabulary, respectively. The prefix can be used in the vocabulary descriptions, e.g., for cross references.
+  - `vocab`: a block with the `id` and the `value` keys defining the prefix and the URL of the vocabulary, respectively. The `id` provides a prefix that can be used in the vocabulary descriptions, e.g., for cross references. The additional, optional `context` key may provide a default context file reference, used by all terms unless locally overwritten (see above).
 
   - `prefix`: definition of a prefixes, and corresponding URLs, for each external external vocabulary in use, defined by the `id` and `value` keys, respectively. 
 
-    Some prefix/value pairs are defined by default, and it is not necessary to define them here. These are: `dc` (for `http://purl.org/dc/terms/`), `owl` (for `http://www.w3.org/2002/07/owl#`), `rdf` (for `http://www.w3.org/1999/02/22-rdf-syntax-ns#`), `rdfs` (for `http://www.w3.org/2000/01/rdf-schema#`), and `xsd` (for `http://www.w3.org/2001/XMLSchema#`).
+    Some id/value pairs are defined by default, and it is not necessary to define them here. These are: `dc` (for `http://purl.org/dc/terms/`), `owl` (for `http://www.w3.org/2002/07/owl#`), `rdf` (for `http://www.w3.org/1999/02/22-rdf-syntax-ns#`), `rdfs` (for `http://www.w3.org/2000/01/rdf-schema#`), `xsd` (for `http://www.w3.org/2001/XMLSchema#`), and `schema` (for `http://schema.org/`).
 
   - `ontology`: definition of "ontology properties", that is, statements made about the vocabulary itself. The (prefixed) property term is defined by the `property` key, and the value by the `value` key. If the value can be parsed as a URL, it is considered to be the URL of an external resource; otherwise, the value is considered to be (English) text.
 

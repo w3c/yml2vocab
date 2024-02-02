@@ -4,3 +4,4 @@ This is a temporary setup for the Verifiable Credentials Working Group. That WG 
 
 - [Verifiable Credentials Vocabulary](./vcdm/)
 - [Security Vocabulary](./di/)
+- [Bitstring Status List](./sl)

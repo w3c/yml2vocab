@@ -1,13 +1,15 @@
 {
     "@context": {
         "sec": "https://w3id.org/security#",
-        "cred": "https://w3.org/2018/credentials#",
+        "cred": "https://www.w3.org/2018/credentials#",
         "dc": "http://purl.org/dc/terms/",
         "owl": "http://www.w3.org/2002/07/owl#",
         "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
         "vs": "http://www.w3.org/2003/06/sw-vocab-status/ns#",
+        "schema": "http://schema.org/",
+        "jsonld": "http://www.w3.org/ns/json-ld#",
         "dc:date": {
             "@type": "xsd:date"
         },
@@ -68,6 +70,10 @@
             "@reverse": "rdfs:isDefinedBy",
             "@type": "@id"
         },
+        "mentioned": {
+            "@reverse": "schema:mentions",
+            "@type": "@id"
+        },
         "dc:title": {
             "@container": "@language"
         },
@@ -86,7 +92,623 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2023-09-08",
+    "dc:date": "2024-02-02",
+    "rdfs_properties": [
+        {
+            "@id": "sec:verificationMethod",
+            "@type": "rdf:Property",
+            "rdfs:range": "sec:VerificationMethod",
+            "rdfs:label": "Verification method",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-verificationmethod",
+            "vs:term_status": "stable",
+            "rdfs:seeAlso": [
+                "https://www.w3.org/TR/did-core/#verification-methods"
+            ],
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:controller",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
+            "rdfs:domain": "sec:VerificationMethod",
+            "rdfs:label": "Controller",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-controller",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/multikey/v1",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://w3id.org/security/jwk/v1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:proof",
+            "@type": "rdf:Property",
+            "rdfs:range": "sec:ProofGraph",
+            "rdfs:label": "Proof sets",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#proof-sets",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:domain",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:Proof",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Domain of a proof",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-domain",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:challenge",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:Proof",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Challenge of a proof",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-challenge",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:previousProof",
+            "@type": "rdf:Property",
+            "rdfs:domain": "sec:Proof",
+            "rdfs:range": "sec:Proof",
+            "rdfs:label": "Previous proof",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-previousproof",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:proofPurpose",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:Proof",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Proof purpose",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-proofpurpose",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:proofValue",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:Proof",
+            "rdfs:range": "sec:multibase",
+            "rdfs:label": "Proof value",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-proofvalue",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:created",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:Proof",
+            "rdfs:range": "xsd:dateTime",
+            "rdfs:label": "Proof creation time",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-created",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:expiration",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "sec:Proof",
+                    "sec:VerificationMethod"
+                ]
+            },
+            "rdfs:range": "xsd:dateTime",
+            "rdfs:label": "Expiration time for a proof or verification method",
+            "rdfs:comment": {
+                "@value": "<div>Historically, this property has often been expressed using `expires` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`expires`) and the property identifier (`...#expiration`) is expected and should not trigger an error.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:nonce",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:Proof",
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Nonce supplied by proof creator",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-nonce",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:authentication",
+            "@type": "rdf:Property",
+            "rdfs:range": "sec:VerificationMethod",
+            "rdfs:label": "Authentication method",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-authentication",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:assertionMethod",
+            "@type": "rdf:Property",
+            "rdfs:range": "sec:VerificationMethod",
+            "rdfs:label": "Assertion method",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-assertionmethod",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:capabilityDelegation",
+            "@type": "rdf:Property",
+            "rdfs:range": "sec:VerificationMethod",
+            "rdfs:label": "Capability delegation method",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilitydelegation",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:capabilityInvocation",
+            "@type": "rdf:Property",
+            "rdfs:range": "sec:VerificationMethod",
+            "rdfs:label": "Capability invocation method",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilityinvocation",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:keyAgreement",
+            "@type": "rdf:Property",
+            "rdfs:range": "sec:VerificationMethod",
+            "rdfs:label": "Key agreement protocols",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-keyagreement",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:cryptosuite",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:DataIntegrityProof",
+            "rdfs:range": "sec:cryptosuiteString",
+            "rdfs:label": "Cryptographic suite",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-cryptosuite",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:publicKeyMultibase",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:Multikey",
+            "rdfs:range": "sec:multibase",
+            "rdfs:label": "Public key multibase",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-publickeymultibase",
+            "vs:term_status": "stable",
+            "rdfs:seeAlso": [
+                "https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03",
+                "https://github.com/multiformats/multicodec/blob/master/table.csv",
+                "https://w3c-ccg.github.io/lds-ed25519-2020/"
+            ],
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/multikey/v1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:secretKeyMultibase",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:Multikey",
+            "rdfs:range": "sec:multibase",
+            "rdfs:label": "Secret key multibase",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeymultibase",
+            "vs:term_status": "stable",
+            "rdfs:seeAlso": [
+                "https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03",
+                "https://github.com/multiformats/multicodec/blob/master/table.csv",
+                "https://w3c-ccg.github.io/lds-ed25519-2020/"
+            ],
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/multikey/v1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:publicKeyJwk",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:JsonWebKey",
+            "rdfs:range": "rdf:JSON",
+            "rdfs:label": "Public key JWK",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-publickeyjwk",
+            "vs:term_status": "stable",
+            "rdfs:seeAlso": [
+                "https://www.iana.org/assignments/jose/jose.xhtml",
+                "https://tools.ietf.org/html/rfc7517"
+            ],
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/jwk/v1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:secretKeyJwk",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:JsonWebKey",
+            "rdfs:range": "rdf:JSON",
+            "rdfs:label": "Secret key JWK",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeyjwk",
+            "vs:term_status": "stable",
+            "rdfs:seeAlso": [
+                "https://www.iana.org/assignments/jose/jose.xhtml",
+                "https://tools.ietf.org/html/rfc7517"
+            ],
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/jwk/v1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:revoked",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "sec:VerificationMethod",
+            "rdfs:range": "xsd:dateTime",
+            "rdfs:label": "Revocation time",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-revoked",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/jwk/v1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:digestMultibase",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:range": "multibase",
+            "rdfs:label": "Digest multibase",
+            "rdfs:comment": {
+                "@value": "<div><b><i>(Feature at Risk)</i></b> The Working Group is currently attempting to determine whether cryptographic hash expression formats can be unified across all of the VCWG core specifications. Candidates for this mechanism include `digestSRI` and `digestMultibase`.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-digestmultibase",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "sec:allowedAction",
+            "@type": "rdf:Property",
+            "rdfs:label": "Allowed action",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#delegated-capability",
+            "vs:term_status": "reserved"
+        },
+        {
+            "@id": "sec:capabilityChain",
+            "@type": "rdf:Property",
+            "rdfs:label": "Capability chain",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#delegation",
+            "vs:term_status": "reserved"
+        },
+        {
+            "@id": "sec:capabilityAction",
+            "@type": "rdf:Property",
+            "rdfs:label": "Capability action",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#invoking-root-capability",
+            "vs:term_status": "reserved"
+        },
+        {
+            "@id": "sec:caveat",
+            "@type": "rdf:Property",
+            "rdfs:label": "Caveat",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#caveats",
+            "vs:term_status": "reserved"
+        },
+        {
+            "@id": "sec:delegator",
+            "@type": "rdf:Property",
+            "rdfs:label": "Delegator",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#delegation",
+            "vs:term_status": "reserved"
+        },
+        {
+            "@id": "sec:invocationTarget",
+            "@type": "rdf:Property",
+            "rdfs:label": "Invocation target",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#root-capability",
+            "vs:term_status": "reserved"
+        },
+        {
+            "@id": "sec:invoker",
+            "@type": "rdf:Property",
+            "rdfs:label": "Invoker",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#invocation",
+            "vs:term_status": "reserved"
+        },
+        {
+            "@id": "sec:blockchainAccountId",
+            "@type": [
+                "rdf:Property",
+                "owl:DeprecatedProperty",
+                "owl:DatatypeProperty"
+            ],
+            "owl:deprecated": true,
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Blockchain account ID",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#blockchainAccountId",
+            "vs:term_status": "deprecated"
+        },
+        {
+            "@id": "sec:ethereumAddress",
+            "@type": [
+                "rdf:Property",
+                "owl:DeprecatedProperty",
+                "owl:DatatypeProperty"
+            ],
+            "owl:deprecated": true,
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Ethereum address",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#ethereumAddress",
+            "vs:term_status": "deprecated",
+            "rdfs:seeAlso": [
+                "https://eips.ethereum.org/EIPS/eip-55",
+                "https://ethereum.github.io/yellowpaper/paper.pdf"
+            ]
+        },
+        {
+            "@id": "sec:publicKeyBase58",
+            "@type": [
+                "rdf:Property",
+                "owl:DeprecatedProperty",
+                "owl:DatatypeProperty"
+            ],
+            "owl:deprecated": true,
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Base58-encoded Public Key",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#publicKeyBase58",
+            "vs:term_status": "deprecated"
+        },
+        {
+            "@id": "sec:publicKeyPem",
+            "@type": [
+                "rdf:Property",
+                "owl:DeprecatedProperty",
+                "owl:DatatypeProperty"
+            ],
+            "owl:deprecated": true,
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Public key PEM",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#publicKeyPem",
+            "vs:term_status": "deprecated"
+        },
+        {
+            "@id": "sec:publicKeyHex",
+            "@type": [
+                "rdf:Property",
+                "owl:DeprecatedProperty",
+                "owl:DatatypeProperty"
+            ],
+            "owl:deprecated": true,
+            "rdfs:range": "xsd:string",
+            "rdfs:label": "Hex-encoded version of public Key",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#publicKeyHex",
+            "vs:term_status": "deprecated",
+            "rdfs:seeAlso": [
+                "https://tools.ietf.org/html/rfc4648#section-8"
+            ]
+        },
+        {
+            "@id": "sec:jws",
+            "@type": [
+                "rdf:Property",
+                "owl:DeprecatedProperty"
+            ],
+            "owl:deprecated": true,
+            "rdfs:label": "Json Web Signature",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#jws",
+            "vs:term_status": "deprecated",
+            "rdfs:seeAlso": [
+                "https://tools.ietf.org/html/rfc7797"
+            ]
+        }
+    ],
     "rdfs_classes": [
         {
             "@id": "sec:Proof",
@@ -97,7 +719,13 @@
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-data-integrity-proof",
-            "vs:term_status": "stable"
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
         },
         {
             "@id": "sec:ProofGraph",
@@ -114,7 +742,13 @@
             "@type": "rdfs:Class",
             "rdfs:label": "Verification method",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#verification-methods",
-            "vs:term_status": "stable"
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
         },
         {
             "@id": "sec:DataIntegrityProof",
@@ -124,7 +758,17 @@
             ],
             "rdfs:label": "A Data Integrity Proof",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof",
-            "vs:term_status": "stable"
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
         },
         {
             "@id": "sec:Multikey",
@@ -137,6 +781,12 @@
             "vs:term_status": "stable",
             "rdfs:seeAlso": [
                 "https://www.w3.org/TR/vc-di-eddsa/#multikey"
+            ],
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/multikey/v1",
+                    "@type": "jsonld:Context"
+                }
             ]
         },
         {
@@ -147,7 +797,13 @@
             ],
             "rdfs:label": "JSON Web Key Verification Method",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#jsonwebkey",
-            "vs:term_status": "stable"
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/jwk/v1",
+                    "@type": "jsonld:Context"
+                }
+            ]
         },
         {
             "@id": "sec:Ed25519VerificationKey2020",
@@ -352,416 +1008,6 @@
             "vs:term_status": "deprecated"
         }
     ],
-    "rdfs_properties": [
-        {
-            "@id": "sec:verificationMethod",
-            "@type": "rdf:Property",
-            "rdfs:range": "sec:VerificationMethod",
-            "rdfs:label": "Verification method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-verificationmethod",
-            "vs:term_status": "stable",
-            "rdfs:seeAlso": [
-                "https://www.w3.org/TR/did-core/#verification-methods"
-            ]
-        },
-        {
-            "@id": "sec:controller",
-            "@type": [
-                "rdf:Property",
-                "owl:ObjectProperty"
-            ],
-            "rdfs:domain": "sec:VerificationMethod",
-            "rdfs:label": "Controller",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-controller",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:proof",
-            "@type": "rdf:Property",
-            "rdfs:range": "sec:ProofGraph",
-            "rdfs:label": "Proof sets",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#proof-sets",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:domain",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:Proof",
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Domain of a proof",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-domain",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:challenge",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:Proof",
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Challenge of a proof",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-challenge",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:previousProof",
-            "@type": "rdf:Property",
-            "rdfs:domain": "sec:Proof",
-            "rdfs:range": "sec:Proof",
-            "rdfs:label": "Previous proof",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-previousproof",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:proofPurpose",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:Proof",
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Proof purpose",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-proofpurpose",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:proofValue",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:Proof",
-            "rdfs:range": "sec:multibase",
-            "rdfs:label": "Proof value",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-proofvalue",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:created",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:Proof",
-            "rdfs:range": "xsd:dateTime",
-            "rdfs:label": "Proof creation time",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-created",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:expires",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": {
-                "owl:unionOf": [
-                    "sec:Proof",
-                    "sec:VerificationMethod"
-                ]
-            },
-            "rdfs:range": "xsd:dateTime",
-            "rdfs:label": "Expiration time for a proof or verification method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:nonce",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:Proof",
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Nonce supplied by proof creator",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-nonce",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:authentication",
-            "@type": "rdf:Property",
-            "rdfs:range": "sec:VerificationMethod",
-            "rdfs:label": "Authentication method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-authentication",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:assertionMethod",
-            "@type": "rdf:Property",
-            "rdfs:range": "sec:VerificationMethod",
-            "rdfs:label": "Assertion method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-assertionmethod",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:capabilityDelegation",
-            "@type": "rdf:Property",
-            "rdfs:range": "sec:VerificationMethod",
-            "rdfs:label": "Capability delegation method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilitydelegation",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:capabilityInvocation",
-            "@type": "rdf:Property",
-            "rdfs:range": "sec:VerificationMethod",
-            "rdfs:label": "Capability invocation method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilityinvocation",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:keyAgreement",
-            "@type": "rdf:Property",
-            "rdfs:range": "sec:VerificationMethod",
-            "rdfs:label": "Key agreement protocols",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-keyagreement",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:cryptosuite",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:DataIntegrityProof",
-            "rdfs:range": "sec:cryptosuiteString",
-            "rdfs:label": "Cryptographic suite",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-cryptosuite",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:publicKeyMultibase",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:Multikey",
-            "rdfs:range": "sec:multibase",
-            "rdfs:label": "Public key multibase",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-publickeymultibase",
-            "vs:term_status": "stable",
-            "rdfs:seeAlso": [
-                "https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03",
-                "https://github.com/multiformats/multicodec/blob/master/table.csv",
-                "https://w3c-ccg.github.io/lds-ed25519-2020/"
-            ]
-        },
-        {
-            "@id": "sec:secretKeyMultibase",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:Multikey",
-            "rdfs:range": "sec:multibase",
-            "rdfs:label": "Secret key multibase",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeymultibase",
-            "vs:term_status": "stable",
-            "rdfs:seeAlso": [
-                "https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03",
-                "https://github.com/multiformats/multicodec/blob/master/table.csv",
-                "https://w3c-ccg.github.io/lds-ed25519-2020/"
-            ]
-        },
-        {
-            "@id": "sec:publicKeyJwk",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:JsonWebKey",
-            "rdfs:range": "rdf:JSON",
-            "rdfs:label": "Public key JWK",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-publickeyjwk",
-            "vs:term_status": "stable",
-            "rdfs:seeAlso": [
-                "https://www.iana.org/assignments/jose/jose.xhtml",
-                "https://tools.ietf.org/html/rfc7517"
-            ]
-        },
-        {
-            "@id": "sec:secretKeyJwk",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:JsonWebKey",
-            "rdfs:range": "rdf:JSON",
-            "rdfs:label": "Secret key JWK",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeyjwk",
-            "vs:term_status": "stable",
-            "rdfs:seeAlso": [
-                "https://www.iana.org/assignments/jose/jose.xhtml",
-                "https://tools.ietf.org/html/rfc7517"
-            ]
-        },
-        {
-            "@id": "sec:revoked",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "sec:VerificationMethod",
-            "rdfs:range": "xsd:dateTime",
-            "rdfs:label": "Revocation time",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-revoked",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:digestMultibase",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:range": "multibase",
-            "rdfs:label": "Digest multibase",
-            "rdfs:comment": {
-                "@value": "<div><b><i>(Feature at Risk)</i></b> The Working Group is currently attempting to determine whether cryptographic hash expression formats can be unified across all of the VCWG core specifications. Candidates for this mechanism include `digestSRI` and `digestMultibase`.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-digestmultibase",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "sec:allowedAction",
-            "@type": "rdf:Property",
-            "rdfs:label": "Allowed action",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#delegated-capability",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "sec:capabilityChain",
-            "@type": "rdf:Property",
-            "rdfs:label": "Capability chain",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#delegation",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "sec:capabilityAction",
-            "@type": "rdf:Property",
-            "rdfs:label": "Capability action",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#invoking-root-capability",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "sec:caveat",
-            "@type": "rdf:Property",
-            "rdfs:label": "Caveat",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#caveats",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "sec:delegator",
-            "@type": "rdf:Property",
-            "rdfs:label": "Delegator",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#delegation",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "sec:invocationTarget",
-            "@type": "rdf:Property",
-            "rdfs:label": "Invocation target",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#root-capability",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "sec:invoker",
-            "@type": "rdf:Property",
-            "rdfs:label": "Invoker",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/zcap-spec/#invocation",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "sec:blockchainAccountId",
-            "@type": [
-                "rdf:Property",
-                "owl:DeprecatedProperty",
-                "owl:DatatypeProperty"
-            ],
-            "owl:deprecated": true,
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Blockchain account ID",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#blockchainAccountId",
-            "vs:term_status": "deprecated"
-        },
-        {
-            "@id": "sec:ethereumAddress",
-            "@type": [
-                "rdf:Property",
-                "owl:DeprecatedProperty",
-                "owl:DatatypeProperty"
-            ],
-            "owl:deprecated": true,
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Ethereum address",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#ethereumAddress",
-            "vs:term_status": "deprecated",
-            "rdfs:seeAlso": [
-                "https://eips.ethereum.org/EIPS/eip-55",
-                "https://ethereum.github.io/yellowpaper/paper.pdf"
-            ]
-        },
-        {
-            "@id": "sec:publicKeyBase58",
-            "@type": [
-                "rdf:Property",
-                "owl:DeprecatedProperty",
-                "owl:DatatypeProperty"
-            ],
-            "owl:deprecated": true,
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Base58-encoded Public Key",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#publicKeyBase58",
-            "vs:term_status": "deprecated"
-        },
-        {
-            "@id": "sec:publicKeyPem",
-            "@type": [
-                "rdf:Property",
-                "owl:DeprecatedProperty",
-                "owl:DatatypeProperty"
-            ],
-            "owl:deprecated": true,
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Public key PEM",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#publicKeyPem",
-            "vs:term_status": "deprecated"
-        },
-        {
-            "@id": "sec:publicKeyHex",
-            "@type": [
-                "rdf:Property",
-                "owl:DeprecatedProperty",
-                "owl:DatatypeProperty"
-            ],
-            "owl:deprecated": true,
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Hex-encoded version of public Key",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#publicKeyHex",
-            "vs:term_status": "deprecated",
-            "rdfs:seeAlso": [
-                "https://tools.ietf.org/html/rfc4648#section-8"
-            ]
-        },
-        {
-            "@id": "sec:jws",
-            "@type": [
-                "rdf:Property",
-                "owl:DeprecatedProperty"
-            ],
-            "owl:deprecated": true,
-            "rdfs:label": "Json Web Signature",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/security-vocab/#jws",
-            "vs:term_status": "deprecated",
-            "rdfs:seeAlso": [
-                "https://tools.ietf.org/html/rfc7797"
-            ]
-        }
-    ],
     "rdfs_individuals": [
         {
             "@id": "sec:PROOF_GENERATION_ERROR",
@@ -843,7 +1089,13 @@
             ],
             "rdfs:label": "Datatype for cryptosuite Identifiers",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#cryptosuiteString",
-            "vs:term_status": "stable"
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/data-integrity/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
         },
         {
             "@id": "sec:multibase",
@@ -853,7 +1105,13 @@
             ],
             "rdfs:label": "Datatype for multibase values",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#multibase",
-            "vs:term_status": "stable"
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://w3id.org/security/multikey/v1",
+                    "@type": "jsonld:Context"
+                }
+            ]
         }
     ]
 }
