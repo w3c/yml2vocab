@@ -76,9 +76,9 @@ export const global = {
      */
     status_counter : new StatusCounter(),
     /**
-     * Set of context URL-s that appear in the vocabulary references
+     * Inverted info for contexts: for each context the list of relevant terms are listed
      */
-    context_set    : new Set<string>,
+    context_mentions : {} as Contexts,
 } 
 
 /**
@@ -225,6 +225,13 @@ export interface RDFDatatype extends RDFTerm {
 export interface RDFPrefix {
     prefix : string;
     url    : string;
+}
+
+/**
+ * Context references
+ */
+export interface Contexts {
+    [ctx: string]: string[];
 }
 
 /**

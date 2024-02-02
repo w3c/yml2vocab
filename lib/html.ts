@@ -239,13 +239,27 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     // Add the list of all contexts to the file
     const contexts = () => {
         const ctx_ul = document.getElementById('contexts');
+        // Check whether the template includes a section for context files
         if (ctx_ul) {
-            if (global.context_set.size > 0) {
-                for (const ctx of global.context_set) {
-                    const ctx_ref = `<a href="${ctx}" typeof="jsonld:Context"><code>${ctx}</code></a>`;
-                    document.addChild(ctx_ul, 'li', ctx_ref);
+            const ctx_keys: string[] = Object.keys(global.context_mentions);
+            if (ctx_keys.length > 0) {
+                // An item for each context file
+                for (const ctx of ctx_keys) {
+                    const li = document.addChild(ctx_ul, 'li');
+
+                    const a  = document.addChild(li, 'a', `<code>${ctx}</code>`);
+                    a.setAttribute('href', ctx);
+                    a.setAttribute('typeof','jsonld:Context');
+
+                    const details = document.addChild(li, 'details');
+                    document.addChild(details, 'summary', 'term list');
+                    const ul = document.addChild(details, 'ul');
+                    for (const term of global.context_mentions[ctx]) {
+                        document.addChild(ul, 'li', `<a href="#${term}"><code>${term}<code></li>`);
+                    }
                 }
             } else {
+                // Remove the full section, it is not used (no context files)
                 // The extra condition checks are imposed by Typescript. In a DOM and
                 // knowing the templates, these parent elements are always present.
                 const section = ctx_ul.parentElement;

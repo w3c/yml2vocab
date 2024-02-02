@@ -271,21 +271,32 @@ export function getData(vocab_source: string): Vocab {
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
 
     // Establish the context reference(s), if any, for a term.
-    const final_contexts = (val: undefined|boolean|string[]): undefined|string[] => {
-        // If the value is set to a boolean (any value, actually), then there should be no
-        // reference to any context
-        if (typeof val === "boolean") {
-            return (val === true) ? [global.vocab_context] : undefined;
-        }
+    // As a side effect, the 'inverse' info, ie, the list of terms per context, is
+    // created in the global data structure
+    const final_contexts = (raw: RawVocabEntry): undefined|string[] => {
+        const ctx_s = ((val: undefined | boolean | string[]): undefined|string[] => {
+                // If the value is set to a boolean (any value, actually), then there should be no
+                // reference to any context
+                if (typeof val === "boolean") {
+                    return (val === true) ? [global.vocab_context] : undefined;
+                }
 
-        // If the value is valid in terms of strings, then that is a local setting to values, use it
-        if (val && val.length > 0) {
-            for (const v of val) global.context_set.add(v);
-            return val;
-        }
+                // If the value is valid in terms of strings, then that is a local setting to values, use it
+                if (val && val.length > 0) return val;
 
-        // If there is a global setting, then that should prevail. Note that it may be undefined as well.
-        return (global.vocab_context === undefined) ? undefined : [global.vocab_context]
+                // If there is a global setting, then that should prevail. Note that it may be undefined as well.
+                return (global.vocab_context === undefined) ? undefined : [global.vocab_context]
+            })(raw.context);
+
+        if (ctx_s !== undefined) {
+            for (const ctx of ctx_s) {
+                if (ctx in global.context_mentions === false) {
+                    global.context_mentions[ctx] = [];
+                }
+                global.context_mentions[ctx].push(raw.id);
+            }
+        }
+        return ctx_s;
     }
 
 
@@ -327,7 +338,7 @@ export function getData(vocab_source: string): Vocab {
             global.vocab_url     = raw.value;
             global.vocab_context = (raw.context === undefined || typeof raw.context === "boolean") ? undefined : raw.context[0];
             if (global.vocab_context) {
-                global.context_set.add(global.vocab_context);
+                global.context_mentions[global.vocab_context] = [];
             }
             return {
                 prefix : raw.id,
@@ -398,7 +409,7 @@ export function getData(vocab_source: string): Vocab {
                 domain        : raw.domain,
                 example       : raw.example,
                 dataset       : raw.dataset,
-                context       : final_contexts(raw.context),
+                context       : final_contexts(raw),
             }
         }) : [];
 
@@ -433,7 +444,7 @@ export function getData(vocab_source: string): Vocab {
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context    : final_contexts(raw.context),
+                context    : final_contexts(raw),
                 range_of, domain_of, included_in_domain_of, includes_range_of
             }
         }) : [];
@@ -451,7 +462,7 @@ export function getData(vocab_source: string): Vocab {
                 type          : (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also      : raw.see_also,
                 example       : raw.example,
-                context       : final_contexts(raw.context),
+                context       : final_contexts(raw),
             }
         }) : [];
 
@@ -481,10 +492,10 @@ export function getData(vocab_source: string): Vocab {
                 type       : (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context    : final_contexts(raw.context),
+                context    : final_contexts(raw),
                 range_of, includes_range_of
             };
         }) : [];
-        
+    
     return {prefixes, ontology_properties, classes, properties, individuals, datatypes}
 }
