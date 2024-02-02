@@ -210,26 +210,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
-    const contexts = () => {
-        const ctx_ul = document.getElementById('contexts');
-        if (ctx_ul) {
-            if (global.context_set.size > 0) {
-                for (const ctx of global.context_set) {
-                    const ctx_ref = `<a href="${ctx}"><code>${ctx}</code></a>`;
-                    document.addChild(ctx_ul, 'li', ctx_ref);
-                }
-            } else {
-                // The extra condition checks are imposed by Typescript. In a DOM and
-                // knowing the templates, these parent elements are always present.
-                const section = ctx_ul.parentElement;
-                if (section) {
-                    section.parentElement?.removeChild(section);
-                }
-            }
-        } 
-    }
-
-
     // Prefixes that are used to differentiate among stable, reserved, and deprecated values
     const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
         switch (status) {
@@ -251,8 +231,28 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);
             const dd = document.addChild(dl, 'dd');
             dd.innerHTML = item.context.map((ctx: string): string => {
-                return `<a href="${ctx}"><code>${ctx}</code></a>`;
+                return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;
             }).join(", ");
+        }
+    }
+
+    // Add the list of all contexts to the file
+    const contexts = () => {
+        const ctx_ul = document.getElementById('contexts');
+        if (ctx_ul) {
+            if (global.context_set.size > 0) {
+                for (const ctx of global.context_set) {
+                    const ctx_ref = `<a href="${ctx}" typeof="jsonld:Context"><code>${ctx}</code></a>`;
+                    document.addChild(ctx_ul, 'li', ctx_ref);
+                }
+            } else {
+                // The extra condition checks are imposed by Typescript. In a DOM and
+                // knowing the templates, these parent elements are always present.
+                const section = ctx_ul.parentElement;
+                if (section) {
+                    section.parentElement?.removeChild(section);
+                }
+            }
         }
     }
 

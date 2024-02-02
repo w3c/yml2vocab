@@ -1,3 +1,7 @@
+## Version 1.4.7
+
+- Adding information on `@context` files
+
 ## Version 1.4.6
 
 - Label is now optional

@@ -56,6 +56,14 @@ const defaultPrefixes: RDFPrefix[] = [
     {
         prefix : "vs",
         url    : "http://www.w3.org/2003/06/sw-vocab-status/ns#"
+    },
+    {
+        prefix : "schema",
+        url    : "http://schema.org/"
+    },
+    {
+        prefix : "jsonld",
+        url    : "http://www.w3.org/ns/json-ld#"
     }
 ];
 
@@ -267,7 +275,7 @@ export function getData(vocab_source: string): Vocab {
         // If the value is set to a boolean (any value, actually), then there should be no
         // reference to any context
         if (typeof val === "boolean") {
-            return undefined;
+            return (val === true) ? [global.vocab_context] : undefined;
         }
 
         // If the value is valid in terms of strings, then that is a local setting to values, use it
@@ -276,7 +284,7 @@ export function getData(vocab_source: string): Vocab {
             return val;
         }
 
-        // If there is a global setting, then that should prevail. Note that it may be undefined as well
+        // If there is a global setting, then that should prevail. Note that it may be undefined as well.
         return (global.vocab_context === undefined) ? undefined : [global.vocab_context]
     }
 
