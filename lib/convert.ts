@@ -288,15 +288,20 @@ export function getData(vocab_source: string): Vocab {
                 return (global.vocab_context === undefined) ? undefined : [global.vocab_context]
             })(raw.context);
 
+
         if (ctx_s !== undefined) {
-            for (const ctx of ctx_s) {
+            // The special "vocab" shortcut refers to the global setting (if any)
+            const final_ctx_s = (global.vocab_context !== undefined) ? (ctx_s.map((val:string): string => (val === "vocab") ? global.vocab_context : val)) : ctx_s;
+            for (const ctx of final_ctx_s) {
                 if (ctx in global.context_mentions === false) {
                     global.context_mentions[ctx] = [];
                 }
                 global.context_mentions[ctx].push(raw.id);
             }
+            return final_ctx_s;
+        } else {
+            return undefined;
         }
-        return ctx_s;
     }
 
 
