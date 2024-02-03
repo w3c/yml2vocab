@@ -59,9 +59,6 @@ class StatusCounter {
     }
 }
 exports.StatusCounter = StatusCounter;
-/**
- * Placeholder for some global data.
- */
 exports.global = {
     /** Vocabulary prefix for the vocabulary being handled */
     vocab_prefix: "",

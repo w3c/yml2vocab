@@ -69,7 +69,18 @@ export interface Contexts {
 /**
  * Placeholder for some global data. 
  */
-export const global = {
+interface GlobalData {
+    vocab_prefix: string,
+    vocab_url: string,
+    vocab_context: undefined | string,
+    status_counter: StatusCounter,
+    context_mentions: Contexts;
+}
+
+/**
+ * As it name says: some global data that are needed by most of the media type specific modules.
+ */
+export const global: GlobalData = {
     /** Vocabulary prefix for the vocabulary being handled */
     vocab_prefix   : "",
     /** Vocabulary URL for the vocabulary being handled */

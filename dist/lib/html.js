@@ -8,9 +8,89 @@ exports.toHTML = void 0;
  * @packageDocumentation
  */
 const common_1 = require("./common");
-// import { DOMParser, HTMLDocument, Element } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
-const minidom_node_1 = require("./sys/minidom_node");
-/* ---------------- Utility functions ------------------------- */
+const jsdom_1 = require("jsdom");
+/**
+ * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
+ * the JSDOM and Deno's DOM WASM implementations; higher layers should not depend on these.
+ *
+ * 2024-02-02: as of today, with deno v. >1.4, this layer is not necessary any more,
+ * because jsdom finally runs with deno as well. The class has been kept as a separate layer
+ * following the wisdom of "ain't broken, don't fix it" :-)
+ *
+ */
+class MiniDOM {
+    _document;
+    constructor(html_text) {
+        const doc = (new jsdom_1.JSDOM(html_text)).window.document;
+        if (doc) {
+            this._document = doc;
+        }
+        else {
+            throw new Error("Problem with parsing the template text");
+        }
+    }
+    get document() {
+        return this._document;
+    }
+    /**
+     * Add a new HTML Element to a parent, and return the new element.
+     *
+     * @param parent - The parent HTML Element
+     * @param element - The new element's name
+     * @param content - The new element's (HTML) content
+     * @returns the new element
+     *
+     */
+    addChild(parent, element, content = undefined) {
+        const new_element = this._document.createElement(element);
+        parent.appendChild(new_element);
+        if (content !== undefined)
+            new_element.innerHTML = content;
+        return new_element;
+    }
+    /**
+     * Add some text to an element, including the obligatory checks that Typescript imposes
+     *
+     * @param content - text to add
+     * @param element HTML Element to add it to
+     * @returns
+     *
+     * @internal
+     */
+    addText(content, element) {
+        if (element) {
+            element.textContent = content;
+        }
+        return element;
+    }
+    /**
+     * Just the mirroring of the official DOM call.
+     *
+     * @param id
+     * @returns
+     */
+    getElementById(id) {
+        return this._document.getElementById(id);
+    }
+    /**
+      * Just the mirroring of the official DOM call.
+      *
+      * @param tag
+      * @returns
+      */
+    getElementsByTagName(tag) {
+        return this._document.getElementsByTagName(tag);
+    }
+    /**
+     * Just the mirroring of the official DOM call.
+     *
+     * @returns
+     */
+    innerHTML() {
+        const retval = this._document.documentElement?.innerHTML;
+        return retval ? retval : "";
+    }
+}
 /**
  * Generate a new bnode id for the "union of" constructs...
  */
@@ -43,7 +123,7 @@ function toHTML(vocab, template_text) {
     /* *********************** The real processing part ****************** */
     // Get the DOM of the template
     // const document: Document = (new JSDOM(template_text)).window.document;
-    const document = new minidom_node_1.MiniDOM(template_text);
+    const document = new MiniDOM(template_text);
     // This is used to generate cross links, possible to external entities, too
     const resolveCurie = (curie) => {
         const components = curie.split(':');
@@ -210,7 +290,7 @@ function toHTML(vocab, template_text) {
     };
     // Add the references to the context files (if any)
     const contextReferences = (section, item) => {
-        if (item.context?.length > 0) {
+        if (item.context !== undefined && item.context?.length > 0) {
             const dl = document.addChild(section, 'dl');
             dl.className = 'terms';
             document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);

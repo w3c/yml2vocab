@@ -5,16 +5,97 @@
  * @packageDocumentation
  */
 import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status, RDFDatatype } from './common';
-// import { DOMParser, HTMLDocument, Element } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
+import { JSDOM } from 'jsdom';
 
-// The "MiniDOM" reference was created to bridge the difference between the deno and the node version of the code
-// An artificial "abstract" interface to a fraction of the DOM functionality that this code uses
-// and is available for both systems
-// As of 2024.02.02 this is unnecessary, because Deno can finally run jsdom, but it would require unnecessary
-// trouble to change the code now... Oh well.
-import { MiniDOM } from "./sys/minidom_node";
 
-/* ---------------- Utility functions ------------------------- */
+/**
+ * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
+ * the JSDOM and Deno's DOM WASM implementations; higher layers should not depend on these.
+ * 
+ * 2024-02-02: as of today, with deno v. >1.4, this layer is not necessary any more,
+ * because jsdom finally runs with deno as well. The class has been kept as a separate layer
+ * following the wisdom of "ain't broken, don't fix it" :-)
+ * 
+ */
+class MiniDOM {
+    private _document: Document;
+
+    constructor(html_text: string) {
+        const doc = (new JSDOM(html_text)).window.document;
+        if (doc) {
+            this._document = doc;
+        } else {
+            throw new Error("Problem with parsing the template text");
+        }
+    }
+
+    get document(): Document {
+        return this._document;
+    }
+
+    /**
+     * Add a new HTML Element to a parent, and return the new element.
+     * 
+     * @param parent - The parent HTML Element
+     * @param element - The new element's name
+     * @param content - The new element's (HTML) content
+     * @returns the new element
+     * 
+     */
+    addChild(parent: Element, element: string, content: string | undefined = undefined): Element {
+        const new_element = this._document.createElement(element);
+        parent.appendChild(new_element);
+        if (content !== undefined) new_element.innerHTML = content;
+        return new_element;
+    }
+
+    /**
+     * Add some text to an element, including the obligatory checks that Typescript imposes
+     * 
+     * @param content - text to add
+     * @param element HTML Element to add it to
+     * @returns 
+     * 
+     * @internal
+     */
+    addText(content: string, element: Element | null): Element | null {
+        if (element) {
+            element.textContent = content;
+        }
+        return element;
+    }
+
+    /**
+     * Just the mirroring of the official DOM call.
+     * 
+     * @param id 
+     * @returns 
+     */
+    getElementById(id: string): Element | null {
+        return this._document.getElementById(id);
+    }
+
+    /**
+      * Just the mirroring of the official DOM call.
+      * 
+      * @param tag 
+      * @returns 
+      */
+    getElementsByTagName(tag: string): HTMLCollection {
+        return this._document.getElementsByTagName(tag);
+    }
+
+    /**
+     * Just the mirroring of the official DOM call.
+     * 
+     * @returns 
+     */
+    innerHTML(): string {
+        const retval = this._document.documentElement?.innerHTML;
+        return retval ? retval : "";
+    }
+}
+
 
 /**
  * Generate a new bnode id for the "union of" constructs...
@@ -230,7 +311,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
     // Add the references to the context files (if any)
     const contextReferences = (section: Element, item: RDFTerm): void => {
-        if (item.context?.length > 0) {
+        if (item.context !== undefined && item.context?.length > 0) {
             const dl = document.addChild(section, 'dl');
             dl.className = 'terms';
             document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);

@@ -8,7 +8,6 @@ exports.toTurtle = void 0;
  * @packageDocumentation
  */
 const common_1 = require("./common");
-
 /**
  * Generate the Turtle representation of the vocabulary.
  * Nothing complex, just a straightforward conversion of the information into the turtle syntax.
