@@ -160,11 +160,7 @@
                     "$ref": "#/$defs/ExampleUnion"
                 },
                 "context": {
-                    "oneOf": [{
-                        "$ref": "#/$defs/ContextOrArrayOfContexts"
-                    },{
-                        "type": "boolean"
-                    }]
+                    "$ref": "#/$defs/Context"
                 }
             },
             "required": [
@@ -287,7 +283,8 @@
                     "format": "uri"
                 },
                 "context": {
-                    "$ref" : "#/$defs/ContextOrArrayOfContexts"
+                    "type": "string",
+                    "format": "uri"
                 }
             },
             "required": [
@@ -296,18 +293,30 @@
             ]
         },
 
-        "ContextOrArrayOfContexts": {
-            "description": "Contexts can be one or several, hence this utility schema",
+        "OneContext": {
+            "description": "A single context setting",
             "oneOf": [
                 {
                     "type": "string",
                     "format": "uri"
                 },
                 {
+                    "type": "string",
+                    "enum": ["vocab", "none"]
+                }
+            ]
+        },
+
+        "Context": {
+            "description": "Contexts can be one or several, hence this utility schema",
+            "oneOf": [
+                {
+                    "$ref": "#/$defs/OneContext"
+                },
+                {
                     "type": "array",
                     "items": {
-                        "type": "string",
-                        "format": "uri"
+                        "$ref": "#/$defs/OneContext"
                     }
                 }
             ]

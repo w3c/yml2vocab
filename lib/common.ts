@@ -70,11 +70,11 @@ export interface Contexts {
  * Placeholder for some global data. 
  */
 interface GlobalData {
-    vocab_prefix: string,
-    vocab_url: string,
-    vocab_context: undefined | string,
-    status_counter: StatusCounter,
-    context_mentions: Contexts;
+    vocab_prefix     : string,
+    vocab_url        : string,
+    vocab_context   ?: string,
+    status_counter   : StatusCounter,
+    context_mentions : Contexts;
 }
 
 /**
@@ -136,7 +136,7 @@ export interface RawVocabEntry {
     see_also    ?: Link[];
     example     ?: Example[];
     dataset     ?: boolean;
-    context     ?: boolean | string[];
+    context     ?: string[];
 };
 
 /**
@@ -190,7 +190,7 @@ export interface RDFTerm {
     deprecated ?: boolean;
     status     ?: Status;
     example    ?: Example[];
-    context    ?: string[];
+    context     : string[];
 }
 
 /**

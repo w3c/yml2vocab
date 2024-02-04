@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
-import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype } from './common';
+import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype, Contexts } from './common';
 import { RawVocabEntry, RawVocab, ValidationResults, global }                                                           from './common';
 import { EXTRA_DATATYPES }                                                                                              from "./common";
 import { validateWithSchema }                                                                                           from './schema';
@@ -92,17 +92,28 @@ const defaultOntologyProperties: OntologyProperty[] = [
  */
 function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     // Some entries are to be put into an array, even if there is only one item
-    const toArray = (val: undefined|boolean|string|string[]) : undefined|boolean|string[] => {
+    const toArray = (val: undefined|string|string[]) : undefined|string[] => {
         if (val === undefined) {
             return undefined
-        } else if (typeof val === "boolean") {
-            return val;
         } else if (val.length === 0) {
-            return undefined
+            return []
         } else if ( typeof val === "string") {
             return [val]
         } else {
             return val
+        }
+    };
+
+    // Almost like to array, except that instead of undefined a real default value is returned
+    const toArrayContexts = (val: undefined | string | string[]): string[] => {
+        if (val === undefined) {
+            return ["vocab"];
+        } else if (val.length === 0) {
+            return ["vocab"];
+        } else if (typeof val === "string") {
+            return [val];
+        } else {
+            return val;
         }
     };
 
@@ -213,7 +224,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
         dataset     : (raw.dataset === undefined) ? false : raw.dataset,
-        context     : toArray(raw.context)
+        context     : toArrayContexts(raw.context)
     }
 }
 
@@ -270,38 +281,35 @@ export function getData(vocab_source: string): Vocab {
     }
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
 
-    // Establish the context reference(s), if any, for a term.
+    // Establish the final context reference(s), if any, for a term.
     // As a side effect, the 'inverse' info, ie, the list of terms per context, is
     // created in the global data structure
-    const final_contexts = (raw: RawVocabEntry): undefined|string[] => {
-        const ctx_s = ((val: undefined | boolean | string[]): undefined|string[] => {
-                // If the value is set to a boolean (any value, actually), then there should be no
-                // reference to any context
-                if (typeof val === "boolean") {
-                    return (val === true) ? [global.vocab_context] : undefined;
-                }
+    const final_contexts = (raw: RawVocabEntry): string[] => {
+        if (raw.context === undefined) return [];
 
-                // If the value is valid in terms of strings, then that is a local setting to values, use it
-                if (val && val.length > 0) return val;
-
-                // If there is a global setting, then that should prevail. Note that it may be undefined as well.
-                return (global.vocab_context === undefined) ? undefined : [global.vocab_context]
-            })(raw.context);
-
-
-        if (ctx_s !== undefined) {
-            // The special "vocab" shortcut refers to the global setting (if any)
-            const final_ctx_s = (global.vocab_context !== undefined) ? (ctx_s.map((val:string): string => (val === "vocab") ? global.vocab_context : val)) : ctx_s;
-            for (const ctx of final_ctx_s) {
-                if (ctx in global.context_mentions === false) {
-                    global.context_mentions[ctx] = [];
-                }
-                global.context_mentions[ctx].push(raw.id);
+        // replace the value of "vocab" by the global context, then
+        // get the possible "none" out of the way.
+        const contexts = raw.context.map((val: string): string => {
+            if (val === "vocab") {
+                // The global context may not have been set...
+                return global.vocab_context !== undefined ? global.vocab_context : "none";
+            } else {
+                return val;
             }
-            return final_ctx_s;
-        } else {
-            return undefined;
+        }).filter((val:string): boolean => val !== "none");
+        
+        // Make sure that all entries are unique before returning it
+        const ctx_s = [...new Set(contexts)];
+
+        // 'Inverse' info: add the term reference to the global data
+        for (const ctx of ctx_s) {
+            if (ctx in global.context_mentions === false) {
+                global.context_mentions[ctx] = [];
+            }
+            global.context_mentions[ctx].push(raw.id);
         }
+
+        return ctx_s;
     }
 
 
@@ -341,7 +349,7 @@ export function getData(vocab_source: string): Vocab {
             }
             global.vocab_prefix  = raw.id;
             global.vocab_url     = raw.value;
-            global.vocab_context = (raw.context === undefined || typeof raw.context === "boolean") ? undefined : raw.context[0];
+            global.vocab_context = raw.context === undefined ? undefined : raw.context[0];
             if (global.vocab_context) {
                 global.context_mentions[global.vocab_context] = [];
             }
