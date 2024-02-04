@@ -4,7 +4,7 @@
  * 
  * @packageDocumentation
  */
-import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype, Contexts } from './common';
+import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype } from './common';
 import { RawVocabEntry, RawVocab, ValidationResults, global }                                                           from './common';
 import { EXTRA_DATATYPES }                                                                                              from "./common";
 import { validateWithSchema }                                                                                           from './schema';
