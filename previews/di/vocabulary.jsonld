@@ -92,7 +92,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2024-02-02",
+    "dc:date": "2024-02-04",
     "rdfs_properties": [
         {
             "@id": "sec:verificationMethod",
@@ -132,6 +132,10 @@
                 },
                 {
                     "@id": "https://w3id.org/security/jwk/v1",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/did/v1",
                     "@type": "jsonld:Context"
                 }
             ]
@@ -347,6 +351,10 @@
                 {
                     "@id": "https://www.w3.org/ns/credentials/v2",
                     "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/did/v1",
+                    "@type": "jsonld:Context"
                 }
             ]
         },
@@ -365,14 +373,22 @@
                 {
                     "@id": "https://www.w3.org/ns/credentials/v2",
                     "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/did/v1",
+                    "@type": "jsonld:Context"
                 }
             ]
         },
         {
-            "@id": "sec:capabilityDelegation",
+            "@id": "sec:capabilityDelegationMethod",
             "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Capability delegation method",
+            "rdfs:comment": {
+                "@value": "<div>Historically, this property has often been expressed using `capabilityDelegation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityDelegation`) and the property identifier (`...#capabilityDelegationMethod`) is expected and should not trigger an error.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilitydelegation",
             "vs:term_status": "stable",
             "mentioned": [
@@ -383,14 +399,22 @@
                 {
                     "@id": "https://www.w3.org/ns/credentials/v2",
                     "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/did/v1",
+                    "@type": "jsonld:Context"
                 }
             ]
         },
         {
-            "@id": "sec:capabilityInvocation",
+            "@id": "sec:capabilityInvocationMethod",
             "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Capability invocation method",
+            "rdfs:comment": {
+                "@value": "<div>Historically, this property has often been expressed using `capabilityInvocation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityInvocation`) and the property identifier (`...#capabilityInvocationMethod`) is expected and should not trigger an error.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilityinvocation",
             "vs:term_status": "stable",
             "mentioned": [
@@ -401,14 +425,22 @@
                 {
                     "@id": "https://www.w3.org/ns/credentials/v2",
                     "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/did/v1",
+                    "@type": "jsonld:Context"
                 }
             ]
         },
         {
-            "@id": "sec:keyAgreement",
+            "@id": "sec:keyAgreementMethod",
             "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Key agreement protocols",
+            "rdfs:comment": {
+                "@value": "<div>Historically, this property has often been expressed using `keyAgreement` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`keyAgreement`) and the property identifier (`...#keyAgreementMethod`) is expected and should not trigger an error.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-keyagreement",
             "vs:term_status": "stable",
             "mentioned": [
@@ -418,6 +450,10 @@
                 },
                 {
                     "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                },
+                {
+                    "@id": "https://www.w3.org/ns/did/v1",
                     "@type": "jsonld:Context"
                 }
             ]

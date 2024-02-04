@@ -15,7 +15,7 @@ sec: a owl:Ontology ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2024-02-02"^^xsd:date ;
+    dc:date "2024-02-04"^^xsd:date ;
 .
 
 # Property definitions
@@ -120,23 +120,26 @@ sec:assertionMethod a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-sec:capabilityDelegation a rdf:Property ;
+sec:capabilityDelegationMethod a rdf:Property ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Capability delegation method" ;
+    rdfs:comment """<div>Historically, this property has often been expressed using `capabilityDelegation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityDelegation`) and the property identifier (`...#capabilityDelegationMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-capabilitydelegation>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
-sec:capabilityInvocation a rdf:Property ;
+sec:capabilityInvocationMethod a rdf:Property ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Capability invocation method" ;
+    rdfs:comment """<div>Historically, this property has often been expressed using `capabilityInvocation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityInvocation`) and the property identifier (`...#capabilityInvocationMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-capabilityinvocation>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
-sec:keyAgreement a rdf:Property ;
+sec:keyAgreementMethod a rdf:Property ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Key agreement protocols" ;
+    rdfs:comment """<div>Historically, this property has often been expressed using `keyAgreement` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`keyAgreement`) and the property identifier (`...#keyAgreementMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-keyagreement>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
@@ -557,9 +560,9 @@ sec:multibase a rdfs:Datatype ;
         sec:nonce,
         sec:authentication,
         sec:assertionMethod,
-        sec:capabilityDelegation,
-        sec:capabilityInvocation,
-        sec:keyAgreement,
+        sec:capabilityDelegationMethod,
+        sec:capabilityInvocationMethod,
+        sec:keyAgreementMethod,
         sec:cryptosuite,
         sec:Proof,
         sec:VerificationMethod,
@@ -579,9 +582,9 @@ sec:multibase a rdfs:Datatype ;
         sec:nonce,
         sec:authentication,
         sec:assertionMethod,
-        sec:capabilityDelegation,
-        sec:capabilityInvocation,
-        sec:keyAgreement,
+        sec:capabilityDelegationMethod,
+        sec:capabilityInvocationMethod,
+        sec:keyAgreementMethod,
         sec:cryptosuite,
         sec:digestMultibase,
         sec:DataIntegrityProof ;
@@ -601,4 +604,13 @@ sec:multibase a rdfs:Datatype ;
         sec:secretKeyJwk,
         sec:revoked,
         sec:JsonWebKey ;
+
+<https://www.w3.org/ns/did/v1> a jsonld:Context ;
+    schema:mentions
+        sec:controller,
+        sec:authentication,
+        sec:assertionMethod,
+        sec:capabilityDelegationMethod,
+        sec:capabilityInvocationMethod,
+        sec:keyAgreementMethod ;
 

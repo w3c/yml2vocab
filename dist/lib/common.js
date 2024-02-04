@@ -59,6 +59,9 @@ class StatusCounter {
     }
 }
 exports.StatusCounter = StatusCounter;
+/**
+ * As it name says: some global data that are needed by most of the media type specific modules.
+ */
 exports.global = {
     /** Vocabulary prefix for the vocabulary being handled */
     vocab_prefix: "",
