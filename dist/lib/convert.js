@@ -29,6 +29,40 @@ const isURL = (value) => {
     }
 };
 /**
+ * Turn the label text into a non-camel case
+ *
+ * @param str
+ * @param separator
+ * @returns
+ */
+function localeUnCamelise(str, separator = ' ') {
+    const isLocaleUpperCase = (char) => {
+        return char[0] === char.toLocaleUpperCase();
+    };
+    if (str.length === 0) {
+        return str;
+    }
+    else {
+        // First character is ignored; it can be upper or lower case
+        const retval = [str.charAt(0)];
+        for (let i = 1; i < str.length; i++) {
+            const char = str.charAt(i);
+            if (isLocaleUpperCase(char)) {
+                // Got to the camel's hump
+                retval.push(separator);
+                retval.push(char.toLocaleLowerCase());
+            }
+            else {
+                retval.push(char);
+            }
+        }
+        // The first character must be capitalized:
+        retval[0] = retval[0].toLocaleUpperCase();
+        return retval.join('');
+    }
+}
+/********************************************************************************/
+/**
  * These prefixes are added no matter what; they are not vocabulary specific
  *
  * @internal
@@ -209,7 +243,8 @@ function finalizeRawEntry(raw) {
             return str;
         }
         else if (raw.id && raw.id.length > 0) {
-            return raw.id[0].toLocaleUpperCase() + raw.id.substring(1);
+            return localeUnCamelise(raw.id);
+            // return raw.id[0].toLocaleUpperCase() + raw.id.substring(1);
         }
         else {
             return "";
