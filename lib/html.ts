@@ -5,11 +5,97 @@
  * @packageDocumentation
  */
 import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status, RDFDatatype } from './common';
-// import { DOMParser, HTMLDocument, Element } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
+import { JSDOM } from 'jsdom';
 
-import { MiniDOM } from "./sys/minidom_node";
 
-/* ---------------- Utility functions ------------------------- */
+/**
+ * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
+ * the JSDOM and Deno's DOM WASM implementations; higher layers should not depend on these.
+ * 
+ * 2024-02-02: as of today, with deno v. >1.4, this layer is not necessary any more,
+ * because jsdom finally runs with deno as well. The class has been kept as a separate layer
+ * following the wisdom of "ain't broken, don't fix it" :-)
+ * 
+ */
+class MiniDOM {
+    private _document: Document;
+
+    constructor(html_text: string) {
+        const doc = (new JSDOM(html_text)).window.document;
+        if (doc) {
+            this._document = doc;
+        } else {
+            throw new Error("Problem with parsing the template text");
+        }
+    }
+
+    get document(): Document {
+        return this._document;
+    }
+
+    /**
+     * Add a new HTML Element to a parent, and return the new element.
+     * 
+     * @param parent - The parent HTML Element
+     * @param element - The new element's name
+     * @param content - The new element's (HTML) content
+     * @returns the new element
+     * 
+     */
+    addChild(parent: Element, element: string, content: string | undefined = undefined): Element {
+        const new_element = this._document.createElement(element);
+        parent.appendChild(new_element);
+        if (content !== undefined) new_element.innerHTML = content;
+        return new_element;
+    }
+
+    /**
+     * Add some text to an element, including the obligatory checks that Typescript imposes
+     * 
+     * @param content - text to add
+     * @param element HTML Element to add it to
+     * @returns 
+     * 
+     * @internal
+     */
+    addText(content: string, element: Element | null): Element | null {
+        if (element) {
+            element.textContent = content;
+        }
+        return element;
+    }
+
+    /**
+     * Just the mirroring of the official DOM call.
+     * 
+     * @param id 
+     * @returns 
+     */
+    getElementById(id: string): Element | null {
+        return this._document.getElementById(id);
+    }
+
+    /**
+      * Just the mirroring of the official DOM call.
+      * 
+      * @param tag 
+      * @returns 
+      */
+    getElementsByTagName(tag: string): HTMLCollection {
+        return this._document.getElementsByTagName(tag);
+    }
+
+    /**
+     * Just the mirroring of the official DOM call.
+     * 
+     * @returns 
+     */
+    innerHTML(): string {
+        const retval = this._document.documentElement?.innerHTML;
+        return retval ? retval : "";
+    }
+}
+
 
 /**
  * Generate a new bnode id for the "union of" constructs...
@@ -125,12 +211,14 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         span.setAttribute('property', 'rdfs:isDefinedBy');
         span.setAttribute('resource', `${vocab_prefix}:`);
 
+        // This does not display, it is only here for RDFa's sake!
         const status_span = document.addChild(section, 'span');
         status_span.setAttribute('style', 'display: none');
         status_span.setAttribute('property', 'vs:term_status');
         document.addText(`${item.status}`, status_span);
 
         if (item.deprecated) {
+            // This does not display, it is only here for RDFa's sake!
             const span = document.addChild(section, 'span');
             span.setAttribute('property', 'owl:deprecated');
             span.setAttribute('datatype', 'xsd:boolean');
@@ -208,7 +296,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
-
     // Prefixes that are used to differentiate among stable, reserved, and deprecated values
     const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
         switch (status) {
@@ -219,6 +306,53 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             case Status.stable :
                 return { id_prefix : '', intro_prefix : '' };
                 
+        }
+    }
+
+    // Add the references to the context files (if any)
+    const contextReferences = (section: Element, item: RDFTerm): void => {
+        if (item.context !== undefined && item.context?.length > 0) {
+            const dl = document.addChild(section, 'dl');
+            dl.className = 'terms';
+            document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);
+            const dd = document.addChild(dl, 'dd');
+            dd.innerHTML = item.context.map((ctx: string): string => {
+                return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;
+            }).join(", ");
+        }
+    }
+
+    // Add the list of all contexts to the file
+    const contexts = () => {
+        const ctx_ul = document.getElementById('contexts');
+        // Check whether the template includes a section for context files
+        if (ctx_ul) {
+            const ctx_keys: string[] = Object.keys(global.context_mentions);
+            if (ctx_keys.length > 0) {
+                // An item for each context file
+                for (const ctx of ctx_keys) {
+                    const li = document.addChild(ctx_ul, 'li');
+
+                    const a  = document.addChild(li, 'a', `<code>${ctx}</code>`);
+                    a.setAttribute('href', ctx);
+                    a.setAttribute('typeof','jsonld:Context');
+
+                    const details = document.addChild(li, 'details');
+                    document.addChild(details, 'summary', 'term list');
+                    const ul = document.addChild(details, 'ul');
+                    for (const term of global.context_mentions[ctx]) {
+                        document.addChild(ul, 'li', `<a href="#${term}"><code>${term}<code></li>`);
+                    }
+                }
+            } else {
+                // Remove the full section, it is not used (no context files)
+                // The extra condition checks are imposed by Typescript. In a DOM and
+                // knowing the templates, these parent elements are always present.
+                const section = ctx_ul.parentElement;
+                if (section) {
+                    section.parentElement?.removeChild(section);
+                }
+            }
         }
     }
 
@@ -289,6 +423,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             dd.innerHTML = prop_names(item.included_in_domain_of);
                         }
                     }
+
+                    contextReferences(cl_section, item);
+
                     setExample(cl_section, item);
                 }                
             } else {
@@ -380,6 +517,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             }
                         }
                     }
+
+                    contextReferences(pr_section, item);
+
                     setExample(pr_section, item);
                 }
             } else {
@@ -415,6 +555,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             document.addChild(dd, 'br')    
                         }
                     }
+
+                    contextReferences(ind_section, item);
+
                     setExample(ind_section, item);
                 }
             } else {
@@ -474,6 +617,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             dd.innerHTML = prop_names(item.includes_range_of);
                         }
                     }
+
+                    contextReferences(dt_section, item);
+
                     setExample(dt_section, item);
                 }
 
@@ -500,31 +646,34 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     // 3. The introductory list of prefixes used in the document
     prefixes();
 
-    // 4. Sections on classes
+    // 4. The introductory list of contexts used in the document
+    contexts();
+
+    // 5. Sections on classes
     Object.values(Status).map((filter: Status): void => {
         const actual_classes = vocab.classes.filter((entry: RDFClass): boolean => entry.status === filter);
         classes(actual_classes, filter);
     });
 
-    // 5. Sections on properties
+    // 6. Sections on properties
     Object.values(Status).map((filter: Status): void => {
         const actual_properties = vocab.properties.filter((entry: RDFProperty): boolean => entry.status === filter);
         properties(actual_properties, filter);
     });
 
-    // 6. Sections on individuals
+    // 7. Sections on individuals
     Object.values(Status).map((filter: Status): void => {
         const actual_individuals = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === filter);
         individuals(actual_individuals, filter);
     });
 
-    // 7. Sections on datatypes
+    // 8. Sections on datatypes
     Object.values(Status).map((filter: Status): void => {
         const actual_datatypes = vocab.datatypes.filter((entry: RDFDatatype): boolean => entry.status === filter);
         datatypes(actual_datatypes, filter);
     });
 
-    // 8. Remove the sections on reserved/deprecation in case there aren't any...
+    // 9. Remove the sections on reserved/deprecation in case there aren't any...
     if (global.status_counter.counter(Status.reserved) === 0) {
         const section = document.getElementById('reserved_term_definitions');
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);

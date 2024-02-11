@@ -29,6 +29,40 @@ const isURL = (value) => {
     }
 };
 /**
+ * Turn the label text into a non-camel case
+ *
+ * @param str
+ * @param separator
+ * @returns
+ */
+function localeUnCamelise(str, separator = ' ') {
+    const isLocaleUpperCase = (char) => {
+        return char[0] === char.toLocaleUpperCase();
+    };
+    if (str.length === 0) {
+        return str;
+    }
+    else {
+        // First character is ignored; it can be upper or lower case
+        const retval = [str.charAt(0)];
+        for (let i = 1; i < str.length; i++) {
+            const char = str.charAt(i);
+            if (isLocaleUpperCase(char)) {
+                // Got to the camel's hump
+                retval.push(separator);
+                retval.push(char.toLocaleLowerCase());
+            }
+            else {
+                retval.push(char);
+            }
+        }
+        // The first character must be capitalized:
+        retval[0] = retval[0].toLocaleUpperCase();
+        return retval.join('');
+    }
+}
+/********************************************************************************/
+/**
  * These prefixes are added no matter what; they are not vocabulary specific
  *
  * @internal
@@ -57,6 +91,14 @@ const defaultPrefixes = [
     {
         prefix: "vs",
         url: "http://www.w3.org/2003/06/sw-vocab-status/ns#"
+    },
+    {
+        prefix: "schema",
+        url: "http://schema.org/"
+    },
+    {
+        prefix: "jsonld",
+        url: "http://www.w3.org/ns/json-ld#"
     }
 ];
 /**
@@ -86,7 +128,22 @@ function finalizeRawEntry(raw) {
             return undefined;
         }
         else if (val.length === 0) {
-            return undefined;
+            return [];
+        }
+        else if (typeof val === "string") {
+            return [val];
+        }
+        else {
+            return val;
+        }
+    };
+    // Almost like to array, except that instead of undefined a real default value is returned
+    const toArrayContexts = (val) => {
+        if (val === undefined) {
+            return ["vocab"];
+        }
+        else if (val.length === 0) {
+            return ["vocab"];
         }
         else if (typeof val === "string") {
             return [val];
@@ -186,7 +243,8 @@ function finalizeRawEntry(raw) {
             return str;
         }
         else if (raw.id && raw.id.length > 0) {
-            return raw.id[0].toLocaleUpperCase() + raw.id.substring(1);
+            return localeUnCamelise(raw.id);
+            // return raw.id[0].toLocaleUpperCase() + raw.id.substring(1);
         }
         else {
             return "";
@@ -207,6 +265,7 @@ function finalizeRawEntry(raw) {
         see_also: toSeeAlso(raw.see_also),
         example: toExample(raw.example),
         dataset: (raw.dataset === undefined) ? false : raw.dataset,
+        context: toArrayContexts(raw.context)
     };
 }
 /**
@@ -259,6 +318,34 @@ function getData(vocab_source) {
         throw (new TypeError(`JSON Schema validation error`, { cause: error }));
     }
     const vocab = finalizeRawVocab(validation_results.vocab);
+    // Establish the final context reference(s), if any, for a term.
+    // As a side effect, the 'inverse' info, ie, the list of terms per context, is
+    // created in the global data structure
+    const final_contexts = (raw) => {
+        if (raw.context === undefined)
+            return [];
+        // replace the value of "vocab" by the global context, then
+        // get the possible "none" out of the way.
+        const contexts = raw.context.map((val) => {
+            if (val === "vocab") {
+                // The global context may not have been set...
+                return common_2.global.vocab_context !== undefined ? common_2.global.vocab_context : "none";
+            }
+            else {
+                return val;
+            }
+        }).filter((val) => val !== "none");
+        // Make sure that all entries are unique before returning it
+        const ctx_s = [...new Set(contexts)];
+        // 'Inverse' info: add the term reference to the global data
+        for (const ctx of ctx_s) {
+            if (ctx in common_2.global.context_mentions === false) {
+                common_2.global.context_mentions[ctx] = [];
+            }
+            common_2.global.context_mentions[ctx].push(raw.id);
+        }
+        return ctx_s;
+    };
     // Calculates cross references from properties to classes or datatypes; used
     // to make the cross references for the property ranges and domains
     // @param raw: raw entry for the class or datatype
@@ -293,6 +380,10 @@ function getData(vocab_source) {
             }
             common_2.global.vocab_prefix = raw.id;
             common_2.global.vocab_url = raw.value;
+            common_2.global.vocab_context = raw.context === undefined ? undefined : raw.context[0];
+            if (common_2.global.vocab_context) {
+                common_2.global.context_mentions[common_2.global.vocab_context] = [];
+            }
             return {
                 prefix: raw.id,
                 url: raw.value,
@@ -361,6 +452,7 @@ function getData(vocab_source) {
                 domain: raw.domain,
                 example: raw.example,
                 dataset: raw.dataset,
+                context: final_contexts(raw),
             };
         }) : [];
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
@@ -391,6 +483,7 @@ function getData(vocab_source) {
                 subClassOf: raw.upper_value,
                 see_also: raw.see_also,
                 example: raw.example,
+                context: final_contexts(raw),
                 range_of, domain_of, included_in_domain_of, includes_range_of
             };
         }) : [];
@@ -407,6 +500,7 @@ function getData(vocab_source) {
                 type: (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also: raw.see_also,
                 example: raw.example,
+                context: final_contexts(raw),
             };
         }) : [];
     // Get the datatypes. 
@@ -433,6 +527,7 @@ function getData(vocab_source) {
                 type: (raw.upper_value !== undefined) ? raw.upper_value : [],
                 see_also: raw.see_also,
                 example: raw.example,
+                context: final_contexts(raw),
                 range_of, includes_range_of
             };
         }) : [];

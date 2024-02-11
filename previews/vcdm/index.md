@@ -4,4 +4,4 @@
 - [In Turtle](./vocabulary.ttl)
 - [In JSON-LD](./vocabulary.jsonld)
 
-Latest change: 2023-07-21
+Latest change: 2024-02-02

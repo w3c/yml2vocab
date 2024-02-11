@@ -60,18 +60,24 @@ class StatusCounter {
 }
 exports.StatusCounter = StatusCounter;
 /**
- * Placeholder for some global data.
+ * As it name says: some global data that are needed by most of the media type specific modules.
  */
 exports.global = {
     /** Vocabulary prefix for the vocabulary being handled */
     vocab_prefix: "",
     /** Vocabulary URL for the vocabulary being handled */
     vocab_url: "",
+    /** Default context URL for the vocabulary being handled */
+    vocab_context: "",
     /**
      * Counter for the terms with various status values.
      * Some serializers (eg HTML) may optimize/improve the final
      * output if one of the categories have no entries whatsoever.
      */
     status_counter: new StatusCounter(),
+    /**
+     * Inverted info for contexts: for each context the list of relevant terms are listed
+     */
+    context_mentions: {},
 };
 ;

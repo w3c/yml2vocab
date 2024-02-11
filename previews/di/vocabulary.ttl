@@ -1,11 +1,13 @@
 @prefix sec: <https://w3id.org/security#> .
-@prefix cred: <https://w3.org/2018/credentials#> .
+@prefix cred: <https://www.w3.org/2018/credentials#> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix schema: <http://schema.org/> .
+@prefix jsonld: <http://www.w3.org/ns/json-ld#> .
 
 # Ontology definition
 sec: a owl:Ontology ;
@@ -13,7 +15,285 @@ sec: a owl:Ontology ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2023-09-08"^^xsd:date ;
+    dc:date "2024-02-04"^^xsd:date ;
+.
+
+# Property definitions
+sec:verificationMethod a rdf:Property ;
+    rdfs:range sec:VerificationMethod ;
+    rdfs:label "Verification method" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-verificationmethod>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://www.w3.org/TR/did-core/#verification-methods> ;
+.
+
+sec:controller a rdf:Property, owl:ObjectProperty ;
+    rdfs:domain sec:VerificationMethod ;
+    rdfs:label "Controller" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-controller>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:proof a rdf:Property ;
+    rdfs:range sec:ProofGraph ;
+    rdfs:label "Proof sets" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#proof-sets>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:domain a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:Proof ;
+    rdfs:range xsd:string ;
+    rdfs:label "Domain of a proof" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-domain>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:challenge a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:Proof ;
+    rdfs:range xsd:string ;
+    rdfs:label "Challenge of a proof" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-challenge>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:previousProof a rdf:Property ;
+    rdfs:domain sec:Proof ;
+    rdfs:range sec:Proof ;
+    rdfs:label "Previous proof" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-previousproof>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:proofPurpose a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:Proof ;
+    rdfs:range xsd:string ;
+    rdfs:label "Proof purpose" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-proofpurpose>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:proofValue a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:Proof ;
+    rdfs:range sec:multibase ;
+    rdfs:label "Proof value" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-proofvalue>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:created a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:Proof ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "Proof creation time" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-created>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:expiration a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain [ owl:unionOf (sec:Proof sec:VerificationMethod) ] ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "Expiration time for a proof or verification method" ;
+    rdfs:comment """<div>Historically, this property has often been expressed using `expires` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`expires`) and the property identifier (`...#expiration`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:nonce a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:Proof ;
+    rdfs:range xsd:string ;
+    rdfs:label "Nonce supplied by proof creator" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-nonce>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:authentication a rdf:Property ;
+    rdfs:range sec:VerificationMethod ;
+    rdfs:label "Authentication method" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-authentication>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:assertionMethod a rdf:Property ;
+    rdfs:range sec:VerificationMethod ;
+    rdfs:label "Assertion method" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-assertionmethod>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:capabilityDelegationMethod a rdf:Property ;
+    rdfs:range sec:VerificationMethod ;
+    rdfs:label "Capability delegation method" ;
+    rdfs:comment """<div>Historically, this property has often been expressed using `capabilityDelegation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityDelegation`) and the property identifier (`...#capabilityDelegationMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-capabilitydelegation>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:capabilityInvocationMethod a rdf:Property ;
+    rdfs:range sec:VerificationMethod ;
+    rdfs:label "Capability invocation method" ;
+    rdfs:comment """<div>Historically, this property has often been expressed using `capabilityInvocation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityInvocation`) and the property identifier (`...#capabilityInvocationMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-capabilityinvocation>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:keyAgreementMethod a rdf:Property ;
+    rdfs:range sec:VerificationMethod ;
+    rdfs:label "Key agreement protocols" ;
+    rdfs:comment """<div>Historically, this property has often been expressed using `keyAgreement` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`keyAgreement`) and the property identifier (`...#keyAgreementMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-keyagreement>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:cryptosuite a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:DataIntegrityProof ;
+    rdfs:range sec:cryptosuiteString ;
+    rdfs:label "Cryptographic suite" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-cryptosuite>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:publicKeyMultibase a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:Multikey ;
+    rdfs:range sec:multibase ;
+    rdfs:label "Public key multibase" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-publickeymultibase>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03>, <https://github.com/multiformats/multicodec/blob/master/table.csv>, <https://w3c-ccg.github.io/lds-ed25519-2020/> ;
+.
+
+sec:secretKeyMultibase a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:Multikey ;
+    rdfs:range sec:multibase ;
+    rdfs:label "Secret key multibase" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeymultibase>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03>, <https://github.com/multiformats/multicodec/blob/master/table.csv>, <https://w3c-ccg.github.io/lds-ed25519-2020/> ;
+.
+
+sec:publicKeyJwk a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:JsonWebKey ;
+    rdfs:range rdf:JSON ;
+    rdfs:label "Public key JWK" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-publickeyjwk>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://www.iana.org/assignments/jose/jose.xhtml>, <https://tools.ietf.org/html/rfc7517> ;
+.
+
+sec:secretKeyJwk a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:JsonWebKey ;
+    rdfs:range rdf:JSON ;
+    rdfs:label "Secret key JWK" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeyjwk>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://www.iana.org/assignments/jose/jose.xhtml>, <https://tools.ietf.org/html/rfc7517> ;
+.
+
+sec:revoked a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain sec:VerificationMethod ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "Revocation time" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-revoked>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:digestMultibase a rdf:Property, owl:DatatypeProperty ;
+    rdfs:range multibase ;
+    rdfs:label "Digest multibase" ;
+    rdfs:comment """<div><b><i>(Feature at Risk)</i></b> The Working Group is currently attempting to determine whether cryptographic hash expression formats can be unified across all of the VCWG core specifications. Candidates for this mechanism include `digestSRI` and `digestMultibase`.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-digestmultibase>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:allowedAction a rdf:Property ;
+    rdfs:label "Allowed action" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#delegated-capability>, <https://w3id.org/security#> ;
+    vs:term_status "reserved" ;
+.
+
+sec:capabilityChain a rdf:Property ;
+    rdfs:label "Capability chain" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#delegation>, <https://w3id.org/security#> ;
+    vs:term_status "reserved" ;
+.
+
+sec:capabilityAction a rdf:Property ;
+    rdfs:label "Capability action" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#invoking-root-capability>, <https://w3id.org/security#> ;
+    vs:term_status "reserved" ;
+.
+
+sec:caveat a rdf:Property ;
+    rdfs:label "Caveat" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#caveats>, <https://w3id.org/security#> ;
+    vs:term_status "reserved" ;
+.
+
+sec:delegator a rdf:Property ;
+    rdfs:label "Delegator" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#delegation>, <https://w3id.org/security#> ;
+    vs:term_status "reserved" ;
+.
+
+sec:invocationTarget a rdf:Property ;
+    rdfs:label "Invocation target" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#root-capability>, <https://w3id.org/security#> ;
+    vs:term_status "reserved" ;
+.
+
+sec:invoker a rdf:Property ;
+    rdfs:label "Invoker" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#invocation>, <https://w3id.org/security#> ;
+    vs:term_status "reserved" ;
+.
+
+sec:blockchainAccountId a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
+    owl:deprecated true ;
+    rdfs:range xsd:string ;
+    rdfs:label "Blockchain account ID" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#blockchainAccountId>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:ethereumAddress a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
+    owl:deprecated true ;
+    rdfs:range xsd:string ;
+    rdfs:label "Ethereum address" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#ethereumAddress>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://eips.ethereum.org/EIPS/eip-55>, <https://ethereum.github.io/yellowpaper/paper.pdf> ;
+.
+
+sec:publicKeyBase58 a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
+    owl:deprecated true ;
+    rdfs:range xsd:string ;
+    rdfs:label "Base58-encoded Public Key" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#publicKeyBase58>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:publicKeyPem a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
+    owl:deprecated true ;
+    rdfs:range xsd:string ;
+    rdfs:label "Public key PEM" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#publicKeyPem>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:publicKeyHex a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
+    owl:deprecated true ;
+    rdfs:range xsd:string ;
+    rdfs:label "Hex-encoded version of public Key" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#publicKeyHex>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://tools.ietf.org/html/rfc4648#section-8> ;
+.
+
+sec:jws a rdf:Property, owl:DeprecatedProperty ;
+    owl:deprecated true ;
+    rdfs:label "Json Web Signature" ;
+    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#jws>, <https://w3id.org/security#> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://tools.ietf.org/html/rfc7797> ;
 .
 
 # Class definitions
@@ -189,280 +469,6 @@ sec:Bls12381G2Key2020 a rdfs:Class, owl:DeprecatedClass ;
 
 
 
-# Property definitions
-sec:verificationMethod a rdf:Property ;
-    rdfs:range sec:VerificationMethod ;
-    rdfs:label "Verification method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-verificationmethod>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-    rdfs:seeAlso <https://www.w3.org/TR/did-core/#verification-methods> ;
-.
-
-sec:controller a rdf:Property, owl:ObjectProperty ;
-    rdfs:domain sec:VerificationMethod ;
-    rdfs:label "Controller" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-controller>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:proof a rdf:Property ;
-    rdfs:range sec:ProofGraph ;
-    rdfs:label "Proof sets" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#proof-sets>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:domain a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:Proof ;
-    rdfs:range xsd:string ;
-    rdfs:label "Domain of a proof" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-domain>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:challenge a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:Proof ;
-    rdfs:range xsd:string ;
-    rdfs:label "Challenge of a proof" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-challenge>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:previousProof a rdf:Property ;
-    rdfs:domain sec:Proof ;
-    rdfs:range sec:Proof ;
-    rdfs:label "Previous proof" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-previousproof>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:proofPurpose a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:Proof ;
-    rdfs:range xsd:string ;
-    rdfs:label "Proof purpose" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-proofpurpose>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:proofValue a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:Proof ;
-    rdfs:range sec:multibase ;
-    rdfs:label "Proof value" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-proofvalue>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:created a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:Proof ;
-    rdfs:range xsd:dateTime ;
-    rdfs:label "Proof creation time" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-created>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:expires a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain [ owl:unionOf (sec:Proof sec:VerificationMethod) ] ;
-    rdfs:range xsd:dateTime ;
-    rdfs:label "Expiration time for a proof or verification method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:nonce a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:Proof ;
-    rdfs:range xsd:string ;
-    rdfs:label "Nonce supplied by proof creator" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-nonce>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:authentication a rdf:Property ;
-    rdfs:range sec:VerificationMethod ;
-    rdfs:label "Authentication method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-authentication>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:assertionMethod a rdf:Property ;
-    rdfs:range sec:VerificationMethod ;
-    rdfs:label "Assertion method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-assertionmethod>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:capabilityDelegation a rdf:Property ;
-    rdfs:range sec:VerificationMethod ;
-    rdfs:label "Capability delegation method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-capabilitydelegation>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:capabilityInvocation a rdf:Property ;
-    rdfs:range sec:VerificationMethod ;
-    rdfs:label "Capability invocation method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-capabilityinvocation>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:keyAgreement a rdf:Property ;
-    rdfs:range sec:VerificationMethod ;
-    rdfs:label "Key agreement protocols" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-keyagreement>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:cryptosuite a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:DataIntegrityProof ;
-    rdfs:range sec:cryptosuiteString ;
-    rdfs:label "Cryptographic suite" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-cryptosuite>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:publicKeyMultibase a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:Multikey ;
-    rdfs:range sec:multibase ;
-    rdfs:label "Public key multibase" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-publickeymultibase>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-    rdfs:seeAlso <https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03>, <https://github.com/multiformats/multicodec/blob/master/table.csv>, <https://w3c-ccg.github.io/lds-ed25519-2020/> ;
-.
-
-sec:secretKeyMultibase a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:Multikey ;
-    rdfs:range sec:multibase ;
-    rdfs:label "Secret key multibase" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeymultibase>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-    rdfs:seeAlso <https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03>, <https://github.com/multiformats/multicodec/blob/master/table.csv>, <https://w3c-ccg.github.io/lds-ed25519-2020/> ;
-.
-
-sec:publicKeyJwk a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:JsonWebKey ;
-    rdfs:range rdf:JSON ;
-    rdfs:label "Public key JWK" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-publickeyjwk>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-    rdfs:seeAlso <https://www.iana.org/assignments/jose/jose.xhtml>, <https://tools.ietf.org/html/rfc7517> ;
-.
-
-sec:secretKeyJwk a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:JsonWebKey ;
-    rdfs:range rdf:JSON ;
-    rdfs:label "Secret key JWK" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeyjwk>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-    rdfs:seeAlso <https://www.iana.org/assignments/jose/jose.xhtml>, <https://tools.ietf.org/html/rfc7517> ;
-.
-
-sec:revoked a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain sec:VerificationMethod ;
-    rdfs:range xsd:dateTime ;
-    rdfs:label "Revocation time" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-revoked>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:digestMultibase a rdf:Property, owl:DatatypeProperty ;
-    rdfs:range multibase ;
-    rdfs:label "Digest multibase" ;
-    rdfs:comment """<div><b><i>(Feature at Risk)</i></b> The Working Group is currently attempting to determine whether cryptographic hash expression formats can be unified across all of the VCWG core specifications. Candidates for this mechanism include `digestSRI` and `digestMultibase`.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-digestmultibase>, <https://w3id.org/security#> ;
-    vs:term_status "stable" ;
-.
-
-sec:allowedAction a rdf:Property ;
-    rdfs:label "Allowed action" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#delegated-capability>, <https://w3id.org/security#> ;
-    vs:term_status "reserved" ;
-.
-
-sec:capabilityChain a rdf:Property ;
-    rdfs:label "Capability chain" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#delegation>, <https://w3id.org/security#> ;
-    vs:term_status "reserved" ;
-.
-
-sec:capabilityAction a rdf:Property ;
-    rdfs:label "Capability action" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#invoking-root-capability>, <https://w3id.org/security#> ;
-    vs:term_status "reserved" ;
-.
-
-sec:caveat a rdf:Property ;
-    rdfs:label "Caveat" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#caveats>, <https://w3id.org/security#> ;
-    vs:term_status "reserved" ;
-.
-
-sec:delegator a rdf:Property ;
-    rdfs:label "Delegator" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#delegation>, <https://w3id.org/security#> ;
-    vs:term_status "reserved" ;
-.
-
-sec:invocationTarget a rdf:Property ;
-    rdfs:label "Invocation target" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#root-capability>, <https://w3id.org/security#> ;
-    vs:term_status "reserved" ;
-.
-
-sec:invoker a rdf:Property ;
-    rdfs:label "Invoker" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/zcap-spec/#invocation>, <https://w3id.org/security#> ;
-    vs:term_status "reserved" ;
-.
-
-sec:blockchainAccountId a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
-    owl:deprecated true ;
-    rdfs:range xsd:string ;
-    rdfs:label "Blockchain account ID" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#blockchainAccountId>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:ethereumAddress a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
-    owl:deprecated true ;
-    rdfs:range xsd:string ;
-    rdfs:label "Ethereum address" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#ethereumAddress>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://eips.ethereum.org/EIPS/eip-55>, <https://ethereum.github.io/yellowpaper/paper.pdf> ;
-.
-
-sec:publicKeyBase58 a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
-    owl:deprecated true ;
-    rdfs:range xsd:string ;
-    rdfs:label "Base58-encoded Public Key" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#publicKeyBase58>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:publicKeyPem a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
-    owl:deprecated true ;
-    rdfs:range xsd:string ;
-    rdfs:label "Public key PEM" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#publicKeyPem>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:publicKeyHex a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
-    owl:deprecated true ;
-    rdfs:range xsd:string ;
-    rdfs:label "Hex-encoded version of public Key" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#publicKeyHex>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://tools.ietf.org/html/rfc4648#section-8> ;
-.
-
-sec:jws a rdf:Property, owl:DeprecatedProperty ;
-    owl:deprecated true ;
-    rdfs:label "Json Web Signature" ;
-    rdfs:isDefinedBy <https://w3c-ccg.github.io/security-vocab/#jws>, <https://w3id.org/security#> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://tools.ietf.org/html/rfc7797> ;
-.
-
 # Definitions of individuals
 sec:PROOF_GENERATION_ERROR a sec:ProcessingError ;
     rdfs:label "Proof generation error" ;
@@ -538,4 +544,73 @@ sec:multibase a rdfs:Datatype ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#multibase>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
+
+# Context files and their mentions
+<https://w3id.org/security/data-integrity/v2> a jsonld:Context ;
+    schema:mentions
+        sec:verificationMethod,
+        sec:proof,
+        sec:domain,
+        sec:challenge,
+        sec:previousProof,
+        sec:proofPurpose,
+        sec:proofValue,
+        sec:created,
+        sec:expiration,
+        sec:nonce,
+        sec:authentication,
+        sec:assertionMethod,
+        sec:capabilityDelegationMethod,
+        sec:capabilityInvocationMethod,
+        sec:keyAgreementMethod,
+        sec:cryptosuite,
+        sec:Proof,
+        sec:VerificationMethod,
+        sec:DataIntegrityProof,
+        sec:cryptosuiteString ;
+
+<https://www.w3.org/ns/credentials/v2> a jsonld:Context ;
+    schema:mentions
+        sec:verificationMethod,
+        sec:proof,
+        sec:domain,
+        sec:challenge,
+        sec:previousProof,
+        sec:proofPurpose,
+        sec:proofValue,
+        sec:expiration,
+        sec:nonce,
+        sec:authentication,
+        sec:assertionMethod,
+        sec:capabilityDelegationMethod,
+        sec:capabilityInvocationMethod,
+        sec:keyAgreementMethod,
+        sec:cryptosuite,
+        sec:digestMultibase,
+        sec:DataIntegrityProof ;
+
+<https://w3id.org/security/multikey/v1> a jsonld:Context ;
+    schema:mentions
+        sec:controller,
+        sec:publicKeyMultibase,
+        sec:secretKeyMultibase,
+        sec:Multikey,
+        sec:multibase ;
+
+<https://w3id.org/security/jwk/v1> a jsonld:Context ;
+    schema:mentions
+        sec:controller,
+        sec:publicKeyJwk,
+        sec:secretKeyJwk,
+        sec:revoked,
+        sec:JsonWebKey ;
+
+<https://www.w3.org/ns/did/v1> a jsonld:Context ;
+    schema:mentions
+        sec:controller,
+        sec:authentication,
+        sec:assertionMethod,
+        sec:capabilityDelegationMethod,
+        sec:capabilityInvocationMethod,
+        sec:keyAgreementMethod ;
 

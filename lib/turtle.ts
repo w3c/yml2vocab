@@ -85,23 +85,8 @@ export function toTurtle(vocab: Vocab): string {
         turtle += ".\n\n"
     }
 
-    if (vocab.classes.length > 0) {
-        turtle += "# Class definitions\n"
-        for (const cl of vocab.classes) {
-            turtle += `${global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
-            if (cl.status === Status.deprecated) {
-                turtle += `    owl:deprecated true ;\n`;
-            }
-            if (cl.subClassOf && cl.subClassOf.length > 0) {
-                turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
-            }
-            commonFields(cl);
-        }
-        turtle += "\n\n";    
-    }
-
-    if (vocab.properties.length > 0){
-        turtle += "# Property definitions\n"
+    if (vocab.properties.length > 0) {
+        turtle += "# Property definitions\n";
         for (const prop of vocab.properties) {
             turtle += `${global.vocab_prefix}:${prop.id} a ${prop.type.join(", ")} ;\n`;
             if (prop.status === Status.deprecated) {
@@ -118,6 +103,21 @@ export function toTurtle(vocab: Vocab): string {
             }
             commonFields(prop);
         }
+    }
+
+    if (vocab.classes.length > 0) {
+        turtle += "# Class definitions\n"
+        for (const cl of vocab.classes) {
+            turtle += `${global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
+            if (cl.status === Status.deprecated) {
+                turtle += `    owl:deprecated true ;\n`;
+            }
+            if (cl.subClassOf && cl.subClassOf.length > 0) {
+                turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
+            }
+            commonFields(cl);
+        }
+        turtle += "\n\n";    
     }
 
     if (vocab.individuals.length > 0) {
@@ -142,6 +142,18 @@ export function toTurtle(vocab: Vocab): string {
                 turtle += `    rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
             }
             commonFields(dt);
+        }
+    }
+
+    const ctx_s = Object.keys(global.context_mentions);
+    if (ctx_s.length > 0) {
+        turtle += "# Context files and their mentions\n"
+        for (const ctx of ctx_s) {
+            turtle += `<${ctx}> a jsonld:Context ;\n`;
+            turtle += `    schema:mentions\n`
+            turtle += (global.context_mentions[ctx].map(
+                (term: string): string => `        ${global.vocab_prefix}:${term}`
+            ).join(",\n")) + " ;\n\n"
         }
     }
 

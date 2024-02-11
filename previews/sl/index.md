@@ -1,4 +1,4 @@
-# Security Vocabulary
+# Bitstring Status List Vocabulary
 
 - [In HTML+RDFa](./vocabulary.html)
 - [In Turtle](./vocabulary.ttl)

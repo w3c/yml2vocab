@@ -60,19 +60,43 @@ export class StatusCounter {
 }
 
 /**
+ * Context references
+ */
+export interface Contexts {
+    [ctx: string]: string[];
+}
+
+/**
  * Placeholder for some global data. 
  */
-export const global = {
+interface GlobalData {
+    vocab_prefix     : string,
+    vocab_url        : string,
+    vocab_context   ?: string,
+    status_counter   : StatusCounter,
+    context_mentions : Contexts;
+}
+
+/**
+ * As it name says: some global data that are needed by most of the media type specific modules.
+ */
+export const global: GlobalData = {
     /** Vocabulary prefix for the vocabulary being handled */
     vocab_prefix   : "",
     /** Vocabulary URL for the vocabulary being handled */
     vocab_url      : "",
+    /** Default context URL for the vocabulary being handled */
+    vocab_context  : "",
     /** 
      * Counter for the terms with various status values.
      * Some serializers (eg HTML) may optimize/improve the final
      * output if one of the categories have no entries whatsoever.
      */
-    status_counter : new StatusCounter(), 
+    status_counter : new StatusCounter(),
+    /**
+     * Inverted info for contexts: for each context the list of relevant terms are listed
+     */
+    context_mentions : {} as Contexts,
 } 
 
 /**
@@ -112,6 +136,7 @@ export interface RawVocabEntry {
     see_also    ?: Link[];
     example     ?: Example[];
     dataset     ?: boolean;
+    context     ?: string[];
 };
 
 /**
@@ -165,6 +190,7 @@ export interface RDFTerm {
     deprecated ?: boolean;
     status     ?: Status;
     example    ?: Example[];
+    context     : string[];
 }
 
 /**

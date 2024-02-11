@@ -85,20 +85,6 @@ function toTurtle(vocab) {
         }
         turtle += ".\n\n";
     }
-    if (vocab.classes.length > 0) {
-        turtle += "# Class definitions\n";
-        for (const cl of vocab.classes) {
-            turtle += `${common_1.global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
-            if (cl.status === common_1.Status.deprecated) {
-                turtle += `    owl:deprecated true ;\n`;
-            }
-            if (cl.subClassOf && cl.subClassOf.length > 0) {
-                turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
-            }
-            commonFields(cl);
-        }
-        turtle += "\n\n";
-    }
     if (vocab.properties.length > 0) {
         turtle += "# Property definitions\n";
         for (const prop of vocab.properties) {
@@ -117,6 +103,20 @@ function toTurtle(vocab) {
             }
             commonFields(prop);
         }
+    }
+    if (vocab.classes.length > 0) {
+        turtle += "# Class definitions\n";
+        for (const cl of vocab.classes) {
+            turtle += `${common_1.global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
+            if (cl.status === common_1.Status.deprecated) {
+                turtle += `    owl:deprecated true ;\n`;
+            }
+            if (cl.subClassOf && cl.subClassOf.length > 0) {
+                turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
+            }
+            commonFields(cl);
+        }
+        turtle += "\n\n";
     }
     if (vocab.individuals.length > 0) {
         turtle += "# Definitions of individuals\n";
@@ -139,6 +139,15 @@ function toTurtle(vocab) {
                 turtle += `    rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
             }
             commonFields(dt);
+        }
+    }
+    const ctx_s = Object.keys(common_1.global.context_mentions);
+    if (ctx_s.length > 0) {
+        turtle += "# Context files and their mentions\n";
+        for (const ctx of ctx_s) {
+            turtle += `<${ctx}> a jsonld:Context ;\n`;
+            turtle += `    schema:mentions\n`;
+            turtle += (common_1.global.context_mentions[ctx].map((term) => `        ${common_1.global.vocab_prefix}:${term}`).join(",\n")) + " ;\n\n";
         }
     }
     return turtle;

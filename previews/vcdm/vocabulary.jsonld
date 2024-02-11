@@ -1,12 +1,14 @@
 {
     "@context": {
-        "cred": "https://w3.org/2018/credentials#",
+        "cred": "https://www.w3.org/2018/credentials#",
         "dc": "http://purl.org/dc/terms/",
         "owl": "http://www.w3.org/2002/07/owl#",
         "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
         "vs": "http://www.w3.org/2003/06/sw-vocab-status/ns#",
+        "schema": "http://schema.org/",
+        "jsonld": "http://www.w3.org/ns/json-ld#",
         "dc:date": {
             "@type": "xsd:date"
         },
@@ -67,6 +69,10 @@
             "@reverse": "rdfs:isDefinedBy",
             "@type": "@id"
         },
+        "mentioned": {
+            "@reverse": "schema:mentions",
+            "@type": "@id"
+        },
         "dc:title": {
             "@container": "@language"
         },
@@ -74,18 +80,336 @@
             "@container": "@language"
         }
     },
-    "@id": "https://w3.org/2018/credentials#",
+    "@id": "https://www.w3.org/2018/credentials#",
     "@type": "owl:Ontology",
     "dc:title": {
         "@value": "Verifiable Credentials Vocabulary v2.0",
         "@language": "en"
     },
     "dc:description": {
-        "@value": "RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL]]",
+        "@value": "RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL-2.0]]",
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-model-2.0/",
-    "dc:date": "2023-09-30",
+    "dc:date": "2024-02-02",
+    "rdfs_properties": [
+        {
+            "@id": "cred:credentialSchema",
+            "@type": "rdf:Property",
+            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:range": "cred:CredentialSchema",
+            "rdfs:label": "Credential schema",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSchema",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:credentialStatus",
+            "@type": "rdf:Property",
+            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:range": "cred:CredentialStatus",
+            "rdfs:label": "Credential status",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialStatus",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:confidenceMethod",
+            "@type": "rdf:Property",
+            "rdfs:range": "cred:ConfidenceMethod",
+            "rdfs:label": "Confidence method",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/confidence-method-spec/",
+            "vs:term_status": "reserved",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:credentialSubject",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
+            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:label": "Credential subject",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSubject",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:digestSRI",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:range": "cred:sriString",
+            "rdfs:label": "Subresource integrity digest",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-digestSRI",
+            "vs:term_status": "stable",
+            "rdfs:seeAlso": [
+                "https://www.w3.org/TR/SRI/#the-integrity-attribute"
+            ],
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:evidence",
+            "@type": "rdf:Property",
+            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:range": "cred:CredentialEvidence",
+            "rdfs:label": "Evidence",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-evidence",
+            "vs:term_status": "reserved",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:expirationDate",
+            "@type": [
+                "rdf:Property",
+                "owl:DeprecatedProperty",
+                "owl:DatatypeProperty"
+            ],
+            "owl:deprecated": true,
+            "rdfs:range": "xsd:dateTime",
+            "rdfs:label": "Expiration date",
+            "rdfs:comment": {
+                "@value": "<div>The value of this property was used in the past to express the date and time the credential ceased to be valid. It has been deprecated in favor of <a href=\"#validUntil\">validUntil</a></div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#expiration",
+            "vs:term_status": "deprecated",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:holder",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
+            "rdfs:domain": "cred:VerifiablePresentation",
+            "rdfs:label": "Holder",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-holder",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:jsonSchema",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": "cred:JsonSchema",
+            "rdfs:range": "rdf:JSON",
+            "rdfs:label": "Referring to a Json Schema",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-json-schema/#jsonschema-0",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:issuanceDate",
+            "@type": [
+                "rdf:Property",
+                "owl:DeprecatedProperty",
+                "owl:DatatypeProperty"
+            ],
+            "owl:deprecated": true,
+            "rdfs:range": "xsd:dateTime",
+            "rdfs:label": "Issuance date",
+            "rdfs:comment": {
+                "@value": "<div>The value of this property was used in the past to represent the earliest date when the information associated with the <a href=\"#credentialSubject\">credentialSubject</a> property became valid. This property has been deprecated in favor of <a href=\"#validFrom\">validFrom</a>.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#issuance-date",
+            "vs:term_status": "deprecated",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:issuer",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
+            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:label": "Issuer",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-issuer",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:refreshService",
+            "@type": "rdf:Property",
+            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:range": "cred:RefreshService",
+            "rdfs:label": "Refresh service",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-refreshService",
+            "vs:term_status": "reserved",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:renderMethod",
+            "@type": "rdf:Property",
+            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:range": "cred:RenderMethod",
+            "rdfs:label": "Render method",
+            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/vc-render-method/#the-rendermethod-property",
+            "vs:term_status": "reserved"
+        },
+        {
+            "@id": "cred:relatedResource",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
+            "rdfs:domain": "cred:VerifiableCredential",
+            "rdfs:label": "Related resource",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-relatedResource",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:termsOfUse",
+            "@type": "rdf:Property",
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "cred:VerifiableCredential",
+                    "cred:VerifiablePresentation"
+                ]
+            },
+            "rdfs:range": "cred:TermsOfUse",
+            "rdfs:label": "Terms of use",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-termsOfUse",
+            "vs:term_status": "reserved",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:validFrom",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "cred:VerifiableCredential",
+                    "cred:VerifiablePresentation"
+                ]
+            },
+            "rdfs:range": "xsd:dateTime",
+            "rdfs:label": "Valid from",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-validFrom",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:validUntil",
+            "@type": [
+                "rdf:Property",
+                "owl:DatatypeProperty"
+            ],
+            "rdfs:domain": {
+                "owl:unionOf": [
+                    "cred:VerifiableCredential",
+                    "cred:VerifiablePresentation"
+                ]
+            },
+            "rdfs:range": "xsd:dateTime",
+            "rdfs:label": "Valid until",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-validUntil",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:verifiableCredential",
+            "@type": "rdf:Property",
+            "rdfs:domain": "cred:VerifiablePresentation",
+            "rdfs:range": "cred:VerifiableCredentialGraph",
+            "rdfs:label": "Verifiable credential graph",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        }
+    ],
     "rdfs_classes": [
         {
             "@id": "cred:CredentialEvidence",
@@ -116,6 +440,19 @@
             "vs:term_status": "reserved"
         },
         {
+            "@id": "cred:EnvelopedVerifiableCredential",
+            "@type": "rdfs:Class",
+            "rdfs:label": "Enveloped verifiable credential",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiableCredential",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
             "@id": "cred:JsonSchema",
             "@type": "rdfs:Class",
             "rdfs:subClassOf": [
@@ -123,7 +460,13 @@
             ],
             "rdfs:label": "JSON schema validator",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-json-schema/#jsonschema",
-            "vs:term_status": "stable"
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
         },
         {
             "@id": "cred:JsonSchemaCredential",
@@ -133,7 +476,13 @@
             ],
             "rdfs:label": "JSON schema validator with schema contained in a credential",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-json-schema/#jsonschemacredential",
-            "vs:term_status": "stable"
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
         },
         {
             "@id": "cred:RefreshService",
@@ -161,7 +510,13 @@
             "@type": "rdfs:Class",
             "rdfs:label": "Verifiable credential",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#credentials",
-            "vs:term_status": "stable"
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
         },
         {
             "@id": "cred:VerifiableCredentialGraph",
@@ -179,235 +534,13 @@
             "@type": "rdfs:Class",
             "rdfs:label": "Verifiable presentation",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#presentations",
-            "vs:term_status": "stable"
-        }
-    ],
-    "rdfs_properties": [
-        {
-            "@id": "cred:credentialSchema",
-            "@type": "rdf:Property",
-            "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:range": "cred:CredentialSchema",
-            "rdfs:label": "Credential schema",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSchema",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "cred:credentialStatus",
-            "@type": "rdf:Property",
-            "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:range": "cred:CredentialStatus",
-            "rdfs:label": "Credential status",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialStatus",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "cred:confidenceMethod",
-            "@type": "rdf:Property",
-            "rdfs:range": "cred:ConfidenceMethod",
-            "rdfs:label": "Confidence method",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/confidence-method-spec/",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "cred:credentialSubject",
-            "@type": [
-                "rdf:Property",
-                "owl:ObjectProperty"
-            ],
-            "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:label": "Credential subject",
-            "rdfs:comment": {
-                "@value": "<div>An entity about which claims are made.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSubject",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "cred:digestSRI",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:range": "cred:sriString",
-            "rdfs:label": "Subresource integrity digest",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-digestSRI",
             "vs:term_status": "stable",
-            "rdfs:seeAlso": [
-                "https://www.w3.org/TR/SRI/#the-integrity-attribute"
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
             ]
-        },
-        {
-            "@id": "cred:evidence",
-            "@type": "rdf:Property",
-            "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:range": "cred:CredentialEvidence",
-            "rdfs:label": "Evidence",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-evidence",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "cred:expirationDate",
-            "@type": [
-                "rdf:Property",
-                "owl:DeprecatedProperty",
-                "owl:DatatypeProperty"
-            ],
-            "owl:deprecated": true,
-            "rdfs:range": "xsd:dateTime",
-            "rdfs:label": "Expiration date",
-            "rdfs:comment": {
-                "@value": "<div>The value of this property was used in the past to express the date and time the credential ceased to be valid. It has been deprecated in favor of <a href=\"#validUntil\">validUntil</a></div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#expiration",
-            "vs:term_status": "deprecated"
-        },
-        {
-            "@id": "cred:holder",
-            "@type": [
-                "rdf:Property",
-                "owl:ObjectProperty"
-            ],
-            "rdfs:domain": "cred:VerifiablePresentation",
-            "rdfs:label": "Holder",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-holder",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "cred:jsonSchema",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": "cred:JsonSchema",
-            "rdfs:range": "rdf:JSON",
-            "rdfs:label": "Referring to a Json Schema",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-json-schema/#jsonschema-0",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "cred:issuanceDate",
-            "@type": [
-                "rdf:Property",
-                "owl:DeprecatedProperty",
-                "owl:DatatypeProperty"
-            ],
-            "owl:deprecated": true,
-            "rdfs:range": "xsd:dateTime",
-            "rdfs:label": "Issuance date",
-            "rdfs:comment": {
-                "@value": "<div>The value of this property was used in the past to represent the earliest date when the information associated with the <a href=\"#credentialSubject\">credentialSubject</a> property became valid. This property has been deprecated in favor of <a href=\"#validFrom\">validFrom</a>.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#issuance-date",
-            "vs:term_status": "deprecated"
-        },
-        {
-            "@id": "cred:issuer",
-            "@type": [
-                "rdf:Property",
-                "owl:ObjectProperty"
-            ],
-            "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:label": "Issuer",
-            "rdfs:comment": {
-                "@value": "<div>The value of this property must be a URL uniquely identifying the issuer.</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-issuer",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "cred:refreshService",
-            "@type": "rdf:Property",
-            "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:range": "cred:RefreshService",
-            "rdfs:label": "Refresh service",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-refreshService",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "cred:renderMethod",
-            "@type": "rdf:Property",
-            "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:range": "cred:RenderMethod",
-            "rdfs:label": "Render method",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/vc-render-method/#the-rendermethod-property",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "cred:relatedResource",
-            "@type": [
-                "rdf:Property",
-                "owl:ObjectProperty"
-            ],
-            "rdfs:domain": "cred:VerifiableCredential",
-            "rdfs:label": "Related resource",
-            "rdfs:isDefinedBy": "https://w3c-ccg.github.io/vc-render-method/#defn-relatedResource",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "cred:termsOfUse",
-            "@type": "rdf:Property",
-            "rdfs:domain": {
-                "owl:unionOf": [
-                    "cred:VerifiableCredential",
-                    "cred:VerifiablePresentation"
-                ]
-            },
-            "rdfs:range": "cred:TermsOfUse",
-            "rdfs:label": "Terms of use",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-termsOfUse",
-            "vs:term_status": "reserved"
-        },
-        {
-            "@id": "cred:validFrom",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": {
-                "owl:unionOf": [
-                    "cred:VerifiableCredential",
-                    "cred:VerifiablePresentation"
-                ]
-            },
-            "rdfs:range": "xsd:dateTime",
-            "rdfs:label": "Valid from",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-validFrom",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "cred:validUntil",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
-            "rdfs:domain": {
-                "owl:unionOf": [
-                    "cred:VerifiableCredential",
-                    "cred:VerifiablePresentation"
-                ]
-            },
-            "rdfs:range": "xsd:dateTime",
-            "rdfs:label": "Valid until",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-validUntil",
-            "vs:term_status": "stable"
-        },
-        {
-            "@id": "cred:verifiableCredential",
-            "@type": "rdf:Property",
-            "rdfs:domain": "cred:VerifiablePresentation",
-            "rdfs:range": "cred:VerifiableCredentialGraph",
-            "rdfs:label": "Verifiable credential graph",
-            "rdfs:comment": {
-                "@value": "<div>The value of this property identifies a <a href=\"#VerifiableCredentialGraph\">Verifiable credential graph</a>. (Informally, it indirectly identifies a <a href=\"#VerifiableCredential\">Verifiable credential</a> contained in a separate graph.)</div>",
-                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
-            },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential",
-            "vs:term_status": "stable"
         }
     ],
     "rdfs_datatypes": [
@@ -422,6 +555,12 @@
             "vs:term_status": "stable",
             "rdfs:seeAlso": [
                 "https://www.w3.org/TR/SRI/#the-integrity-attribute"
+            ],
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
             ]
         }
     ]
