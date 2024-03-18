@@ -16,6 +16,7 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
 - Common key/value pairs for the `class`, `property`, `datatype`, and `individual` blocks:
   - `label` refers to a short header label to the term. If missing, the capitalized value of `id` is used. 
   - `comment` refers to a longer description of the term, and can be used for blocks in the `class`, `property` and `individual` top-level blocks. It may include [HTML Flow content elements](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories). The comment will be encapsulated into an HTML `<div>` element and will then be displayed verbatim in the HTML version of the vocabulary, and as a literal of type `rdf:HTML` in the JSON-LD and Turtle versions. Note that the Markdown syntax for simple formatting, like the use of "`" for `<code.../>`, may also be used.
+  - `type` refers to RDF types. Note that the tool automatically adds types like `rdf:Property`, `rdfs:Class`, etc.; this key is to be used for the vocabulary specific types only.
   - `defined_by` should be a URL, referring to the formal definition of the term.
   - `see_also` refers to one or more blocks with `label` and `url` keys, providing a human readable title and a URL, respectively, to an external document that can be referred to by the description of the term. (These are translated into an `rdfs:seeAlso` term in the vocabulary.)
   - The `status` key refers to a string that can be `stable`, `reserved`, or `deprecated`. The terms are divided, in the HTML output, into these three sections. `stable` is the default.
@@ -48,9 +49,9 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
 
     The `dataset` key can also be set to a boolean value. This key only influences the generated JSON-LD `@context`: if the value is `true`, the JSON-LD `@container` is set to the `@graph` value for the property, signalling that the value refers to a _dataset_ (or _graph_). See the [JSON-LD Specification](https://www.w3.org/TR/json-ld/#graph-containers) for further details.
   
-  - `individual`: blocks of definitions of individuals, i.e., a single resources defined in the vocabulary. For each individual the `id` key defines the property name (no prefix should be used here); the possible types are defined in the block for `upper_value` as a single term, or a sequence of terms.
+  - `individual`: blocks of definitions of individuals, i.e., a single resources defined in the vocabulary. For each individual the `id` key defines the property name (no prefix should be used here); the possible types are defined in the block for `type` as a single term, or a sequence of terms. (Earlier versions of this tool used `upper_value` for the same purpose, but that usage, though still understood for backward compatibility reasons, is deprecated.)
 
-  - `datatype`: blocks of datatype definitions. For each datatype the `id` key defines the datatype name (no prefix should be used here); the possible types are defined in the block for `upper_value` as a single term for possible datatype this is derived from.
+  - `datatype`: blocks of datatype definitions. For each datatype the `id` key defines the datatype name (no prefix should be used here). The possible types are defined in the block for `upper_value` or for `type`, as a single term for possible datatype this is derived from.
 
 There are some examples in the [example directory on github](https://github.com/w3c/yml2vocab/tree/main/example) that illustrate all of these terms.
 

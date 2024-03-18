@@ -1,3 +1,7 @@
+## Version 1.4.8
+
+- Adding the possibility of explicitly setting a resource type via the (new) `type` property.
+
 ## Version 1.4.7
 
 - Adding information on `@context` files

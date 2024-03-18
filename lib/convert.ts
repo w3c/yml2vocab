@@ -250,6 +250,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         value       : raw.value,
         label       : label,
         upper_value : toArray(raw.upper_value) as undefined | string[],
+        type        : toArray(raw.type) as undefined | string[],
         domain      : toArray(raw.domain) as undefined | string[],
         range       : toArray(raw.range) as undefined | string[],
         deprecated  : deprecated,
@@ -422,7 +423,12 @@ export function getData(vocab_source: string): Vocab {
     // the extra owl types added depending on the range
     const properties: RDFProperty[] = (vocab.property !== undefined) ?
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
-            const types: string[] = (raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"];
+            const user_type: string[] = (raw.type === undefined) ? [] : raw.type      
+            const types: string[] = [
+                ...(raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],                      
+                ...user_type
+            ];
+
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
@@ -446,6 +452,7 @@ export function getData(vocab_source: string): Vocab {
             return {
                 id            : raw.id,
                 type          : types,
+                user_type     : user_type,
                 label         : raw.label,
                 comment       : raw.comment,
                 deprecated    : raw.deprecated,
@@ -464,7 +471,11 @@ export function getData(vocab_source: string): Vocab {
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
     const classes: RDFClass[] = (vocab.class !== undefined) ? 
         vocab.class.map((raw: RawVocabEntry): RDFClass => {
-            const types: string[] = (raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
+            const user_type: string[] = (raw.type === undefined) ? [] : raw.type;
+            const types: string[] = [
+                ...(raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"],
+                ...user_type
+            ];
             const range_of: string[] = [];
             const domain_of: string[] = [];
             const included_in_domain_of: string[] = [];
@@ -484,6 +495,7 @@ export function getData(vocab_source: string): Vocab {
             return {
                 id         : raw.id,
                 type       : types,
+                user_type  : user_type,
                 label      : raw.label,
                 comment    : raw.comment,
                 deprecated : raw.deprecated,
@@ -500,6 +512,13 @@ export function getData(vocab_source: string): Vocab {
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
     const individuals: RDFIndividual[] = (vocab.individual !== undefined) ?
         vocab.individual.map((raw:RawVocabEntry): RDFIndividual => {
+            // In the former version the user's type was done via the upper_value property, which was not clean
+            // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
+            // To be sure, an extra action below is necessary to make sure there are no repeated entries.
+            const type = [
+                ...(raw.type !== undefined) ? raw.type : [],
+                ...(raw.upper_value !== undefined) ? raw.upper_value : []
+            ];
             return {
                 id            : raw.id,
                 label         : raw.label,
@@ -507,7 +526,7 @@ export function getData(vocab_source: string): Vocab {
                 deprecated    : raw.deprecated,
                 defined_by    : raw.defined_by,
                 status        : raw.status,
-                type          : (raw.upper_value !== undefined) ? raw.upper_value : [],
+                type          : [...new Set(type)],
                 see_also      : raw.see_also,
                 example       : raw.example,
                 context       : final_contexts(raw),
@@ -517,6 +536,14 @@ export function getData(vocab_source: string): Vocab {
     // Get the datatypes. 
     const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
         vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
+            // In the former version the user's type was done via the upper_value property, which was not clean
+            // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
+            // To be sure, an extra action below is necessary to make sure there are no repeated entries.
+            const type = [
+                ...(raw.type !== undefined) ? raw.type : [],
+                ...(raw.upper_value !== undefined) ? raw.upper_value : []
+            ];
+
             const range_of: string[] = [];
             const includes_range_of: string[] = [];
 
@@ -537,7 +564,7 @@ export function getData(vocab_source: string): Vocab {
                 deprecated : raw.deprecated,
                 defined_by : raw.defined_by,
                 status     : raw.status,
-                type       : (raw.upper_value !== undefined) ? raw.upper_value : [],
+                type       : [...new Set(type)],
                 see_also   : raw.see_also,
                 example    : raw.example,
                 context    : final_contexts(raw),

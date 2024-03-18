@@ -6,6 +6,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix schema: <http://schema.org/> .
+@prefix jsonld: <http://www.w3.org/ns/json-ld#> .
 
 # Ontology definition
 sec: a owl:Ontology ;
@@ -13,308 +15,8 @@ sec: a owl:Ontology ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs 
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2023-12-15"^^xsd:date ;
+    dc:date "2024-03-18"^^xsd:date ;
 .
-
-# Class definitions
-sec:Proof a rdfs:Class ;
-    rdfs:label "Digital proof" ;
-    rdfs:comment """<div>This class represents a digital proof on serialized data. </div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "stable" ;
-.
-
-sec:ProofGraph a rdfs:Class ;
-    rdfs:label "An RDF Graph for a digital proof" ;
-    rdfs:comment """<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Proof.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "reserved" ;
-.
-
-sec:VerificationMethod a rdfs:Class ;
-    rdfs:label "Verification method" ;
-    rdfs:comment """<div>A Verification Method class can express different verification methods, such as cryptographic public keys, which can be used to authenticate or authorize interaction with the `controller` or associated parties. Verification methods might take many parameters.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "stable" ;
-.
-
-sec:DataIntegrityProof a rdfs:Class ;
-    rdfs:subClassOf sec:Proof ;
-    rdfs:label "A Data Integrity Proof" ;
-    rdfs:comment """<div>This class represents a data integrity proof used to encode a variety of cryptographic suite proof encodings.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "stable" ;
-    rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof> ;
-.
-
-sec:Ed25519Signature2020 a rdfs:Class ;
-    rdfs:subClassOf sec:Proof ;
-    rdfs:label "ED2559 Signature Suite, 2020 version" ;
-    rdfs:comment """<div>T.B.D.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "stable" ;
-.
-
-sec:Key a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "Cryptographic key" ;
-    rdfs:comment """<div>This class represents a cryptographic key that may be used for encryption, decryption, or digitally signing data.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:Signature a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Proof ;
-    rdfs:label "Digital signature" ;
-    rdfs:comment """<div>This class represents a digital signature on serialized data. It is an abstract class and should not be used other than for Semantic Web reasoning purposes, such as by a reasoning agent. This class MUST NOT be used directly, but only through its subclasses.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:SignatureGraph a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:ProofGraph ;
-    rdfs:label "An RDF Graph for a digital signature" ;
-    rdfs:comment """<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Signature.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:EcdsaSecp256k1Signature2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "TBD." ;
-    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1> ;
-.
-
-sec:EcdsaSecp256k1Signature2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "TBD." ;
-    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1> ;
-.
-
-sec:EcdsaSecp256k1RecoverySignature2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "TBD." ;
-    rdfs:comment """<div>This class represents a data integrity signature.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverysignature2020> ;
-.
-
-sec:EcdsaSecp256k1VerificationKey2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "TBD." ;
-    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1> ;
-.
-
-sec:EcdsaSecp256k1RecoveryMethod2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "TBD." ;
-    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverymethod2020> ;
-.
-
-sec:RsaSignature2018 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "Signature Suite for RSA (was deprecated in the CCG document)" ;
-    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#rsa> ;
-.
-
-sec:RsaVerificationKey2018 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "Verification Key for RSA (was deprecated in the CCG document)" ;
-    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#rsa> ;
-.
-
-sec:SchnorrSecp256k1Signature2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "TBD." ;
-    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:SchnorrSecp256k1VerificationKey2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "TBD." ;
-    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:ServiceEndpointProxyService a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "TBD." ;
-    rdfs:comment """<div>T.B.D.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:Digest a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "Message digest" ;
-    rdfs:comment """<div>This class represents a message digest that may be used for data integrity verification. The digest algorithm used will determine the cryptographic properties of the digest.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:EncryptedMessage a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:label "Encrypted message" ;
-    rdfs:comment """<div>A class of messages that are obfuscated in some cryptographic manner. These messages are incredibly difficult to decrypt without the proper decryption key.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:GraphSignature2012 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "RDF graph signature" ;
-    rdfs:comment """<div>A graph signature is used for digital signatures on RDF graphs. The default canonicalization mechanism is specified in the RDF Graph normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:LinkedDataSignature2015 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "Linked data signature, 2015 version (was deprecated in the CCG document)" ;
-    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:LinkedDataSignature2016 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "Linked data signature, 2016 version (was deprecated in the CCG document)" ;
-    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:MerkleProof2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "Merkle Proof" ;
-    rdfs:comment """<div>Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and ECDSA to perform the digital signature.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/lds-merkle-proof-2019/> ;
-.
-
-sec:X25519KeyAgreementKey2019 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "X25519 Key Agreement Key 2019" ;
-    rdfs:comment """<div>This class represents a verification key.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:Ed25519VerificationKey2018 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "ED2559 Verification Key, 2018 version" ;
-    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
-.
-
-sec:Ed25519VerificationKey2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "ED2559 Verification Key, 2020 version" ;
-    rdfs:comment """<div>A linked data proof suite verification method type used with <a href=”#Ed25519Signature2020>`Ed25519Signature2020`</a>.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:JsonWebKey2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "JSON Web Key, 2020 version" ;
-    rdfs:comment """<div>A linked data proof suite verification method type used with <a href=”#JsonWebSignature2020>`JsonWebSignature2020`</a></div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:JsonWebSignature2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "JSON Web Signature, 2020 version" ;
-    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and JWS to perform the digital signature.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:BbsBlsSignature2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "BBS Signature, 2020 version" ;
-    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. Importantly, a `BbsBlsSignature` digests each of the statements produced by the normalization process individually to enable selective disclosure. The signature mechanism uses Blake2B as the digest for each statement and produces a single output digital signature.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:BbsBlsSignatureProof2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Signature ;
-    rdfs:label "BBS Signature Proof, 2020 version" ;
-    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. Importantly, a `BbsBlsSignatureProof2020` is in fact a proof of knowledge of an unrevealed BbsBlsSignature2020 enabling the ability to selectively reveal information from the set that was originally signed. Each of the statements produced by the normalizing process for a JSON-LD document featuring a <a href=”#BbsBlsSignatureProof2020">`BbsBlsSignatureProof2020`</a> represent statements that were originally signed in producing the `BbsBlsSignature2020` and represent the denomination under which information can be selectively disclosed. The signature mechanism uses Blake2B as the digest for each statement and produces a single output digital signature.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-.
-
-sec:Bls12381G1Key2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "BLS 12381 G1 Signature Key, 2020 version" ;
-    rdfs:comment """<div>This class represents a data integrity signature key.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
-.
-
-sec:Bls12381G2Key2020 a rdfs:Class, owl:DeprecatedClass ;
-    owl:deprecated true ;
-    rdfs:subClassOf sec:Key ;
-    rdfs:label "BLS 12381 G2 Signature Key, 2020 version" ;
-    rdfs:comment """<div>This class represents a data integrity signature key.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "deprecated" ;
-    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
-.
-
-
 
 # Property definitions
 sec:verificationMethod a rdf:Property ;
@@ -824,6 +526,306 @@ sec:invoker a rdf:Property, owl:DeprecatedProperty ;
     rdfs:seeAlso <https://w3c-ccg.github.io/zcap-spec/#invocation> ;
 .
 
+# Class definitions
+sec:Proof a rdfs:Class ;
+    rdfs:label "Digital proof" ;
+    rdfs:comment """<div>This class represents a digital proof on serialized data. </div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "stable" ;
+.
+
+sec:ProofGraph a rdfs:Class ;
+    rdfs:label "An RDF Graph for a digital proof" ;
+    rdfs:comment """<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Proof.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "reserved" ;
+.
+
+sec:VerificationMethod a rdfs:Class ;
+    rdfs:label "Verification method" ;
+    rdfs:comment """<div>A Verification Method class can express different verification methods, such as cryptographic public keys, which can be used to authenticate or authorize interaction with the `controller` or associated parties. Verification methods might take many parameters.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "stable" ;
+.
+
+sec:DataIntegrityProof a rdfs:Class ;
+    rdfs:subClassOf sec:Proof ;
+    rdfs:label "A Data Integrity Proof" ;
+    rdfs:comment """<div>This class represents a data integrity proof used to encode a variety of cryptographic suite proof encodings.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "stable" ;
+    rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof> ;
+.
+
+sec:Ed25519Signature2020 a rdfs:Class ;
+    rdfs:subClassOf sec:Proof ;
+    rdfs:label "ED2559 Signature Suite, 2020 version" ;
+    rdfs:comment """<div>T.B.D.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "stable" ;
+.
+
+sec:Key a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "Cryptographic key" ;
+    rdfs:comment """<div>This class represents a cryptographic key that may be used for encryption, decryption, or digitally signing data.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:Signature a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Proof ;
+    rdfs:label "Digital signature" ;
+    rdfs:comment """<div>This class represents a digital signature on serialized data. It is an abstract class and should not be used other than for Semantic Web reasoning purposes, such as by a reasoning agent. This class MUST NOT be used directly, but only through its subclasses.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:SignatureGraph a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:ProofGraph ;
+    rdfs:label "An RDF Graph for a digital signature" ;
+    rdfs:comment """<div>Instances of this class are RDF Graphs, where each of these graphs must include exactly one Signature.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:EcdsaSecp256k1Signature2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "TBD." ;
+    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1> ;
+.
+
+sec:EcdsaSecp256k1Signature2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "TBD." ;
+    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1> ;
+.
+
+sec:EcdsaSecp256k1RecoverySignature2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "TBD." ;
+    rdfs:comment """<div>This class represents a data integrity signature.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverysignature2020> ;
+.
+
+sec:EcdsaSecp256k1VerificationKey2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "TBD." ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsa-secp256k1> ;
+.
+
+sec:EcdsaSecp256k1RecoveryMethod2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "TBD." ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ecdsasecp256k1recoverymethod2020> ;
+.
+
+sec:RsaSignature2018 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "Signature Suite for RSA (was deprecated in the CCG document)" ;
+    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#rsa> ;
+.
+
+sec:RsaVerificationKey2018 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "Verification Key for RSA (was deprecated in the CCG document)" ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#rsa> ;
+.
+
+sec:SchnorrSecp256k1Signature2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "TBD." ;
+    rdfs:comment """<div>This class represents a data integrity signature suite.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:SchnorrSecp256k1VerificationKey2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "TBD." ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:ServiceEndpointProxyService a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "TBD." ;
+    rdfs:comment """<div>T.B.D.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:Digest a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "Message digest" ;
+    rdfs:comment """<div>This class represents a message digest that may be used for data integrity verification. The digest algorithm used will determine the cryptographic properties of the digest.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:EncryptedMessage a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:label "Encrypted message" ;
+    rdfs:comment """<div>A class of messages that are obfuscated in some cryptographic manner. These messages are incredibly difficult to decrypt without the proper decryption key.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:GraphSignature2012 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "RDF graph signature" ;
+    rdfs:comment """<div>A graph signature is used for digital signatures on RDF graphs. The default canonicalization mechanism is specified in the RDF Graph normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:LinkedDataSignature2015 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "Linked data signature, 2015 version (was deprecated in the CCG document)" ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:LinkedDataSignature2016 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "Linked data signature, 2016 version (was deprecated in the CCG document)" ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and RSA to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:MerkleProof2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "Merkle Proof" ;
+    rdfs:comment """<div>Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which effectively deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and ECDSA to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/lds-merkle-proof-2019/> ;
+.
+
+sec:X25519KeyAgreementKey2019 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "X25519 Key Agreement Key 2019" ;
+    rdfs:comment """<div>This class represents a verification key.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:Ed25519VerificationKey2018 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "ED2559 Verification Key, 2018 version" ;
+    rdfs:comment """<div>This class represents a data integrity verification method.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
+.
+
+sec:Ed25519VerificationKey2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "ED2559 Verification Key, 2020 version" ;
+    rdfs:comment """<div>A linked data proof suite verification method type used with <a href=”#Ed25519Signature2020>`Ed25519Signature2020`</a>.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:JsonWebKey2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "JSON Web Key, 2020 version" ;
+    rdfs:comment """<div>A linked data proof suite verification method type used with <a href=”#JsonWebSignature2020>`JsonWebSignature2020`</a></div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:JsonWebSignature2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "JSON Web Signature, 2020 version" ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. The default signature mechanism uses a SHA-256 digest and JWS to perform the digital signature.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:BbsBlsSignature2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "BBS Signature, 2020 version" ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. Importantly, a `BbsBlsSignature` digests each of the statements produced by the normalization process individually to enable selective disclosure. The signature mechanism uses Blake2B as the digest for each statement and produces a single output digital signature.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:BbsBlsSignatureProof2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Signature ;
+    rdfs:label "BBS Signature Proof, 2020 version" ;
+    rdfs:comment """<div>A Linked Data signature is used for digital signatures on RDF Datasets. The default canonicalization mechanism is specified in the RDF Dataset Normalization specification, which deterministically names all unnamed nodes. Importantly, a `BbsBlsSignatureProof2020` is in fact a proof of knowledge of an unrevealed BbsBlsSignature2020 enabling the ability to selectively reveal information from the set that was originally signed. Each of the statements produced by the normalizing process for a JSON-LD document featuring a <a href=”#BbsBlsSignatureProof2020">`BbsBlsSignatureProof2020`</a> represent statements that were originally signed in producing the `BbsBlsSignature2020` and represent the denomination under which information can be selectively disclosed. The signature mechanism uses Blake2B as the digest for each statement and produces a single output digital signature.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+.
+
+sec:Bls12381G1Key2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "BLS 12381 G1 Signature Key, 2020 version" ;
+    rdfs:comment """<div>This class represents a data integrity signature key.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
+.
+
+sec:Bls12381G2Key2020 a rdfs:Class, owl:DeprecatedClass ;
+    owl:deprecated true ;
+    rdfs:subClassOf sec:Key ;
+    rdfs:label "BLS 12381 G2 Signature Key, 2020 version" ;
+    rdfs:comment """<div>This class represents a data integrity signature key.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "deprecated" ;
+    rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
+.
+
+
+
 # Definitions of individuals
 sec:SomeIndividual a cred:ABCD ;
     rdfs:label "Testing the individuals" ;
@@ -841,4 +843,97 @@ sec:DeprecatedIndividual a cred:XYXX ;
     vs:term_status "deprecated" ;
     rdfs:seeAlso <https://www.example.org/namivan/deprecated> ;
 .
+
+# Context files and their mentions
+<vocab> a jsonld:Context ;
+    schema:mentions
+        sec:verificationMethod,
+        sec:domain,
+        sec:challenge,
+        sec:proofPurpose,
+        sec:proofValue,
+        sec:proof,
+        sec:proofChain,
+        sec:controller,
+        sec:authentication,
+        sec:assertionMethod,
+        sec:capabilityDelegation,
+        sec:capabilityInvocation,
+        sec:keyAgreement,
+        sec:cryptosuite,
+        sec:publicKeyMultibase,
+        sec:publicKeyJwk,
+        sec:cipherAlgorithm,
+        sec:cipherData,
+        sec:cipherKey,
+        sec:digestAlgorithm,
+        sec:digestValue,
+        sec:blockchainAccountId,
+        sec:ethereumAddress,
+        sec:expires,
+        sec:initializationVector,
+        sec:nonce,
+        sec:canonicalizationAlgorithm,
+        sec:controller,
+        sec:owner,
+        sec:password,
+        sec:privateKeyPem,
+        sec:publicKey,
+        sec:publicKeyBase58,
+        sec:publicKeyPem,
+        sec:publicKeyHex,
+        sec:publicKeyService,
+        sec:revoked,
+        sec:jws,
+        sec:challenge,
+        sec:expirationDate,
+        sec:signature,
+        sec:signatureValue,
+        sec:signatureAlgorithm,
+        sec:service,
+        sec:serviceEndpoint,
+        sec:x509CertificateChain,
+        sec:x509CertificateFingerprint,
+        sec:allowedAction,
+        sec:capabilityChain,
+        sec:capabilityAction,
+        sec:caveat,
+        sec:delegator,
+        sec:invocationTarget,
+        sec:invoker,
+        sec:Proof,
+        sec:ProofGraph,
+        sec:VerificationMethod,
+        sec:DataIntegrityProof,
+        sec:Ed25519Signature2020,
+        sec:Key,
+        sec:Signature,
+        sec:SignatureGraph,
+        sec:EcdsaSecp256k1Signature2019,
+        sec:EcdsaSecp256k1Signature2020,
+        sec:EcdsaSecp256k1RecoverySignature2020,
+        sec:EcdsaSecp256k1VerificationKey2019,
+        sec:EcdsaSecp256k1RecoveryMethod2020,
+        sec:RsaSignature2018,
+        sec:RsaVerificationKey2018,
+        sec:SchnorrSecp256k1Signature2019,
+        sec:SchnorrSecp256k1VerificationKey2019,
+        sec:ServiceEndpointProxyService,
+        sec:Digest,
+        sec:EncryptedMessage,
+        sec:GraphSignature2012,
+        sec:LinkedDataSignature2015,
+        sec:LinkedDataSignature2016,
+        sec:MerkleProof2019,
+        sec:X25519KeyAgreementKey2019,
+        sec:Ed25519VerificationKey2018,
+        sec:Ed25519VerificationKey2020,
+        sec:JsonWebKey2020,
+        sec:JsonWebSignature2020,
+        sec:BbsBlsSignature2020,
+        sec:BbsBlsSignatureProof2020,
+        sec:Bls12381G1Key2020,
+        sec:Bls12381G2Key2020,
+        sec:SomeIndividual,
+        sec:DeprecatedIndividual ;
 

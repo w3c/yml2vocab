@@ -126,6 +126,7 @@ export interface RawVocabEntry {
     property    ?: string;
     value       ?: string;
     label        : string;
+    type        ?: string[];
     upper_value ?: string[];
     domain      ?: string[];
     range       ?: string[];
@@ -183,6 +184,7 @@ export interface ValidationError {
 export interface RDFTerm {
     id          : string;
     type        : string[];
+    user_type  ?: string[];
     label       : string;
     comment    ?: string;
     defined_by ?: string;

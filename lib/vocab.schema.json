@@ -149,6 +149,9 @@
                 "upper_value": {
                     "$ref": "#/$defs/StringOrArrayOfStrings"
                 },
+                "type": {
+                    "$ref": "#/$defs/StringOrArrayOfStrings"
+                },
                 "deprecated": {
                     "type": "boolean"
                 },
