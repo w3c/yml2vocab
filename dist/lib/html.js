@@ -195,6 +195,17 @@ function toHTML(vocab, template_text) {
                 document.addChild(dd, 'br');
             }
         }
+        if (item.user_type && item.user_type.length > 0) {
+            const dl = document.addChild(section, 'dl');
+            dl.className = 'terms';
+            document.addChild(dl, 'dt', 'Type');
+            const dd = document.addChild(dl, 'dd');
+            for (const itype of item.user_type) {
+                document.addChild(dd, 'span', resolveCurie(itype));
+                document.addChild(dd, 'br');
+            }
+        }
+        // This does not display, it is only here for RDFa's sake!
         const span = document.addChild(section, 'span');
         span.setAttribute('property', 'rdfs:isDefinedBy');
         span.setAttribute('resource', `${vocab_prefix}:`);

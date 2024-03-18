@@ -256,6 +256,7 @@ function finalizeRawEntry(raw) {
         value: raw.value,
         label: label,
         upper_value: toArray(raw.upper_value),
+        type: toArray(raw.type),
         domain: toArray(raw.domain),
         range: toArray(raw.range),
         deprecated: deprecated,
@@ -415,7 +416,11 @@ function getData(vocab_source) {
     // the extra owl types added depending on the range
     const properties = (vocab.property !== undefined) ?
         vocab.property.map((raw) => {
-            const types = (raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"];
+            const user_type = (raw.type === undefined) ? [] : raw.type;
+            const types = [
+                ...(raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],
+                ...user_type
+            ];
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
@@ -441,6 +446,7 @@ function getData(vocab_source) {
             return {
                 id: raw.id,
                 type: types,
+                user_type: user_type,
                 label: raw.label,
                 comment: raw.comment,
                 deprecated: raw.deprecated,
@@ -458,7 +464,11 @@ function getData(vocab_source) {
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
     const classes = (vocab.class !== undefined) ?
         vocab.class.map((raw) => {
-            const types = (raw.status === common_1.Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
+            const user_type = (raw.type === undefined) ? [] : raw.type;
+            const types = [
+                ...(raw.status === common_1.Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"],
+                ...user_type
+            ];
             const range_of = [];
             const domain_of = [];
             const included_in_domain_of = [];
@@ -475,6 +485,7 @@ function getData(vocab_source) {
             return {
                 id: raw.id,
                 type: types,
+                user_type: user_type,
                 label: raw.label,
                 comment: raw.comment,
                 deprecated: raw.deprecated,
@@ -490,6 +501,13 @@ function getData(vocab_source) {
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
     const individuals = (vocab.individual !== undefined) ?
         vocab.individual.map((raw) => {
+            // In the former version the user's type was done via the upper_value property, which was not clean
+            // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
+            // To be sure, an extra action below is necessary to make sure there are no repeated entries.
+            const type = [
+                ...(raw.type !== undefined) ? raw.type : [],
+                ...(raw.upper_value !== undefined) ? raw.upper_value : []
+            ];
             return {
                 id: raw.id,
                 label: raw.label,
@@ -497,7 +515,7 @@ function getData(vocab_source) {
                 deprecated: raw.deprecated,
                 defined_by: raw.defined_by,
                 status: raw.status,
-                type: (raw.upper_value !== undefined) ? raw.upper_value : [],
+                type: [...new Set(type)],
                 see_also: raw.see_also,
                 example: raw.example,
                 context: final_contexts(raw),
@@ -506,6 +524,13 @@ function getData(vocab_source) {
     // Get the datatypes. 
     const datatypes = (vocab.datatype !== undefined) ?
         vocab.datatype.map((raw) => {
+            // In the former version the user's type was done via the upper_value property, which was not clean
+            // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
+            // To be sure, an extra action below is necessary to make sure there are no repeated entries.
+            const type = [
+                ...(raw.type !== undefined) ? raw.type : [],
+                ...(raw.upper_value !== undefined) ? raw.upper_value : []
+            ];
             const range_of = [];
             const includes_range_of = [];
             // Get the range cross-references
@@ -524,7 +549,7 @@ function getData(vocab_source) {
                 deprecated: raw.deprecated,
                 defined_by: raw.defined_by,
                 status: raw.status,
-                type: (raw.upper_value !== undefined) ? raw.upper_value : [],
+                type: [...new Set(type)],
                 see_also: raw.see_also,
                 example: raw.example,
                 context: final_contexts(raw),
