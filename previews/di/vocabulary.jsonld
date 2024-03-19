@@ -92,7 +92,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2024-02-04",
+    "dc:date": "2024-03-19",
     "rdfs_properties": [
         {
             "@id": "sec:verificationMethod",
@@ -223,12 +223,9 @@
         },
         {
             "@id": "sec:proofPurpose",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
+            "@type": "rdf:Property",
             "rdfs:domain": "sec:Proof",
-            "rdfs:range": "xsd:string",
+            "rdfs:range": "sec:VerificationRelationship",
             "rdfs:label": "Proof purpose",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-proofpurpose",
             "vs:term_status": "stable",
@@ -338,7 +335,10 @@
         },
         {
             "@id": "sec:authentication",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "sec:VerificationRelationship"
+            ],
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Authentication method",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-authentication",
@@ -360,7 +360,10 @@
         },
         {
             "@id": "sec:assertionMethod",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "sec:VerificationRelationship"
+            ],
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Assertion method",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-assertionmethod",
@@ -382,7 +385,10 @@
         },
         {
             "@id": "sec:capabilityDelegationMethod",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "sec:VerificationRelationship"
+            ],
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Capability delegation method",
             "rdfs:comment": {
@@ -408,7 +414,10 @@
         },
         {
             "@id": "sec:capabilityInvocationMethod",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "sec:VerificationRelationship"
+            ],
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Capability invocation method",
             "rdfs:comment": {
@@ -434,7 +443,10 @@
         },
         {
             "@id": "sec:keyAgreementMethod",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "sec:VerificationRelationship"
+            ],
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Key agreement protocols",
             "rdfs:comment": {
@@ -785,6 +797,20 @@
                     "@type": "jsonld:Context"
                 }
             ]
+        },
+        {
+            "@id": "sec:VerificationRelationship",
+            "@type": "rdfs:Class",
+            "rdfs:subClassOf": [
+                "rdf:Property"
+            ],
+            "rdfs:label": "Verification relationship",
+            "rdfs:comment": {
+                "@value": "<div>Instances of this class are verification relationships like, for example, <a href=\"#authentication\">authentication</a> or <a href=\"#assertionMethod\">assertionMethod</a>. These resources can also appear as the values of the <a href=\"#proofPurpose\">proofPurpose</a> property.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#verification-relationships",
+            "vs:term_status": "stable"
         },
         {
             "@id": "sec:DataIntegrityProof",

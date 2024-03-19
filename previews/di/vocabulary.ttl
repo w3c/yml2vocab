@@ -15,7 +15,7 @@ sec: a owl:Ontology ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2024-02-04"^^xsd:date ;
+    dc:date "2024-03-19"^^xsd:date ;
 .
 
 # Property definitions
@@ -65,9 +65,9 @@ sec:previousProof a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-sec:proofPurpose a rdf:Property, owl:DatatypeProperty ;
+sec:proofPurpose a rdf:Property ;
     rdfs:domain sec:Proof ;
-    rdfs:range xsd:string ;
+    rdfs:range sec:VerificationRelationship ;
     rdfs:label "Proof purpose" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-proofpurpose>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
@@ -106,21 +106,21 @@ sec:nonce a rdf:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-sec:authentication a rdf:Property ;
+sec:authentication a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Authentication method" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-authentication>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
-sec:assertionMethod a rdf:Property ;
+sec:assertionMethod a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Assertion method" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#dfn-assertionmethod>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
-sec:capabilityDelegationMethod a rdf:Property ;
+sec:capabilityDelegationMethod a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Capability delegation method" ;
     rdfs:comment """<div>Historically, this property has often been expressed using `capabilityDelegation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityDelegation`) and the property identifier (`...#capabilityDelegationMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
@@ -128,7 +128,7 @@ sec:capabilityDelegationMethod a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-sec:capabilityInvocationMethod a rdf:Property ;
+sec:capabilityInvocationMethod a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Capability invocation method" ;
     rdfs:comment """<div>Historically, this property has often been expressed using `capabilityInvocation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityInvocation`) and the property identifier (`...#capabilityInvocationMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
@@ -136,7 +136,7 @@ sec:capabilityInvocationMethod a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-sec:keyAgreementMethod a rdf:Property ;
+sec:keyAgreementMethod a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Key agreement protocols" ;
     rdfs:comment """<div>Historically, this property has often been expressed using `keyAgreement` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`keyAgreement`) and the property identifier (`...#keyAgreementMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
@@ -314,6 +314,14 @@ sec:ProofGraph a rdfs:Class ;
 sec:VerificationMethod a rdfs:Class ;
     rdfs:label "Verification method" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#verification-methods>, <https://w3id.org/security#> ;
+    vs:term_status "stable" ;
+.
+
+sec:VerificationRelationship a rdfs:Class ;
+    rdfs:subClassOf rdf:Property ;
+    rdfs:label "Verification relationship" ;
+    rdfs:comment """<div>Instances of this class are verification relationships like, for example, <a href="#authentication">authentication</a> or <a href="#assertionMethod">assertionMethod</a>. These resources can also appear as the values of the <a href="#proofPurpose">proofPurpose</a> property.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#verification-relationships>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
