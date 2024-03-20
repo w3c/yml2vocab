@@ -15,7 +15,7 @@ sec: a owl:Ontology ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2024-03-19"^^xsd:date ;
+    dc:date "2024-03-20"^^xsd:date ;
 .
 
 # Property definitions
@@ -320,7 +320,7 @@ sec:VerificationMethod a rdfs:Class ;
 sec:VerificationRelationship a rdfs:Class ;
     rdfs:subClassOf rdf:Property ;
     rdfs:label "Verification relationship" ;
-    rdfs:comment """<div>Instances of this class are verification relationships like, for example, <a href="#authentication">authentication</a> or <a href="#assertionMethod">assertionMethod</a>. These resources can also appear as the values of the <a href="#proofPurpose">proofPurpose</a> property.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>Instances of this class are verification relationships like, for example, <a href="#authentication">authentication</a> or <a href="#assertionMethod">assertionMethod</a>. These resources can also appear as values of the <a href="#proofPurpose">proofPurpose</a> property.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#verification-relationships>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .

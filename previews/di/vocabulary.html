@@ -122,7 +122,7 @@
         <a rel="alternate" href="vocabulary.jsonld">JSON-LD</a>.
       </p>
       <dl>
-        <dt>Published:</dt><dd><time property="dc:date" id="time">2024-03-19</time></dd>
+        <dt>Published:</dt><dd><time property="dc:date" id="time">2024-03-20</time></dd>
         <dt>Version Info:</dt>
         <dd>2.0</dd>
         <dt id="see_also">See Also: <a href="https://www.w3.org/TR/vc-data-integrity/" property="rdfs:seeAlso">https://www.w3.org/TR/vc-data-integrity/</a></dt>
@@ -186,7 +186,7 @@
 
       <section id="class_definitions" class="term_definitions">
         <h2>Class definitions</h2>
-      <p>The following are  class definitions in the <code>sec</code> namespace.</p><section id="Proof" resource="sec:Proof" typeof="rdfs:Class"><h4><code>Proof</code></h4><p property="rdfs:label"><em>Digital proof</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#dfn-data-integrity-proof">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">This class represents a digital proof on serialized data.</div><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#previousProof"><code>previousProof</code></a></dd><dt>Domain of:</dt><dd><a href="#domain"><code>domain</code></a>, <a href="#challenge"><code>challenge</code></a>, <a href="#previousProof"><code>previousProof</code></a>, <a href="#proofPurpose"><code>proofPurpose</code></a>, <a href="#proofValue"><code>proofValue</code></a>, <a href="#created"><code>created</code></a>, <a href="#nonce"><code>nonce</code></a></dd><dt>In the domain of:</dt><dd><a href="#expiration"><code>expiration</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="ProofGraph" resource="sec:ProofGraph" typeof="rdfs:Class"><h4><code>ProofGraph</code></h4><p property="rdfs:label"><em>An RDF Graph for a digital proof</em></p><div property="rdfs:comment" datatype="rdf:HTML">Instances of this class are <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a>&nbsp;[[RDF12-CONCEPTS]], where each of these graphs must include exactly one <a href="#Proof">Proof</a> instance.</div><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#proof"><code>proof</code></a></dd></dl></section><section id="VerificationMethod" resource="sec:VerificationMethod" typeof="rdfs:Class"><h4><code>VerificationMethod</code></h4><p property="rdfs:label"><em>Verification method</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#verification-methods">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#verificationMethod"><code>verificationMethod</code></a>, <a href="#authentication"><code>authentication</code></a>, <a href="#assertionMethod"><code>assertionMethod</code></a>, <a href="#capabilityDelegationMethod"><code>capabilityDelegationMethod</code></a>, <a href="#capabilityInvocationMethod"><code>capabilityInvocationMethod</code></a>, <a href="#keyAgreementMethod"><code>keyAgreementMethod</code></a></dd><dt>Domain of:</dt><dd><a href="#controller"><code>controller</code></a>, <a href="#revoked"><code>revoked</code></a></dd><dt>In the domain of:</dt><dd><a href="#expiration"><code>expiration</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="VerificationRelationship" resource="sec:VerificationRelationship" typeof="rdfs:Class"><h4><code>VerificationRelationship</code></h4><p property="rdfs:label"><em>Verification relationship</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#verification-relationships">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">Instances of this class are verification relationships like, for example, <a href="#authentication">authentication</a> or <a href="#assertionMethod">assertionMethod</a>. These resources can also appear as the values of the <a href="#proofPurpose">proofPurpose</a> property.</div><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="rdf:Property"><code>rdf:Property</code></span></dd></dl><dl class="terms"><dt>Range of:</dt><dd><a href="#proofPurpose"><code>proofPurpose</code></a></dd></dl></section><section id="DataIntegrityProof" resource="sec:DataIntegrityProof" typeof="rdfs:Class"><h4><code>DataIntegrityProof</code></h4><p property="rdfs:label"><em>A Data Integrity Proof</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:Proof"><a href="#Proof"><code>Proof</code></a></span></dd></dl><dl class="terms"><dt>Domain of:</dt><dd><a href="#cryptosuite"><code>cryptosuite</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span>, <span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="Multikey" resource="sec:Multikey" typeof="rdfs:Class"><h4><code>Multikey</code></h4><p property="rdfs:label"><em>Multikey Verification Method</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#multikey">formal definition of the term</a>.</p><dl class="terms"><dt>See also:</dt><dd><a href="https://www.w3.org/TR/vc-di-eddsa/#multikey" property="rdfs:seeAlso">EdDSA Cryptosuite v2022</a><br></dd></dl><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:VerificationMethod"><a href="#VerificationMethod"><code>VerificationMethod</code></a></span></dd></dl><dl class="terms"><dt>Domain of:</dt><dd><a href="#publicKeyMultibase"><code>publicKeyMultibase</code></a>, <a href="#secretKeyMultibase"><code>secretKeyMultibase</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/multikey/v1"><code>https://w3id.org/security/multikey/v1</code></a></span></dd></dl></section><section id="JsonWebKey" resource="sec:JsonWebKey" typeof="rdfs:Class"><h4><code>JsonWebKey</code></h4><p property="rdfs:label"><em>JSON Web Key Verification Method</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#jsonwebkey">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:VerificationMethod"><a href="#VerificationMethod"><code>VerificationMethod</code></a></span></dd></dl><dl class="terms"><dt>Domain of:</dt><dd><a href="#publicKeyJwk"><code>publicKeyJwk</code></a>, <a href="#secretKeyJwk"><code>secretKeyJwk</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/jwk/v1"><code>https://w3id.org/security/jwk/v1</code></a></span></dd></dl></section><section id="Ed25519VerificationKey2020" resource="sec:Ed25519VerificationKey2020" typeof="rdfs:Class"><h4><code>Ed25519VerificationKey2020</code></h4><p property="rdfs:label"><em>ED2559 Verification Key, 2020 version</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-di-eddsa/#ed25519verificationkey2020">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:VerificationMethod"><a href="#VerificationMethod"><code>VerificationMethod</code></a></span></dd></dl></section><section id="Ed25519Signature2020" resource="sec:Ed25519Signature2020" typeof="rdfs:Class"><h4><code>Ed25519Signature2020</code></h4><p property="rdfs:label"><em>Ed25519 Signature Suite, 2020 version</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-di-eddsa/#ed25519signature2020">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:Proof"><a href="#Proof"><code>Proof</code></a></span></dd></dl></section><section id="ProcessingError" resource="sec:ProcessingError" typeof="rdfs:Class"><h4><code>ProcessingError</code></h4><p property="rdfs:label"><em>Processing error</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-di-eddsa/#errors">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span></section></section>
+      <p>The following are  class definitions in the <code>sec</code> namespace.</p><section id="Proof" resource="sec:Proof" typeof="rdfs:Class"><h4><code>Proof</code></h4><p property="rdfs:label"><em>Digital proof</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#dfn-data-integrity-proof">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">This class represents a digital proof on serialized data.</div><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#previousProof"><code>previousProof</code></a></dd><dt>Domain of:</dt><dd><a href="#domain"><code>domain</code></a>, <a href="#challenge"><code>challenge</code></a>, <a href="#previousProof"><code>previousProof</code></a>, <a href="#proofPurpose"><code>proofPurpose</code></a>, <a href="#proofValue"><code>proofValue</code></a>, <a href="#created"><code>created</code></a>, <a href="#nonce"><code>nonce</code></a></dd><dt>In the domain of:</dt><dd><a href="#expiration"><code>expiration</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="ProofGraph" resource="sec:ProofGraph" typeof="rdfs:Class"><h4><code>ProofGraph</code></h4><p property="rdfs:label"><em>An RDF Graph for a digital proof</em></p><div property="rdfs:comment" datatype="rdf:HTML">Instances of this class are <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a>&nbsp;[[RDF12-CONCEPTS]], where each of these graphs must include exactly one <a href="#Proof">Proof</a> instance.</div><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#proof"><code>proof</code></a></dd></dl></section><section id="VerificationMethod" resource="sec:VerificationMethod" typeof="rdfs:Class"><h4><code>VerificationMethod</code></h4><p property="rdfs:label"><em>Verification method</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#verification-methods">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#verificationMethod"><code>verificationMethod</code></a>, <a href="#authentication"><code>authentication</code></a>, <a href="#assertionMethod"><code>assertionMethod</code></a>, <a href="#capabilityDelegationMethod"><code>capabilityDelegationMethod</code></a>, <a href="#capabilityInvocationMethod"><code>capabilityInvocationMethod</code></a>, <a href="#keyAgreementMethod"><code>keyAgreementMethod</code></a></dd><dt>Domain of:</dt><dd><a href="#controller"><code>controller</code></a>, <a href="#revoked"><code>revoked</code></a></dd><dt>In the domain of:</dt><dd><a href="#expiration"><code>expiration</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="VerificationRelationship" resource="sec:VerificationRelationship" typeof="rdfs:Class"><h4><code>VerificationRelationship</code></h4><p property="rdfs:label"><em>Verification relationship</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#verification-relationships">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">Instances of this class are verification relationships like, for example, <a href="#authentication">authentication</a> or <a href="#assertionMethod">assertionMethod</a>. These resources can also appear as values of the <a href="#proofPurpose">proofPurpose</a> property.</div><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="rdf:Property"><code>rdf:Property</code></span></dd></dl><dl class="terms"><dt>Range of:</dt><dd><a href="#proofPurpose"><code>proofPurpose</code></a></dd></dl></section><section id="DataIntegrityProof" resource="sec:DataIntegrityProof" typeof="rdfs:Class"><h4><code>DataIntegrityProof</code></h4><p property="rdfs:label"><em>A Data Integrity Proof</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#dataintegrityproof">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:Proof"><a href="#Proof"><code>Proof</code></a></span></dd></dl><dl class="terms"><dt>Domain of:</dt><dd><a href="#cryptosuite"><code>cryptosuite</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span>, <span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="Multikey" resource="sec:Multikey" typeof="rdfs:Class"><h4><code>Multikey</code></h4><p property="rdfs:label"><em>Multikey Verification Method</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#multikey">formal definition of the term</a>.</p><dl class="terms"><dt>See also:</dt><dd><a href="https://www.w3.org/TR/vc-di-eddsa/#multikey" property="rdfs:seeAlso">EdDSA Cryptosuite v2022</a><br></dd></dl><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:VerificationMethod"><a href="#VerificationMethod"><code>VerificationMethod</code></a></span></dd></dl><dl class="terms"><dt>Domain of:</dt><dd><a href="#publicKeyMultibase"><code>publicKeyMultibase</code></a>, <a href="#secretKeyMultibase"><code>secretKeyMultibase</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/multikey/v1"><code>https://w3id.org/security/multikey/v1</code></a></span></dd></dl></section><section id="JsonWebKey" resource="sec:JsonWebKey" typeof="rdfs:Class"><h4><code>JsonWebKey</code></h4><p property="rdfs:label"><em>JSON Web Key Verification Method</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-integrity/#jsonwebkey">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:VerificationMethod"><a href="#VerificationMethod"><code>VerificationMethod</code></a></span></dd></dl><dl class="terms"><dt>Domain of:</dt><dd><a href="#publicKeyJwk"><code>publicKeyJwk</code></a>, <a href="#secretKeyJwk"><code>secretKeyJwk</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://w3id.org/security/jwk/v1"><code>https://w3id.org/security/jwk/v1</code></a></span></dd></dl></section><section id="Ed25519VerificationKey2020" resource="sec:Ed25519VerificationKey2020" typeof="rdfs:Class"><h4><code>Ed25519VerificationKey2020</code></h4><p property="rdfs:label"><em>ED2559 Verification Key, 2020 version</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-di-eddsa/#ed25519verificationkey2020">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:VerificationMethod"><a href="#VerificationMethod"><code>VerificationMethod</code></a></span></dd></dl></section><section id="Ed25519Signature2020" resource="sec:Ed25519Signature2020" typeof="rdfs:Class"><h4><code>Ed25519Signature2020</code></h4><p property="rdfs:label"><em>Ed25519 Signature Suite, 2020 version</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-di-eddsa/#ed25519signature2020">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:Proof"><a href="#Proof"><code>Proof</code></a></span></dd></dl></section><section id="ProcessingError" resource="sec:ProcessingError" typeof="rdfs:Class"><h4><code>ProcessingError</code></h4><p property="rdfs:label"><em>Processing error</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-di-eddsa/#errors">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="sec:"></span><span style="display: none" property="vs:term_status">stable</span></section></section>
   
       <section id="datatype_definitions" class="term_definitions">
         <h2>Datatype definitions</h2>
@@ -244,128 +244,107 @@
         <p>
           The diagram uses boxes, ellipses, and connecting lines with different "styles" 
           (border color, end marker, line type) to differentiate their semantic meaning; 
-          these styles identify Property, Class, or Datatype, via the shapes used for the 
-          graph nodes, and Superclass, Domain Of, Range, Type, or Contains, via the styles of the connecting lines.
+          these styles identify "Property", "Class", or "Datatype" via the shapes used for the 
+          graph nodes, and "Superclass", "Domain Of", "Range", "Type", or "Contains", 
+          via the styles of the connecting lines. In particular, <em>all</em> ellipses are styled as "Class".
           These style names are used in the explanation text that follows, below.
         </p>
         <p>
-          The diagram is roughly divided into (lower) left and (lower) right sections, and a top section.
-          These sections are connected by connecting lines of different types, and there is also one 
-          box, labeled as "multibase" and of a shape Datatype, that is shared by the two lower sections.
-          To make this description easier to understand, these sections will be referred to as the 
-          "Proof Section", "Verification Section", and "Verification Relationship Section", respectively. 
+          The diagram is roughly divided into three sections&nbsp;—&nbsp;lower left, lower right, and upper.
+          To make this description easier to understand, these sections will be respectively referred to
+          as the "Proof", "Verification Method", and "Verification Relationship" sections.
+          The three sections are connected by lines of different types; additionally, one box,
+          labeled as "multibase", and having shape "Datatype", is shared by the two lower sections 
+          ("Proof" and "Verification Method").
         </p>
         <p>
-          Each of these sections has an ellipse at the top, styled as Class, 
-          and respectively labeled as "Proof", "VerificationMethod", and "VerificationRelationship".
+          Each of these sections has an ellipse at the top, labeled as "Proof", "VerificationMethod", 
+          and "VerificationRelationship", respectively.
         </p>
         <section>
           <h3>Proof Section</h3>
           <p>
-            The left side of the Proof Section contains another ellipse, 
-            styled as Class and labeled as "ProofGraph", and connected
-            to the ellipse labeled as "Proof" with a connecting line styled as Contains. 
-            There is also a box, styled as Property and labeled as "proof",
-            connected to the ellipse labeled as "ProofGraph"
-            with a connecting line styled as Range.
+            The left side of the section contains another ellipse, 
+            labeled as "ProofGraph", and connected to the ellipse labeled as "Proof" with a connecting line, 
+            styled as "Contains". 
+            A separate box, styled as "Property" and labeled as "proof", is connected to the ellipse labeled as "ProofGraph",
+            with a connecting line styled as "Range".
           </p>
           <p>
-            There are two more ellipses in this section, styled as Class 
-            and labeled as "Ed25519Signature2020" and "DataIntegrityProof",
-            each connected to the ellipse labeled as "Proof"
-            with connecting lines styled as Superclass. 
-            The ellipse labeled as "DataIntegrityProof" is
-            also connected to a box styled as Property, 
-            and labeled as "cryptosuite", with a connecting 
-            line styled as Domain Of. The "cryptosuite" Property box
-            is connected to a shape
-            styled as Datatype and labeled as
-            "cryptosuiteString", with a connecting 
-            line styled as Range.
+            There are two more ellipses in this section, 
+            labeled as "Ed25519Signature2020" and "DataIntegrityProof", respectively,
+            each connected to the ellipse labeled as "Proof" through connecting lines styled as "Superclass". 
+            The ellipse labeled as "DataIntegrityProof" is also connected to a box, styled as "Property" and labeled as 
+            "cryptosuite", with a connecting line styled as "Domain Of". 
+            The "cryptosuite" Property box is connected to a shape, styled as "Datatype" and labeled as "cryptosuiteString", 
+            with a connecting  line styled as "Range".
           </p>
           <p>
-            The right side of the Section contains a column of labeled boxes, 
-            all styled as Property. The labels, from top to 
-            bottom, are "previousProof", "domain", "challenge",
-            "nonce", "created", "proofValue". 
-            The ellipse labeled as "Proof" is connected to all of these with 
-            connecting lines styled as Domain Of. 
-            The box labeled as "previousProof" is also connected to the ellipse 
-            labeled as "Proof" with a connecting line styled as Range. 
-            The box labeled as "proofValue" is connected to a shape styled as Datatype
-            and labeled as "multibase", with a connecting line styled as Range.
-            Finally, another box, styled as Property and labeled as "digestMultibase",
-            is connected to the same "multibase" Datatype shape with
-            a connecting line styled as Range.
+            The right side of the section contains a column of labeled boxes, all styled as "Property".
+            The labels, from top to bottom, are "previousProof", "domain", "challenge", "nonce", "created", and "proofValue". 
+            The ellipse, labeled as "Proof", is connected to all of these with connecting lines styled as "Domain Of". 
+            The box labeled as "previousProof" is also connected to the ellipse, labeled as "Proof", with a connecting line styled as "Range". 
+            The box labeled as "proofValue" is connected to a shape, styled as "Datatype" and labeled as "multibase", with a connecting line styled as "Range".
+            Finally, another box, styled as "Property" and labeled as "digestMultibase", is connected to the same "multibase" shape, styled as "Datatype", with a connecting line styled as "Range".
           </p>
         </section>
         <section>
-          <h3>Verification Section</h3>
+          <h3>Verification Method Section</h3>
 
           <p>
-            The left side of this Section contains a column of three labeled 
-            boxes, all styled as Property. The labels, from top to bottom, are 
-            "expires", "controller", and "revoked". Each of these is connected
-            to the ellipse labeled "VerificationMethod",
-            with connecting lines styled as Domain Of.
-            The "expires" Property box is also connected to the ellipse 
-            labeled "Proof" in the Proof Section, with a connecting line 
-            styled as Domain Of.
+            The left side of this section contains a column of three labeled boxes, all styled as "Property". 
+            The labels, from top to bottom, are "expires", "controller", and "revoked". 
+            Each of these is connected to the ellipse, labeled "VerificationMethod", with connecting lines styled as "Domain Of".
+            The "expires" "Property" box is also connected to the ellipse labeled "Proof" in the Proof section, 
+            with a connecting line styled as "Domain Of".
           </p>
 
           <p>
-            There is also a separate box, styled as Property and labeled as "verificationMethod". 
-            This box is connected to the ellipse labeled as "VerificationMethod" with a 
-            connecting line styled as Range.
+            There is also a distinct box, styled as "Property" and labeled as "verificationMethod". 
+            This box is connected to the ellipse, labeled as "VerificationMethod", with a connecting line styled as "Range".
           </p>
 
           <p>
-            The middle of this section contains three more ellipses,
-            styled as Class, and labeled as 
-            "Multikey, "Ed25519VerificationKey2020", and "JsonWebKey".
-            Each of these is connected to 
-            the ellipse labeled as "VerificationMethod"
-            with a connecting line styled as Superclass.
+            The middle of this section contains three more ellipses, labeled as "Multikey, "Ed25519VerificationKey2020", 
+            and "JsonWebKey", respectively.
+            Each of these is connected to the ellipse, labeled as "VerificationMethod", with a connecting line styled as "Superclass".
           </p>
 
           <p>
-            Two boxes, styled as Property and labeled as "secretKeyMultibase"
-            and "publicKeyMultibase", are connected to the ellipse
-            labeled as "Multikey" with a connecting line styled as Domain Of.
-            Each of these boxes is also connected to the shape in the Proof
-            section styled as Datatype and labeled as "multibase",
-            with connecting lines styled as Range.
+            Two boxes, styled as "Property" and labeled as "secretKeyMultibase" and "publicKeyMultibase", 
+            respectively, are connected to the ellipse labeled as "Multikey" with a connecting line styled as "Domain Of".
+            Each of these boxes is also connected to the shape in the Proof section, styled as "Datatype" 
+            and labeled as "multibase", with connecting lines styled as "Range".
           </p>
 
           <p>
-            Finally, two boxes, styled as Property and labeled "secretKeyJwk" 
-            and "publicKeyJwk", are connected to the ellipse labeled "JsonWebKey"
-            with a connecting line styled as Domain Of. 
-            Each of these boxes is also connected to
-            a shape styled as Datatype and labeled as "rdf:JSON",
-            with connecting lines styled as Range.
+            Finally, two boxes, styled as "Property" and labeled as "secretKeyJwk" 
+            and "publicKeyJwk", respectively, are connected to the ellipse labeled "JsonWebKey",
+            with a connecting line styled as "Domain Of". 
+            Both boxes are also connected to a shape, styled as "Datatype" and labeled as "rdf:JSON", with connecting 
+            lines styled as "Range".
           </p>
 
         </section>
         <section>
           <h3>Verification Relationship Section</h3>
           <p>
-            The left side of the section contains a single box, styled as Property
-            and labeled as "proofPurpose". This box is connected to the ellipse
-            "VerificationRelationship" with a connecting line styled as Range, 
-            and is also connected to the ellipse labeled "Proof" in the Proof Section, 
-            with a connecting line styled as Domain Of.
+            The left side of the section contains a single box, styled as "Property"
+            and labeled as "proofPurpose". 
+            This box is connected to the ellipse, labeled as "VerificationRelationship", 
+            with a connecting line styled as "Range". 
+            It is also connected to the ellipse in the Proof section, labeled "Proof", 
+            with a connecting line styled as "Domain Of".
           </p>
 
           <p>
-            The right side of this Section contains a column of labeled boxes,
-            all styled as Property. The labels, from top to bottom, are
-            "verificationMethod", "authentication", "assertionMethod",
-            "capabilityDelegation", "capabilityInvocation", and "keyAgreement".
-            Each of these boxes is connected to the ellipse labeled "VerificationMethod" in the 
-            Verification section, with a connecting line styled as Range, 
-            and to the ellipse labeled "VerificationRelationship"
-            with a connecting line styled as Type.
+            The right side of the section contains a column of labeled boxes,
+            all styled as "Property". 
+            The labels, from top to bottom, are "verificationMethod", "authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation", and "keyAgreement".
+            Each of these boxes is connected to the ellipse in the Verification Method section, labeled "VerificationMethod", 
+            with a connecting line styled as "Range". 
+            Finally, each of these boxes is also connected to the ellipse, labeled "VerificationRelationship",
+            with a connecting line styled as "Type".
           </p>
         </section>
       </details>

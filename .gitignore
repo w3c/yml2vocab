@@ -6,6 +6,12 @@ example/*.jsonld
 example/credentials.html
 example/security.html
 example/test.html
+previews/di/vocabulary.yml
+previews/di/vocabulary.drawio
+previews/di/template.html
+previews/vcdm/vocabulary.yml
+previews/vcdm/vocabulary.drawio
+previews/vcdm/template.html
 publish
 package-lock.json
 .vscode/

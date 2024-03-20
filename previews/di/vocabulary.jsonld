@@ -92,7 +92,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2024-03-19",
+    "dc:date": "2024-03-20",
     "rdfs_properties": [
         {
             "@id": "sec:verificationMethod",
@@ -806,7 +806,7 @@
             ],
             "rdfs:label": "Verification relationship",
             "rdfs:comment": {
-                "@value": "<div>Instances of this class are verification relationships like, for example, <a href=\"#authentication\">authentication</a> or <a href=\"#assertionMethod\">assertionMethod</a>. These resources can also appear as the values of the <a href=\"#proofPurpose\">proofPurpose</a> property.</div>",
+                "@value": "<div>Instances of this class are verification relationships like, for example, <a href=\"#authentication\">authentication</a> or <a href=\"#assertionMethod\">assertionMethod</a>. These resources can also appear as values of the <a href=\"#proofPurpose\">proofPurpose</a> property.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#verification-relationships",
