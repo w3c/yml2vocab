@@ -12,10 +12,10 @@
 
 # Ontology definition
 cs: a owl:Ontology ;
-    dc:title """Verifiable Credentials Bitstring Status List v1.0"""@en ;
+    dc:title """Bitstring Status List Vocabulary"""@en ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the [[[VC-BITSTRING-STATUS-LIST]]] [[VC-BITSTRING-STATUS-LIST]]"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-bitstring-status-list/> ;
-    dc:date "2024-02-02"^^xsd:date ;
+    dc:date "2024-03-28"^^xsd:date ;
 .
 
 # Property definitions
@@ -35,9 +35,9 @@ cs:statusListIndex a rdf:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-cs:statusListCredential a rdf:Property, owl:DatatypeProperty ;
+cs:statusListCredential a rdf:Property ;
     rdfs:domain cs:BitstringStatusListEntry ;
-    rdfs:range xsd:string ;
+    rdfs:range cs:BitstringStatusListCredential ;
     rdfs:label "Status list credential" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-bitstring-status-list/#statusListCredential>, <https://www.w3.org/ns/credentials/status#> ;
     vs:term_status "stable" ;
@@ -61,21 +61,22 @@ cs:ttl a rdf:Property, owl:DatatypeProperty ;
 
 cs:statusSize a rdf:Property, owl:DatatypeProperty ;
     rdfs:domain cs:BitstringStatusList ;
-    rdfs:range xsd:string ;
+    rdfs:range xsd:positiveInteger ;
     rdfs:label "Bitstring entry size in bits" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-bitstring-status-list/#statusSize>, <https://www.w3.org/ns/credentials/status#> ;
     vs:term_status "stable" ;
 .
 
-cs:statusMessage a rdf:Property, owl:DatatypeProperty ;
+cs:statusMessage a rdf:Property ;
     rdfs:domain cs:BitstringStatusList ;
-    rdfs:range xsd:string ;
-    rdfs:label "Status messages" ;
+    rdfs:range cs:BitstringStatusMessage ;
+    rdfs:label "Status message" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-bitstring-status-list/#statusMessage>, <https://www.w3.org/ns/credentials/status#> ;
     vs:term_status "stable" ;
 .
 
 cs:status a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain cs:BitstringStatusMessage ;
     rdfs:range xsd:string ;
     rdfs:label "Hexadecimal value of a status message" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-bitstring-status-list/#status>, <https://www.w3.org/ns/credentials/status#> ;
@@ -83,15 +84,15 @@ cs:status a rdf:Property, owl:DatatypeProperty ;
 .
 
 cs:message a rdf:Property, owl:DatatypeProperty ;
+    rdfs:domain cs:BitstringStatusMessage ;
     rdfs:range xsd:string ;
     rdfs:label "Human-readable message of a status value" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-bitstring-status-list/#message>, <https://www.w3.org/ns/credentials/status#> ;
     vs:term_status "stable" ;
 .
 
-cs:statusReference a rdf:Property, owl:DatatypeProperty ;
+cs:statusReference a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cs:BitstringStatusList ;
-    rdfs:range xsd:string ;
     rdfs:label "Reference documentation for status messages" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-bitstring-status-list/#statusReference>, <https://www.w3.org/ns/credentials/status#> ;
     vs:term_status "stable" ;
@@ -105,14 +106,22 @@ cs:BitstringStatusList a rdfs:Class ;
 .
 
 cs:BitstringStatusListEntry a rdfs:Class ;
+    rdfs:subClassOf cred:CredentialStatus ;
     rdfs:label "Bitstring status list entry" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistentry>, <https://www.w3.org/ns/credentials/status#> ;
     vs:term_status "stable" ;
 .
 
 cs:BitstringStatusListCredential a rdfs:Class ;
+    rdfs:subClassOf cred:VerifiableCredential ;
     rdfs:label "Bitstring status list credential" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistcredential>, <https://www.w3.org/ns/credentials/status#> ;
+    vs:term_status "stable" ;
+.
+
+cs:BitstringStatusMessage a rdfs:Class ;
+    rdfs:label "Bitstring status message" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-bitstring-status-list/#statusMessage>, <https://www.w3.org/ns/credentials/status#> ;
     vs:term_status "stable" ;
 .
 
@@ -133,5 +142,6 @@ cs:BitstringStatusListCredential a rdfs:Class ;
         cs:statusReference,
         cs:BitstringStatusList,
         cs:BitstringStatusListEntry,
-        cs:BitstringStatusListCredential ;
+        cs:BitstringStatusListCredential,
+        cs:BitstringStatusMessage ;
 

@@ -85,7 +85,7 @@
     "@id": "https://www.w3.org/ns/credentials/status#",
     "@type": "owl:Ontology",
     "dc:title": {
-        "@value": "Verifiable Credentials Bitstring Status List v1.0",
+        "@value": "Bitstring Status List Vocabulary",
         "@language": "en"
     },
     "dc:description": {
@@ -93,7 +93,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-bitstring-status-list/",
-    "dc:date": "2024-02-02",
+    "dc:date": "2024-03-28",
     "rdfs_properties": [
         {
             "@id": "cs:statusPurpose",
@@ -138,12 +138,9 @@
         },
         {
             "@id": "cs:statusListCredential",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
+            "@type": "rdf:Property",
             "rdfs:domain": "cs:BitstringStatusListEntry",
-            "rdfs:range": "xsd:string",
+            "rdfs:range": "cs:BitstringStatusListCredential",
             "rdfs:label": "Status list credential",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusListCredential",
             "vs:term_status": "stable",
@@ -194,7 +191,7 @@
                 "owl:DatatypeProperty"
             ],
             "rdfs:domain": "cs:BitstringStatusList",
-            "rdfs:range": "xsd:string",
+            "rdfs:range": "xsd:positiveInteger",
             "rdfs:label": "Bitstring entry size in bits",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusSize",
             "vs:term_status": "stable",
@@ -207,13 +204,10 @@
         },
         {
             "@id": "cs:statusMessage",
-            "@type": [
-                "rdf:Property",
-                "owl:DatatypeProperty"
-            ],
+            "@type": "rdf:Property",
             "rdfs:domain": "cs:BitstringStatusList",
-            "rdfs:range": "xsd:string",
-            "rdfs:label": "Status messages",
+            "rdfs:range": "cs:BitstringStatusMessage",
+            "rdfs:label": "Status message",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusMessage",
             "vs:term_status": "stable",
             "mentioned": [
@@ -229,6 +223,7 @@
                 "rdf:Property",
                 "owl:DatatypeProperty"
             ],
+            "rdfs:domain": "cs:BitstringStatusMessage",
             "rdfs:range": "xsd:string",
             "rdfs:label": "Hexadecimal value of a status message",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#status",
@@ -246,6 +241,7 @@
                 "rdf:Property",
                 "owl:DatatypeProperty"
             ],
+            "rdfs:domain": "cs:BitstringStatusMessage",
             "rdfs:range": "xsd:string",
             "rdfs:label": "Human-readable message of a status value",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#message",
@@ -261,10 +257,9 @@
             "@id": "cs:statusReference",
             "@type": [
                 "rdf:Property",
-                "owl:DatatypeProperty"
+                "owl:ObjectProperty"
             ],
             "rdfs:domain": "cs:BitstringStatusList",
-            "rdfs:range": "xsd:string",
             "rdfs:label": "Reference documentation for status messages",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusReference",
             "vs:term_status": "stable",
@@ -293,6 +288,9 @@
         {
             "@id": "cs:BitstringStatusListEntry",
             "@type": "rdfs:Class",
+            "rdfs:subClassOf": [
+                "cred:CredentialStatus"
+            ],
             "rdfs:label": "Bitstring status list entry",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistentry",
             "vs:term_status": "stable",
@@ -306,8 +304,24 @@
         {
             "@id": "cs:BitstringStatusListCredential",
             "@type": "rdfs:Class",
+            "rdfs:subClassOf": [
+                "cred:VerifiableCredential"
+            ],
             "rdfs:label": "Bitstring status list credential",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistcredential",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cs:BitstringStatusMessage",
+            "@type": "rdfs:Class",
+            "rdfs:label": "Bitstring status message",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-bitstring-status-list/#statusMessage",
             "vs:term_status": "stable",
             "mentioned": [
                 {

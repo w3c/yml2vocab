@@ -1,0 +1,94 @@
+vocab:
+  - id: cs
+    value: https://www.w3.org/ns/credentials/status#
+    context: https://www.w3.org/ns/credentials/v2
+
+prefix:
+  - id: cred
+    value: https://w3.org/2018/credentials#
+
+  - id: sec
+    value: https://w3id.org/security#
+
+ontology:
+  - property: dc:title
+    value: Bitstring Status List Vocabulary
+
+  - property: dc:description
+    value: RDFS [[RDF-SCHEMA]] vocabulary used by the [[[VC-BITSTRING-STATUS-LIST]]] [[VC-BITSTRING-STATUS-LIST]]
+
+  - property: rdfs:seeAlso
+    value: https://www.w3.org/TR/vc-bitstring-status-list/
+
+class:
+  - id: BitstringStatusList
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslist
+
+  - id: BitstringStatusListEntry
+    upper_value: cred:CredentialStatus
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistentry
+
+  - id: BitstringStatusListCredential
+    upper_value: cred:VerifiableCredential
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#bitstringstatuslistcredential
+
+  - id: BitstringStatusMessage
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#statusMessage
+
+property:
+  - id: statusPurpose
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#statusPurpose
+    domain:
+      - cs:BitstringStatusList
+      - cs:BitstringStatusListEntry
+    range: xsd:string
+
+  - id: statusListIndex
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#statusListIndex
+    domain: cs:BitstringStatusListEntry
+    range: xsd:string
+
+  - id: statusListCredential
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#statusListCredential
+    domain: cs:BitstringStatusListEntry
+    range: cs:BitstringStatusListCredential
+
+  - id: encodedList
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#encodedList
+    domain: cs:BitstringStatusList
+    range: sec:multibase
+
+  - id: ttl
+    label: Time to live in milliseconds
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#ttl
+    domain: cs:BitstringStatusList
+    range: xsd:string
+
+  - id: statusSize
+    label: Bitstring entry size in bits
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#statusSize
+    domain: cs:BitstringStatusList
+    range: xsd:positiveInteger
+
+  - id: statusMessage
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#statusMessage
+    domain: cs:BitstringStatusList
+    range: cs:BitstringStatusMessage
+
+  - id: status
+    label: Hexadecimal value of a status message
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#status
+    range: xsd:string
+    domain: cs:BitstringStatusMessage
+
+  - id: message
+    label: Human-readable message of a status value
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#message
+    range: xsd:string
+    domain: cs:BitstringStatusMessage
+
+  - id: statusReference
+    label: Reference documentation for status messages
+    defined_by: https://www.w3.org/TR/vc-bitstring-status-list/#statusReference
+    domain: cs:BitstringStatusList
+    range: URL
