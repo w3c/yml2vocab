@@ -92,14 +92,14 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2024-03-20",
+    "dc:date": "2024-07-04",
     "rdfs_properties": [
         {
             "@id": "sec:verificationMethod",
             "@type": "rdf:Property",
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Verification method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-verificationmethod",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#dfn-verificationmethod",
             "vs:term_status": "stable",
             "rdfs:seeAlso": [
                 "https://www.w3.org/TR/did-core/#verification-methods"
@@ -123,7 +123,7 @@
             ],
             "rdfs:domain": "sec:VerificationMethod",
             "rdfs:label": "Controller",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-controller",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-controller",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -341,7 +341,7 @@
             ],
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Authentication method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-authentication",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-authentication",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -366,7 +366,7 @@
             ],
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Assertion method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-assertionmethod",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-assertionmethod",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -395,7 +395,7 @@
                 "@value": "<div>Historically, this property has often been expressed using `capabilityDelegation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityDelegation`) and the property identifier (`...#capabilityDelegationMethod`) is expected and should not trigger an error.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilitydelegation",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-capabilityDelegation",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -424,7 +424,7 @@
                 "@value": "<div>Historically, this property has often been expressed using `capabilityInvocation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityInvocation`) and the property identifier (`...#capabilityInvocationMethod`) is expected and should not trigger an error.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-capabilityinvocation",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-capabilityInvocation",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -453,7 +453,7 @@
                 "@value": "<div>Historically, this property has often been expressed using `keyAgreement` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`keyAgreement`) and the property identifier (`...#keyAgreementMethod`) is expected and should not trigger an error.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-keyagreement",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-keyAgreement",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -501,12 +501,11 @@
             "rdfs:domain": "sec:Multikey",
             "rdfs:range": "sec:multibase",
             "rdfs:label": "Public key multibase",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-publickeymultibase",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#dfn-publickeymultibase",
             "vs:term_status": "stable",
             "rdfs:seeAlso": [
                 "https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03",
-                "https://github.com/multiformats/multicodec/blob/master/table.csv",
-                "https://w3c-ccg.github.io/lds-ed25519-2020/"
+                "https://github.com/multiformats/multicodec/blob/master/table.csv"
             ],
             "mentioned": [
                 {
@@ -524,12 +523,11 @@
             "rdfs:domain": "sec:Multikey",
             "rdfs:range": "sec:multibase",
             "rdfs:label": "Secret key multibase",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeymultibase",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#dfn-secretkeymultibase",
             "vs:term_status": "stable",
             "rdfs:seeAlso": [
                 "https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03",
-                "https://github.com/multiformats/multicodec/blob/master/table.csv",
-                "https://w3c-ccg.github.io/lds-ed25519-2020/"
+                "https://github.com/multiformats/multicodec/blob/master/table.csv"
             ],
             "mentioned": [
                 {
@@ -547,7 +545,7 @@
             "rdfs:domain": "sec:JsonWebKey",
             "rdfs:range": "rdf:JSON",
             "rdfs:label": "Public key JWK",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-publickeyjwk",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#dfn-publickeyjwk",
             "vs:term_status": "stable",
             "rdfs:seeAlso": [
                 "https://www.iana.org/assignments/jose/jose.xhtml",
@@ -569,7 +567,7 @@
             "rdfs:domain": "sec:JsonWebKey",
             "rdfs:range": "rdf:JSON",
             "rdfs:label": "Secret key JWK",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-secretkeyjwk",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#dfn-secretkeyjwk",
             "vs:term_status": "stable",
             "rdfs:seeAlso": [
                 "https://www.iana.org/assignments/jose/jose.xhtml",
@@ -591,7 +589,7 @@
             "rdfs:domain": "sec:VerificationMethod",
             "rdfs:range": "xsd:dateTime",
             "rdfs:label": "Revocation time",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#dfn-revoked",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#dfn-revoked",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -789,7 +787,7 @@
             "@id": "sec:VerificationMethod",
             "@type": "rdfs:Class",
             "rdfs:label": "Verification method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#verification-methods",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#verification-methods",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -809,7 +807,7 @@
                 "@value": "<div>Instances of this class are verification relationships like, for example, <a href=\"#authentication\">authentication</a> or <a href=\"#assertionMethod\">assertionMethod</a>. These resources can also appear as values of the <a href=\"#proofPurpose\">proofPurpose</a> property.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#verification-relationships",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#verification-relationships",
             "vs:term_status": "stable"
         },
         {
@@ -839,10 +837,12 @@
                 "sec:VerificationMethod"
             ],
             "rdfs:label": "Multikey Verification Method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#multikey",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#multikey",
             "vs:term_status": "stable",
             "rdfs:seeAlso": [
-                "https://www.w3.org/TR/vc-di-eddsa/#multikey"
+                "https://www.w3.org/TR/vc-di-eddsa/#multikey",
+                "https://www.w3.org/TR/vc-di-ecdsa/#multikey",
+                "https://www.w3.org/TR/vc-di-bbs/#multikey"
             ],
             "mentioned": [
                 {
@@ -858,7 +858,7 @@
                 "sec:VerificationMethod"
             ],
             "rdfs:label": "JSON Web Key Verification Method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#jsonwebkey",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#jsonwebkey",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -891,7 +891,7 @@
             "@id": "sec:ProcessingError",
             "@type": "rdfs:Class",
             "rdfs:label": "Processing error",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-di-eddsa/#errors",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#processing-errors",
             "vs:term_status": "stable"
         },
         {
@@ -1074,70 +1074,70 @@
         {
             "@id": "sec:PROOF_GENERATION_ERROR",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Proof generation error",
+            "rdfs:label": "Proof generation error (-16)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#PROOF_GENERATION_ERROR",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:MALFORMED_PROOF_ERROR",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Malformed proof",
+            "rdfs:label": "Malformed proof (-17)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#MALFORMED_PROOF_ERROR",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:MISMATCHED_PROOF_PURPOSE_ERROR",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Mismatched proof purpose",
+            "rdfs:label": "Mismatched proof purpose (-18)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#MISMATCHED_PROOF_PURPOSE_ERROR",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:INVALID_DOMAIN_ERROR",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Invalid proof domain",
+            "rdfs:label": "Invalid proof domain (-19)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#INVALID_DOMAIN_ERROR",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:INVALID_CHALLENGE_ERROR",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Invalid challenge",
+            "rdfs:label": "Invalid challenge (-20)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#INVALID_CHALLENGE_ERROR",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:INVALID_VERIFICATION_METHOD_URL",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Invalid verification method URL",
+            "rdfs:label": "Invalid verification method URL (-21)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#INVALID_VERIFICATION_METHOD_URL",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:INVALID_CONTROLLER_DOCUMENT_ID",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Invalid controller document id",
+            "rdfs:label": "Invalid controller document id (-22)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#INVALID_CONTROLLER_DOCUMENT_ID",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:INVALID_CONTROLLER_DOCUMENT",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Invalid controller document",
+            "rdfs:label": "Invalid controller document (-23)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#INVALID_CONTROLLER_DOCUMENT",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:INVALID_VERIFICATION_METHOD",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Invalid verification method",
+            "rdfs:label": "Invalid verification method (-24)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#INVALID_VERIFICATION_METHOD",
             "vs:term_status": "stable"
         },
         {
             "@id": "sec:INVALID_PROOF_PURPOSE_FOR_VERIFICATION_METHOD",
             "@type": "sec:ProcessingError",
-            "rdfs:label": "Invalid proof purpose for verification method",
+            "rdfs:label": "Invalid proof purpose for verification method (-25)",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#INVALID_PROOF_PURPOSE_FOR_VERIFICATION_METHOD",
             "vs:term_status": "stable"
         }
@@ -1166,7 +1166,7 @@
                 "xsd:string"
             ],
             "rdfs:label": "Datatype for multibase values",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#multibase",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#multibase",
             "vs:term_status": "stable",
             "mentioned": [
                 {
