@@ -13,7 +13,7 @@ cred: a owl:Ontology ;
     dc:title """Verifiable Credentials Vocabulary v2.0"""@en ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL-2.0]]"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2024-02-02"^^xsd:date ;
+    dc:date "2024-08-08"^^xsd:date ;
 .
 
 # Property definitions
@@ -131,7 +131,7 @@ cred:termsOfUse a rdf:Property ;
     rdfs:range cred:TermsOfUse ;
     rdfs:label "Terms of use" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-termsOfUse>, <https://www.w3.org/2018/credentials#> ;
-    vs:term_status "reserved" ;
+    vs:term_status "stable" ;
 .
 
 cred:validFrom a rdf:Property, owl:DatatypeProperty ;
@@ -160,7 +160,7 @@ cred:verifiableCredential a rdf:Property ;
 
 # Class definitions
 cred:CredentialEvidence a rdfs:Class ;
-    rdfs:label "Credential Evidence" ;
+    rdfs:label "Credential evidence" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-evidence>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
 .
@@ -186,6 +186,12 @@ cred:ConfidenceMethod a rdfs:Class ;
 cred:EnvelopedVerifiableCredential a rdfs:Class ;
     rdfs:label "Enveloped verifiable credential" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiableCredential>, <https://www.w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
+.
+
+cred:EnvelopedVerifiablePresentation a rdfs:Class ;
+    rdfs:label "Enveloped verifiable presentation" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiablePresentation>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
@@ -218,7 +224,7 @@ cred:RenderMethod a rdfs:Class ;
 cred:TermsOfUse a rdfs:Class ;
     rdfs:label "Terms of use" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-terms-of-use>, <https://www.w3.org/2018/credentials#> ;
-    vs:term_status "reserved" ;
+    vs:term_status "stable" ;
 .
 
 cred:VerifiableCredential a rdfs:Class ;
@@ -272,6 +278,7 @@ cred:sriString a rdfs:Datatype ;
         cred:validUntil,
         cred:verifiableCredential,
         cred:EnvelopedVerifiableCredential,
+        cred:EnvelopedVerifiablePresentation,
         cred:JsonSchema,
         cred:JsonSchemaCredential,
         cred:VerifiableCredential,

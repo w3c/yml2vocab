@@ -91,7 +91,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-model-2.0/",
-    "dc:date": "2024-02-02",
+    "dc:date": "2024-08-08",
     "rdfs_properties": [
         {
             "@id": "cred:credentialSchema",
@@ -340,7 +340,7 @@
             "rdfs:range": "cred:TermsOfUse",
             "rdfs:label": "Terms of use",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-termsOfUse",
-            "vs:term_status": "reserved",
+            "vs:term_status": "stable",
             "mentioned": [
                 {
                     "@id": "https://www.w3.org/ns/credentials/v2",
@@ -414,7 +414,7 @@
         {
             "@id": "cred:CredentialEvidence",
             "@type": "rdfs:Class",
-            "rdfs:label": "Credential Evidence",
+            "rdfs:label": "Credential evidence",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-evidence",
             "vs:term_status": "reserved"
         },
@@ -444,6 +444,19 @@
             "@type": "rdfs:Class",
             "rdfs:label": "Enveloped verifiable credential",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiableCredential",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/credentials/v2",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "cred:EnvelopedVerifiablePresentation",
+            "@type": "rdfs:Class",
+            "rdfs:label": "Enveloped verifiable presentation",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiablePresentation",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -503,7 +516,7 @@
             "@type": "rdfs:Class",
             "rdfs:label": "Terms of use",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-model-2.0/#bc-terms-of-use",
-            "vs:term_status": "reserved"
+            "vs:term_status": "stable"
         },
         {
             "@id": "cred:VerifiableCredential",
