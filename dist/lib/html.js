@@ -9,6 +9,8 @@ exports.toHTML = void 0;
  */
 const common_1 = require("./common");
 const jsdom_1 = require("jsdom");
+// This object is need for a proper formatting of some text
+const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
 /**
  * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
  * the JSDOM and Deno's DOM WASM implementations; higher layers should not depend on these.
@@ -168,8 +170,16 @@ function toHTML(vocab, template_text) {
             span.className = 'bold';
             document.addChild(span, 'em', ` (${item.status})`);
         }
-        if (item.defined_by !== "") {
-            document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by}">formal definition of the term</a>.`);
+        switch (item.defined_by.length) {
+            case 0: break;
+            case 1: {
+                document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by}">formal definition of the term</a>.`);
+                break;
+            }
+            default: {
+                const refs = item.defined_by.map((def) => `<a rel="rdfs:isDefinedBy" href="${def}">here</a>`);
+                document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
+            }
         }
         if (item.comment !== "") {
             let description = item.comment;

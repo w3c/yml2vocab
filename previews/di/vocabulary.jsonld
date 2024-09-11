@@ -92,7 +92,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2024-07-04",
+    "dc:date": "2024-09-11",
     "rdfs_properties": [
         {
             "@id": "sec:verificationMethod",
@@ -298,7 +298,10 @@
                 "@value": "<div>Historically, this property has often been expressed using `expires` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`expires`) and the property identifier (`...#expiration`) is expected and should not trigger an error.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires",
+            "rdfs:isDefinedBy": [
+                "https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires",
+                "https://www.w3.org/TR/controller-document/#defn-vm-expires"
+            ],
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -341,7 +344,7 @@
             ],
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Authentication method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-authentication",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#authentication",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -366,7 +369,7 @@
             ],
             "rdfs:range": "sec:VerificationMethod",
             "rdfs:label": "Assertion method",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-assertionmethod",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#assertion",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -395,7 +398,7 @@
                 "@value": "<div>Historically, this property has often been expressed using `capabilityDelegation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityDelegation`) and the property identifier (`...#capabilityDelegationMethod`) is expected and should not trigger an error.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-capabilityDelegation",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#capability-delegation",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -424,7 +427,7 @@
                 "@value": "<div>Historically, this property has often been expressed using `capabilityInvocation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityInvocation`) and the property identifier (`...#capabilityInvocationMethod`) is expected and should not trigger an error.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-capabilityInvocation",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#capability-invocation",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -453,7 +456,7 @@
                 "@value": "<div>Historically, this property has often been expressed using `keyAgreement` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`keyAgreement`) and the property identifier (`...#keyAgreementMethod`) is expected and should not trigger an error.</div>",
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#defn-keyAgreement",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/controller-document/#key-agreement",
             "vs:term_status": "stable",
             "mentioned": [
                 {
@@ -1079,17 +1082,17 @@
             "vs:term_status": "stable"
         },
         {
-            "@id": "sec:MALFORMED_PROOF_ERROR",
+            "@id": "sec:PROOF_VERIFICATION_ERROR",
             "@type": "sec:ProcessingError",
             "rdfs:label": "Malformed proof (-17)",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#MALFORMED_PROOF_ERROR",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#PROOF_VERIFICATION_ERROR",
             "vs:term_status": "stable"
         },
         {
-            "@id": "sec:MISMATCHED_PROOF_PURPOSE_ERROR",
+            "@id": "sec:PROOF_TRANSFORMATION_ERROR",
             "@type": "sec:ProcessingError",
             "rdfs:label": "Mismatched proof purpose (-18)",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#MISMATCHED_PROOF_PURPOSE_ERROR",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/vc-data-integrity/#PROOF_TRANSFORMATION_ERROR",
             "vs:term_status": "stable"
         },
         {
