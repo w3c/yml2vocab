@@ -7,6 +7,9 @@
 import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status, RDFDatatype } from './common';
 import { JSDOM } from 'jsdom';
 
+// This object is need for a proper formatting of some text
+const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
+
 
 /**
  * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
@@ -178,8 +181,16 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             document.addChild(span, 'em', ` (${item.status})`);
         }
 
-        if (item.defined_by !== "") {
-            document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by}">formal definition of the term</a>.`);
+        switch (item.defined_by.length) {
+            case 0: break;
+            case 1: {
+                document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by}">formal definition of the term</a>.`);
+                break;
+            }
+            default: {
+                const refs: string[] = item.defined_by.map((def: string): string => `<a rel="rdfs:isDefinedBy" href="${def}">here</a>`);
+                document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
+            }
         }
 
         if (item.comment !== "") {

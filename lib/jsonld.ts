@@ -88,8 +88,12 @@ export function toJSONLD(vocab: Vocab): string {
                 "@type"  : "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             }
         }
-        if (entry.defined_by !== '') {
-            target["rdfs:isDefinedBy"] = `${entry.defined_by}`;
+        if (entry.defined_by.length !== 0) {
+            if (entry.defined_by.length === 1) {
+                target["rdfs:isDefinedBy"] = entry.defined_by[0];
+            } else {
+                target["rdfs:isDefinedBy"] = entry.defined_by;
+            }
         }
         target["vs:term_status"] = `${entry.status}`;
         if (entry.see_also && entry.see_also.length > 0) {

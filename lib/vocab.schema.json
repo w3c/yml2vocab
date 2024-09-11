@@ -140,8 +140,7 @@
                     "type": "string"
                 },
                 "defined_by": {
-                    "type": "string",
-                    "format": "uri"
+                    "$ref": "#/$defs/URIOrArrayOfURIs"
                 },
                 "see_also": {
                     "$ref": "#/$defs/SeeAlso"
@@ -185,6 +184,23 @@
                     "type": "array",
                     "items": {
                         "type": "string"
+                    }
+                }
+            ]
+        },
+
+        "URIOrArrayOfURIs": {
+            "description": "Some of the URI values may be arrays or single URIs, hence this utility schema",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "format": "uri"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uri"
                     }
                 }
             ]
