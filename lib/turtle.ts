@@ -45,8 +45,9 @@ export function toTurtle(vocab: Vocab): string {
         if (entry.comment !== '') {
             turtle += `    rdfs:comment """<div>${entry.comment}</div>"""^^rdf:HTML ;\n`;
         }
-        if (entry.defined_by !== '') {
-            turtle += `    rdfs:isDefinedBy <${entry.defined_by}>, <${global.vocab_url}> ;\n`;
+        if (entry.defined_by.length !== 0) {
+            const defs: string = entry.defined_by.map((def: string): string => `<${def}>`).join(", ");
+            turtle += `    rdfs:isDefinedBy ${defs}, <${global.vocab_url}> ;\n`;
         } else {
             turtle += `    rdfs:isDefinedBy <${global.vocab_url}> ;\n`;
         }

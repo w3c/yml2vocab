@@ -132,7 +132,7 @@ export interface RawVocabEntry {
     range       ?: string[];
     deprecated  ?: boolean;
     status      ?: Status;
-    defined_by  ?: string;
+    defined_by  ?: string[];
     comment     ?: string;
     see_also    ?: Link[];
     example     ?: Example[];
@@ -187,7 +187,7 @@ export interface RDFTerm {
     user_type  ?: string[];
     label       : string;
     comment    ?: string;
-    defined_by ?: string;
+    defined_by ?: string[];
     see_also   ?: Link[];
     deprecated ?: boolean;
     status     ?: Status;
@@ -201,7 +201,7 @@ export interface RDFTerm {
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
-    subClassOf            ?: string[];
+    subClassOf           ?: string[];
     range_of              : string[];
     domain_of             : string[];
     included_in_domain_of : string[];

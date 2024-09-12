@@ -15,7 +15,7 @@ sec: a owl:Ontology ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs
 """@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2024-07-04"^^xsd:date ;
+    dc:date "2024-09-11"^^xsd:date ;
 .
 
 # Property definitions
@@ -94,7 +94,7 @@ sec:expiration a rdf:Property, owl:DatatypeProperty ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Expiration time for a proof or verification method" ;
     rdfs:comment """<div>Historically, this property has often been expressed using `expires` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`expires`) and the property identifier (`...#expiration`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires>, <https://w3id.org/security#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#defn-proof-expires>, <https://www.w3.org/TR/controller-document/#defn-vm-expires>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
@@ -109,14 +109,14 @@ sec:nonce a rdf:Property, owl:DatatypeProperty ;
 sec:authentication a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Authentication method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#defn-authentication>, <https://w3id.org/security#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#authentication>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
 sec:assertionMethod a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Assertion method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#defn-assertionmethod>, <https://w3id.org/security#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#assertion>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
@@ -124,7 +124,7 @@ sec:capabilityDelegationMethod a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Capability delegation method" ;
     rdfs:comment """<div>Historically, this property has often been expressed using `capabilityDelegation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityDelegation`) and the property identifier (`...#capabilityDelegationMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#defn-capabilityDelegation>, <https://w3id.org/security#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#capability-delegation>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
@@ -132,7 +132,7 @@ sec:capabilityInvocationMethod a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Capability invocation method" ;
     rdfs:comment """<div>Historically, this property has often been expressed using `capabilityInvocation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityInvocation`) and the property identifier (`...#capabilityInvocationMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#defn-capabilityInvocation>, <https://w3id.org/security#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#capability-invocation>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
@@ -140,7 +140,7 @@ sec:keyAgreementMethod a rdf:Property, sec:VerificationRelationship ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Key agreement protocols" ;
     rdfs:comment """<div>Historically, this property has often been expressed using `keyAgreement` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`keyAgreement`) and the property identifier (`...#keyAgreementMethod`) is expected and should not trigger an error.</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#defn-keyAgreement>, <https://w3id.org/security#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/controller-document/#key-agreement>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
@@ -484,15 +484,15 @@ sec:PROOF_GENERATION_ERROR a sec:ProcessingError ;
     vs:term_status "stable" ;
 .
 
-sec:MALFORMED_PROOF_ERROR a sec:ProcessingError ;
+sec:PROOF_VERIFICATION_ERROR a sec:ProcessingError ;
     rdfs:label "Malformed proof (-17)" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#MALFORMED_PROOF_ERROR>, <https://w3id.org/security#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#PROOF_VERIFICATION_ERROR>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 
-sec:MISMATCHED_PROOF_PURPOSE_ERROR a sec:ProcessingError ;
+sec:PROOF_TRANSFORMATION_ERROR a sec:ProcessingError ;
     rdfs:label "Mismatched proof purpose (-18)" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#MISMATCHED_PROOF_PURPOSE_ERROR>, <https://w3id.org/security#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-integrity/#PROOF_TRANSFORMATION_ERROR>, <https://w3id.org/security#> ;
     vs:term_status "stable" ;
 .
 

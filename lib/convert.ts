@@ -254,7 +254,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         domain      : toArray(raw.domain) as undefined | string[],
         range       : toArray(raw.range) as undefined | string[],
         deprecated  : deprecated,
-        defined_by  : (raw.defined_by) ? raw.defined_by : "",
+        defined_by  : toArray(raw.defined_by) ?? [],
         status      : status,
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
