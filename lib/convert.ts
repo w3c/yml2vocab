@@ -301,7 +301,7 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
 /******************************************* External entry point **********************************/
 /**
  * Parse and interpret the YAML file's raw content. This is, essentially, just translation of the 
- * YAML file structure into the its internal equivalent representation with only a very few changes.
+ * YAML file structure into its internal equivalent representation with only a very few changes.
  * See the interface definition of 'RawVocabEntry' for the details.
  * 
  * The result is ephemeral, in the sense that it is then immediately transformed into a proper internal 
@@ -343,7 +343,7 @@ export function getData(vocab_source: string): Vocab {
 
         // 'Inverse' info: add the term reference to the global data
         for (const ctx of ctx_s) {
-            if (ctx in global.context_mentions === false) {
+            if (!(ctx in global.context_mentions)) {
                 global.context_mentions[ctx] = [];
             }
             global.context_mentions[ctx].push(raw.id);
@@ -353,8 +353,8 @@ export function getData(vocab_source: string): Vocab {
     }
 
 
-    // Calculates cross references from properties to classes or datatypes; used
-    // to make the cross references for the property ranges and domains
+    // Calculates cross-references from properties to classes or datatypes; used
+    // to make the cross-references for the property ranges and domains
     // @param raw: raw entry for the class or datatype
     // @param refs: the range or domain array of the property
     // @return: whether the class/datatype is indeed in the range of the property
@@ -491,7 +491,7 @@ export function getData(vocab_source: string): Vocab {
             // but the deno typescript checker complains...
             global.status_counter.add(raw.status ? raw.status : Status.stable);
 
-            // Get all domain/range cross references
+            // Get all domain/range cross-references
             for (const property of properties) {
                 crossref(raw, property, property.range, range_of, includes_range_of);
                 crossref(raw, property, property.domain, domain_of, included_in_domain_of);

@@ -199,7 +199,7 @@ export interface RDFTerm {
 
 /**
  * Extra information necessary for a class: its superclasses.
- * The cross references for domains and ranges are calculated.
+ * The cross-references for domains and ranges are calculated.
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
@@ -211,7 +211,7 @@ export interface RDFClass extends RDFTerm {
 }
 
 /**
- * Extra information necessary for a property: its superproperties, range, and domain.
+ * Extra information necessary for a property: its super-properties, range, and domain.
  * None of these are required.
  */
 export interface RDFProperty extends RDFTerm {
@@ -232,7 +232,7 @@ export interface RDFIndividual extends RDFTerm {
 
 /**
  * Extra optional information is the superclass (ie, the datatypes that was used to derive this one).
- * The cross references for domains and ranges are calculated.
+ * The cross-references for domains and ranges are calculated.
  */
 export interface RDFDatatype extends RDFTerm {
     subClassOf        ?: string[],
