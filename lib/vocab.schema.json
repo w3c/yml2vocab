@@ -158,6 +158,9 @@
                     "type": "string",
                     "enum": ["stable", "reserved", "deprecated"]
                 },
+                "external": {
+                    "type": "boolean"
+                },
                 "example": {
                     "$ref": "#/$defs/ExampleUnion"
                 },

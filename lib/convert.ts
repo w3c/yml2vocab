@@ -42,20 +42,20 @@ function localeUnCamelise(str: string, separator = ' '): string {
         return str;
     } else {
         // First character is ignored; it can be upper or lower case
-        const retval: string[] = [str.charAt(0)];
+        const output: string[] = [str.charAt(0)];
         for (let i = 1; i < str.length; i++) {
             const char = str.charAt(i);
             if (isLocaleUpperCase(char)) {
                 // Got to the camel's hump
-                retval.push(separator);
-                retval.push(char.toLocaleLowerCase());
+                output.push(separator);
+                output.push(char.toLocaleLowerCase());
             } else {
-                retval.push(char);
+                output.push(char);
             }
         }
         // The first character must be capitalized:
-        retval[0] = retval[0].toLocaleUpperCase();
-        return retval.join('');
+        output[0] = output[0].toLocaleUpperCase();
+        return output.join('');
     }
 }
 
@@ -210,11 +210,10 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         return final;
     }
 
-    // The deprecation flag, as a separate value, is kept also for reasons of backward compatibility,
+    // The deprecation flag, as a separate value, is kept for reasons of backward compatibility,
     // but this makes the interpretation of the value(s) in the vocabulary a bit awkward. Later version
-    // (maybe even next version) would remove the deprecated flag from existing vocabularies, ie,
-    // switch to status, and all this will go away.
-
+    // may remove the deprecated flag from existing vocabularies, ie, switch to status, altogether,
+    // and all this will go away.
     const {status, deprecated} = ((): {status: Status, deprecated: boolean} => {
         if (raw.status !== undefined) {
             return { 
@@ -244,18 +243,23 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
             return "";
         }
     })(raw.label);
+    const external = !!raw.external || false;
+    // Note that for external terms the range, domain, and superclass definitions
+    // are all ignored. Not doing so would mean hijacking an external term, in case
+    // the user makes the mistake of defining them.
     return {
         id          : (raw.id) ? raw.id : "",
         property    : raw.property,
         value       : raw.value,
         label       : label,
-        upper_value : toArray(raw.upper_value) as undefined | string[],
+        upper_value : external ? undefined : toArray(raw.upper_value) as undefined | string[],
         type        : toArray(raw.type) as undefined | string[],
-        domain      : toArray(raw.domain) as undefined | string[],
-        range       : toArray(raw.range) as undefined | string[],
+        domain      : external ? undefined : toArray(raw.domain) as undefined | string[],
+        range       : external ? undefined : toArray(raw.range) as undefined | string[],
         deprecated  : deprecated,
         defined_by  : toArray(raw.defined_by) ?? [],
         status      : status,
+        external    : external,
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
@@ -458,6 +462,7 @@ export function getData(vocab_source: string): Vocab {
                 deprecated    : raw.deprecated,
                 defined_by    : raw.defined_by,
                 status        : raw.status,
+                external      : raw.external,
                 subPropertyOf : raw.upper_value,
                 see_also      : raw.see_also,
                 range         : range,
@@ -501,6 +506,7 @@ export function getData(vocab_source: string): Vocab {
                 deprecated : raw.deprecated,
                 defined_by : raw.defined_by,
                 status     : raw.status,
+                external   : raw.external,
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
                 example    : raw.example,
@@ -526,6 +532,7 @@ export function getData(vocab_source: string): Vocab {
                 deprecated    : raw.deprecated,
                 defined_by    : raw.defined_by,
                 status        : raw.status,
+                external      : raw.external,
                 type          : [...new Set(type)],
                 see_also      : raw.see_also,
                 example       : raw.example,
@@ -564,6 +571,7 @@ export function getData(vocab_source: string): Vocab {
                 deprecated : raw.deprecated,
                 defined_by : raw.defined_by,
                 status     : raw.status,
+                external   : raw.external,
                 type       : [...new Set(type)],
                 see_also   : raw.see_also,
                 example    : raw.example,

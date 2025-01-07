@@ -29,7 +29,7 @@ async function main() {
     
     const vocabulary: string = options.vocab ? options.vocab : 'vocabulary.yml';
     const template: string   = options.template ? options.template : 'template.html'; 
-    const context: boolean   = options.context ? true : false;
+    const context: boolean   = !!options.context;
     await yml2vocab.generateVocabularyFiles(vocabulary, template, context);
 }
 

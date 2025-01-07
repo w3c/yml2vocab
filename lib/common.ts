@@ -89,7 +89,7 @@ export const global: GlobalData = {
     vocab_context  : "",
     /** 
      * Counter for the terms with various status values.
-     * Some serializers (eg HTML) may optimize/improve the final
+     * Some serializers (e.g. HTML) may optimize/improve the final
      * output if one of the categories have no entries whatsoever.
      */
     status_counter : new StatusCounter(),
@@ -132,13 +132,14 @@ export interface RawVocabEntry {
     range       ?: string[];
     deprecated  ?: boolean;
     status      ?: Status;
+    external    ?: boolean;
     defined_by  ?: string[];
     comment     ?: string;
     see_also    ?: Link[];
     example     ?: Example[];
     dataset     ?: boolean;
     context     ?: string[];
-};
+}
 
 /**
  * This is the structure of the YAML file itself. Note that only vocab and ontology is required, everything else is optional
@@ -170,7 +171,7 @@ export interface ValidationResults {
 
 /**
  * This is a shortened version of the full Ajv error message (the schema is very simple,
- * the generic Ajv error message is way to complex for this use)
+ * the generic Ajv error message is way too complex for this use)
  */
 export interface ValidationError {
     message ?: string,
@@ -191,6 +192,7 @@ export interface RDFTerm {
     see_also   ?: Link[];
     deprecated ?: boolean;
     status     ?: Status;
+    external   ?: boolean;
     example    ?: Example[];
     context     : string[];
 }
@@ -234,10 +236,9 @@ export interface RDFIndividual extends RDFTerm {
  */
 export interface RDFDatatype extends RDFTerm {
     subClassOf        ?: string[],
-    range_of          : string[];
-    includes_range_of : string[];
+    range_of           : string[];
+    includes_range_of  : string[];
 }
-
 
 /**
  * Information for a prefix (to be used either as a prefix in Turtle or in the context of a JSON-LD).
