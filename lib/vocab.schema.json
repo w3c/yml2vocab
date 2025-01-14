@@ -170,10 +170,6 @@
             },
             "required": [
                 "id"
-            ],
-            "anyOf": [
-                { "required": ["comment"]    },
-                { "required": ["defined_by"] }
             ]
         },
 

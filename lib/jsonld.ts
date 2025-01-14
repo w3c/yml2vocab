@@ -97,8 +97,7 @@ export function toJSONLD(vocab: Vocab): string {
         }
         target["vs:term_status"] = `${entry.status}`;
         if (entry.see_also && entry.see_also.length > 0) {
-            const urls = entry.see_also.map( (link: Link): string => link.url);
-            target["rdfs:seeAlso"] = urls;
+            target["rdfs:seeAlso"] = entry.see_also.map( (link: Link): string => link.url);
         }
     }
 
@@ -147,6 +146,7 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the properties
         const properties: JSON[] = [];
         for (const prop of vocab.properties) {
+            if (prop.external) continue;
             const pr_object: JSON = {};
             pr_object["@id"] = `${global.vocab_prefix}:${prop.id}`;
             if (prop.type.length === 1) {
@@ -177,6 +177,7 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the classes
         const classes: JSON[] = [];
         for (const cl of vocab.classes) {
+            if (cl.external) continue;
             const cl_object: JSON = {};
             cl_object["@id"]   = `${global.vocab_prefix}:${cl.id}`;
             if (cl.type.length === 1) {
@@ -201,6 +202,7 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the individuals
         const individuals: JSON[] = [];
         for (const ind of vocab.individuals) {
+            if (ind.external) continue;
             const ind_object: JSON = {};
             ind_object["@id"]   = `${global.vocab_prefix}:${ind.id}`;
             if (ind.type.length === 1) {
@@ -222,6 +224,7 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the datatypes
         const datatypes: JSON[] = [];
         for (const dt of vocab.datatypes) {
+
             const dt_object: JSON = {};
             dt_object["@id"] = `${global.vocab_prefix}:${dt.id}`;
             dt_object["@type"] = `rdfs:Datatype`;

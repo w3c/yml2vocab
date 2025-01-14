@@ -89,6 +89,8 @@ export function toTurtle(vocab: Vocab): string {
     if (vocab.properties.length > 0) {
         turtle += "# Property definitions\n";
         for (const prop of vocab.properties) {
+            // External definitions should be ignored
+            if (prop.external) continue;
             turtle += `${global.vocab_prefix}:${prop.id} a ${prop.type.join(", ")} ;\n`;
             if (prop.status === Status.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
@@ -109,6 +111,7 @@ export function toTurtle(vocab: Vocab): string {
     if (vocab.classes.length > 0) {
         turtle += "# Class definitions\n"
         for (const cl of vocab.classes) {
+            if (cl.external) continue;
             turtle += `${global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
             if (cl.status === Status.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
@@ -124,6 +127,7 @@ export function toTurtle(vocab: Vocab): string {
     if (vocab.individuals.length > 0) {
         turtle += "# Definitions of individuals\n"
         for (const ind of vocab.individuals) {
+            if (ind.external) continue;
             turtle += `${global.vocab_prefix}:${ind.id} a ${ind.type.join(", ")} ;\n`;
             if (ind.status === Status.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
@@ -135,6 +139,7 @@ export function toTurtle(vocab: Vocab): string {
     if (vocab.datatypes.length > 0) {
         turtle += "# Definitions of datatypes\n"
         for (const dt of vocab.datatypes) {
+            if (dt.external) continue;
             turtle += `${global.vocab_prefix}:${dt.id} a rdfs:Datatype ;\n`
             if (dt.status === Status.deprecated) {
                 turtle += `    owl:deprecated true ;\n`;
@@ -153,7 +158,7 @@ export function toTurtle(vocab: Vocab): string {
             turtle += `<${ctx}> a jsonld:Context ;\n`;
             turtle += `    schema:mentions\n`
             turtle += (global.context_mentions[ctx].map(
-                (term: string): string => `        ${global.vocab_prefix}:${term}`
+                (term: string): string => `        ${term}`
             ).join(",\n")) + " ;\n\n"
         }
     }

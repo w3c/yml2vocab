@@ -1,4 +1,4 @@
-/**
+  /**
  * Generate a (minimal) JSON-LD context file for the vocabulary 
  * (see the 'Vocab' interface).
  * 

@@ -193,6 +193,7 @@ export interface RDFTerm {
     deprecated ?: boolean;
     status     ?: Status;
     external   ?: boolean;
+    prefix     ?: string;
     example    ?: Example[];
     context     : string[];
 }

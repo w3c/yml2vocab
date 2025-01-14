@@ -36,7 +36,7 @@ export function validateWithSchema(yaml_raw_content: string): ValidationResults 
             });
             return {
                 vocab: null,
-                error: simple_errors
+                error: simple_errors,
             }
         } else {
             return {

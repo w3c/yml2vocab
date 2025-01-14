@@ -243,23 +243,25 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
             return "";
         }
     })(raw.label);
-    const external = !!raw.external || false;
-    // Note that for external terms the range, domain, and superclass definitions
-    // are all ignored. Not doing so would mean hijacking an external term, in case
+
+    // It is currently not fully decided, whether for external terms the range, domain, and superclass definitions
+    // should be fully ignored. Not doing so would mean hijacking an external term, in case
     // the user makes the mistake of defining them.
+    // At the moment they are allowed, but ignored by most of the processing except, potentially
+    // by the generation of context files
     return {
         id          : (raw.id) ? raw.id : "",
         property    : raw.property,
         value       : raw.value,
         label       : label,
-        upper_value : external ? undefined : toArray(raw.upper_value) as undefined | string[],
+        upper_value : toArray(raw.upper_value) as undefined | string[],
         type        : toArray(raw.type) as undefined | string[],
-        domain      : external ? undefined : toArray(raw.domain) as undefined | string[],
-        range       : external ? undefined : toArray(raw.range) as undefined | string[],
+        domain      : toArray(raw.domain) as undefined | string[],
+        range       : toArray(raw.range) as undefined | string[],
         deprecated  : deprecated,
         defined_by  : toArray(raw.defined_by) ?? [],
         status      : status,
-        external    : external,
+        external    : raw.external,
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
@@ -287,14 +289,21 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
     // It is perfectly fine if the vocab is not encoded as an array in YAML
     if (!Array.isArray(raw.vocab)) raw.vocab = [raw.vocab];
 
+    // The extra filter is used to keep the valid entries only. For example, an external
+    // term without a clear definition must be ignored.
+    const classes = raw.class?.map(finalizeRawEntry).filter((entry) => entry !== null)
+    const property = raw.property?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const individual = raw.individual?.map(finalizeRawEntry).filter((entry) => entry !== null)
+    const datatypes = raw.datatype?.map(finalizeRawEntry).filter((entry) => entry !== null)
+
     return {
         vocab      : raw.vocab.map(finalizeRawEntry),
         prefix     : raw.prefix?.map(finalizeRawEntry),
         ontology   : raw.ontology?.map(finalizeRawEntry),
-        class      : raw.class?.map(finalizeRawEntry),
-        property   : raw.property?.map(finalizeRawEntry),
-        individual : raw.individual?.map(finalizeRawEntry),
-        datatype   : raw.datatype?.map(finalizeRawEntry),
+        class      : classes,
+        property   : property,
+        individual : individual,
+        datatype   : datatypes,
     }
 }
 
@@ -316,15 +325,15 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
 export function getData(vocab_source: string): Vocab {
     const validation_results: ValidationResults = validateWithSchema(vocab_source);
     if (validation_results.vocab === null) {
-        const error = JSON.stringify(validation_results,null,4);
-        throw(new TypeError(`JSON Schema validation error`, {cause: error}));
+        const error = (validation_results.error.map((e): string => e.message)).join('\n');
+        throw(new TypeError(`JSON Schema validation error`, {cause: '\n' + error}));
     }
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
 
     // Establish the final context reference(s), if any, for a term.
     // As a side effect, the 'inverse' info, ie, the list of terms per context, is
     // created in the global data structure
-    const final_contexts = (raw: RawVocabEntry): string[] => {
+    const final_contexts = (raw: RawVocabEntry, curie: string ): string[] => {
         if (raw.context === undefined) return [];
 
         // replace the value of "vocab" by the global context, then
@@ -346,12 +355,11 @@ export function getData(vocab_source: string): Vocab {
             if (!(ctx in global.context_mentions)) {
                 global.context_mentions[ctx] = [];
             }
-            global.context_mentions[ctx].push(raw.id);
+            global.context_mentions[ctx].push(curie);
         }
 
         return ctx_s;
     }
-
 
     // Calculates cross-references from properties to classes or datatypes; used
     // to make the cross-references for the property ranges and domains
@@ -423,10 +431,47 @@ export function getData(vocab_source: string): Vocab {
         ...defaultOntologyProperties,
     ];
 
+    const check_id = (raw: RawVocabEntry): { prefix: string,  id: string, external: boolean } => {
+        // see if the id is a CURIE; it is treated differently.
+
+        // An error condition is also checked on the fly: if a term is not external, either
+        // defined_by or comment should also be set
+
+        const [prefix, value] = raw.id.split(":");
+
+        const output = ((): { prefix: string, id: string, external: boolean } => {
+            if (value === undefined) {
+                // Not a curie. Check the 'external' flag: it should not be true
+                if (raw.external) {
+                    throw (new Error(`${raw.id} is set to be external, but the id is not a CURIE`));
+                }
+                return {
+                    id: raw.id,
+                    prefix: global.vocab_prefix,
+                    external: false
+                }
+            } else {
+                // A real curie, which may or may not be external. By default, it is.
+                const external = raw.external ?? true;
+                return {prefix: prefix, id: value, external}
+            }
+        })();
+
+        if (!output.external) {
+            if ((raw.comment === undefined || raw.comment === "") &&
+                (raw.defined_by === undefined || raw.defined_by.length === 0)
+            ) {
+                throw (new Error(`${raw.id} is incomplete: either "defined_by" or "comment" should be provided.`));
+            }
+        }
+        return output;
+    }
+
     // Get the properties. Note the special treatment for deprecated properties, as well as 
     // the extra owl types added depending on the range
     const properties: RDFProperty[] = (vocab.property !== undefined) ?
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
+            const {prefix, id, external} = check_id(raw);
             const user_type: string[] = (raw.type === undefined) ? [] : raw.type      
             const types: string[] = [
                 ...(raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],                      
@@ -454,7 +499,7 @@ export function getData(vocab_source: string): Vocab {
                 }
             }
             return {
-                id            : raw.id,
+                id            : id,
                 type          : types,
                 user_type     : user_type,
                 label         : raw.label,
@@ -462,20 +507,22 @@ export function getData(vocab_source: string): Vocab {
                 deprecated    : raw.deprecated,
                 defined_by    : raw.defined_by,
                 status        : raw.status,
-                external      : raw.external,
+                external      : external,
+                prefix        : prefix,
                 subPropertyOf : raw.upper_value,
                 see_also      : raw.see_also,
                 range         : range,
                 domain        : raw.domain,
                 example       : raw.example,
                 dataset       : raw.dataset,
-                context       : final_contexts(raw),
+                context       : final_contexts(raw, `${prefix}:${id}`),
             }
         }) : [];
 
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
     const classes: RDFClass[] = (vocab.class !== undefined) ? 
         vocab.class.map((raw: RawVocabEntry): RDFClass => {
+            const {prefix, id, external} = check_id(raw);
             const user_type: string[] = (raw.type === undefined) ? [] : raw.type;
             const types: string[] = [
                 ...(raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"],
@@ -498,7 +545,7 @@ export function getData(vocab_source: string): Vocab {
             }
 
             return {
-                id         : raw.id,
+                id         : id,
                 type       : types,
                 user_type  : user_type,
                 label      : raw.label,
@@ -506,11 +553,12 @@ export function getData(vocab_source: string): Vocab {
                 deprecated : raw.deprecated,
                 defined_by : raw.defined_by,
                 status     : raw.status,
-                external   : raw.external,
+                external   : external,
+                prefix     : prefix,
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context    : final_contexts(raw),
+                context       : final_contexts(raw, `${prefix}:${id}`),
                 range_of, domain_of, included_in_domain_of, includes_range_of
             }
         }) : [];
@@ -518,6 +566,7 @@ export function getData(vocab_source: string): Vocab {
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
     const individuals: RDFIndividual[] = (vocab.individual !== undefined) ?
         vocab.individual.map((raw:RawVocabEntry): RDFIndividual => {
+            const {prefix, id, external} = check_id(raw);
             // In the former version the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
@@ -526,23 +575,25 @@ export function getData(vocab_source: string): Vocab {
                 ...(raw.upper_value !== undefined) ? raw.upper_value : []
             ];
             return {
-                id            : raw.id,
+                id            : id,
                 label         : raw.label,
                 comment       : raw.comment,
                 deprecated    : raw.deprecated,
                 defined_by    : raw.defined_by,
                 status        : raw.status,
-                external      : raw.external,
+                external      : external,
+                prefix        : prefix,
                 type          : [...new Set(type)],
                 see_also      : raw.see_also,
                 example       : raw.example,
-                context       : final_contexts(raw),
+                context       : final_contexts(raw, `${prefix}:${id}`),
             }
         }) : [];
 
     // Get the datatypes. 
     const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
         vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
+            const {prefix, id, external} = check_id(raw);
             // In the former version the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
@@ -564,18 +615,19 @@ export function getData(vocab_source: string): Vocab {
             }
 
             return {
-                id: raw.id,
-                subClassOf: (raw.upper_value !== undefined) ? raw.upper_value : [],
+                id         : id,
+                subClassOf : (raw.upper_value !== undefined) ? raw.upper_value : [],
                 label      : raw.label,
                 comment    : raw.comment,
                 deprecated : raw.deprecated,
                 defined_by : raw.defined_by,
                 status     : raw.status,
-                external   : raw.external,
+                external   : external,
+                prefix     : prefix,
                 type       : [...new Set(type)],
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context    : final_contexts(raw),
+                context       : final_contexts(raw, `${prefix}:${id}`),
                 range_of, includes_range_of
             };
         }) : [];
