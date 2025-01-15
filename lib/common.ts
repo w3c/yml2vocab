@@ -105,6 +105,15 @@ export interface GlobalData {
      * Inverted info for contexts: for each context the list of relevant terms are listed.
      */
     context_mentions : Contexts;
+
+    /**
+     * List of "real" curies that occur in the vocabulary as terms. These are, usually,
+     * external terms but, in theory, may also be bona fide terms defined as part of this
+     * vocabulary.
+     *
+     * Used to set the right 'id' values for cross-references in the generated HTML file
+     */
+    real_curies      : string[];
 }
 
 /**
@@ -116,6 +125,7 @@ export const global: GlobalData = {
     vocab_context    : "",
     status_counter   : new StatusCounter(),
     context_mentions : {} as Contexts,
+    real_curies      : [],
 } 
 
 /**

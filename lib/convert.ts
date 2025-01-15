@@ -409,6 +409,7 @@ export function getData(vocab_source: string): Vocab {
             } else {
                 // A real curie, which may or may not be external. By default, it is.
                 const external = raw.external ?? true;
+                if (!global.real_curies.includes(raw.id)) global.real_curies.push(raw.id);
                 return {prefix: prefix, id: value, external}
             }
         })();

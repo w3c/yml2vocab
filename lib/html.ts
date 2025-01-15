@@ -153,18 +153,24 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 // Do not touch that!!!!
                 return `<a href="${curie}"><code>${curie}</code></a>`;
             } else {
-                // it is fairly unnecessary to make references to some of the core
-                // vocabularies, like rdf or xsd, which do not have a proper HTML target
-                // anyway... (alas!)
-                const no_url = ['rdf', 'xsd', 'rdfs', 'owl'];
-                if (no_url.includes(components[0]) === false) {
-                    for (const prefix_def of vocab.prefixes.slice(1)) {
-                        if (prefix_def.prefix === components[0]) {
-                            return `<a href="${prefix_def.url}${components[1]}"><code>${curie}</code></a>`;
+                // The target may be an external term within the vocabulary!
+                if (global.real_curies.includes(curie)) {
+                    return `<a href="#${curie}"><code>${curie}</code></a>`
+                } else {
+                    // it is fairly unnecessary to make references to some of the core
+                    // vocabularies, like rdf or xsd, which do not have a proper HTML target
+                    // anyway... (alas!)
+                    const no_url = ['rdf', 'xsd', 'rdfs', 'owl'];
+                    if (no_url.includes(components[0]) === false) {
+                        for (const prefix_def of vocab.prefixes.slice(1)) {
+                            if (prefix_def.prefix === components[0]) {
+                                return `<a href="${prefix_def.url}${components[1]}"><code>${curie}</code></a>`;
+                            }
                         }
-                    }    
+                    }
+                    // Fallback case: no URL...
+                    return `<code>${curie}</code>`;
                 }
-                return `<code>${curie}</code>`;
             }
         }
     };
