@@ -1,5 +1,5 @@
 /**
- * Import the YAML file, validate against a JSON schema, and return the data as an object...
+ * Import the YAML file, validate against a JSON schema, and return the data as an object.
  * 
  * @packageDocumentation
  */
@@ -9,6 +9,8 @@ import addFormats                                       from 'ajv-formats';
 import * as yaml                                        from 'yaml';
 import { RawVocab, ValidationError, ValidationResults } from './common';
 
+// Yeah, it is ugly to use require, but importing a json file is still an issue for TS
+// At some point we can simply import a json file
 const schema = require('./vocab.schema.json');
 
 /**

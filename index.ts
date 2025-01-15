@@ -1,3 +1,9 @@
+/**
+ * API entry point to the package.
+ *
+ * @module
+ */
+
 import { Vocab }          from './lib/common';
 import { getData }        from "./lib/convert";
 import { toTurtle }       from "./lib/turtle";
@@ -9,12 +15,17 @@ import { promises as fs } from 'node:fs';
 
 /**
  * Conversion class for YAML to the various syntaxes.
+ * The constructor of the class does the real work: converting the yaml file into
+ * an internal representation of the vocabulary (see {@link Vocab}). The class methods
+ * are the interfaces to the different representations of the vocabulary (done through
+ * separate modules).
  */
 export class VocabGeneration {
-    private vocab: Vocab;
+    private readonly vocab: Vocab;
 
     /**
-     * 
+     * Conversion class for YAML to the various syntaxes. The real action is in the {@link getData} method.
+     *
      * @param yml_content - the YAML content in string (before parsing)
      * @throws {ValidationError} Error raised by either the YAML parser or the Schema Validator
      */
@@ -23,7 +34,7 @@ export class VocabGeneration {
     }
 
     /**
-     * Get the Turtle representation of the vocabulary
+     * Get the Turtle representation of the vocabulary.
      * 
      * @returns The Turtle content
      */
@@ -32,7 +43,7 @@ export class VocabGeneration {
     }
 
     /**
-     * Get the JSON-LD representation of the vocabulary
+     * Get the JSON-LD representation of the vocabulary.
      * 
      * @returns The JSON-LD content
      */
@@ -41,7 +52,7 @@ export class VocabGeneration {
     }
 
     /**
-     * Get the minimal JSON-LD Context file for the vocabulary
+     * Get the minimal JSON-LD Context file for the vocabulary.
      * 
      * @returns The JSON-LD content
      */
@@ -59,9 +70,13 @@ export class VocabGeneration {
     }
 
     /* Deprecated; these are just to avoid problems for users of earlier versions */
+    /** @internal */
     get_turtle()                {return this.getTurtle()}
+    /** @internal */
     get_jsonld()                {return this.getJSONLD()}
+    /** @internal */
     get_html(template: string)  {return this.getHTML(template)}
+    /** @internal */
     get_context()               {return this.getContext()}
 }
 
@@ -83,8 +98,7 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
     const basename = yaml_file_name.endsWith('.yml') ? yaml_file_name.slice(0,-4) : yaml_file_name;
 
     // Get the two files from the file system (at some point, this can be extended
-    // to URL-s using fetch instead of an fs.read but, so far, there was no need)
-
+    // to URL-s using `fetch` instead of `fs.read` but, so far, there was no need)
     let yaml = '', template = '';
     const read_errors: string[] = [];
     const reads = await Promise.allSettled([
@@ -111,23 +125,21 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
     try {
         const conversion: VocabGeneration = new VocabGeneration(yaml);
 
-        {
-            const fs_writes: Promise<void>[] = [
-                fs.writeFile(`${basename}.ttl`, conversion.getTurtle()),
-                fs.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-                fs.writeFile(`${basename}.html`, conversion.getHTML(template)),
-            ];
-            if (context) {
-                fs_writes.push(fs.writeFile(`${basename}_context.jsonld`, conversion.getContext()))
-            }
-            const write_errors = (await Promise.allSettled(fs_writes))
-                .filter((result): boolean => result.status === "rejected")
-                .map((result): string => (result.status === "rejected" ? result.reason : ''));
+        const fs_writes: Promise<void>[] = [
+            fs.writeFile(`${basename}.ttl`, conversion.getTurtle()),
+            fs.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
+            fs.writeFile(`${basename}.html`, conversion.getHTML(template)),
+        ];
+        if (context) {
+            fs_writes.push(fs.writeFile(`${basename}_context.jsonld`, conversion.getContext()))
+        }
+        const write_errors = (await Promise.allSettled(fs_writes))
+            .filter((result): boolean => result.status === "rejected")
+            .map((result): string => (result.status === "rejected" ? result.reason : ''));
 
-            if (write_errors.length != 0) {
-                // One or more files could not be written, we should throw an exception...
-                throw(new AggregateError(write_errors.join('\n')));
-            }
+        if (write_errors.length != 0) {
+            // One or more files could not be written, we should throw an exception...
+            throw(new AggregateError(write_errors.join('\n')));
         }
     } catch(e) {
         console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}`);
@@ -138,6 +150,14 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
 // This function is retained for historical reasons, before the naming conventions have been changed to camel case for functions.
 // Older usage may rely on this format, and there is no reason to make them invalid...
 //
+/**
+ *
+ * @param yaml_file_name
+ * @param template_file_name
+ * @param context
+ *
+ * @internal
+ */
 export async function generate_vocabulary_files(yaml_file_name: string, template_file_name: string, context: boolean): Promise<void> {
     return await generateVocabularyFiles(yaml_file_name, template_file_name, context);
 }

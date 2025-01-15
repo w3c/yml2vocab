@@ -14,6 +14,8 @@ const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction'
 /**
  * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
  * the JSDOM and Deno's DOM WASM implementations; higher layers should not depend on these.
+ *
+ * The class also includes some handy shorthands to make the code cleaner…
  * 
  * 2024-02-02: as of today, with deno v. >1.4, this layer is not necessary any more,
  * because jsdom finally runs with deno as well. The class has been kept as a separate layer
@@ -116,13 +118,15 @@ const bnode = (): string => {
  * 
  * The template files have element with a predefined `@id` value at all points where some
  * content must be added. Ie, the usual model in the code below is:
- * 
- * const some_element = document.getElementById('namespaces');
+ *
+ * ```javascript
+ * const some_element = document.getElementById('properties');
  * manipulate the subtree at 'some_element' to add content
+ * ```
  * 
- * The current version adds a bunch of properties to the HTML to make it also RDFa, ie,
+ * The current version adds a bunch of properties to the HTML to make it also RDFa, i.e.,
  * that the vocabulary can be extracted by an RDFa distiller. I am not sure if it is all
- * that useful, and it complicates the code; at some point we may decide to remove this.
+ * that useful, and it complicates the code, but let us keep it anyway.
  * 
  * @param vocab - The internal representation of the vocabulary
  * @param template_text - The textual content of the template file 
@@ -130,10 +134,10 @@ const bnode = (): string => {
  */
 export function toHTML(vocab: Vocab, template_text: string): string {
 
-    /* *********************** The real processing part ****************** */
     // Get the DOM of the template
-    // const document: Document = (new JSDOM(template_text)).window.document;
     const document: MiniDOM = new MiniDOM(template_text);
+
+    /*********************************** Utility functions ******************************************/
 
     // This is used to generate cross-links, possible to external entities, too
     const resolveCurie = (curie: string): string => {
@@ -151,7 +155,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             } else {
                 // it is fairly unnecessary to make references to some of the core
                 // vocabularies, like rdf or xsd, which do not have a proper HTML target
-                // anyway...
+                // anyway... (alas!)
                 const no_url = ['rdf', 'xsd', 'rdfs', 'owl'];
                 if (no_url.includes(components[0]) === false) {
                     for (const prefix_def of vocab.prefixes.slice(1)) {
@@ -166,8 +170,15 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     };
 
     // Factor out all common fields for the terms
-    const commonFields = (section: Element, item: RDFTerm): void => {
+    // return the value that can be used as the id value of the section in HTML
+    const commonFields = (section: Element, item: RDFTerm): string => {
+        // by default, the id of the term should be used for the enclosing section
+        let output = item.id;
+
+        // External terms have a different behavior: ranges/domains should be ignored, and no RDFa should be
+        // generated.
         if (item.external) {
+            // Check whether the term's prefix is indeed defined
             const ns = ((pr: string, id: string): RDFPrefix => {
                 for (const prefix of vocab.prefixes) {
                     if (prefix.prefix === pr) {
@@ -178,8 +189,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             })(item.prefix, item.id);
 
             const curie = ns.prefix + ':' + item.id;
-            // This is a bit ugly; oh well...
-            section.id = curie;
+            // For external terms, the id of the enclosing section should not be the
+            // id of the term; it could be misleading. Instead, it is set to the full
+            // curie
+            output = curie;
 
             document.addChild(section,'h4', `<code>${item.id}</code>`);
             const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
@@ -192,9 +205,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
             const url = ns.url + item.id;
             const warning_text = `
-                <b>This term is not formally part of the vocabulary.</b>
-                It is frequently used <em>with</em> this vocabulary, and has been added for
-                reference. For a more detailed definition, 
+                <b>This term is formally defined in another vocabulary</b>, but is
+                frequently used with this vocabulary and has been included to aid
+                readability of this document. 
+                For a more detailed definition, 
                 see the definition of the term at <a href="${url}"><code>${curie}</code></a>.
             `
             document.addChild(section, 'p', warning_text);
@@ -296,9 +310,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 document.addText('true', span);
             }
         }
+
+        return output;
     }
 
-    const setExample = (section: Element, item: RDFClass|RDFIndividual|RDFProperty): void => {
+    const setExample = (section: Element, item: RDFClass | RDFIndividual | RDFProperty): void => {
         if (item.example && item.example.length > 0) {
             for (const ex of item.example) {
                 const example = document.addChild(section, 'pre', ex.json);
@@ -310,7 +326,35 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
-    // RDFa preamble. If, at some point, we decide that the RDFa part is superfluous, this block can be removed.
+    // Prefixes that are used to differentiate among stable, reserved, and deprecated values
+    const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
+        switch (status) {
+            case Status.deprecated :
+                return { id_prefix : 'deprecated_', intro_prefix: '<em><strong>deprecated</strong></em>' };
+            case Status.reserved :
+                return { id_prefix : 'reserved_', intro_prefix: '<em><strong>reserved</strong></em>' };
+            case Status.stable :
+                return { id_prefix : '', intro_prefix : '' };
+
+        }
+    }
+
+    // Add the references to the context files (if any)
+    const contextReferences = (section: Element, item: RDFTerm): void => {
+        if (item.context !== undefined && item.context?.length > 0) {
+            const dl = document.addChild(section, 'dl');
+            dl.className = 'terms';
+            document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);
+            const dd = document.addChild(dl, 'dd');
+            dd.innerHTML = item.context.map((ctx: string): string => {
+                return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;
+            }).join(", ");
+        }
+    }
+
+    /************ Functions to add specific content to the final HTML, based also on the template ********************/
+
+    // RDFa preamble.
     const rdfaPreamble = () => {
         const body = document.getElementsByTagName('body')[0];
         if (body) {
@@ -326,9 +370,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             const title = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:title')[0].value;
             document.addText(title, document.getElementsByTagName('title')[0]);
             document.addText(title, document.getElementById('title'));    
-        } catch(_e) {
+         } catch(_e) {
             console.log("Vocabulary warning: title is not provided.")
-        }
+         }
 
         const date = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:date')[0].value;
         document.addText(date, document.getElementById('time'));
@@ -364,32 +408,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 const dd = document.addChild(ns_dl, 'dd');
                 document.addChild(dd, 'code', ns.url);
             }
-        }
-    }
-
-    // Prefixes that are used to differentiate among stable, reserved, and deprecated values
-    const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
-        switch (status) {
-            case Status.deprecated : 
-                return { id_prefix : 'deprecated_', intro_prefix: '<em><strong>deprecated</strong></em>' };
-            case Status.reserved :
-                return { id_prefix : 'reserved_', intro_prefix: '<em><strong>reserved</strong></em>' };
-            case Status.stable :
-                return { id_prefix : '', intro_prefix : '' };
-                
-        }
-    }
-
-    // Add the references to the context files (if any)
-    const contextReferences = (section: Element, item: RDFTerm): void => {
-        if (item.context !== undefined && item.context?.length > 0) {
-            const dl = document.addChild(section, 'dl');
-            dl.className = 'terms';
-            document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);
-            const dd = document.addChild(dl, 'dd');
-            dd.innerHTML = item.context.map((ctx: string): string => {
-                return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;
-            }).join(", ");
         }
     }
 
@@ -434,6 +452,12 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
+    // Note that the functions for classes, properties, etc., have a second argument for "statusFilter", ie, for reserved,
+    // deprecate, or stable. These values are used to find the right section in the template, and can also
+    // affect the real function. These functions are called several time, each with different status values
+    // and different list of terms; see at the end of the function
+
+
     // Generation of the section content for classes: a big table, with a row per class
     // There is a check for a possible template error and also whether there are class
     // definitions in the first place.
@@ -449,8 +473,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
                 for (const item of cl_list) {
                     const cl_section = document.addChild(section, 'section');
-                    cl_section.id = item.id;
-                    commonFields(cl_section, item);
+                    cl_section.id = commonFields(cl_section, item);
                     // Extra list of superclasses, if applicable
                     if (!item.external && item.subClassOf && item.subClassOf.length > 0) {
                         const dl = document.addChild(cl_section, 'dl');
@@ -526,8 +549,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
                 for (const item of pr_list) {
                     const pr_section = document.addChild(section, 'section');
-                    pr_section.id = item.id;
-                    commonFields(pr_section,item);
+                    pr_section.id = commonFields(pr_section,item);
                     // Extra list of superproperty, if applicable
                     if (!item.external && item.subPropertyOf && item.subPropertyOf.length > 0) {
                         const dl = document.addChild(pr_section, 'dl');
@@ -617,8 +639,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
                 for (const item of ind_list) {
                     const ind_section = document.addChild(section, 'section');
-                    ind_section.id = item.id;
-                    commonFields(ind_section,item);
+                    ind_section.id = commonFields(ind_section,item);
                     const dl = document.addChild(ind_section, 'dl');
                     dl.className = 'terms';
                     if (!item.external && item.type.length > 0) {
@@ -654,8 +675,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
                 for (const item of dt_list) {
                     const dt_section = document.addChild(section, 'section');
-                    dt_section.id = item.id;
-                    commonFields(dt_section, item);
+                    dt_section.id = commonFields(dt_section, item);
 
                     if (item.subClassOf && item.subClassOf.length > 0) {
                         const dl = document.addChild(dt_section, 'dl');
@@ -702,7 +722,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }   
     }
 
-    
+    /*********************** The real processing part, making use of all these functions ****************************/
 
     // The prefix and the URL for the vocabulary itself
     // I am just lazy to type things that are too long... :-)

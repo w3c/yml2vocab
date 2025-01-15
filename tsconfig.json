@@ -35,6 +35,7 @@
     "typedocOptions" : {
         "excludeExternals": true,
         "excludePrivate" : true,
+        "excludeInternal" : true,
         "excludeProtected" : false,
         "out" : "docs",
         "theme": "default",
