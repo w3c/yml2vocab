@@ -200,7 +200,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             // curie
             output = curie;
 
-            document.addChild(section,'h4', `<code>${item.id}</code>`);
+            document.addChild(section,'h4', `<code>${curie}</code>`);
             const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
 
             if (item.status !== Status.stable) {
@@ -214,20 +214,20 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 <b>This term is formally defined in another vocabulary</b>, but is
                 frequently used with this vocabulary and has been included to aid
                 readability of this document. 
-                For a more detailed definition, 
-                see the definition of the term at <a href="${url}"><code>${curie}</code></a>.
+                For more detailed information, see the <a href="${url}">reference</a> to the term
+                in its own vocabulary definition.
             `
             document.addChild(section, 'p', warning_text);
             switch (item.defined_by.length) {
                 case 0:
                     break;
                 case 1: {
-                    document.addChild(section, 'p', `See the <a href="${item.defined_by[0]}">formal definition of the term</a>.`);
+                    document.addChild(section, 'p', `See also the <a href="${item.defined_by[0]}">formal definition of the term</a>.`);
                     break;
                 }
                 default: {
                     const refs: string[] = item.defined_by.map((def: string): string => `<a href="${def}">here</a>`);
-                    document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
+                    document.addChild(section, 'p', `See also the formal definitions ${formatter.format(refs)}.`);
                 }
             }
         } else {
