@@ -18,18 +18,17 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
   - `comment` refers to a longer description of the term, and can be used for blocks in the `class`, `property` and `individual` top-level blocks. It may include [HTML Flow content elements](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories). The comment will be encapsulated into an HTML `<div>` element and will then be displayed verbatim in the HTML version of the vocabulary, and as a literal of type `rdf:HTML` in the JSON-LD and Turtle versions. Note that the Markdown syntax for simple formatting, like the use of backtick for `<code.../>`, may also be used.
   - `type` refers to RDF types. Note that the tool automatically adds types like `rdf:Property`, `rdfs:Class`, etc.; this key is to be used for the vocabulary specific types only.
   - `defined_by` should be a URL, or a list thereof, referring to the formal definition(s) of the term.
-  - `see_also` refers to one or more blocks with `label` and `url` keys, providing a human readable title and a URL, respectively, to an external document that can be referred to by the description of the term. (These are translated into an `rdfs:seeAlso` term in the vocabulary.)
+  - `see_also` refers to one or more blocks with `label` and `url` keys, providing a human-readable title and a URL, respectively, to an external document that can be referred to by the description of the term. (These are translated into an `rdfs:seeAlso` term in the vocabulary.)
   - The `status` key refers to a string that can be `stable`, `reserved`, or `deprecated`. The terms are divided, in the HTML output, into these three sections. `stable` is the default.
   - The `deprecated` key refers to a boolean, signaling whether term is deprecated or not. Default is `false`. This property is a leftover from earlier version and is overwritten, if applicable, by the value of `status`.
   - The `context` key refers to list of URLs or two special keywords. It is used to add information on JSON-LD `@context` file(s) that "mention" the term; the list of URLs refer to the relevant `@context` file. If the value is `vocab`, and a global `@context` file is defined in the `vocab` block, that "default" `@context` is used. Finally, if the value of the property is `none`, there is no context file reference for the term. The default setting is `vocab` (i.e., unless it is otherwise specified, the default value is used for the term).
   - The `example` key refers to on or more blocks with `label` and `json` keys, providing a (JSON) example with a title. These examples are placed, in the HTML version, to the end of the section referring to a term (the examples are ignored in the Turtle and the JSON-LD versions). Care should be taken to use the `"|"` [block style indicator](https://yaml-multiline.info) in the YAML file for the examples.
 
-  For these blocks the `id` key, and either the `comment` or the `defined_by` keys, are _required_. All the others are optional.
 
 - Top level blocks:
-  - `vocab`: a block with the `id` and the `value` keys defining the prefix and the URL of the vocabulary, respectively. The `id` provides a prefix that can be used in the vocabulary descriptions, e.g., for cross references. The additional, optional `context` key may provide a default context file reference (as a URI), used by all terms unless locally overwritten (see above).
+  - `vocab`: a block with the `id` and the `value` keys defining the prefix and the URL of the vocabulary, respectively. The `id` provides a prefix that can be used in the vocabulary descriptions, e.g., for cross-references. The additional, optional `context` key may provide a default context file reference (as a URI), used by all terms unless locally overwritten (see above).
 
-  - `prefix`: definition of a prefixes, and corresponding URLs, for each external external vocabulary in use, defined by the `id` and `value` keys, respectively. 
+  - `prefix`: definition of a prefixes, and corresponding URLs, for each external vocabulary in use, defined by the `id` and `value` keys, respectively. 
 
     Some id/value pairs are defined by default, and it is not necessary to define them here. These are: `dc` (for `http://purl.org/dc/terms/`), `owl` (for `http://www.w3.org/2002/07/owl#`), `rdf` (for `http://www.w3.org/1999/02/22-rdf-syntax-ns#`), `rdfs` (for `http://www.w3.org/2000/01/rdf-schema#`), `xsd` (for `http://www.w3.org/2001/XMLSchema#`), and `schema` (for `http://schema.org/`).
 
@@ -53,14 +52,25 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
 
   - `datatype`: blocks of datatype definitions. For each datatype the `id` key defines the datatype name (no prefix should be used here). The possible types are defined in the block for `upper_value` or for `type`, as a single term for possible datatype this is derived from.
 
-There are some examples in the [example directory on github](https://github.com/w3c/yml2vocab/tree/main/example) that illustrate all of these terms.
+For classes, properties, individuals, and datatypes, the `id` key, and either the `comment` or the `defined_by` keys, are _required_. All the others are optional.
+
+There are some examples in the [example directory on GitHub](https://github.com/w3c/yml2vocab/tree/main/example) that illustrate all of these terms.
+
+### External terms
+
+The value of the `id` key is, usually, simple reference identifying the class, property, etc., as part of the vocabulary. It is also possible to use a [curie](https://www.w3.org/TR/curie/) instead of a simple reference. Such terms are considered to be _external_ terms: terms that are formally defined in another vocabulary, and are listed only to increase the readability of the vocabulary specification. (Typical cases are schema.org or Dublin Core terms, that are frequently used in combination with other vocabularies.) 
+
+External terms, while they appear in the HTML document generated by the tool, do not bear formal RDF statements in Turtle, JSON-LD, or RDFa; they only appear as information only items in the generated document.
+
+The prefix part of the curie _must_ be defined through the `prefix` top level block.
+
 
 ## Installation and use
 
 The script is in TypeScript (version 5.0.2 and beyond) running on top of `node.js` (version 16 and beyond).
 
 Beyond the YAML file itself, the script relies on an HTML template file, i.e., a skeleton file in HTML that is completed by the vocabulary entries. The
-[example template file on github](https://github.com/w3c/yml2vocab/tree/main/example/template.html) provides a good starting point for a template that also makes use of [respec](https://respec.org). The script relies on the existing `id` values and section structures to be modified/extended by the script. Unused subsections (e.g., when there are no deprecated classes) are removed from the final HTML file.
+[example template file on GitHub](https://github.com/w3c/yml2vocab/tree/main/example/template.html) provides a good starting point for a template that also makes use of [respec](https://respec.org). The script relies on the existing `id` values and section structures to be modified/extended by the script. Unused subsections (e.g., when there are no deprecated classes) are removed from the final HTML file.
 
 ### Installation from npm
 
@@ -104,7 +114,7 @@ const vocabGeneration = new yml2vocab.VocabGeneration(yml_content);     // YAML 
 const turtle: string  = vocabGeneration.getTurtle();                    // returns the turtle content as a string
 const jsonld: string  = vocabGeneration.getJSONLD();                    // returns the JSON-LD content as a string
 const html: string    = vocabGeneration.getHTML(template_file_content); // returns the HTML+RDFa content as a string
-const html: string    = vocabGeneration.getContext();                   // returns the minimal @context file for the vocabulary
+const context: string = vocabGeneration.getContext();                   // returns the minimal @context file for the vocabulary
 ```
 
 If TypeScript is used instead of Javascript the same works, except that the `require` must be replaced by:
@@ -144,11 +154,12 @@ The [repository](https://github.com/yml2vocab) may also be cloned. For a complet
 - `dist` directory: the Javascript distribution files (compiled from the TypeScript sources)
 - `main.ts`: the TypeScript entry point to the script as a command line tool
 - `index.ts`: the top level type interface, to be used if the files are used by an external script.
+- `docs` directory: documentation of the package as generated by Typedoc
 
 The following files and directories are generated/modified by either the script or `npm`; better not to touch these directly:
 
 - `package-lock.json`: used by `npm` as an internal file for the packages.
-- `node_modules` directory: the various Javascript libraries used by the script. This directory should _not_ be uploaded to github, it is strictly for the local activation of the script.
+- `node_modules` directory: the various Javascript libraries used by the script. This directory should _not_ be uploaded to GitHub, it is strictly for the local activation of the script.
 
 ## Acknowledgement
 

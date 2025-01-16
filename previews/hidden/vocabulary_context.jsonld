@@ -1,0 +1,125 @@
+{
+    "@context": {
+        "@protected": true,
+        "id": "@id",
+        "type": "@type",
+        "CredentialEvidence": "https://www.w3.org/2018/credentials#CredentialEvidence",
+        "CredentialSchema": "https://www.w3.org/2018/credentials#CredentialSchema",
+        "CredentialStatus": "https://www.w3.org/2018/credentials#CredentialStatus",
+        "ConfidenceMethod": "https://www.w3.org/2018/credentials#ConfidenceMethod",
+        "EnvelopedVerifiableCredential": "https://www.w3.org/2018/credentials#EnvelopedVerifiableCredential",
+        "EnvelopedVerifiablePresentation": "https://www.w3.org/2018/credentials#EnvelopedVerifiablePresentation",
+        "JsonSchema": {
+            "@id": "https://www.w3.org/2018/credentials#JsonSchema",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "jsonSchema": {
+                    "@id": "https://www.w3.org/2018/credentials#jsonSchema",
+                    "@type": "@id"
+                }
+            }
+        },
+        "JsonSchemaCredential": "https://www.w3.org/2018/credentials#JsonSchemaCredential",
+        "RefreshService": "https://www.w3.org/2018/credentials#RefreshService",
+        "RenderMethod": "https://www.w3.org/2018/credentials#RenderMethod",
+        "TermsOfUse": "https://www.w3.org/2018/credentials#TermsOfUse",
+        "VerifiableCredential": {
+            "@id": "https://www.w3.org/2018/credentials#VerifiableCredential",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "credentialSchema": {
+                    "@id": "https://www.w3.org/2018/credentials#credentialSchema",
+                    "@type": "@id"
+                },
+                "credentialStatus": {
+                    "@id": "https://www.w3.org/2018/credentials#credentialStatus",
+                    "@type": "@id"
+                },
+                "credentialSubject": {
+                    "@id": "https://www.w3.org/2018/credentials#credentialSubject",
+                    "@type": "@id"
+                },
+                "evidence": {
+                    "@id": "https://www.w3.org/2018/credentials#evidence",
+                    "@type": "@id"
+                },
+                "issuer": {
+                    "@id": "https://www.w3.org/2018/credentials#issuer",
+                    "@type": "@id"
+                },
+                "refreshService": {
+                    "@id": "https://www.w3.org/2018/credentials#refreshService",
+                    "@type": "@id"
+                },
+                "renderMethod": {
+                    "@id": "https://www.w3.org/2018/credentials#renderMethod",
+                    "@type": "@id"
+                },
+                "relatedResource": {
+                    "@id": "https://www.w3.org/2018/credentials#relatedResource",
+                    "@type": "@id"
+                },
+                "termsOfUse": {
+                    "@id": "https://www.w3.org/2018/credentials#termsOfUse",
+                    "@type": "@id"
+                },
+                "validFrom": {
+                    "@id": "https://www.w3.org/2018/credentials#validFrom",
+                    "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+                },
+                "validUntil": {
+                    "@id": "https://www.w3.org/2018/credentials#validUntil",
+                    "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+                }
+            }
+        },
+        "VerifiableCredentialGraph": "https://www.w3.org/2018/credentials#VerifiableCredentialGraph",
+        "VerifiablePresentation": {
+            "@id": "https://www.w3.org/2018/credentials#VerifiablePresentation",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "holder": {
+                    "@id": "https://www.w3.org/2018/credentials#holder",
+                    "@type": "@id"
+                },
+                "termsOfUse": {
+                    "@id": "https://www.w3.org/2018/credentials#termsOfUse",
+                    "@type": "@id"
+                },
+                "validFrom": {
+                    "@id": "https://www.w3.org/2018/credentials#validFrom",
+                    "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+                },
+                "validUntil": {
+                    "@id": "https://www.w3.org/2018/credentials#validUntil",
+                    "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+                },
+                "verifiableCredential": {
+                    "@id": "https://www.w3.org/2018/credentials#verifiableCredential",
+                    "@type": "@id"
+                }
+            }
+        },
+        "confidenceMethod": "https://www.w3.org/2018/credentials#confidenceMethod",
+        "digestSRI": "https://www.w3.org/2018/credentials#digestSRI",
+        "expirationDate": {
+            "@id": "https://www.w3.org/2018/credentials#expirationDate",
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+        },
+        "issuanceDate": {
+            "@id": "https://www.w3.org/2018/credentials#issuanceDate",
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+        },
+        "name": "https://www.w3.org/2018/credentials#name",
+        "proof": "https://www.w3.org/2018/credentials#proof",
+        "digestMultibase": "https://www.w3.org/2018/credentials#digestMultibase",
+        "sriString": "https://www.w3.org/2018/credentials#sriString",
+        "multibase": "https://www.w3.org/2018/credentials#multibase"
+    }
+}
