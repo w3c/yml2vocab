@@ -15,7 +15,7 @@ cred: a owl:Ontology ;
     dc:title """Verifiable Credentials Vocabulary v2.0"""@en ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL-2.0]]"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2025-01-16"^^xsd:date ;
+    dc:date "2025-01-21"^^xsd:date ;
 .
 
 # Property definitions
@@ -160,6 +160,12 @@ cred:verifiableCredential a rdf:Property ;
     vs:term_status "stable" ;
 .
 
+https://www.w3.org/2018/credentials#schema:name owl:sameAs schema:name ;
+
+https://www.w3.org/2018/credentials#sec:proof owl:sameAs sec:proof ;
+
+https://www.w3.org/2018/credentials#sec:digestMultibase owl:sameAs sec:digestMultibase ;
+
 # Class definitions
 cred:CredentialEvidence a rdfs:Class ;
     rdfs:label "Credential evidence" ;
@@ -258,6 +264,8 @@ cred:sriString a rdfs:Datatype ;
     vs:term_status "stable" ;
     rdfs:seeAlso <https://www.w3.org/TR/SRI/#the-integrity-attribute> ;
 .
+
+https://www.w3.org/2018/credentials#sec:multibase owl:sameAs sec:multibase ;
 
 # Context files and their mentions
 <https://www.w3.org/ns/credentials/v2> a jsonld:Context ;

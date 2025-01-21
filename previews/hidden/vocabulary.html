@@ -1,77 +1,9 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="utf-8">
-<meta name="generator" content="ReSpec 35.2.2">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<style>
-dfn{cursor:pointer}
-.dfn-panel{position:absolute;z-index:35;min-width:300px;max-width:500px;padding:.5em .75em;margin-top:.6em;font-family:"Helvetica Neue",sans-serif;font-size:small;background:#fff;background:var(--indextable-hover-bg,#fff);color:#000;color:var(--text,#000);box-shadow:0 1em 3em -.4em rgba(0,0,0,.3),0 0 1px 1px rgba(0,0,0,.05);box-shadow:0 1em 3em -.4em var(--tocsidebar-shadow,rgba(0,0,0,.3)),0 0 1px 1px var(--tocsidebar-shadow,rgba(0,0,0,.05));border-radius:2px}
-.dfn-panel:not(.docked)>.caret{position:absolute;top:-9px}
-.dfn-panel:not(.docked)>.caret::after,.dfn-panel:not(.docked)>.caret::before{content:"";position:absolute;border:10px solid transparent;border-top:0;border-bottom:10px solid #fff;border-bottom-color:var(--indextable-hover-bg,#fff);top:0}
-.dfn-panel:not(.docked)>.caret::before{border-bottom:9px solid #a2a9b1;border-bottom-color:var(--indextable-hover-bg,#a2a9b1)}
-.dfn-panel *{margin:0}
-.dfn-panel b{display:block;color:#000;color:var(--text,#000);margin-top:.25em}
-.dfn-panel ul a[href]{color:#333;color:var(--text,#333)}
-.dfn-panel>div{display:flex}
-.dfn-panel a.self-link{font-weight:700;margin-right:auto}
-.dfn-panel .marker{padding:.1em;margin-left:.5em;border-radius:.2em;text-align:center;white-space:nowrap;font-size:90%;color:#040b1c}
-.dfn-panel .marker.dfn-exported{background:#d1edfd;box-shadow:0 0 0 .125em #1ca5f940}
-.dfn-panel .marker.idl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
-.dfn-panel a:not(:hover){text-decoration:none!important;border-bottom:none!important}
-.dfn-panel a[href]:hover{border-bottom-width:1px}
-.dfn-panel ul{padding:0}
-.dfn-panel li{margin-left:1em}
-.dfn-panel.docked{position:fixed;left:.5em;top:unset;bottom:2em;margin:0 auto;max-width:calc(100vw - .75em * 2 - .5em - .2em * 2);max-height:30vh;overflow:auto}
-</style>
-    
-    
-<title>Verifiable Credentials Vocabulary v2.0</title>
-    
-<style id="respec-mainstyle">
-@keyframes pop{
-0%{transform:scale(1,1)}
-25%{transform:scale(1.25,1.25);opacity:.75}
-100%{transform:scale(1,1)}
-}
-a.internalDFN{color:inherit;border-bottom:1px solid #99c;text-decoration:none}
-a.externalDFN{color:inherit;border-bottom:1px dotted #ccc;text-decoration:none}
-a.bibref{text-decoration:none}
-.respec-offending-element:target{animation:pop .25s ease-in-out 0s 1}
-.respec-offending-element,a[href].respec-offending-element{text-decoration:red wavy underline}
-@supports not (text-decoration:red wavy underline){
-.respec-offending-element:not(pre){display:inline-block}
-.respec-offending-element{background:url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x}
-}
-#references :target{background:#eaf3ff;animation:pop .4s ease-in-out 0s 1}
-cite .bibref{font-style:normal}
-a[href].orcid{padding-left:4px;padding-right:4px}
-a[href].orcid>svg{margin-bottom:-2px}
-ol.tof,ul.tof{list-style:none outside none}
-.caption{margin-top:.5em;font-style:italic}
-#issue-summary>ul{column-count:2}
-#issue-summary li{list-style:none;display:inline-block}
-details.respec-tests-details{margin-left:1em;display:inline-block;vertical-align:top}
-details.respec-tests-details>*{padding-right:2em}
-details.respec-tests-details[open]{z-index:999999;position:absolute;border:thin solid #cad3e2;border-radius:.3em;background-color:#fff;padding-bottom:.5em}
-details.respec-tests-details[open]>summary{border-bottom:thin solid #cad3e2;padding-left:1em;margin-bottom:1em;line-height:2em}
-details.respec-tests-details>ul{width:100%;margin-top:-.3em}
-details.respec-tests-details>li{padding-left:1em}
-.self-link:hover{opacity:1;text-decoration:none;background-color:transparent}
-aside.example .marker>a.self-link{color:inherit}
-.header-wrapper{display:flex;align-items:baseline}
-:is(h2,h3,h4,h5,h6):not(#toc>h2,#abstract>h2,#sotd>h2,.head>h2){position:relative;left:-.5em}
-:is(h2,h3,h4,h5,h6):not(#toch2)+a.self-link{color:inherit;order:-1;position:relative;left:-1.1em;font-size:1rem;opacity:.5}
-:is(h2,h3,h4,h5,h6)+a.self-link::before{content:"§";text-decoration:none;color:var(--heading-text)}
-:is(h2,h3)+a.self-link{top:-.2em}
-:is(h4,h5,h6)+a.self-link::before{color:#000}
-@media (max-width:767px){
-dd{margin-left:0}
-}
-@media print{
-.removeOnSave{display:none}
-}
-</style>
-    
-<script>
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <title>Verifiable Credentials Vocabulary v2.0</title>
+    <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c"></script>
+    <script>
       function remove_status_remark() {
           const sotd = document.getElementById("sotd");
           const p = sotd.getElementsByTagName('p')[0];
@@ -87,10 +19,46 @@ dd{margin-left:0}
       }
 
     </script>
-    
-    
-<style type="text/css">
-
+    <script class="remove">
+      var respecConfig = {
+        specStatus:  "base",
+        shortName:   "2018/credentials/",
+        thisVersion: "https://www.w3.org/2018/credentials/",
+        doJsonLd:    true,
+        editors: [{
+          name:       "Ivan Herman",
+          url:        "https://www.w3.org/People/Ivan/",
+          company:    "W3C",
+          w3cid:      7382,
+          orcid:      "0000-0003-0782-2704",
+          companyURL: "https://www.w3.org",
+          note:       "v2.0"
+        },{
+          name:       "Manu Sporny",
+          url:        "http://manu.sporny.org/",
+          company:    "Digital Bazaar",
+          companyURL: "http://digitalbazaar.com/",
+          w3cid:      41758,
+          note:       "v1.0, v2.0"
+        },{
+          name:       "Gregg Kellogg",
+          url:        "http://greggkellogg.net/",
+          w3cid:      44770,
+          company:    "Invited Expert",
+          note:       "v1.0"
+        }],
+        alternateFormats: [
+          {uri: "vocabulary.ttl", label: "Turtle"},
+          {uri: "vocabulary.jsonld", label: "JSON-LD"}
+        ],
+        postProcess : [remove_status_remark],
+        inlineCSS: true,
+        doRDFa: false,
+        noIDLIn: true,
+        noLegacyStyle: false
+      };
+    </script>
+    <style type="text/css">
       dl.terms dt {
         float: left;
         clear: left;
@@ -149,151 +117,27 @@ dd{margin-left:0}
         font-weight: normal !important;
       }
 
-    
-</style>
-  
-<meta name="color-scheme" content="light">
-<meta name="description" content="This document describes the Verifiable Credentials Vocabulary v2.0, i.e.,
-         the RDFS [RDF-SCHEMA] vocabulary used by the Verifiable Credentials [VC-DATA-MODEL-2.0].">
-<style>
-var{position:relative;cursor:pointer}
-var[data-type]::after,var[data-type]::before{position:absolute;left:50%;top:-6px;opacity:0;transition:opacity .4s;pointer-events:none}
-var[data-type]::before{content:"";transform:translateX(-50%);border-width:4px 6px 0 6px;border-style:solid;border-color:transparent;border-top-color:#222}
-var[data-type]::after{content:attr(data-type);transform:translateX(-50%) translateY(-100%);background:#222;text-align:center;font-family:"Dank Mono","Fira Code",monospace;font-style:normal;padding:6px;border-radius:3px;color:#daca88;text-indent:0;font-weight:400}
-var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
-</style>
-<script id="initialUserConfig" type="application/json">{
-  "specStatus": "base",
-  "shortName": "2018/credentials/",
-  "thisVersion": "https://www.w3.org/2018/credentials/",
-  "doJsonLd": true,
-  "editors": [
-    {
-      "name": "Ivan Herman",
-      "url": "https://www.w3.org/People/Ivan/",
-      "company": "W3C",
-      "w3cid": 7382,
-      "orcid": "https://orcid.org/0000-0003-0782-2704",
-      "companyURL": "https://www.w3.org",
-      "note": "v2.0"
-    },
-    {
-      "name": "Manu Sporny",
-      "url": "http://manu.sporny.org/",
-      "company": "Digital Bazaar",
-      "companyURL": "http://digitalbazaar.com/",
-      "w3cid": 41758,
-      "note": "v1.0, v2.0"
-    },
-    {
-      "name": "Gregg Kellogg",
-      "url": "http://greggkellogg.net/",
-      "w3cid": 44770,
-      "company": "Invited Expert",
-      "note": "v1.0"
-    }
-  ],
-  "alternateFormats": [
-    {
-      "uri": "vocabulary.ttl",
-      "label": "Turtle"
-    },
-    {
-      "uri": "vocabulary.jsonld",
-      "label": "JSON-LD"
-    }
-  ],
-  "postProcess": [
-    null
-  ],
-  "inlineCSS": true,
-  "doRDFa": false,
-  "noIDLIn": true,
-  "noLegacyStyle": false,
-  "publishISODate": "2025-01-16T00:00:00.000Z",
-  "generatedSubtitle": "16 January 2025"
-}</script>
-<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/base.css"></head>
-  <body typeof="owl:Ontology" resource="https://www.w3.org/2018/credentials#" prefix="cred: https://www.w3.org/2018/credentials# schema: http://schema.org/ sec: https://w3id.org/security# dc: http://purl.org/dc/terms/ owl: http://www.w3.org/2002/07/owl# rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# xsd: http://www.w3.org/2001/XMLSchema# vs: http://www.w3.org/2003/06/sw-vocab-status/ns# schema: http://schema.org/ jsonld: http://www.w3.org/ns/json-ld#" class="h-entry informative"><div class="head">
-    
-    <h1 id="title" class="title">Verifiable Credentials Vocabulary v2.0</h1> 
-    <p id="w3c-state"> <time class="dt-published" datetime="2025-01-16">16 January 2025</time></p>
-    <details open="">
-      <summary>More details about this document</summary>
-      <dl>
-        <dt>This version:</dt><dd>
-                <a class="u-url" href="https://www.w3.org/2018/credentials/">https://www.w3.org/2018/credentials/</a>
-              </dd>
-        <dt>Latest published version:</dt><dd>
-                <a href="https://www.w3.org/2018/credentials//">https://www.w3.org/2018/credentials//</a>
-              </dd>
-        
-        
-        
-        
-        
-        
-        
-        <dt>Editors:</dt><dd class="editor p-author h-card vcard" data-editor-id="7382">
-    <a class="u-url url p-name fn" href="https://www.w3.org/People/Ivan/">Ivan Herman</a><a class="p-name orcid" href="https://orcid.org/0000-0003-0782-2704"><svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-    <style>
-
-      .st1 {
-        fill: #fff;
-      }
-    
-</style>
-    <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z" fill="#a6ce39"></path>
-    <path class="st1" d="M86.3 186.2H70.9V79.1h15.4v107.1zM108.9 79.1h41.6c39.6 0 57 28.3 57 53.6 0 27.5-21.5 53.6-56.8 53.6h-41.8V79.1zm15.4 93.3h24.5c34.9 0 42.9-26.5 42.9-39.7C191.7 111.2 178 93 148 93h-23.7v79.4zM88.7 56.8c0 5.5-4.5 10.1-10.1 10.1s-10.1-4.6-10.1-10.1c0-5.6 4.5-10.1 10.1-10.1s10.1 4.6 10.1 10.1z"></path>
-  </svg></a> (<a class="p-org org h-org" href="https://www.w3.org">W3C</a>) (v2.0)
-  </dd><dd class="editor p-author h-card vcard" data-editor-id="41758">
-    <a class="u-url url p-name fn" href="http://manu.sporny.org/">Manu Sporny</a> (<a class="p-org org h-org" href="http://digitalbazaar.com/">Digital Bazaar</a>) (v1.0, v2.0)
-  </dd><dd class="editor p-author h-card vcard" data-editor-id="44770">
-    <a class="u-url url p-name fn" href="http://greggkellogg.net/">Gregg Kellogg</a> (<span class="p-org org h-org">Invited Expert</span>) (v1.0)
-  </dd>
-        
-        
-        
-        
-        
-      </dl>
-    </details>
-    
-    <p>
-          This document is also available in these non-normative formats:
-          <a rel="alternate" href="vocabulary.ttl">Turtle</a> and <a rel="alternate" href="vocabulary.jsonld">JSON-LD</a>
-        </p>
-    <p class="copyright">
-    <a href="https://www.w3.org/policies/#copyright">Copyright</a>
-    ©
-    2025
-    
-    <a href="https://www.w3.org/">World Wide Web Consortium</a>.
-    <abbr title="World Wide Web Consortium">W3C</abbr><sup>®</sup>
-    <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>,
-    <a href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a> and
-    <a rel="license" href="https://www.w3.org/copyright/software-license-2023/" title="W3C Software and Document Notice and License">permissive document license</a> rules apply.
-  </p>
-    <hr title="Separator for header">
-  </div>
-    <section id="abstract" class="introductory"><h2>Abstract</h2>
+    </style>
+  </head>
+  <body typeof="owl:Ontology" resource="https://www.w3.org/2018/credentials#" prefix="cred: https://www.w3.org/2018/credentials# schema: http://schema.org/ sec: https://w3id.org/security# dc: http://purl.org/dc/terms/ owl: http://www.w3.org/2002/07/owl# rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# xsd: http://www.w3.org/2001/XMLSchema# vs: http://www.w3.org/2003/06/sw-vocab-status/ns# schema: http://schema.org/ jsonld: http://www.w3.org/ns/json-ld#">
+    <section id="abstract">
       <p>This document describes the <span property="dc:title" id="title">Verifiable Credentials Vocabulary v2.0</span>, i.e.,
-         the <span property="dc:description" id="description">RDFS [<cite><a class="bibref" data-link-type="biblio" href="#bib-rdf-schema" title="RDF Schema 1.1">RDF-SCHEMA</a></cite>] vocabulary used by the Verifiable Credentials [<cite><a class="bibref" data-link-type="biblio" href="#bib-vc-data-model-2.0" title="Verifiable Credentials Data Model v2.0">VC-DATA-MODEL-2.0</a></cite>]</span>.
+         the <span property="dc:description" id="description">RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL-2.0]]</span>.
       </p>
       <p>Alternate versions of the vocabulary definition exist in
         <a rel="alternate" href="vocabulary.ttl">Turtle</a> and
         <a rel="alternate" href="vocabulary.jsonld">JSON-LD</a>.
       </p>
       <dl>
-        <dt>Published:</dt><dd><time property="dc:date" id="time">2025-01-16</time></dd>
+        <dt>Published:</dt><dd><time property="dc:date" id="time">2025-01-21</time></dd>
         <dt>Version Info:</dt>
         <dd>2.0</dd>
         <dt id="see_also">See Also: <a href="https://www.w3.org/TR/vc-data-model-2.0/" property="rdfs:seeAlso">https://www.w3.org/TR/vc-data-model-2.0/</a></dt>
        </dl>
     </section>
-    <section id="sotd" class="introductory"><h2>Status of This Document</h2>
+    <section id="sotd">
       <p>
-        This vocabulary has been defined by the <a href="https://www.w3.org/2017/vc/WG/"><abbr title="World Wide Web Consortium">W3C</abbr> Verifiable Credentials Working Group</a> and provides
+        This vocabulary has been defined by the <a href="https://www.w3.org/2017/vc/WG/">W3C Verifiable Credentials Working Group</a> and provides
         the official RDFS vocabulary for <a href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials</a>.
         Comments regarding this document are welcome. Please file issues
         directly on <a href="https://github.com/w3c/vc-data-model/issues/">GitHub</a>, or send them to
@@ -301,81 +145,73 @@ var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
         (<a href="mailto:public-vc-comments-request@w3.org?subject=subscribe">subscribe</a>,
         <a href="https://lists.w3.org/Archives/Public/public-vc-comments/">archives</a>).
       </p>
-    </section><nav id="toc"><h2 class="introductory" id="table-of-contents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#abstract">Abstract</a></li><li class="tocline"><a class="tocxref" href="#sotd">Status of This Document</a></li><li class="tocline"><a class="tocxref" href="#specification-of-terms"><bdi class="secno">1. </bdi>Specification of terms</a></li><li class="tocline"><a class="tocxref" href="#namespaces-0"><bdi class="secno">2. </bdi>Namespaces</a></li><li class="tocline"><a class="tocxref" href="#context-files"><bdi class="secno">3. </bdi><code>@context</code> files</a></li><li class="tocline"><a class="tocxref" href="#term_definitions"><bdi class="secno">4. </bdi>Regular terms</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#property_definitions"><bdi class="secno">4.1 </bdi>Property definitions</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#credentialSchema"><bdi class="secno">4.1.1 </bdi><code>credentialSchema</code></a></li><li class="tocline"><a class="tocxref" href="#credentialStatus"><bdi class="secno">4.1.2 </bdi><code>credentialStatus</code></a></li><li class="tocline"><a class="tocxref" href="#credentialSubject"><bdi class="secno">4.1.3 </bdi><code>credentialSubject</code></a></li><li class="tocline"><a class="tocxref" href="#digestSRI"><bdi class="secno">4.1.4 </bdi><code>digestSRI</code></a></li><li class="tocline"><a class="tocxref" href="#evidence"><bdi class="secno">4.1.5 </bdi><code>evidence</code></a></li><li class="tocline"><a class="tocxref" href="#holder"><bdi class="secno">4.1.6 </bdi><code>holder</code></a></li><li class="tocline"><a class="tocxref" href="#jsonSchema"><bdi class="secno">4.1.7 </bdi><code>jsonSchema</code></a></li><li class="tocline"><a class="tocxref" href="#issuer"><bdi class="secno">4.1.8 </bdi><code>issuer</code></a></li><li class="tocline"><a class="tocxref" href="#refreshService"><bdi class="secno">4.1.9 </bdi><code>refreshService</code></a></li><li class="tocline"><a class="tocxref" href="#relatedResource"><bdi class="secno">4.1.10 </bdi><code>relatedResource</code></a></li><li class="tocline"><a class="tocxref" href="#termsOfUse"><bdi class="secno">4.1.11 </bdi><code>termsOfUse</code></a></li><li class="tocline"><a class="tocxref" href="#validFrom"><bdi class="secno">4.1.12 </bdi><code>validFrom</code></a></li><li class="tocline"><a class="tocxref" href="#validUntil"><bdi class="secno">4.1.13 </bdi><code>validUntil</code></a></li><li class="tocline"><a class="tocxref" href="#verifiableCredential"><bdi class="secno">4.1.14 </bdi><code>verifiableCredential</code></a></li><li class="tocline"><a class="tocxref" href="#schema:name"><bdi class="secno">4.1.15 </bdi><code>schema:name</code></a></li><li class="tocline"><a class="tocxref" href="#sec:proof"><bdi class="secno">4.1.16 </bdi><code>sec:proof</code></a></li><li class="tocline"><a class="tocxref" href="#sec:digestMultibase"><bdi class="secno">4.1.17 </bdi><code>sec:digestMultibase</code></a></li></ol></li><li class="tocline"><a class="tocxref" href="#class_definitions"><bdi class="secno">4.2 </bdi>Class definitions</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#CredentialEvidence"><bdi class="secno">4.2.1 </bdi><code>CredentialEvidence</code></a></li><li class="tocline"><a class="tocxref" href="#CredentialSchema"><bdi class="secno">4.2.2 </bdi><code>CredentialSchema</code></a></li><li class="tocline"><a class="tocxref" href="#CredentialStatus"><bdi class="secno">4.2.3 </bdi><code>CredentialStatus</code></a></li><li class="tocline"><a class="tocxref" href="#EnvelopedVerifiableCredential"><bdi class="secno">4.2.4 </bdi><code>EnvelopedVerifiableCredential</code></a></li><li class="tocline"><a class="tocxref" href="#EnvelopedVerifiablePresentation"><bdi class="secno">4.2.5 </bdi><code>EnvelopedVerifiablePresentation</code></a></li><li class="tocline"><a class="tocxref" href="#JsonSchema"><bdi class="secno">4.2.6 </bdi><code>JsonSchema</code></a></li><li class="tocline"><a class="tocxref" href="#JsonSchemaCredential"><bdi class="secno">4.2.7 </bdi><code>JsonSchemaCredential</code></a></li><li class="tocline"><a class="tocxref" href="#RefreshService"><bdi class="secno">4.2.8 </bdi><code>RefreshService</code></a></li><li class="tocline"><a class="tocxref" href="#TermsOfUse"><bdi class="secno">4.2.9 </bdi><code>TermsOfUse</code></a></li><li class="tocline"><a class="tocxref" href="#VerifiableCredential"><bdi class="secno">4.2.10 </bdi><code>VerifiableCredential</code></a></li><li class="tocline"><a class="tocxref" href="#VerifiableCredentialGraph"><bdi class="secno">4.2.11 </bdi><code>VerifiableCredentialGraph</code></a></li><li class="tocline"><a class="tocxref" href="#VerifiablePresentation"><bdi class="secno">4.2.12 </bdi><code>VerifiablePresentation</code></a></li></ol></li><li class="tocline"><a class="tocxref" href="#datatype_definitions"><bdi class="secno">4.3 </bdi>Datatype definitions</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#sriString"><bdi class="secno">4.3.1 </bdi><code>sriString</code></a></li><li class="tocline"><a class="tocxref" href="#sec:multibase"><bdi class="secno">4.3.2 </bdi><code>sec:multibase</code></a></li></ol></li></ol></li><li class="tocline"><a class="tocxref" href="#reserved_term_definitions"><bdi class="secno">5. </bdi>Reserved terms</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#reserved_property_definitions"><bdi class="secno">5.1 </bdi>Reserved properties</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#confidenceMethod"><bdi class="secno">5.1.1 </bdi><code>confidenceMethod</code></a></li><li class="tocline"><a class="tocxref" href="#renderMethod"><bdi class="secno">5.1.2 </bdi><code>renderMethod</code></a></li></ol></li><li class="tocline"><a class="tocxref" href="#reserved_class_definitions"><bdi class="secno">5.2 </bdi>Reserved classes</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#ConfidenceMethod"><bdi class="secno">5.2.1 </bdi><code>ConfidenceMethod</code></a></li><li class="tocline"><a class="tocxref" href="#RenderMethod"><bdi class="secno">5.2.2 </bdi><code>RenderMethod</code></a></li></ol></li></ol></li><li class="tocline"><a class="tocxref" href="#deprecated_term_definitions"><bdi class="secno">6. </bdi>Deprecated terms</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#deprecated_property_definitions"><bdi class="secno">6.1 </bdi>Deprecated properties</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#expirationDate"><bdi class="secno">6.1.1 </bdi><code>expirationDate</code></a></li><li class="tocline"><a class="tocxref" href="#issuanceDate"><bdi class="secno">6.1.2 </bdi><code>issuanceDate</code></a></li></ol></li><li class="tocline"><a class="tocxref" href="#deprecated_property_definitions"><bdi class="secno">6.2 </bdi>Deprecated properties</a></li></ol></li><li class="tocline"><a class="tocxref" href="#vocabulary-diagram-alt"><bdi class="secno">A. </bdi>Diagram description</a></li><li class="tocline"><a class="tocxref" href="#references"><bdi class="secno">B. </bdi>References</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#informative-references"><bdi class="secno">B.1 </bdi>Informative references</a></li></ol></li></ol></nav>
-    <section id="specification-of-terms"><div class="header-wrapper"><h2 id="x1-specification-of-terms"><bdi class="secno">1. </bdi>Specification of terms</h2><a class="self-link" href="#specification-of-terms" aria-label="Permalink for Section 1."></a></div>
-      
+    </section>
+    <section>
+      <h2>Specification of terms</h2>
       <p>
-        In general, the terms — i.e., the properties and classes — used in the VCDM are formally specified in Recommendation Track documents published by the <a href="https://www.w3.org/groups/wg/vc"><abbr title="World Wide Web Consortium">W3C</abbr> Verifiable Credentials Working Group</a> or, for some deprecated or reserved terms, in Reports published by the <a href="https://www.w3.org/groups/cg/credentials"><abbr title="World Wide Web Consortium">W3C</abbr> Credentials Community Group</a>. In each case of such external definition, the term's description in this document contains a link to the relevant specification. Additionally, the <code>rdfs:definedBy</code> property in the RDFS representation(s) refers to the formal specification.
+        In general, the terms — i.e., the properties and classes — used in the VCDM are formally specified in Recommendation Track documents published by the <a href="https://www.w3.org/groups/wg/vc">W3C Verifiable Credentials Working Group</a> or, for some deprecated or reserved terms, in Reports published by the <a href="https://www.w3.org/groups/cg/credentials">W3C Credentials Community Group</a>. In each case of such external definition, the term's description in this document contains a link to the relevant specification. Additionally, the `rdfs:definedBy` property in the RDFS representation(s) refers to the formal specification.
       </p>
       <p>
-        In some cases, a local explanation is necessary to complement, or to replace, the definition found in an external specification. For instance, this is so when the term is needed to provide a consistent structure to the RDFS vocabulary, such as when the term defines a common supertype for class instances that are used as objects of specific properties, or when <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a> are involved. For such cases, the extra definition is included in the current document (and the <code>rdfs:comment</code> property is used to include them in the RDFS representations).
+        In some cases, a local explanation is necessary to complement, or to replace, the definition found in an external specification. For instance, this is so when the term is needed to provide a consistent structure to the RDFS vocabulary, such as when the term defines a common supertype for class instances that are used as objects of specific properties, or when <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a> are involved. For such cases, the extra definition is included in the current document (and the `rdfs:comment` property is used to include them in the RDFS representations).
       </p>
       <figure id="vocabulary-diagram" style="text-align:center">
         <img src="vocabulary.svg" alt="ss">
-        <figcaption><a class="self-link" href="#vocabulary-diagram">Figure <bdi class="figno">1</bdi></a> <span class="fig-title">Overview diagram of the vocabulary (without the deprecated items).<br>
+        <figcaption>Overview diagram of the vocabulary (without the deprecated items).<br>
           A separate, stand-alone <a href="vocabulary.svg" target="_blank">SVG version</a> of the diagram, as well as a <a href="#vocabulary-diagram-alt">textual description</a>,
           are also available.
-        </span></figcaption>
+        </figcaption>
       </figure>
     </section>
-    <section id="namespaces-0"><div class="header-wrapper"><h2 id="x2-namespaces"><bdi class="secno">2. </bdi>Namespaces</h2><a class="self-link" href="#namespaces-0" aria-label="Permalink for Section 2."></a></div>
-      
+    <section>
+      <h2>Namespaces</h2>
       <p>This specification makes use of the following namespaces:</p>
       <dl class="terms" id="namespaces">
       <dt><code>cred</code></dt><dd><code>https://www.w3.org/2018/credentials#</code></dd><dt><code>schema</code></dt><dd><code>http://schema.org/</code></dd><dt><code>sec</code></dt><dd><code>https://w3id.org/security#</code></dd><dt><code>dc</code></dt><dd><code>http://purl.org/dc/terms/</code></dd><dt><code>owl</code></dt><dd><code>http://www.w3.org/2002/07/owl#</code></dd><dt><code>rdf</code></dt><dd><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></dd><dt><code>rdfs</code></dt><dd><code>http://www.w3.org/2000/01/rdf-schema#</code></dd><dt><code>xsd</code></dt><dd><code>http://www.w3.org/2001/XMLSchema#</code></dd><dt><code>vs</code></dt><dd><code>http://www.w3.org/2003/06/sw-vocab-status/ns#</code></dd><dt><code>schema</code></dt><dd><code>http://schema.org/</code></dd><dt><code>jsonld</code></dt><dd><code>http://www.w3.org/ns/json-ld#</code></dd></dl>
     </section>
 
-    <section id="context-files"><div class="header-wrapper"><h2 id="x3-context-files"><bdi class="secno">3. </bdi><code>@context</code> files</h2><a class="self-link" href="#context-files" aria-label="Permalink for Section 3."></a></div>
-      
+    <section>
+      <h2><code>@context</code> files</h2>
       <p>The following <code>@context</code> files make use of the terms defined in this specification:</p>
       <ul id="contexts">
       <li><a href="https://www.w3.org/ns/credentials/v2" typeof="jsonld:Context"><code>https://www.w3.org/ns/credentials/v2</code></a><details><summary>term list</summary><ul><li><a href="#credentialSchema"><code>cred:credentialSchema<code></code></code></a></li><li><a href="#credentialStatus"><code>cred:credentialStatus<code></code></code></a></li><li><a href="#confidenceMethod"><code>cred:confidenceMethod<code></code></code></a></li><li><a href="#credentialSubject"><code>cred:credentialSubject<code></code></code></a></li><li><a href="#digestSRI"><code>cred:digestSRI<code></code></code></a></li><li><a href="#evidence"><code>cred:evidence<code></code></code></a></li><li><a href="#expirationDate"><code>cred:expirationDate<code></code></code></a></li><li><a href="#holder"><code>cred:holder<code></code></code></a></li><li><a href="#jsonSchema"><code>cred:jsonSchema<code></code></code></a></li><li><a href="#issuanceDate"><code>cred:issuanceDate<code></code></code></a></li><li><a href="#issuer"><code>cred:issuer<code></code></code></a></li><li><a href="#refreshService"><code>cred:refreshService<code></code></code></a></li><li><a href="#relatedResource"><code>cred:relatedResource<code></code></code></a></li><li><a href="#termsOfUse"><code>cred:termsOfUse<code></code></code></a></li><li><a href="#validFrom"><code>cred:validFrom<code></code></code></a></li><li><a href="#validUntil"><code>cred:validUntil<code></code></code></a></li><li><a href="#verifiableCredential"><code>cred:verifiableCredential<code></code></code></a></li><li><a href="#schema:name"><code>schema:name<code></code></code></a></li><li><a href="#sec:proof"><code>sec:proof<code></code></code></a></li><li><a href="#sec:digestMultibase"><code>sec:digestMultibase<code></code></code></a></li><li><a href="#EnvelopedVerifiableCredential"><code>cred:EnvelopedVerifiableCredential<code></code></code></a></li><li><a href="#EnvelopedVerifiablePresentation"><code>cred:EnvelopedVerifiablePresentation<code></code></code></a></li><li><a href="#JsonSchema"><code>cred:JsonSchema<code></code></code></a></li><li><a href="#JsonSchemaCredential"><code>cred:JsonSchemaCredential<code></code></code></a></li><li><a href="#VerifiableCredential"><code>cred:VerifiableCredential<code></code></code></a></li><li><a href="#VerifiablePresentation"><code>cred:VerifiablePresentation<code></code></code></a></li><li><a href="#sriString"><code>cred:sriString<code></code></code></a></li><li><a href="#sec:multibase"><code>sec:multibase<code></code></code></a></li></ul></details></li><li><a href="https://w3id.org/security/data-integrity/v2" typeof="jsonld:Context"><code>https://w3id.org/security/data-integrity/v2</code></a><details><summary>term list</summary><ul><li><a href="#sec:proof"><code>sec:proof<code></code></code></a></li></ul></details></li><li><a href="https://w3id.org/security/multikey/v1" typeof="jsonld:Context"><code>https://w3id.org/security/multikey/v1</code></a><details><summary>term list</summary><ul><li><a href="#sec:multibase"><code>sec:multibase<code></code></code></a></li></ul></details></li></ul>
     </section>
 
-    <section id="term_definitions"><div class="header-wrapper"><h2 id="x4-regular-terms"><bdi class="secno">4. </bdi>Regular terms</h2><a class="self-link" href="#term_definitions" aria-label="Permalink for Section 4."></a></div>
-      
+    <section id="term_definitions">
+      <h1>Regular terms</h1>
 
-      <section id="property_definitions" class="term_definitions"><div class="header-wrapper"><h3 id="x4-1-property-definitions"><bdi class="secno">4.1 </bdi>Property definitions</h3><a class="self-link" href="#property_definitions" aria-label="Permalink for Section 4.1"></a></div>
-        
-      <p>The following are  property definitions in the <code>cred</code> namespace.</p><section resource="cred:credentialSchema" typeof="rdf:Property" id="credentialSchema"><div class="header-wrapper"><h4 id="x4-1-1-credentialschema"><bdi class="secno">4.1.1 </bdi><code>credentialSchema</code></h4><a class="self-link" href="#credentialSchema" aria-label="Permalink for Section 4.1.1"></a></div><p><em>Credential schema</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSchema">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:CredentialSchema"><a href="#CredentialSchema"><code>CredentialSchema</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:credentialStatus" typeof="rdf:Property" id="credentialStatus"><div class="header-wrapper"><h4 id="x4-1-2-credentialstatus"><bdi class="secno">4.1.2 </bdi><code>credentialStatus</code></h4><a class="self-link" href="#credentialStatus" aria-label="Permalink for Section 4.1.2"></a></div><p><em>Credential status</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialStatus">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:CredentialStatus"><a href="#CredentialStatus"><code>CredentialStatus</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:credentialSubject" typeof="rdf:Property owl:ObjectProperty" id="credentialSubject"><div class="header-wrapper"><h4 id="x4-1-3-credentialsubject"><bdi class="secno">4.1.3 </bdi><code>credentialSubject</code></h4><a class="self-link" href="#credentialSubject" aria-label="Permalink for Section 4.1.3"></a></div><p><em>Credential subject</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSubject">formal definition of the term</a>.</p><p>The property's value should be a URL, i.e., not a literal.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:digestSRI" typeof="rdf:Property owl:DatatypeProperty" id="digestSRI"><div class="header-wrapper"><h4 id="x4-1-4-digestsri"><bdi class="secno">4.1.4 </bdi><code>digestSRI</code></h4><a class="self-link" href="#digestSRI" aria-label="Permalink for Section 4.1.4"></a></div><p><em>Subresource integrity digest</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-digestSRI">formal definition of the term</a>.</p><dl class="terms"><dt>See also:</dt><dd><a href="https://www.w3.org/TR/SRI/#the-integrity-attribute" property="rdfs:seeAlso">Subresource Integrity Metadata</a><br></dd></dl><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:sriString"><a href="#sriString"><code>sriString</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:evidence" typeof="rdf:Property" id="evidence"><div class="header-wrapper"><h4 id="x4-1-5-evidence"><bdi class="secno">4.1.5 </bdi><code>evidence</code></h4><a class="self-link" href="#evidence" aria-label="Permalink for Section 4.1.5"></a></div><p><em>Evidence</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-evidence">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:CredentialEvidence"><a href="#CredentialEvidence"><code>CredentialEvidence</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:holder" typeof="rdf:Property owl:ObjectProperty" id="holder"><div class="header-wrapper"><h4 id="x4-1-6-holder"><bdi class="secno">4.1.6 </bdi><code>holder</code></h4><a class="self-link" href="#holder" aria-label="Permalink for Section 4.1.6"></a></div><p><em>Holder</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-holder">formal definition of the term</a>.</p><p>The property's value should be a URL, i.e., not a literal.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:jsonSchema" typeof="rdf:Property owl:DatatypeProperty" id="jsonSchema"><div class="header-wrapper"><h4 id="x4-1-7-jsonschema"><bdi class="secno">4.1.7 </bdi><code>jsonSchema</code></h4><a class="self-link" href="#jsonSchema" aria-label="Permalink for Section 4.1.7"></a></div><p><em>Referring to a Json Schema</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-json-schema/#jsonschema-0">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="rdf:JSON"><code>rdf:JSON</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:JsonSchema"><a href="#JsonSchema"><code>JsonSchema</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:issuer" typeof="rdf:Property owl:ObjectProperty" id="issuer"><div class="header-wrapper"><h4 id="x4-1-8-issuer"><bdi class="secno">4.1.8 </bdi><code>issuer</code></h4><a class="self-link" href="#issuer" aria-label="Permalink for Section 4.1.8"></a></div><p><em>Issuer</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-issuer">formal definition of the term</a>.</p><p>The property's value should be a URL, i.e., not a literal.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:refreshService" typeof="rdf:Property" id="refreshService"><div class="header-wrapper"><h4 id="x4-1-9-refreshservice"><bdi class="secno">4.1.9 </bdi><code>refreshService</code></h4><a class="self-link" href="#refreshService" aria-label="Permalink for Section 4.1.9"></a></div><p><em>Refresh service</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-refreshService">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:RefreshService"><a href="#RefreshService"><code>RefreshService</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:relatedResource" typeof="rdf:Property owl:ObjectProperty" id="relatedResource"><div class="header-wrapper"><h4 id="x4-1-10-relatedresource"><bdi class="secno">4.1.10 </bdi><code>relatedResource</code></h4><a class="self-link" href="#relatedResource" aria-label="Permalink for Section 4.1.10"></a></div><p><em>Related resource</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-relatedResource">formal definition of the term</a>.</p><p>The property's value should be a URL, i.e., not a literal.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:termsOfUse" typeof="rdf:Property" id="termsOfUse"><div class="header-wrapper"><h4 id="x4-1-11-termsofuse"><bdi class="secno">4.1.11 </bdi><code>termsOfUse</code></h4><a class="self-link" href="#termsOfUse" aria-label="Permalink for Section 4.1.11"></a></div><p><em>Terms of use</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-termsOfUse">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:TermsOfUse"><a href="#TermsOfUse"><code>TermsOfUse</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="_:a0">Union of: <br><span about="_:a0" inlist="true" property="owl:unionOf" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></span><br><span about="_:a0" inlist="true" property="owl:unionOf" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:validFrom" typeof="rdf:Property owl:DatatypeProperty" id="validFrom"><div class="header-wrapper"><h4 id="x4-1-12-validfrom"><bdi class="secno">4.1.12 </bdi><code>validFrom</code></h4><a class="self-link" href="#validFrom" aria-label="Permalink for Section 4.1.12"></a></div><p><em>Valid from</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-validFrom">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:dateTime"><code>xsd:dateTime</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="_:a1">Union of: <br><span about="_:a1" inlist="true" property="owl:unionOf" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></span><br><span about="_:a1" inlist="true" property="owl:unionOf" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:validUntil" typeof="rdf:Property owl:DatatypeProperty" id="validUntil"><div class="header-wrapper"><h4 id="x4-1-13-validuntil"><bdi class="secno">4.1.13 </bdi><code>validUntil</code></h4><a class="self-link" href="#validUntil" aria-label="Permalink for Section 4.1.13"></a></div><p><em>Valid until</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-validUntil">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:dateTime"><code>xsd:dateTime</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="_:a2">Union of: <br><span about="_:a2" inlist="true" property="owl:unionOf" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></span><br><span about="_:a2" inlist="true" property="owl:unionOf" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:verifiableCredential" typeof="rdf:Property" id="verifiableCredential"><div class="header-wrapper"><h4 id="x4-1-14-verifiablecredential"><bdi class="secno">4.1.14 </bdi><code>verifiableCredential</code></h4><a class="self-link" href="#verifiableCredential" aria-label="Permalink for Section 4.1.14"></a></div><p><em>Verifiable credential graph</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:VerifiableCredentialGraph"><a href="#VerifiableCredentialGraph"><code>VerifiableCredentialGraph</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="schema:name"><div class="header-wrapper"><h4 id="x4-1-15-schema-name"><bdi class="secno">4.1.15 </bdi><code>schema:name</code></h4><a class="self-link" href="#schema:name" aria-label="Permalink for Section 4.1.15"></a></div><p><em>Name of a person, organization, etc.</em></p><p>
-                <b>This term is formally defined in another vocabulary</b>, but is
-                frequently used with this vocabulary and has been included to aid
-                readability of this document. 
-                For more detailed information, see the <a href="http://schema.org/name">reference</a> to the term
-                in its own vocabulary definition.
-            </p><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="sec:proof"><div class="header-wrapper"><h4 id="x4-1-16-sec-proof"><bdi class="secno">4.1.16 </bdi><code>sec:proof</code></h4><a class="self-link" href="#sec:proof" aria-label="Permalink for Section 4.1.16"></a></div><p><em>Proof sets</em></p><p>
-                <b>This term is formally defined in another vocabulary</b>, but is
-                frequently used with this vocabulary and has been included to aid
-                readability of this document. 
-                For more detailed information, see the <a href="https://w3id.org/security#proof">reference</a> to the term
-                in its own vocabulary definition.
-            </p><p>See also the <a href="https://www.w3.org/TR/vc-data-integrity/#proof-sets">formal definition of the term</a>.</p><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span>, <span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="sec:digestMultibase"><div class="header-wrapper"><h4 id="x4-1-17-sec-digestmultibase"><bdi class="secno">4.1.17 </bdi><code>sec:digestMultibase</code></h4><a class="self-link" href="#sec:digestMultibase" aria-label="Permalink for Section 4.1.17"></a></div><p><em>Digest multibase</em></p><p>
-                <b>This term is formally defined in another vocabulary</b>, but is
-                frequently used with this vocabulary and has been included to aid
-                readability of this document. 
-                For more detailed information, see the <a href="https://w3id.org/security#digestMultibase">reference</a> to the term
-                in its own vocabulary definition.
-            </p><p>See also the <a href="https://www.w3.org/TR/vc-data-integrity/#dfn-digestmultibase">formal definition of the term</a>.</p><div><b><i>(Feature at Risk)</i></b> The Working Group is currently attempting to determine whether cryptographic hash expression formats can be unified across all of the VCWG core specifications. Candidates for this mechanism include <code>digestSRI</code> and <code>digestMultibase</code>.</div><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section></section>
+      <section id="property_definitions" class="term_definitions">
+        <h2>Property definitions</h2>
+      <p>The following are  property definitions in the <code>cred</code> namespace.</p><section resource="cred:credentialSchema" typeof="rdf:Property" id="credentialSchema"><h4><code>credentialSchema</code></h4><p><em>Credential schema</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSchema">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:CredentialSchema"><a href="#CredentialSchema"><code>CredentialSchema</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:credentialStatus" typeof="rdf:Property" id="credentialStatus"><h4><code>credentialStatus</code></h4><p><em>Credential status</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialStatus">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:CredentialStatus"><a href="#CredentialStatus"><code>CredentialStatus</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:credentialSubject" typeof="rdf:Property owl:ObjectProperty" id="credentialSubject"><h4><code>credentialSubject</code></h4><p><em>Credential subject</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSubject">formal definition of the term</a>.</p><p>The property's value should be a URL, i.e., not a literal.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:digestSRI" typeof="rdf:Property owl:DatatypeProperty" id="digestSRI"><h4><code>digestSRI</code></h4><p><em>Subresource integrity digest</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-digestSRI">formal definition of the term</a>.</p><dl class="terms"><dt>See also:</dt><dd><a href="https://www.w3.org/TR/SRI/#the-integrity-attribute" property="rdfs:seeAlso">Subresource Integrity Metadata</a><br></dd></dl><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:sriString"><a href="#sriString"><code>sriString</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:evidence" typeof="rdf:Property" id="evidence"><h4><code>evidence</code></h4><p><em>Evidence</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-evidence">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:CredentialEvidence"><a href="#CredentialEvidence"><code>CredentialEvidence</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:holder" typeof="rdf:Property owl:ObjectProperty" id="holder"><h4><code>holder</code></h4><p><em>Holder</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-holder">formal definition of the term</a>.</p><p>The property's value should be a URL, i.e., not a literal.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:jsonSchema" typeof="rdf:Property owl:DatatypeProperty" id="jsonSchema"><h4><code>jsonSchema</code></h4><p><em>Referring to a Json Schema</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-json-schema/#jsonschema-0">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="rdf:JSON"><code>rdf:JSON</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:JsonSchema"><a href="#JsonSchema"><code>JsonSchema</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:issuer" typeof="rdf:Property owl:ObjectProperty" id="issuer"><h4><code>issuer</code></h4><p><em>Issuer</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-issuer">formal definition of the term</a>.</p><p>The property's value should be a URL, i.e., not a literal.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:refreshService" typeof="rdf:Property" id="refreshService"><h4><code>refreshService</code></h4><p><em>Refresh service</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-refreshService">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:RefreshService"><a href="#RefreshService"><code>RefreshService</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:relatedResource" typeof="rdf:Property owl:ObjectProperty" id="relatedResource"><h4><code>relatedResource</code></h4><p><em>Related resource</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-relatedResource">formal definition of the term</a>.</p><p>The property's value should be a URL, i.e., not a literal.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:termsOfUse" typeof="rdf:Property" id="termsOfUse"><h4><code>termsOfUse</code></h4><p><em>Terms of use</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-termsOfUse">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:TermsOfUse"><a href="#TermsOfUse"><code>TermsOfUse</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="_:a0">Union of: <br><span about="_:a0" inlist="true" property="owl:unionOf" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></span><br><span about="_:a0" inlist="true" property="owl:unionOf" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:validFrom" typeof="rdf:Property owl:DatatypeProperty" id="validFrom"><h4><code>validFrom</code></h4><p><em>Valid from</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-validFrom">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:dateTime"><code>xsd:dateTime</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="_:a1">Union of: <br><span about="_:a1" inlist="true" property="owl:unionOf" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></span><br><span about="_:a1" inlist="true" property="owl:unionOf" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:validUntil" typeof="rdf:Property owl:DatatypeProperty" id="validUntil"><h4><code>validUntil</code></h4><p><em>Valid until</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-validUntil">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:dateTime"><code>xsd:dateTime</code></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="_:a2">Union of: <br><span about="_:a2" inlist="true" property="owl:unionOf" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></span><br><span about="_:a2" inlist="true" property="owl:unionOf" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:verifiableCredential" typeof="rdf:Property" id="verifiableCredential"><h4><code>verifiableCredential</code></h4><p><em>Verifiable credential graph</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:VerifiableCredentialGraph"><a href="#VerifiableCredentialGraph"><code>VerifiableCredentialGraph</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiablePresentation"><a href="#VerifiablePresentation"><code>VerifiablePresentation</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section about="https://www.w3.org/2018/credentials#schema:name" rel="owl:sameAs" resource="schema:name" id="schema:name"><h4><code>name</code></h4><p><em>Name of a person, organization, etc.</em></p><p>
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="http://schema.org/name">schema:name</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section about="https://www.w3.org/2018/credentials#sec:proof" rel="owl:sameAs" resource="sec:proof" id="sec:proof"><h4><code>proof</code></h4><p><em>Proof sets</em></p><p>
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#proof">sec:proof</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><p>See also the <a href="https://www.w3.org/TR/vc-data-integrity/#proof-sets">formal definition of the term</a>.</p><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span>, <span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section about="https://www.w3.org/2018/credentials#sec:digestMultibase" rel="owl:sameAs" resource="sec:digestMultibase" id="sec:digestMultibase"><h4><code>digestMultibase</code></h4><p><em>Digest multibase</em></p><p>
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#digestMultibase">sec:digestMultibase</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><p>See also the <a href="https://www.w3.org/TR/vc-data-integrity/#dfn-digestmultibase">formal definition of the term</a>.</p><div><b><i>(Feature at Risk)</i></b> The Working Group is currently attempting to determine whether cryptographic hash expression formats can be unified across all of the VCWG core specifications. Candidates for this mechanism include `digestSRI` and `digestMultibase`.</div><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section></section>
 
-      <section id="class_definitions" class="term_definitions"><div class="header-wrapper"><h3 id="x4-2-class-definitions"><bdi class="secno">4.2 </bdi>Class definitions</h3><a class="self-link" href="#class_definitions" aria-label="Permalink for Section 4.2"></a></div>
-        
-      <p>The following are  class definitions in the <code>cred</code> namespace.</p><section resource="cred:CredentialEvidence" typeof="rdfs:Class" id="CredentialEvidence"><div class="header-wrapper"><h4 id="x4-2-1-credentialevidence"><bdi class="secno">4.2.1 </bdi><code>CredentialEvidence</code></h4><a class="self-link" href="#CredentialEvidence" aria-label="Permalink for Section 4.2.1"></a></div><p><em>Credential evidence</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-evidence">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#evidence"><code>evidence</code></a></dd></dl></section><section resource="cred:CredentialSchema" typeof="rdfs:Class" id="CredentialSchema"><div class="header-wrapper"><h4 id="x4-2-2-credentialschema"><bdi class="secno">4.2.2 </bdi><code>CredentialSchema</code></h4><a class="self-link" href="#CredentialSchema" aria-label="Permalink for Section 4.2.2"></a></div><p><em>Credential schema</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-schema">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#credentialSchema"><code>credentialSchema</code></a></dd></dl></section><section resource="cred:CredentialStatus" typeof="rdfs:Class" id="CredentialStatus"><div class="header-wrapper"><h4 id="x4-2-3-credentialstatus"><bdi class="secno">4.2.3 </bdi><code>CredentialStatus</code></h4><a class="self-link" href="#CredentialStatus" aria-label="Permalink for Section 4.2.3"></a></div><p><em>Credential status</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-status">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#credentialStatus"><code>credentialStatus</code></a></dd></dl></section><section resource="cred:EnvelopedVerifiableCredential" typeof="rdfs:Class" id="EnvelopedVerifiableCredential"><div class="header-wrapper"><h4 id="x4-2-4-envelopedverifiablecredential"><bdi class="secno">4.2.4 </bdi><code>EnvelopedVerifiableCredential</code></h4><a class="self-link" href="#EnvelopedVerifiableCredential" aria-label="Permalink for Section 4.2.4"></a></div><p><em>Enveloped verifiable credential</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiableCredential">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:EnvelopedVerifiablePresentation" typeof="rdfs:Class" id="EnvelopedVerifiablePresentation"><div class="header-wrapper"><h4 id="x4-2-5-envelopedverifiablepresentation"><bdi class="secno">4.2.5 </bdi><code>EnvelopedVerifiablePresentation</code></h4><a class="self-link" href="#EnvelopedVerifiablePresentation" aria-label="Permalink for Section 4.2.5"></a></div><p><em>Enveloped verifiable presentation</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiablePresentation">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:JsonSchema" typeof="rdfs:Class" id="JsonSchema"><div class="header-wrapper"><h4 id="x4-2-6-jsonschema"><bdi class="secno">4.2.6 </bdi><code>JsonSchema</code></h4><a class="self-link" href="#JsonSchema" aria-label="Permalink for Section 4.2.6"></a></div><p><em>JSON schema validator</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-json-schema/#jsonschema">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="cred:CredentialSchema"><a href="#CredentialSchema"><code>CredentialSchema</code></a></span></dd></dl><dl class="terms"><dt>Domain of:</dt><dd><a href="#jsonSchema"><code>jsonSchema</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:JsonSchemaCredential" typeof="rdfs:Class" id="JsonSchemaCredential"><div class="header-wrapper"><h4 id="x4-2-7-jsonschemacredential"><bdi class="secno">4.2.7 </bdi><code>JsonSchemaCredential</code></h4><a class="self-link" href="#JsonSchemaCredential" aria-label="Permalink for Section 4.2.7"></a></div><p><em>JSON schema validator with schema contained in a credential</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-json-schema/#jsonschemacredential">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></span></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:RefreshService" typeof="rdfs:Class" id="RefreshService"><div class="header-wrapper"><h4 id="x4-2-8-refreshservice"><bdi class="secno">4.2.8 </bdi><code>RefreshService</code></h4><a class="self-link" href="#RefreshService" aria-label="Permalink for Section 4.2.8"></a></div><p><em>Refresh service</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-refresh-service">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#refreshService"><code>refreshService</code></a></dd></dl></section><section resource="cred:TermsOfUse" typeof="rdfs:Class" id="TermsOfUse"><div class="header-wrapper"><h4 id="x4-2-9-termsofuse"><bdi class="secno">4.2.9 </bdi><code>TermsOfUse</code></h4><a class="self-link" href="#TermsOfUse" aria-label="Permalink for Section 4.2.9"></a></div><p><em>Terms of use</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-terms-of-use">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#termsOfUse"><code>termsOfUse</code></a></dd></dl></section><section resource="cred:VerifiableCredential" typeof="rdfs:Class" id="VerifiableCredential"><div class="header-wrapper"><h4 id="x4-2-10-verifiablecredential"><bdi class="secno">4.2.10 </bdi><code>VerifiableCredential</code></h4><a class="self-link" href="#VerifiableCredential" aria-label="Permalink for Section 4.2.10"></a></div><p><em>Verifiable credential</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#credentials">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain of:</dt><dd><a href="#credentialSchema"><code>credentialSchema</code></a>, <a href="#credentialStatus"><code>credentialStatus</code></a>, <a href="#credentialSubject"><code>credentialSubject</code></a>, <a href="#evidence"><code>evidence</code></a>, <a href="#issuer"><code>issuer</code></a>, <a href="#refreshService"><code>refreshService</code></a>, <a href="#renderMethod"><code>renderMethod</code></a>, <a href="#relatedResource"><code>relatedResource</code></a></dd><dt>In the domain of:</dt><dd><a href="#termsOfUse"><code>termsOfUse</code></a>, <a href="#validFrom"><code>validFrom</code></a>, <a href="#validUntil"><code>validUntil</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:VerifiableCredentialGraph" typeof="rdfs:Class" id="VerifiableCredentialGraph"><div class="header-wrapper"><h4 id="x4-2-11-verifiablecredentialgraph"><bdi class="secno">4.2.11 </bdi><code>VerifiableCredentialGraph</code></h4><a class="self-link" href="#VerifiableCredentialGraph" aria-label="Permalink for Section 4.2.11"></a></div><p><em>Verifiable credential graph</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiablecredentialgraph">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">Instances of this class are <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a>&nbsp;[<cite><a class="bibref" data-link-type="biblio" href="#bib-rdf12-concepts" title="RDF 1.2 Concepts and Abstract Syntax">RDF12-CONCEPTS</a></cite>].</div><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#verifiableCredential"><code>verifiableCredential</code></a></dd></dl></section><section resource="cred:VerifiablePresentation" typeof="rdfs:Class" id="VerifiablePresentation"><div class="header-wrapper"><h4 id="x4-2-12-verifiablepresentation"><bdi class="secno">4.2.12 </bdi><code>VerifiablePresentation</code></h4><a class="self-link" href="#VerifiablePresentation" aria-label="Permalink for Section 4.2.12"></a></div><p><em>Verifiable presentation</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#presentations">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain of:</dt><dd><a href="#holder"><code>holder</code></a>, <a href="#verifiableCredential"><code>verifiableCredential</code></a></dd><dt>In the domain of:</dt><dd><a href="#termsOfUse"><code>termsOfUse</code></a>, <a href="#validFrom"><code>validFrom</code></a>, <a href="#validUntil"><code>validUntil</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section></section>
+      <section id="class_definitions" class="term_definitions">
+        <h2>Class definitions</h2>
+      <p>The following are  class definitions in the <code>cred</code> namespace.</p><section resource="cred:CredentialEvidence" typeof="rdfs:Class" id="CredentialEvidence"><h4><code>CredentialEvidence</code></h4><p><em>Credential evidence</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-evidence">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#evidence"><code>evidence</code></a></dd></dl></section><section resource="cred:CredentialSchema" typeof="rdfs:Class" id="CredentialSchema"><h4><code>CredentialSchema</code></h4><p><em>Credential schema</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-schema">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#credentialSchema"><code>credentialSchema</code></a></dd></dl></section><section resource="cred:CredentialStatus" typeof="rdfs:Class" id="CredentialStatus"><h4><code>CredentialStatus</code></h4><p><em>Credential status</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-status">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#credentialStatus"><code>credentialStatus</code></a></dd></dl></section><section resource="cred:EnvelopedVerifiableCredential" typeof="rdfs:Class" id="EnvelopedVerifiableCredential"><h4><code>EnvelopedVerifiableCredential</code></h4><p><em>Enveloped verifiable credential</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiableCredential">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:EnvelopedVerifiablePresentation" typeof="rdfs:Class" id="EnvelopedVerifiablePresentation"><h4><code>EnvelopedVerifiablePresentation</code></h4><p><em>Enveloped verifiable presentation</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiablePresentation">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:JsonSchema" typeof="rdfs:Class" id="JsonSchema"><h4><code>JsonSchema</code></h4><p><em>JSON schema validator</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-json-schema/#jsonschema">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="cred:CredentialSchema"><a href="#CredentialSchema"><code>CredentialSchema</code></a></span></dd></dl><dl class="terms"><dt>Domain of:</dt><dd><a href="#jsonSchema"><code>jsonSchema</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:JsonSchemaCredential" typeof="rdfs:Class" id="JsonSchemaCredential"><h4><code>JsonSchemaCredential</code></h4><p><em>JSON schema validator with schema contained in a credential</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-json-schema/#jsonschemacredential">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></span></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:RefreshService" typeof="rdfs:Class" id="RefreshService"><h4><code>RefreshService</code></h4><p><em>Refresh service</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-refresh-service">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#refreshService"><code>refreshService</code></a></dd></dl></section><section resource="cred:TermsOfUse" typeof="rdfs:Class" id="TermsOfUse"><h4><code>TermsOfUse</code></h4><p><em>Terms of use</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-terms-of-use">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#termsOfUse"><code>termsOfUse</code></a></dd></dl></section><section resource="cred:VerifiableCredential" typeof="rdfs:Class" id="VerifiableCredential"><h4><code>VerifiableCredential</code></h4><p><em>Verifiable credential</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#credentials">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain of:</dt><dd><a href="#credentialSchema"><code>credentialSchema</code></a>, <a href="#credentialStatus"><code>credentialStatus</code></a>, <a href="#credentialSubject"><code>credentialSubject</code></a>, <a href="#evidence"><code>evidence</code></a>, <a href="#issuer"><code>issuer</code></a>, <a href="#refreshService"><code>refreshService</code></a>, <a href="#renderMethod"><code>renderMethod</code></a>, <a href="#relatedResource"><code>relatedResource</code></a></dd><dt>In the domain of:</dt><dd><a href="#termsOfUse"><code>termsOfUse</code></a>, <a href="#validFrom"><code>validFrom</code></a>, <a href="#validUntil"><code>validUntil</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:VerifiableCredentialGraph" typeof="rdfs:Class" id="VerifiableCredentialGraph"><h4><code>VerifiableCredentialGraph</code></h4><p><em>Verifiable credential graph</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiablecredentialgraph">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">Instances of this class are <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a>&nbsp;[[RDF12-CONCEPTS]].</div><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#verifiableCredential"><code>verifiableCredential</code></a></dd></dl></section><section resource="cred:VerifiablePresentation" typeof="rdfs:Class" id="VerifiablePresentation"><h4><code>VerifiablePresentation</code></h4><p><em>Verifiable presentation</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#presentations">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain of:</dt><dd><a href="#holder"><code>holder</code></a>, <a href="#verifiableCredential"><code>verifiableCredential</code></a></dd><dt>In the domain of:</dt><dd><a href="#termsOfUse"><code>termsOfUse</code></a>, <a href="#validFrom"><code>validFrom</code></a>, <a href="#validUntil"><code>validUntil</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section></section>
 
-      <section id="datatype_definitions" class="term_definitions"><div class="header-wrapper"><h3 id="x4-3-datatype-definitions"><bdi class="secno">4.3 </bdi>Datatype definitions</h3><a class="self-link" href="#datatype_definitions" aria-label="Permalink for Section 4.3"></a></div>
-        
-      <p>The following are  datatype definitions in the <code>cred</code> namespace.</p><section resource="cred:sriString" typeof="xsd:string" id="sriString"><div class="header-wrapper"><h4 id="x4-3-1-sristring"><bdi class="secno">4.3.1 </bdi><code>sriString</code></h4><a class="self-link" href="#sriString" aria-label="Permalink for Section 4.3.1"></a></div><p><em>Datatype for digest SRI values</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#the-sristring-datatype">formal definition of the term</a>.</p><dl class="terms"><dt>See also:</dt><dd><a href="https://www.w3.org/TR/SRI/#the-integrity-attribute" property="rdfs:seeAlso">Subresource Integrity Metadata</a><br></dd></dl><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Derived from:</dt><dd><span property="rdfs:subClassOf" resource="xsd:string"><code>xsd:string</code></span></dd></dl><dl class="terms"><dt>Range of:</dt><dd><a href="#digestSRI"><code>digestSRI</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section id="sec:multibase"><div class="header-wrapper"><h4 id="x4-3-2-sec-multibase"><bdi class="secno">4.3.2 </bdi><code>sec:multibase</code></h4><a class="self-link" href="#sec:multibase" aria-label="Permalink for Section 4.3.2"></a></div><p><em>Datatype for multibase values</em></p><p>
-                <b>This term is formally defined in another vocabulary</b>, but is
-                frequently used with this vocabulary and has been included to aid
-                readability of this document. 
-                For more detailed information, see the <a href="https://w3id.org/security#multibase">reference</a> to the term
-                in its own vocabulary definition.
+      <section id="datatype_definitions" class="term_definitions">
+        <h2>Datatype definitions</h2>
+      <p>The following are  datatype definitions in the <code>cred</code> namespace.</p><section resource="cred:sriString" typeof="xsd:string" id="sriString"><h4><code>sriString</code></h4><p><em>Datatype for digest SRI values</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#the-sristring-datatype">formal definition of the term</a>.</p><dl class="terms"><dt>See also:</dt><dd><a href="https://www.w3.org/TR/SRI/#the-integrity-attribute" property="rdfs:seeAlso">Subresource Integrity Metadata</a><br></dd></dl><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Derived from:</dt><dd><span property="rdfs:subClassOf" resource="xsd:string"><code>xsd:string</code></span></dd></dl><dl class="terms"><dt>Range of:</dt><dd><a href="#digestSRI"><code>digestSRI</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section about="https://www.w3.org/2018/credentials#sec:multibase" rel="owl:sameAs" resource="sec:multibase" id="sec:multibase"><h4><code>multibase</code></h4><p><em>Datatype for multibase values</em></p><p>
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#multibase">sec:multibase</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
             </p><p>See also the <a href="https://www.w3.org/TR/cid-1.0/#multibase">formal definition of the term</a>.</p><dl class="terms"><dt>Derived from:</dt><dd><span property="rdfs:subClassOf" resource="xsd:string"><code>xsd:string</code></span></dd></dl><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span>, <span rev="schema:mentions"><a href="https://w3id.org/security/multikey/v1"><code>https://w3id.org/security/multikey/v1</code></a></span></dd></dl></section></section>
 
       
     </section>
 
-    <section id="reserved_term_definitions"><div class="header-wrapper"><h2 id="x5-reserved-terms"><bdi class="secno">5. </bdi>Reserved terms</h2><a class="self-link" href="#reserved_term_definitions" aria-label="Permalink for Section 5."></a></div>
-      
+    <section id="reserved_term_definitions">
+      <h1>Reserved terms</h1>
 
       <p>All terms in this section are
         <a href="https://www.w3.org/TR/vc-data-model-2.0/#reserved-extension-points"><em><strong>reserved</strong></em></a>.
@@ -383,41 +219,41 @@ var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
         normatively specify them.
       </p>
 
-      <section id="reserved_property_definitions" class="term_definitions"><div class="header-wrapper"><h3 id="x5-1-reserved-properties"><bdi class="secno">5.1 </bdi>Reserved properties</h3><a class="self-link" href="#reserved_property_definitions" aria-label="Permalink for Section 5.1"></a></div>
-        
-      <p>The following are <em><strong>reserved</strong></em> property definitions in the <code>cred</code> namespace.</p><section resource="cred:confidenceMethod" typeof="rdf:Property" id="confidenceMethod"><div class="header-wrapper"><h4 id="x5-1-1-confidencemethod"><bdi class="secno">5.1.1 </bdi><code>confidenceMethod</code></h4><a class="self-link" href="#confidenceMethod" aria-label="Permalink for Section 5.1.1"></a></div><p><em>Confidence method</em><span class="bold"><em> (reserved)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://w3c-ccg.github.io/confidence-method-spec/">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">reserved</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:ConfidenceMethod"><a href="#ConfidenceMethod"><code>ConfidenceMethod</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:renderMethod" typeof="rdf:Property" id="renderMethod"><div class="header-wrapper"><h4 id="x5-1-2-rendermethod"><bdi class="secno">5.1.2 </bdi><code>renderMethod</code></h4><a class="self-link" href="#renderMethod" aria-label="Permalink for Section 5.1.2"></a></div><p><em>Render method</em><span class="bold"><em> (reserved)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://w3c-ccg.github.io/vc-render-method/#the-rendermethod-property">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">reserved</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:RenderMethod"><a href="#RenderMethod"><code>RenderMethod</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl></section></section>
+      <section id="reserved_property_definitions" class="term_definitions">
+        <h2>Reserved properties</h2>
+      <p>The following are <em><strong>reserved</strong></em> property definitions in the <code>cred</code> namespace.</p><section resource="cred:confidenceMethod" typeof="rdf:Property" id="confidenceMethod"><h4><code>confidenceMethod</code></h4><p><em>Confidence method</em><span class="bold"><em> (reserved)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://w3c-ccg.github.io/confidence-method-spec/">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">reserved</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:ConfidenceMethod"><a href="#ConfidenceMethod"><code>ConfidenceMethod</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:renderMethod" typeof="rdf:Property" id="renderMethod"><h4><code>renderMethod</code></h4><p><em>Render method</em><span class="bold"><em> (reserved)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://w3c-ccg.github.io/vc-render-method/#the-rendermethod-property">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">reserved</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="cred:RenderMethod"><a href="#RenderMethod"><code>RenderMethod</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="cred:VerifiableCredential"><a href="#VerifiableCredential"><code>VerifiableCredential</code></a></dd></dl></section></section>
 
-      <section id="reserved_class_definitions" class="term_definitions"><div class="header-wrapper"><h3 id="x5-2-reserved-classes"><bdi class="secno">5.2 </bdi>Reserved classes</h3><a class="self-link" href="#reserved_class_definitions" aria-label="Permalink for Section 5.2"></a></div>
-        
-      <p>The following are <em><strong>reserved</strong></em> class definitions in the <code>cred</code> namespace.</p><section resource="cred:ConfidenceMethod" typeof="rdfs:Class" id="ConfidenceMethod"><div class="header-wrapper"><h4 id="x5-2-1-confidencemethod"><bdi class="secno">5.2.1 </bdi><code>ConfidenceMethod</code></h4><a class="self-link" href="#ConfidenceMethod" aria-label="Permalink for Section 5.2.1"></a></div><p><em>Confidence method</em><span class="bold"><em> (reserved)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-confidence-method">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">reserved</span><dl class="terms"><dt>Range of:</dt><dd><a href="#confidenceMethod"><code>confidenceMethod</code></a></dd></dl></section><section resource="cred:RenderMethod" typeof="rdfs:Class" id="RenderMethod"><div class="header-wrapper"><h4 id="x5-2-2-rendermethod"><bdi class="secno">5.2.2 </bdi><code>RenderMethod</code></h4><a class="self-link" href="#RenderMethod" aria-label="Permalink for Section 5.2.2"></a></div><p><em>Render method</em><span class="bold"><em> (reserved)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-render-method">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">reserved</span><dl class="terms"><dt>Range of:</dt><dd><a href="#renderMethod"><code>renderMethod</code></a></dd></dl></section></section>
+      <section id="reserved_class_definitions" class="term_definitions">
+        <h2>Reserved classes</h2>
+      <p>The following are <em><strong>reserved</strong></em> class definitions in the <code>cred</code> namespace.</p><section resource="cred:ConfidenceMethod" typeof="rdfs:Class" id="ConfidenceMethod"><h4><code>ConfidenceMethod</code></h4><p><em>Confidence method</em><span class="bold"><em> (reserved)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-confidence-method">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">reserved</span><dl class="terms"><dt>Range of:</dt><dd><a href="#confidenceMethod"><code>confidenceMethod</code></a></dd></dl></section><section resource="cred:RenderMethod" typeof="rdfs:Class" id="RenderMethod"><h4><code>RenderMethod</code></h4><p><em>Render method</em><span class="bold"><em> (reserved)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/vc-data-model-2.0/#bc-render-method">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">reserved</span><dl class="terms"><dt>Range of:</dt><dd><a href="#renderMethod"><code>renderMethod</code></a></dd></dl></section></section>
 
       
 
       
     </section>
 
-    <section id="deprecated_term_definitions"><div class="header-wrapper"><h2 id="x6-deprecated-terms"><bdi class="secno">6. </bdi>Deprecated terms</h2><a class="self-link" href="#deprecated_term_definitions" aria-label="Permalink for Section 6."></a></div>
-      
+    <section id="deprecated_term_definitions">
+      <h1>Deprecated terms</h1>
 
       <p class="annoy">All terms in this section are <em><strong>deprecated</strong></em>, and are only kept in this vocabulary for backward compatibility.
         <br>New applications should not use them.
       </p>
 
-      <section id="deprecated_property_definitions" class="term_definitions"><div class="header-wrapper"><h3 id="x6-1-deprecated-properties"><bdi class="secno">6.1 </bdi>Deprecated properties</h3><a class="self-link" href="#deprecated_property_definitions" aria-label="Permalink for Section 6.1"></a></div>
-        
-      <p>The following are <em><strong>deprecated</strong></em> property definitions in the <code>cred</code> namespace.</p><section resource="cred:expirationDate" typeof="rdf:Property owl:DeprecatedProperty owl:DatatypeProperty" id="expirationDate"><div class="header-wrapper"><h4 id="x6-1-1-expirationdate"><bdi class="secno">6.1.1 </bdi><code>expirationDate</code></h4><a class="self-link" href="#expirationDate" aria-label="Permalink for Section 6.1.1"></a></div><p><em>Expiration date</em><span class="bold"><em> (deprecated)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#expiration">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">The value of this property was used in the past to express the date and time the credential ceased to be valid. It has been deprecated in favor of <a href="#validUntil">validUntil</a></div><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">deprecated</span><span property="owl:deprecated" datatype="xsd:boolean" style="display: none">true</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:dateTime"><code>xsd:dateTime</code></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:issuanceDate" typeof="rdf:Property owl:DeprecatedProperty owl:DatatypeProperty" id="issuanceDate"><div class="header-wrapper"><h4 id="x6-1-2-issuancedate"><bdi class="secno">6.1.2 </bdi><code>issuanceDate</code></h4><a class="self-link" href="#issuanceDate" aria-label="Permalink for Section 6.1.2"></a></div><p><em>Issuance date</em><span class="bold"><em> (deprecated)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#issuance-date">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">The value of this property was used in the past to represent the earliest date when the information associated with the <a href="#credentialSubject">credentialSubject</a> property became valid. This property has been deprecated in favor of <a href="#validFrom">validFrom</a>.</div><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">deprecated</span><span property="owl:deprecated" datatype="xsd:boolean" style="display: none">true</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:dateTime"><code>xsd:dateTime</code></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section></section>
+      <section id="deprecated_property_definitions" class="term_definitions">
+        <h2>Deprecated properties</h2>
+      <p>The following are <em><strong>deprecated</strong></em> property definitions in the <code>cred</code> namespace.</p><section resource="cred:expirationDate" typeof="rdf:Property owl:DeprecatedProperty owl:DatatypeProperty" id="expirationDate"><h4><code>expirationDate</code></h4><p><em>Expiration date</em><span class="bold"><em> (deprecated)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#expiration">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">The value of this property was used in the past to express the date and time the credential ceased to be valid. It has been deprecated in favor of <a href="#validUntil">validUntil</a></div><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">deprecated</span><span property="owl:deprecated" datatype="xsd:boolean" style="display: none">true</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:dateTime"><code>xsd:dateTime</code></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section><section resource="cred:issuanceDate" typeof="rdf:Property owl:DeprecatedProperty owl:DatatypeProperty" id="issuanceDate"><h4><code>issuanceDate</code></h4><p><em>Issuance date</em><span class="bold"><em> (deprecated)</em></span></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/2022/REC-vc-data-model-20220303/#issuance-date">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">The value of this property was used in the past to represent the earliest date when the information associated with the <a href="#credentialSubject">credentialSubject</a> property became valid. This property has been deprecated in favor of <a href="#validFrom">validFrom</a>.</div><span property="rdfs:isDefinedBy" resource="cred:"></span><span style="display: none" property="vs:term_status">deprecated</span><span property="owl:deprecated" datatype="xsd:boolean" style="display: none">true</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="xsd:dateTime"><code>xsd:dateTime</code></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/credentials/v2"><code>https://www.w3.org/ns/credentials/v2</code></a></span></dd></dl></section></section>
 
       
 
-      <section id="deprecated_property_definitions" class="term_definitions"><div class="header-wrapper"><h3 id="x6-2-deprecated-properties"><bdi class="secno">6.2 </bdi>Deprecated properties</h3><a class="self-link" href="#deprecated_property_definitions" aria-label="Permalink for Section 6.2"></a></div>
-        
+      <section id="deprecated_property_definitions" class="term_definitions">
+        <h2>Deprecated properties</h2>
       </section>
 
       
     </section>
 
-    <section class="appendix" id="vocabulary-diagram-alt"><div class="header-wrapper"><h2 id="a-diagram-description"><bdi class="secno">A. </bdi>Diagram description</h2><a class="self-link" href="#vocabulary-diagram-alt" aria-label="Permalink for Appendix A."></a></div>
-      
+    <section class="appendix" id="vocabulary-diagram-alt">
+      <h2>Diagram description</h2>
       <details>
         <summary>Overview diagram of the vocabulary (without the deprecated items).</summary>
         <p>
@@ -481,237 +317,4 @@ var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
 
 
 
-<section id="references" class="appendix"><div class="header-wrapper"><h2 id="b-references"><bdi class="secno">B. </bdi>References</h2><a class="self-link" href="#references" aria-label="Permalink for Appendix B."></a></div><section id="informative-references"><div class="header-wrapper"><h3 id="b-1-informative-references"><bdi class="secno">B.1 </bdi>Informative references</h3><a class="self-link" href="#informative-references" aria-label="Permalink for Appendix B.1"></a></div>
-    
-    <dl class="bibliography"><dt id="bib-rdf-schema">[RDF-SCHEMA]</dt><dd>
-      <a href="https://www.w3.org/TR/rdf-schema/"><cite>RDF Schema 1.1</cite></a>. Dan Brickley; Ramanathan Guha.  W3C. 25 February 2014. W3C Recommendation. URL: <a href="https://www.w3.org/TR/rdf-schema/">https://www.w3.org/TR/rdf-schema/</a>
-    </dd><dt id="bib-rdf12-concepts">[RDF12-CONCEPTS]</dt><dd>
-      <a href="https://www.w3.org/TR/rdf12-concepts/"><cite>RDF 1.2 Concepts and Abstract Syntax</cite></a>. Olaf Hartig; Pierre-Antoine Champin; Gregg Kellogg; Andy Seaborne.  W3C. 9 January 2025. W3C Working Draft. URL: <a href="https://www.w3.org/TR/rdf12-concepts/">https://www.w3.org/TR/rdf12-concepts/</a>
-    </dd><dt id="bib-vc-data-model-2.0">[VC-DATA-MODEL-2.0]</dt><dd>
-      <a href="https://www.w3.org/TR/vc-data-model-2.0/"><cite>Verifiable Credentials Data Model v2.0</cite></a>. Ivan Herman; Michael Jones; Manu Sporny; Ted Thibodeau Jr; Gabe Cohen.  W3C. 19 December 2024. W3C Candidate Recommendation. URL: <a href="https://www.w3.org/TR/vc-data-model-2.0/">https://www.w3.org/TR/vc-data-model-2.0/</a>
-    </dd></dl>
-  </section></section><p role="navigation" id="back-to-top">
-    <a href="#title"><abbr title="Back to Top">↑</abbr></a>
-  </p><script id="respec-dfn-panel">(() => {
-// @ts-check
-if (document.respec) {
-  document.respec.ready.then(setupPanel);
-} else {
-  setupPanel();
-}
-
-function setupPanel() {
-  const listener = panelListener();
-  document.body.addEventListener("keydown", listener);
-  document.body.addEventListener("click", listener);
-}
-
-function panelListener() {
-  /** @type {HTMLElement} */
-  let panel = null;
-  return event => {
-    const { target, type } = event;
-
-    if (!(target instanceof HTMLElement)) return;
-
-    // For keys, we only care about Enter key to activate the panel
-    // otherwise it's activated via a click.
-    if (type === "keydown" && event.key !== "Enter") return;
-
-    const action = deriveAction(event);
-
-    switch (action) {
-      case "show": {
-        hidePanel(panel);
-        /** @type {HTMLElement} */
-        const dfn = target.closest("dfn, .index-term");
-        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
-        const coords = deriveCoordinates(event);
-        displayPanel(dfn, panel, coords);
-        break;
-      }
-      case "dock": {
-        panel.style.left = null;
-        panel.style.top = null;
-        panel.classList.add("docked");
-        break;
-      }
-      case "hide": {
-        hidePanel(panel);
-        panel = null;
-        break;
-      }
-    }
-  };
-}
-
-/**
- * @param {MouseEvent|KeyboardEvent} event
- */
-function deriveCoordinates(event) {
-  const target = /** @type HTMLElement */ (event.target);
-
-  // We prevent synthetic AT clicks from putting
-  // the dialog in a weird place. The AT events sometimes
-  // lack coordinates, so they have clientX/Y = 0
-  const rect = target.getBoundingClientRect();
-  if (
-    event instanceof MouseEvent &&
-    event.clientX >= rect.left &&
-    event.clientY >= rect.top
-  ) {
-    // The event probably happened inside the bounding rect...
-    return { x: event.clientX, y: event.clientY };
-  }
-
-  // Offset to the middle of the element
-  const x = rect.x + rect.width / 2;
-  // Placed at the bottom of the element
-  const y = rect.y + rect.height;
-  return { x, y };
-}
-
-/**
- * @param {Event} event
- */
-function deriveAction(event) {
-  const target = /** @type {HTMLElement} */ (event.target);
-  const hitALink = !!target.closest("a");
-  if (target.closest("dfn:not([data-cite]), .index-term")) {
-    return hitALink ? "none" : "show";
-  }
-  if (target.closest(".dfn-panel")) {
-    if (hitALink) {
-      return target.classList.contains("self-link") ? "hide" : "dock";
-    }
-    const panel = target.closest(".dfn-panel");
-    return panel.classList.contains("docked") ? "hide" : "none";
-  }
-  if (document.querySelector(".dfn-panel:not([hidden])")) {
-    return "hide";
-  }
-  return "none";
-}
-
-/**
- * @param {HTMLElement} dfn
- * @param {HTMLElement} panel
- * @param {{ x: number, y: number }} clickPosition
- */
-function displayPanel(dfn, panel, { x, y }) {
-  panel.hidden = false;
-  // distance (px) between edge of panel and the pointing triangle (caret)
-  const MARGIN = 20;
-
-  const dfnRects = dfn.getClientRects();
-  // Find the `top` offset when the `dfn` can be spread across multiple lines
-  let closestTop = 0;
-  let minDiff = Infinity;
-  for (const rect of dfnRects) {
-    const { top, bottom } = rect;
-    const diffFromClickY = Math.abs((top + bottom) / 2 - y);
-    if (diffFromClickY < minDiff) {
-      minDiff = diffFromClickY;
-      closestTop = top;
-    }
-  }
-
-  const top = window.scrollY + closestTop + dfnRects[0].height;
-  const left = x - MARGIN;
-  panel.style.left = `${left}px`;
-  panel.style.top = `${top}px`;
-
-  // Find if the panel is flowing out of the window
-  const panelRect = panel.getBoundingClientRect();
-  const SCREEN_WIDTH = Math.min(window.innerWidth, window.screen.width);
-  if (panelRect.right > SCREEN_WIDTH) {
-    const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
-    const newCaretOffset = left - newLeft;
-    panel.style.left = `${newLeft}px`;
-    /** @type {HTMLElement} */
-    const caret = panel.querySelector(".caret");
-    caret.style.left = `${newCaretOffset}px`;
-  }
-
-  // As it's a dialog, we trap focus.
-  // TODO: when <dialog> becomes a implemented, we should really
-  // use that.
-  trapFocus(panel, dfn);
-}
-
-/**
- * @param {HTMLElement} panel
- * @param {HTMLElement} dfn
- * @returns
- */
-function trapFocus(panel, dfn) {
-  /** @type NodeListOf<HTMLAnchorElement> elements */
-  const anchors = panel.querySelectorAll("a[href]");
-  // No need to trap focus
-  if (!anchors.length) return;
-
-  // Move focus to first anchor element
-  const first = anchors.item(0);
-  first.focus();
-
-  const trapListener = createTrapListener(anchors, panel, dfn);
-  panel.addEventListener("keydown", trapListener);
-
-  // Hiding the panel releases the trap
-  const mo = new MutationObserver(records => {
-    const [record] = records;
-    const target = /** @type HTMLElement */ (record.target);
-    if (target.hidden) {
-      panel.removeEventListener("keydown", trapListener);
-      mo.disconnect();
-    }
-  });
-  mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
-}
-
-/**
- *
- * @param {NodeListOf<HTMLAnchorElement>} anchors
- * @param {HTMLElement} panel
- * @param {HTMLElement} dfn
- * @returns
- */
-function createTrapListener(anchors, panel, dfn) {
-  const lastIndex = anchors.length - 1;
-  let currentIndex = 0;
-  return event => {
-    switch (event.key) {
-      // Hitting "Tab" traps us in a nice loop around elements.
-      case "Tab": {
-        event.preventDefault();
-        currentIndex += event.shiftKey ? -1 : +1;
-        if (currentIndex < 0) {
-          currentIndex = lastIndex;
-        } else if (currentIndex > lastIndex) {
-          currentIndex = 0;
-        }
-        anchors.item(currentIndex).focus();
-        break;
-      }
-
-      // Hitting "Enter" on an anchor releases the trap.
-      case "Enter":
-        hidePanel(panel);
-        break;
-
-      // Hitting "Escape" returns focus to dfn.
-      case "Escape":
-        hidePanel(panel);
-        dfn.focus();
-        return;
-    }
-  };
-}
-
-/** @param {HTMLElement} panel */
-function hidePanel(panel) {
-  if (!panel) return;
-  panel.hidden = true;
-  panel.classList.remove("docked");
-}
-})()</script><script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script></body></html>
+</body></html>

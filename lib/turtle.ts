@@ -59,6 +59,12 @@ export function toTurtle(vocab: Vocab): string {
         turtle += ".\n\n";
     }
 
+    const addExternal = (entry: RDFTerm): void => {
+        const curie = `${entry.prefix}:${entry.id}`
+        turtle +=`${global.vocab_url}${curie} owl:sameAs ${curie} ;\n\n`;
+        return
+    }
+
     // Here we go, category by category...
     {
         // Copy-paste (sort of...) the prefix definitions
@@ -90,36 +96,42 @@ export function toTurtle(vocab: Vocab): string {
         turtle += "# Property definitions\n";
         for (const prop of vocab.properties) {
             // External definitions should be ignored
-            if (prop.external) continue;
-            turtle += `${global.vocab_prefix}:${prop.id} a ${prop.type.join(", ")} ;\n`;
-            if (prop.status === Status.deprecated) {
-                turtle += `    owl:deprecated true ;\n`;
+            if (prop.external) {
+                addExternal(prop);
+            } else {
+                turtle += `${global.vocab_prefix}:${prop.id} a ${prop.type.join(", ")} ;\n`;
+                if (prop.status === Status.deprecated) {
+                    turtle += `    owl:deprecated true ;\n`;
+                }
+                if (prop.subPropertyOf) {
+                    turtle += `    rdfs:subPropertyOf ${prop.subPropertyOf.join(", ")} ;\n`;
+                }
+                if (prop.domain) {
+                    turtle += `    rdfs:domain ${multiDomain(prop.domain)} ;\n`;
+                }
+                if (prop.range) {
+                    turtle += `    rdfs:range ${multiRange(prop.range)} ;\n`;
+                }
+                commonFields(prop);
             }
-            if (prop.subPropertyOf) {
-                turtle += `    rdfs:subPropertyOf ${prop.subPropertyOf.join(", ")} ;\n`;
-            }
-            if (prop.domain) {
-                turtle += `    rdfs:domain ${multiDomain(prop.domain)} ;\n`;
-            }
-            if (prop.range) {
-                turtle += `    rdfs:range ${multiRange(prop.range)} ;\n`;
-            }
-            commonFields(prop);
         }
     }
 
     if (vocab.classes.length > 0) {
         turtle += "# Class definitions\n"
         for (const cl of vocab.classes) {
-            if (cl.external) continue;
-            turtle += `${global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
-            if (cl.status === Status.deprecated) {
-                turtle += `    owl:deprecated true ;\n`;
+            if (cl.external) {
+                addExternal(cl);
+            } else {
+                turtle += `${global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
+                if (cl.status === Status.deprecated) {
+                    turtle += `    owl:deprecated true ;\n`;
+                }
+                if (cl.subClassOf && cl.subClassOf.length > 0) {
+                    turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
+                }
+                commonFields(cl);
             }
-            if (cl.subClassOf && cl.subClassOf.length > 0) {
-                turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
-            }
-            commonFields(cl);
         }
         turtle += "\n\n";    
     }
@@ -127,27 +139,33 @@ export function toTurtle(vocab: Vocab): string {
     if (vocab.individuals.length > 0) {
         turtle += "# Definitions of individuals\n"
         for (const ind of vocab.individuals) {
-            if (ind.external) continue;
-            turtle += `${global.vocab_prefix}:${ind.id} a ${ind.type.join(", ")} ;\n`;
-            if (ind.status === Status.deprecated) {
-                turtle += `    owl:deprecated true ;\n`;
+            if (ind.external) {
+                addExternal(ind);
+            } else {
+                turtle += `${global.vocab_prefix}:${ind.id} a ${ind.type.join(", ")} ;\n`;
+                if (ind.status === Status.deprecated) {
+                    turtle += `    owl:deprecated true ;\n`;
+                }
+                commonFields(ind);
             }
-            commonFields(ind);
         }
     }
 
     if (vocab.datatypes.length > 0) {
         turtle += "# Definitions of datatypes\n"
         for (const dt of vocab.datatypes) {
-            if (dt.external) continue;
-            turtle += `${global.vocab_prefix}:${dt.id} a rdfs:Datatype ;\n`
-            if (dt.status === Status.deprecated) {
-                turtle += `    owl:deprecated true ;\n`;
+            if (dt.external) {
+                addExternal(dt);
+            } else {
+                turtle += `${global.vocab_prefix}:${dt.id} a rdfs:Datatype ;\n`
+                if (dt.status === Status.deprecated) {
+                    turtle += `    owl:deprecated true ;\n`;
+                }
+                if (dt.subClassOf && dt.subClassOf.length > 0) {
+                    turtle += `    rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
+                }
+                commonFields(dt);
             }
-            if (dt.subClassOf && dt.subClassOf.length > 0) {
-                turtle += `    rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
-            }
-            commonFields(dt);
         }
     }
 

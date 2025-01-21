@@ -200,7 +200,17 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             // curie
             output = curie;
 
-            document.addChild(section,'h4', `<code>${curie}</code>`);
+            // This is still a matter of discussion... I am not sure that this is the
+            // right approach. However, I am an RDF oriented person...
+            // h4 = document.addChild(section,'h4', `<code>${curie}</code>`);
+            document.addChild(section,'h4', `<code>${item.id}</code>`);
+
+            // A single RDFa statement is added to the lot to ensure a proper relationship
+            // to the "real" URL of the external term
+            section.setAttribute('about', `${vocab_url}${curie}`);
+            section.setAttribute('rel', 'owl:sameAs');
+            section.setAttribute('resource', `${curie}`);
+
             const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
 
             if (item.status !== Status.stable) {
@@ -211,11 +221,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
             const url = ns.url + item.id;
             const warning_text = `
-                <b>This term is formally defined in another vocabulary</b>, but is
-                frequently used with this vocabulary and has been included to aid
-                readability of this document. 
-                For more detailed information, see the <a href="${url}">reference</a> to the term
-                in its own vocabulary definition.
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="${url}">${curie}</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
             `
             document.addChild(section, 'p', warning_text);
             switch (item.defined_by.length) {
