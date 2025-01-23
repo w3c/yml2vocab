@@ -4,14 +4,14 @@
  * @packageDocumentation
  */
 
+const SCHEMA_STRING = "vocab.schema.json";
+
 import Ajv2019, { ErrorObject}                          from 'ajv/dist/2019';
 import addFormats                                       from 'ajv-formats';
 import * as yaml                                        from 'yaml';
 import { RawVocab, ValidationError, ValidationResults } from './common';
-
-// Yeah, it is ugly to use require, but importing a json file is still an issue for TS
-// At some point we can simply import a json file
-const schema = require('./vocab.schema.json');
+import * as fs                                          from "node:fs";
+import * as path                                        from "node:path";
 
 /**
  * Perform a JSON Schema validation on the YAML content. Done by converting the YAML content into 
@@ -22,6 +22,10 @@ const schema = require('./vocab.schema.json');
  */
 export function validateWithSchema(yaml_raw_content: string): ValidationResults {
     try {
+        // Get the JSON schema from the separate file
+        const schema_file = path.join(path.dirname(module.filename), SCHEMA_STRING);
+        const schema = JSON.parse(fs.readFileSync(schema_file, "utf8"));
+
         const yaml_content :any = yaml.parse(yaml_raw_content);
         const ajv = new Ajv2019({allErrors: true, verbose: true});
         addFormats(ajv);
