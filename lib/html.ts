@@ -23,19 +23,19 @@ const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction'
  * 
  */
 class MiniDOM {
-    private readonly _document: Document;
+    private readonly _localDocument: Document;
 
     constructor(html_text: string) {
         const doc = (new JSDOM(html_text)).window.document;
         if (doc) {
-            this._document = doc;
+            this._localDocument = doc;
         } else {
             throw new Error("Problem with parsing the template text");
         }
     }
 
     get document(): Document {
-        return this._document;
+        return this._localDocument;
     }
 
     /**
@@ -48,7 +48,7 @@ class MiniDOM {
      * 
      */
     addChild(parent: Element, element: string, content: string | undefined = undefined): Element {
-        const new_element = this._document.createElement(element);
+        const new_element = this._localDocument.createElement(element);
         parent.appendChild(new_element);
         if (content !== undefined) new_element.innerHTML = content;
         return new_element;
@@ -77,7 +77,7 @@ class MiniDOM {
      * @returns 
      */
     getElementById(id: string): Element | null {
-        return this._document.getElementById(id);
+        return this._localDocument.getElementById(id);
     }
 
     /**
@@ -87,7 +87,7 @@ class MiniDOM {
       * @returns 
       */
     getElementsByTagName(tag: string): HTMLCollection {
-        return this._document.getElementsByTagName(tag);
+        return this._localDocument.getElementsByTagName(tag);
     }
 
     /**
@@ -96,7 +96,7 @@ class MiniDOM {
      * @returns 
      */
     innerHTML(): string {
-        const output = this._document.documentElement?.innerHTML;
+        const output = this._localDocument.documentElement?.innerHTML;
         return output ? output : "";
     }
 }
@@ -185,7 +185,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         // generated.
         if (item.external) {
             // Check whether the term's prefix is indeed defined
-            const ns = ((pr: string, id: string): RDFPrefix => {
+            const ns = ((pr: string | undefined, id: string): RDFPrefix => {
+                if (pr === undefined) {
+                    throw new Error(`No prefix has been generated for the external term "${id}"`);
+                }
                 for (const prefix of vocab.prefixes) {
                     if (prefix.prefix === pr) {
                         return prefix;
@@ -226,16 +229,20 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 included to aid readability of this document.
             `
             document.addChild(section, 'p', warning_text);
-            switch (item.defined_by.length) {
-                case 0:
-                    break;
-                case 1: {
-                    document.addChild(section, 'p', `See also the <a href="${item.defined_by[0]}">formal definition of the term</a>.`);
-                    break;
-                }
-                default: {
-                    const refs: string[] = item.defined_by.map((def: string): string => `<a href="${def}">here</a>`);
-                    document.addChild(section, 'p', `See also the formal definitions ${formatter.format(refs)}.`);
+            if (item.defined_by) {
+                // By the logic of the program, at this point defined_by is always defined
+                // but picky compilers, like deno, push me to put this extra condition
+                switch (item.defined_by.length) {
+                    case 0:
+                        break;
+                    case 1: {
+                        document.addChild(section, 'p', `See also the <a href="${item.defined_by[0]}">formal definition of the term</a>.`);
+                        break;
+                    }
+                    default: {
+                        const refs: string[] = item.defined_by.map((def: string): string => `<a href="${def}">here</a>`);
+                        document.addChild(section, 'p', `See also the formal definitions ${formatter.format(refs)}.`);
+                    }
                 }
             }
         } else {
@@ -251,16 +258,20 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 document.addChild(span, 'em', ` (${item.status})`);
             }
 
-            switch (item.defined_by.length) {
-                case 0:
-                    break;
-                case 1: {
-                    document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by[0]}">formal definition of the term</a>.`);
-                    break;
-                }
-                default: {
-                    const refs: string[] = item.defined_by.map((def: string): string => `<a rel="rdfs:isDefinedBy" href="${def}">here</a>`);
-                    document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
+            if (item.defined_by) {
+                // By the logic of the program, at this point defined_by is always defined
+                // but picky compilers, like deno, push me to put this extra condition
+                switch (item.defined_by.length) {
+                    case 0:
+                        break;
+                    case 1: {
+                        document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by[0]}">formal definition of the term</a>.`);
+                        break;
+                    }
+                    default: {
+                        const refs: string[] = item.defined_by.map((def: string): string => `<a rel="rdfs:isDefinedBy" href="${def}">here</a>`);
+                        document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
+                    }
                 }
             }
         }

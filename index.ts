@@ -141,7 +141,8 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
             // One or more files could not be written, we should throw an exception...
             throw(new AggregateError(write_errors.join('\n')));
         }
-    } catch(e) {
+    // deno-lint-ignore no-explicit-any
+    } catch(e: any) {
         console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}`);
     }
 }

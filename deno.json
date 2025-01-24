@@ -1,0 +1,43 @@
+{
+    "version": "1.5.0",
+    "description": "Generation of vocabulary files starting by YAML",
+    "homepage": "https://github.com/w3c/yml2vocab-d",
+    "compilerOptions": {
+        "lib": ["dom", "deno.ns"]
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/w3c/yml2vocab"
+    },
+    "tasks": {
+        "test": "cd test; deno run --allow-read --allow-write --allow-env ../main.ts",
+        "test_di": "cd test/di; deno run --allow-read --allow-write --allow-env ../../main.ts",
+        "test_vcdm": "cd test/vcdm; deno run --allow-read --allow-write --allow-env ../../main.ts",
+        "local_vcdm_nolink": "cd local/tests/vcdm;  deno run --allow-read --allow-write --allow-env ../../../main.ts",
+        "compile": "deno compile --allow-read --allow-write --allow-env main.ts"
+    },
+    "main": "index.ts",
+    "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
+    "license": "W3C-20150513",
+    "imports": {
+        "./common"           : "./common.ts",
+        "./context"          : "./context.ts",
+        "./convert"          : "./convert.ts",
+        "./html"             : "./html.ts",
+        "./jsonld"           : "./jsonld.ts",
+        "./schema"           : "./schema.ts",
+        "./turtle"           : "./turtle.ts",
+        "./lib/common"       : "./lib/common.ts",
+        "./lib/context"      : "./lib/context.ts",
+        "./lib/convert"      : "./lib/convert.ts",
+        "./lib/html"         : "./lib/html.ts",
+        "./lib/jsonld"       : "./lib/jsonld.ts",
+        "./lib/schema"       : "./lib/schema.ts",
+        "./lib/turtle"       : "./lib/turtle.ts",
+        "./index"            : "./index.ts",
+        "yaml"               : "npm:yaml",
+        "commander"          : "npm:commander",
+        "@exodus/schemasafe" : "npm:@exodus/schemasafe",
+        "jsdom"              : "npm:jsdom"
+    }
+}

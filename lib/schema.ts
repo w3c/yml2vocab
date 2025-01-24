@@ -1,9 +1,8 @@
 /**
  * Import the YAML file, validate against a JSON schema, and return the data as an object.
- * 
+ *
  * @packageDocumentation
  */
-
 const SCHEMA_STRING = "vocab.schema.json";
 
 import { parser, ValidationError as VError }            from '@exodus/schemasafe';
@@ -11,6 +10,23 @@ import * as yaml                                        from 'yaml';
 import { RawVocab, ValidationError, ValidationResults } from './common';
 import * as fs                                          from "node:fs";
 import * as path                                        from "node:path";
+import * as url                                         from "node:url";
+
+// Unfortunately, I could not do this (so far) so that both deno and node
+// would accept this code. Sigh...
+function getSchemaFileName() {
+    const dirname = (() => {
+        // If this is Deno FROM HERE
+        // const __filename = url.fileURLToPath(import.meta.url);
+        // return path.dirname(__filename);
+        // UNTIL HERE
+
+        // if this is Node.js FROM HERE
+        return path.dirname(module.filename);
+        // UNTIL HERE
+    })();
+    return path.join(dirname, SCHEMA_STRING);
+}
 
 /**
  * Perform a JSON Schema validation on the YAML content. Done by converting the YAML content into 
@@ -22,9 +38,9 @@ import * as path                                        from "node:path";
 export function validateWithSchema(yaml_raw_content: string): ValidationResults {
     try {
         // Get the JSON schema from the separate file
-        const schema_file = path.join(path.dirname(module.filename), SCHEMA_STRING);
-        const schema = JSON.parse(fs.readFileSync(schema_file, "utf8"));
+        const schema = JSON.parse(fs.readFileSync(getSchemaFileName(), "utf8"));
 
+        // deno-lint-ignore no-explicit-any
         const yaml_content :any = yaml.parse(yaml_raw_content);
 
         const parse = parser(schema, {
