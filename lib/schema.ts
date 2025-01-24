@@ -6,8 +6,7 @@
 
 const SCHEMA_STRING = "vocab.schema.json";
 
-import Ajv2019, { ErrorObject}                          from 'ajv/dist/2019';
-import addFormats                                       from 'ajv-formats';
+import { parser, ValidationError as VError }            from '@exodus/schemasafe';
 import * as yaml                                        from 'yaml';
 import { RawVocab, ValidationError, ValidationResults } from './common';
 import * as fs                                          from "node:fs";
@@ -27,23 +26,25 @@ export function validateWithSchema(yaml_raw_content: string): ValidationResults 
         const schema = JSON.parse(fs.readFileSync(schema_file, "utf8"));
 
         const yaml_content :any = yaml.parse(yaml_raw_content);
-        const ajv = new Ajv2019({allErrors: true, verbose: true});
-        addFormats(ajv);
 
-        if (!ajv.validate(schema, yaml_content)) {
-            // Simplify the error messages of Ajv, this schema is way too simple to need the
-            // full complexity of those;
-            const simple_errors = ajv.errors.map((e: ErrorObject): ValidationError => {
+        const parse = parser(schema, {
+            mode: "default",
+            includeErrors: true,
+            allErrors: true,
+            requireStringValidation: false
+        });
+        const result = parse(JSON.stringify(yaml_content));
+
+        if (result.valid !== true) {
+            const errors = result.errors?.map((e: VError): ValidationError => {
                 return {
-                    message: (e.message) ? e.message : undefined,
-                    params: e.params,
-                    data: (e.data) ? e.data : undefined,
+                    message: `Error at ${e.instanceLocation}: ${e.keywordLocation}`,
                 }
-            });
+            })
             return {
                 vocab: null,
-                error: simple_errors,
-            }
+                error: errors ?? [], //errors ? errors : [],
+            };
         } else {
             return {
                 vocab: yaml_content as RawVocab,

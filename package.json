@@ -42,8 +42,7 @@
   "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
   "license": "W3C-20150513",
   "dependencies": {
-    "ajv": "^8.12.0",
-    "ajv-formats": "^2.1.1",
+    "@exodus/schemasafe": "^1.3.0",
     "commander": "^11.1.0",
     "jsdom": "^22.1.0",
     "yaml": "^2.3.4"
@@ -53,9 +52,9 @@
     "@types/node": "^20.9.0",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
-    "typescript": "^5.2.2",
     "eslint": "^8.53.0",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.25.3"
+    "typedoc": "^0.25.3",
+    "typescript": "^5.2.2"
   }
 }
