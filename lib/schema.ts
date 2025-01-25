@@ -1,3 +1,5 @@
+import * as process from "node:process";
+
 /**
  * Import the YAML file, validate against a JSON schema, and return the data as an object.
  *
@@ -13,19 +15,27 @@ import * as path                                        from "node:path";
 import * as url                                         from "node:url";
 
 // Unfortunately, I could not do this (so far) so that both deno and node
-// would accept this code. Sigh...
+// would accept this code. Sigh... The necessary portion should be
+// manually commented.
+// Maybe, at some point, there will be a solution that will make this
+// code properly usable...
 function getSchemaFileName() {
     const dirname = (() => {
-        // If this is Deno FROM HERE
-        // const __filename = url.fileURLToPath(import.meta.url);
-        // return path.dirname(__filename);
-        // UNTIL HERE
-
-        // if this is Node.js FROM HERE
-        return path.dirname(module.filename);
-        // UNTIL HERE
+        if (process.versions?.deno) {
+            // const filename = url.fileURLToPath(import.meta.url);
+            // return path.dirname(filename);
+            return undefined;
+        } else if (process.versions?.node) {
+            return path.dirname(module.filename);
+        } else {
+            throw new Error("Unknown architecture; should be used in deno 2 or node.js");
+        }
     })();
-    return path.join(dirname, SCHEMA_STRING);
+    if (dirname) {
+        return path.join(dirname, SCHEMA_STRING);
+    } else {
+        return "";
+    }
 }
 
 /**
@@ -75,3 +85,7 @@ export function validateWithSchema(yaml_raw_content: string): ValidationResults 
         }
     }
 }
+
+// const filename = getSchemaFileName();
+// console.log(filename);
+
