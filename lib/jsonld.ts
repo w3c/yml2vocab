@@ -79,9 +79,6 @@ export function toJSONLD(vocab: Vocab): string {
     // This is the target object
     const jsonld: JSON = {}
 
-    // These are the potential external objects
-    const externals: JSON[] = [];
-
     // Factoring out the common fields
     const commonFields = (target: JSON, entry: RDFTerm): void => {
         target["rdfs:label"]  = entry.label;
@@ -91,8 +88,8 @@ export function toJSONLD(vocab: Vocab): string {
                 "@type"  : "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             }
         }
-        if (entry.defined_by.length !== 0) {
-            if (entry.defined_by.length === 1) {
+        if (entry.defined_by?.length !== 0) {
+            if (entry.defined_by?.length === 1) {
                 target["rdfs:isDefinedBy"] = entry.defined_by[0];
             } else {
                 target["rdfs:isDefinedBy"] = entry.defined_by;
@@ -102,26 +99,6 @@ export function toJSONLD(vocab: Vocab): string {
         if (entry.see_also && entry.see_also.length > 0) {
             target["rdfs:seeAlso"] = entry.see_also.map( (link: Link): string => link.url);
         }
-    }
-
-    const addToExternals = (entry: RDFTerm): void => {
-        const curie = `${entry.prefix}:${entry.id}`
-        const url = ((): string => {
-            for (const prefix of vocab.prefixes) {
-                if (prefix.prefix === entry.prefix) {
-                    return prefix.url
-                }
-            }
-            // This should not happen, it was cleared earlier in th process.
-            // but we have to keep TS happy...
-            return "";
-        })();
-        externals.push({
-            "@id" : `${global.vocab_url}${curie}`,
-            // the general context is not valid here, so the right URL must be
-            // found
-            "http://www.w3.org/2002/07/owl#sameAs" : `${url}${entry.id}`,
-        });
     }
 
     const contexts = (target: JSON, entry: RDFTerm): void => {
@@ -169,9 +146,7 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the properties
         const properties: JSON[] = [];
         for (const prop of vocab.properties) {
-            if (prop.external) {
-                addToExternals(prop);
-            } else {
+            if (!prop.external) {
                 const pr_object: JSON = {};
                 pr_object["@id"] = `${global.vocab_prefix}:${prop.id}`;
                 if (prop.type.length === 1) {
@@ -203,9 +178,7 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the classes
         const classes: JSON[] = [];
         for (const cl of vocab.classes) {
-            if (cl.external) {
-                addToExternals(cl);
-            } else {
+            if (!cl.external) {
                 const cl_object: JSON = {};
                 cl_object["@id"] = `${global.vocab_prefix}:${cl.id}`;
                 if (cl.type.length === 1) {
@@ -231,9 +204,7 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the individuals
         const individuals: JSON[] = [];
         for (const ind of vocab.individuals) {
-            if (ind.external) {
-                addToExternals(ind);
-            } else {
+            if (!ind.external) {
                 const ind_object: JSON = {};
                 ind_object["@id"] = `${global.vocab_prefix}:${ind.id}`;
                 if (ind.type.length === 1) {
@@ -256,9 +227,7 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the datatypes
         const datatypes: JSON[] = [];
         for (const dt of vocab.datatypes) {
-            if (dt.external) {
-                addToExternals(dt);
-            } else {
+            if (!dt.external) {
                 const dt_object: JSON = {};
                 dt_object["@id"] = `${global.vocab_prefix}:${dt.id}`;
                 dt_object["@type"] = `rdfs:Datatype`;
@@ -274,9 +243,6 @@ export function toJSONLD(vocab: Vocab): string {
 
     }
 
-    if (externals.length > 0) {
-        return JSON.stringify([jsonld,  ...externals], null, 4);
-    } else {
-        return JSON.stringify(jsonld, null, 4);
-    }
+    // Done... just turn the result into bona fide json
+    return JSON.stringify(jsonld, null, 4);
 }
