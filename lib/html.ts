@@ -4,8 +4,15 @@
  * 
  * @packageDocumentation
  */
-import {Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status, RDFDatatype, RDFPrefix} from './common';
-import { JSDOM } from 'jsdom';
+import { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, RDFPrefix } from './common';
+import { Vocab, RDFTerm, global, Status }                               from './common';
+import { JSDOM }                                                        from 'jsdom';
+import { createHash }                                                   from 'node:crypto';
+
+// Calculate the SHA hash of a string. Used to encode the id of external terms
+function computeHash(input: string, sh_func:string = "sha256"): string {
+    return createHash(sh_func).update(input).digest('hex');
+}
 
 // This object is need for a proper formatting of some text
 const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
@@ -26,7 +33,7 @@ class MiniDOM {
     private readonly _localDocument: Document;
 
     constructor(html_text: string) {
-        const doc = (new JSDOM(html_text)).window.document;
+        const doc = (new JSDOM(html_text)).window._document;
         if (doc) {
             this._localDocument = doc;
         } else {
@@ -34,6 +41,7 @@ class MiniDOM {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     get document(): Document {
         return this._localDocument;
     }
@@ -201,7 +209,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             // For external terms, the id of the enclosing section should not be the
             // id of the term; it could be misleading. Instead, it is set to the full
             // curie
-            output = curie;
+            output = computeHash(curie) /* curie */;
 
             // This is still a matter of discussion... I am not sure that this is the
             // right approach. However, I am an RDF oriented person...
