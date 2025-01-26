@@ -2,6 +2,7 @@
     "version": "1.5.0",
     "description": "Generation of vocabulary files starting by YAML",
     "homepage": "https://github.com/w3c/yml2vocab",
+    "nodeModulesDir": "none",
     "compilerOptions": {
         "lib": ["dom", "deno.ns"]
     },
