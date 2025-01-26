@@ -165,6 +165,7 @@ The following files and directories are generated/modified by either the script 
 
 - `package-lock.json`: used by `npm` as an internal file for the packages.
 - `node_modules` directory: the various Javascript libraries used by the script. This directory should _not_ be uploaded to GitHub, it is strictly for the local activation of the script.
+- `deno.lock`: used by `deno` to manage imported packages using its own mechanism (bypassing `node_modules`).
 
 ## Acknowledgement
 
