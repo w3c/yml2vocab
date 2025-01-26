@@ -1,4 +1,4 @@
-`# Generate RDFS vocabulary files from YAML
+# Generate RDFS vocabulary files from YAML
 
 This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-concepts/) vocabulary, described in [YAML](https://yaml.org/spec/1.2.2/), into a formal [RDFS](https://www.w3.org/TR/rdf-schema/) in [JSON-LD](https://www.w3.org/TR/json-ld11/), [Turtle](https://www.w3.org/TR/turtle/), and [HTML+RDFa](https://www.w3.org/TR/rdfa-core/). Optionally, a simple [JSON-LD `@context`](https://www.w3.org/TR/json-ld11/#the-context)  is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements. 
 
