@@ -4,8 +4,15 @@
  * 
  * @packageDocumentation
  */
-import { Vocab, RDFTerm, global, RDFClass, RDFProperty, RDFIndividual, Status, RDFDatatype } from './common';
-import { JSDOM } from 'jsdom';
+import { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, RDFPrefix } from './common';
+import { Vocab, RDFTerm, global, Status }                               from './common';
+import { JSDOM }                                                        from 'jsdom';
+import { createHash }                                                   from 'node:crypto';
+
+// Calculate the SHA hash of a string. Used to encode the id of external terms
+function computeHash(input: string, sh_func:string = "sha256"): string {
+    return createHash(sh_func).update(input).digest('hex');
+}
 
 // This object is need for a proper formatting of some text
 const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
@@ -14,6 +21,8 @@ const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction'
 /**
  * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
  * the JSDOM and Deno's DOM WASM implementations; higher layers should not depend on these.
+ *
+ * The class also includes some handy shorthands to make the code cleaner…
  * 
  * 2024-02-02: as of today, with deno v. >1.4, this layer is not necessary any more,
  * because jsdom finally runs with deno as well. The class has been kept as a separate layer
@@ -21,19 +30,20 @@ const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction'
  * 
  */
 class MiniDOM {
-    private _document: Document;
+    private readonly _localDocument: Document;
 
     constructor(html_text: string) {
-        const doc = (new JSDOM(html_text)).window.document;
+        const doc = (new JSDOM(html_text)).window._document;
         if (doc) {
-            this._document = doc;
+            this._localDocument = doc;
         } else {
             throw new Error("Problem with parsing the template text");
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     get document(): Document {
-        return this._document;
+        return this._localDocument;
     }
 
     /**
@@ -46,7 +56,7 @@ class MiniDOM {
      * 
      */
     addChild(parent: Element, element: string, content: string | undefined = undefined): Element {
-        const new_element = this._document.createElement(element);
+        const new_element = this._localDocument.createElement(element);
         parent.appendChild(new_element);
         if (content !== undefined) new_element.innerHTML = content;
         return new_element;
@@ -75,7 +85,7 @@ class MiniDOM {
      * @returns 
      */
     getElementById(id: string): Element | null {
-        return this._document.getElementById(id);
+        return this._localDocument.getElementById(id);
     }
 
     /**
@@ -85,7 +95,7 @@ class MiniDOM {
       * @returns 
       */
     getElementsByTagName(tag: string): HTMLCollection {
-        return this._document.getElementsByTagName(tag);
+        return this._localDocument.getElementsByTagName(tag);
     }
 
     /**
@@ -94,20 +104,19 @@ class MiniDOM {
      * @returns 
      */
     innerHTML(): string {
-        const retval = this._document.documentElement?.innerHTML;
-        return retval ? retval : "";
+        const output = this._localDocument.documentElement?.innerHTML;
+        return output ? output : "";
     }
 }
-
 
 /**
  * Generate a new bnode id for the "union of" constructs...
  */
 let idnum = 0;
 const bnode = (): string => {
-    const retval = `_:a${idnum}`;
+    const output = `_:a${idnum}`;
     idnum++;
-    return retval
+    return output
 }
 
 /**
@@ -117,13 +126,15 @@ const bnode = (): string => {
  * 
  * The template files have element with a predefined `@id` value at all points where some
  * content must be added. Ie, the usual model in the code below is:
- * 
- * const some_element = document.getElementById('namespaces');
+ *
+ * ```javascript
+ * const some_element = document.getElementById('properties');
  * manipulate the subtree at 'some_element' to add content
+ * ```
  * 
- * The current version adds a bunch of properties to the HTML to make it also RDFa, ie,
- * that the vocabulary can be extracted by an RDFa distiller. I am not sure it is all
- * that useful and it complicates the code; at some point we may decide to remove this.
+ * The current version adds a bunch of properties to the HTML to make it also RDFa, i.e.,
+ * that the vocabulary can be extracted by an RDFa distiller. I am not sure if it is all
+ * that useful, and it complicates the code, but let us keep it anyway.
  * 
  * @param vocab - The internal representation of the vocabulary
  * @param template_text - The textual content of the template file 
@@ -131,13 +142,12 @@ const bnode = (): string => {
  */
 export function toHTML(vocab: Vocab, template_text: string): string {
 
-    /* *********************** The real processing part ****************** */
     // Get the DOM of the template
-    // const document: Document = (new JSDOM(template_text)).window.document;
-
     const document: MiniDOM = new MiniDOM(template_text);
 
-    // This is used to generate cross links, possible to external entities, too
+    /*********************************** Utility functions ******************************************/
+
+    // This is used to generate cross-links, possible to external entities, too
     const resolveCurie = (curie: string): string => {
         const components = curie.split(':');
         if (components.length === 1) {
@@ -151,45 +161,126 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 // Do not touch that!!!!
                 return `<a href="${curie}"><code>${curie}</code></a>`;
             } else {
-                // it is fairly unnecessary to make references to some of the core
-                // vocabularies, like rdf or xsd, which do not have a proper HTML target
-                // anyway...
-                const no_url = ['rdf', 'xsd', 'rdfs', 'owl'];
-                if (no_url.includes(components[0]) === false) {
-                    for (const prefix_def of vocab.prefixes.slice(1)) {
-                        if (prefix_def.prefix === components[0]) {
-                            return `<a href="${prefix_def.url}${components[1]}"><code>${curie}</code></a>`;
+                // The target may be an external term within the vocabulary!
+                if (global.real_curies.includes(curie)) {
+                    return `<a href="#${curie}"><code>${curie}</code></a>`
+                } else {
+                    // it is fairly unnecessary to make references to some of the core
+                    // vocabularies, like rdf or xsd, which do not have a proper HTML target
+                    // anyway... (alas!)
+                    const no_url = ['rdf', 'xsd', 'rdfs', 'owl'];
+                    if (no_url.includes(components[0]) === false) {
+                        for (const prefix_def of vocab.prefixes.slice(1)) {
+                            if (prefix_def.prefix === components[0]) {
+                                return `<a href="${prefix_def.url}${components[1]}"><code>${curie}</code></a>`;
+                            }
                         }
-                    }    
+                    }
+                    // Fallback case: no URL...
+                    return `<code>${curie}</code>`;
                 }
-                return `<code>${curie}</code>`;
             }
         }
     };
 
     // Factor out all common fields for the terms
-    const commonFields = (section: Element, item: RDFTerm): void => {        
-        section.setAttribute('resource',`${vocab_prefix}:${item.id}`);
-        section.setAttribute('typeof', `${item.type.join(' ')}`);
+    // return the value that can be used as the id value of the section in HTML
+    const commonFields = (section: Element, item: RDFTerm): string => {
+        // by default, the id of the term should be used for the enclosing section
+        let output = item.id;
 
-        const h = document.addChild(section,'h4', `<code>${item.id}</code>`);
-        const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
-        term.setAttribute('property', 'rdfs:label');
-        if (item.status !== Status.stable) {
-            const span = document.addChild(term, 'span');
-            span.className = 'bold';
-            document.addChild(span, 'em', ` (${item.status})`);
-        }
+        // External terms have a different behavior: ranges/domains should be ignored, and no RDFa should be
+        // generated.
+        if (item.external) {
+            // Check whether the term's prefix is indeed defined
+            const ns = ((pr: string | undefined, id: string): RDFPrefix => {
+                if (pr === undefined) {
+                    throw new Error(`No prefix has been generated for the external term "${id}"`);
+                }
+                for (const prefix of vocab.prefixes) {
+                    if (prefix.prefix === pr) {
+                        return prefix;
+                    }
+                }
+                throw new Error(`Unknown prefix for the external term "${id}": "${pr}"`);
+            })(item.prefix, item.id);
 
-        switch (item.defined_by.length) {
-            case 0: break;
-            case 1: {
-                document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by}">formal definition of the term</a>.`);
-                break;
+            const curie = ns.prefix + ':' + item.id;
+            // For external terms, the id of the enclosing section should not be the
+            // id of the term; it could be misleading. Instead, it is set to the full
+            // curie
+            output = computeHash(curie) /* curie */;
+
+            // This is still a matter of discussion... I am not sure that this is the
+            // right approach. However, I am an RDF oriented person...
+            // h4 = document.addChild(section,'h4', `<code>${curie}</code>`);
+            document.addChild(section,'h4', `<code>${item.id}</code>`);
+
+            // A single RDFa statement is added to the lot to ensure a proper relationship
+            // to the "real" URL of the external term
+            section.setAttribute('about', `${vocab_url}${curie}`);
+            section.setAttribute('rel', 'owl:sameAs');
+            section.setAttribute('resource', `${curie}`);
+
+            const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
+
+            if (item.status !== Status.stable) {
+                const span = document.addChild(term, 'span');
+                span.className = 'bold';
+                document.addChild(span, 'em', ` (${item.status})`);
             }
-            default: {
-                const refs: string[] = item.defined_by.map((def: string): string => `<a rel="rdfs:isDefinedBy" href="${def}">here</a>`);
-                document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
+
+            const url = ns.url + item.id;
+            const warning_text = `
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="${url}">${curie}</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            `
+            document.addChild(section, 'p', warning_text);
+            if (item.defined_by) {
+                // By the logic of the program, at this point defined_by is always defined
+                // but picky compilers, like deno, push me to put this extra condition
+                switch (item.defined_by.length) {
+                    case 0:
+                        break;
+                    case 1: {
+                        document.addChild(section, 'p', `See also the <a href="${item.defined_by[0]}">formal definition of the term</a>.`);
+                        break;
+                    }
+                    default: {
+                        const refs: string[] = item.defined_by.map((def: string): string => `<a href="${def}">here</a>`);
+                        document.addChild(section, 'p', `See also the formal definitions ${formatter.format(refs)}.`);
+                    }
+                }
+            }
+        } else {
+            section.setAttribute('resource', `${vocab_prefix}:${item.id}`);
+            section.setAttribute('typeof', `${item.type.join(' ')}`);
+
+            document.addChild(section, 'h4', `<code>${item.id}</code>`);
+            const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
+
+            if (item.status !== Status.stable) {
+                const span = document.addChild(term, 'span');
+                span.className = 'bold';
+                document.addChild(span, 'em', ` (${item.status})`);
+            }
+
+            if (item.defined_by) {
+                // By the logic of the program, at this point defined_by is always defined
+                // but picky compilers, like deno, push me to put this extra condition
+                switch (item.defined_by.length) {
+                    case 0:
+                        break;
+                    case 1: {
+                        document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by[0]}">formal definition of the term</a>.`);
+                        break;
+                    }
+                    default: {
+                        const refs: string[] = item.defined_by.map((def: string): string => `<a rel="rdfs:isDefinedBy" href="${def}">here</a>`);
+                        document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
+                    }
+                }
             }
         }
 
@@ -199,8 +290,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 description += "<br><br>The property's value should be a URL, i.e., not a literal."
             }
             const div = document.addChild(section, 'div', description);
-            div.setAttribute('property', 'rdfs:comment');
-            div.setAttribute('datatype', 'rdf:HTML')
+            if (!item.external) {
+                div.setAttribute('property', 'rdfs:comment');
+                div.setAttribute('datatype', 'rdf:HTML')
+            }
         } else if (item.type.includes("owl:ObjectProperty")) {
             document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
         }
@@ -213,7 +306,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             for (const link of item.see_also) {
                 const a = document.addChild(dd, 'a', link.label);
                 a.setAttribute('href', link.url);
-                a.setAttribute('property', 'rdfs:seeAlso');
+                if (!item.external) a.setAttribute('property', 'rdfs:seeAlso');
                 document.addChild(dd, 'br');
             }
         }
@@ -223,34 +316,38 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             dl.className = 'terms';
             document.addChild(dl, 'dt', 'Type');
             const dd = document.addChild(dl, 'dd');
-            for (const itype of item.user_type) {
-                document.addChild(dd, 'span', resolveCurie(itype));
+            for (const item_type of item.user_type) {
+                document.addChild(dd, 'span', resolveCurie(item_type));
                 document.addChild(dd, 'br');
             }
         }
 
-        // This does not display, it is only here for RDFa's sake!
-        const span = document.addChild(section, 'span');
-        span.setAttribute('property', 'rdfs:isDefinedBy');
-        span.setAttribute('resource', `${vocab_prefix}:`);
-
-        // This does not display, it is only here for RDFa's sake!
-        const status_span = document.addChild(section, 'span');
-        status_span.setAttribute('style', 'display: none');
-        status_span.setAttribute('property', 'vs:term_status');
-        document.addText(`${item.status}`, status_span);
-
-        if (item.deprecated) {
+        if (!item.external) {
             // This does not display, it is only here for RDFa's sake!
             const span = document.addChild(section, 'span');
-            span.setAttribute('property', 'owl:deprecated');
-            span.setAttribute('datatype', 'xsd:boolean');
-            span.setAttribute('style', 'display: none');
-            document.addText('true', span);
+            span.setAttribute('property', 'rdfs:isDefinedBy');
+            span.setAttribute('resource', `${vocab_prefix}:`);
+
+            // This does not display, it is only here for RDFa's sake!
+            const status_span = document.addChild(section, 'span');
+            status_span.setAttribute('style', 'display: none');
+            status_span.setAttribute('property', 'vs:term_status');
+            document.addText(`${item.status}`, status_span);
+
+            if (item.deprecated) {
+                // This does not display, it is only here for RDFa's sake!
+                const span = document.addChild(section, 'span');
+                span.setAttribute('property', 'owl:deprecated');
+                span.setAttribute('datatype', 'xsd:boolean');
+                span.setAttribute('style', 'display: none');
+                document.addText('true', span);
+            }
         }
+
+        return output;
     }
 
-    const setExample = (section: Element, item: RDFClass|RDFIndividual|RDFProperty): void => {
+    const setExample = (section: Element, item: RDFClass | RDFIndividual | RDFProperty): void => {
         if (item.example && item.example.length > 0) {
             for (const ex of item.example) {
                 const example = document.addChild(section, 'pre', ex.json);
@@ -262,7 +359,35 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
-    // RDFa preamble. If, at some point, we decide that the RDFa part is superfluous, this block can be removed.
+    // Prefixes that are used to differentiate among stable, reserved, and deprecated values
+    const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
+        switch (status) {
+            case Status.deprecated :
+                return { id_prefix : 'deprecated_', intro_prefix: '<em><strong>deprecated</strong></em>' };
+            case Status.reserved :
+                return { id_prefix : 'reserved_', intro_prefix: '<em><strong>reserved</strong></em>' };
+            case Status.stable :
+                return { id_prefix : '', intro_prefix : '' };
+
+        }
+    }
+
+    // Add the references to the context files (if any)
+    const contextReferences = (section: Element, item: RDFTerm): void => {
+        if (item.context !== undefined && item.context?.length > 0) {
+            const dl = document.addChild(section, 'dl');
+            dl.className = 'terms';
+            document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);
+            const dd = document.addChild(dl, 'dd');
+            dd.innerHTML = item.context.map((ctx: string): string => {
+                return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;
+            }).join(", ");
+        }
+    }
+
+    /************ Functions to add specific content to the final HTML, based also on the template ********************/
+
+    // RDFa preamble.
     const rdfaPreamble = () => {
         const body = document.getElementsByTagName('body')[0];
         if (body) {
@@ -278,9 +403,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             const title = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:title')[0].value;
             document.addText(title, document.getElementsByTagName('title')[0]);
             document.addText(title, document.getElementById('title'));    
-        } catch(_e) {
+         } catch(_e) {
             console.log("Vocabulary warning: title is not provided.")
-        }
+         }
 
         const date = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:date')[0].value;
         document.addText(date, document.getElementById('time'));
@@ -319,32 +444,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
-    // Prefixes that are used to differentiate among stable, reserved, and deprecated values
-    const statusSignals = (status: Status): {id_prefix: string, intro_prefix: string} => {
-        switch (status) {
-            case Status.deprecated : 
-                return { id_prefix : 'deprecated_', intro_prefix: '<em><strong>deprecated</strong></em>' };
-            case Status.reserved :
-                return { id_prefix : 'reserved_', intro_prefix: '<em><strong>reserved</strong></em>' };
-            case Status.stable :
-                return { id_prefix : '', intro_prefix : '' };
-                
-        }
-    }
-
-    // Add the references to the context files (if any)
-    const contextReferences = (section: Element, item: RDFTerm): void => {
-        if (item.context !== undefined && item.context?.length > 0) {
-            const dl = document.addChild(section, 'dl');
-            dl.className = 'terms';
-            document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);
-            const dd = document.addChild(dl, 'dd');
-            dd.innerHTML = item.context.map((ctx: string): string => {
-                return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;
-            }).join(", ");
-        }
-    }
-
     // Add the list of all contexts to the file
     const contexts = () => {
         const ctx_ul = document.getElementById('contexts');
@@ -364,7 +463,14 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                     document.addChild(details, 'summary', 'term list');
                     const ul = document.addChild(details, 'ul');
                     for (const term of global.context_mentions[ctx]) {
-                        document.addChild(ul, 'li', `<a href="#${term}"><code>${term}<code></li>`);
+                        const reference: string = ((): string => {
+                            if (term.startsWith(global.vocab_prefix)) {
+                                return term.split(':')[1];
+                            } else {
+                                return term;
+                            }
+                        })();
+                        document.addChild(ul, 'li', `<a href="#${reference}"><code>${term}<code></li>`);
                     }
                 }
             } else {
@@ -378,6 +484,12 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             }
         }
     }
+
+    // Note that the functions for classes, properties, etc., have a second argument for "statusFilter", ie, for reserved,
+    // deprecate, or stable. These values are used to find the right section in the template, and can also
+    // affect the real function. These functions are called several time, each with different status values
+    // and different list of terms; see at the end of the function
+
 
     // Generation of the section content for classes: a big table, with a row per class
     // There is a check for a possible template error and also whether there are class
@@ -394,10 +506,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
                 for (const item of cl_list) {
                     const cl_section = document.addChild(section, 'section');
-                    cl_section.id = item.id;
-                    commonFields(cl_section, item);
+                    cl_section.id = commonFields(cl_section, item);
                     // Extra list of superclasses, if applicable
-                    if (item.subClassOf && item.subClassOf.length > 0) {
+                    if (!item.external && item.subClassOf && item.subClassOf.length > 0) {
                         const dl = document.addChild(cl_section, 'dl');
                         dl.className = 'terms'
                         document.addChild(dl, 'dt', 'Subclass of:')
@@ -471,10 +582,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
                 for (const item of pr_list) {
                     const pr_section = document.addChild(section, 'section');
-                    pr_section.id = item.id;
-                    commonFields(pr_section,item);
+                    pr_section.id = commonFields(pr_section,item);
                     // Extra list of superproperty, if applicable
-                    if (item.subPropertyOf && item.subPropertyOf.length > 0) {
+                    if (!item.external && item.subPropertyOf && item.subPropertyOf.length > 0) {
                         const dl = document.addChild(pr_section, 'dl');
                         dl.className = 'terms'
                         document.addChild(dl, 'dt', 'Subproperty of:')
@@ -489,7 +599,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                     }
 
                     // Again an extra list for range/domain definitions, if applicable
-                    if ((item.range && item.range.length > 0) || (item.domain && item.domain.length > 0)) {
+                    if (!item.external && ((item.range && item.range.length > 0) || (item.domain && item.domain.length > 0))) {
                         const dl = document.addChild(pr_section, 'dl');
                         dl.className = 'terms';
 
@@ -562,15 +672,14 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
                 for (const item of ind_list) {
                     const ind_section = document.addChild(section, 'section');
-                    ind_section.id = item.id;
-                    commonFields(ind_section,item);
+                    ind_section.id = commonFields(ind_section,item);
                     const dl = document.addChild(ind_section, 'dl');
                     dl.className = 'terms';
-                    if (item.type.length > 0) {
+                    if (!item.external && item.type.length > 0) {
                         document.addChild(dl, 'dt', 'Type')
                         const dd = document.addChild(dl, 'dd');
-                        for (const itype of item.type) {
-                            document.addChild(dd, 'span', resolveCurie(itype));
+                        for (const item_type of item.type) {
+                            document.addChild(dd, 'span', resolveCurie(item_type));
                             document.addChild(dd, 'br')    
                         }
                     }
@@ -599,8 +708,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
                 for (const item of dt_list) {
                     const dt_section = document.addChild(section, 'section');
-                    dt_section.id = item.id;
-                    commonFields(dt_section, item);
+                    dt_section.id = commonFields(dt_section, item);
 
                     if (item.subClassOf && item.subClassOf.length > 0) {
                         const dl = document.addChild(dt_section, 'dl');
@@ -647,7 +755,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }   
     }
 
-    
+    /*********************** The real processing part, making use of all these functions ****************************/
 
     // The prefix and the URL for the vocabulary itself
     // I am just lazy to type things that are too long... :-)
@@ -703,7 +811,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
     // That is it... generate the output
     // I wish it was possible to generate a properly formatted HTML source, but I am not sure how to do that
-    return `<!DOCTYPE html>\n<html>${document.innerHTML()}</html>`;
+    return `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
 }
 
 

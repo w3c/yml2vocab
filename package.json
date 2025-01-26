@@ -1,6 +1,6 @@
 {
   "name": "yml2vocab",
-  "version": "1.4.9",
+  "version": "1.5.0",
   "description": "Generation of vocabulary files starting by YAML",
   "homepage": "https://github.com/w3c/yml2vocab",
   "repository": {
@@ -26,8 +26,8 @@
   },
   "scripts": {
     "generate": "ts-node main.ts",
-    "docs": "typedoc main.js index.ts lib/*",
-    "dist": "tsc; cp lib/vocab.schema.json dist/lib/vocab.schema.json",
+    "docs": "typedoc index.ts main.ts lib/*",
+    "dist": "tsc",
     "test_di": "ts-node main.ts -v example/security.yml -t example/security_template.html -c",
     "test_vcdm": "ts-node main.ts -v example/credentials.yml -t example/template.html -c",
     "test": "ts-node main.ts -v example/test.yml -t example/test_template.html -c",
@@ -35,14 +35,14 @@
     "local_vcdm": "ts-node main.ts -v local/vcdm/vocabulary.yml -t local/vcdm/template.html -c",
     "local_di": "ts-node main.ts -v local/di/vocabulary.yml -t local/di/template.html -c",
     "local_sl": "ts-node main.ts -v local/sl/vocabulary.yml -t local/sl/template.html -c",
+    "local_vcdm_nolink": "ts-node main.ts -v local/tests/vcdm/vocabulary.yml -t local/tests/vcdm/template.html -c",
     "preview_vcdm": "ts-node main.ts -v previews/vcdm/vocabulary.yml -t previews/vcdm/template.html",
     "preview_di": "ts-node main.ts -v previews/di/vocabulary.yml -t previews/di/template.html"
   },
   "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
   "license": "W3C-20150513",
   "dependencies": {
-    "ajv": "^8.12.0",
-    "ajv-formats": "^2.1.1",
+    "@exodus/schemasafe": "^1.3.0",
     "commander": "^11.1.0",
     "jsdom": "^22.1.0",
     "yaml": "^2.3.4"
@@ -52,9 +52,9 @@
     "@types/node": "^20.9.0",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
-    "typescript": "^5.2.2",
     "eslint": "^8.53.0",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.25.3"
+    "typedoc": "^0.25.3",
+    "typescript": "^5.2.2"
   }
 }

@@ -92,7 +92,7 @@
         "@language": "en"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/vc-data-integrity/",
-    "dc:date": "2024-03-18",
+    "dc:date": "2025-01-16",
     "rdfs_properties": [
         {
             "@id": "sec:verificationMethod",

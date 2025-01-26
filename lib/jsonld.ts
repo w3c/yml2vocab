@@ -88,8 +88,8 @@ export function toJSONLD(vocab: Vocab): string {
                 "@type"  : "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             }
         }
-        if (entry.defined_by.length !== 0) {
-            if (entry.defined_by.length === 1) {
+        if (entry.defined_by?.length !== 0) {
+            if (entry.defined_by?.length === 1) {
                 target["rdfs:isDefinedBy"] = entry.defined_by[0];
             } else {
                 target["rdfs:isDefinedBy"] = entry.defined_by;
@@ -97,8 +97,7 @@ export function toJSONLD(vocab: Vocab): string {
         }
         target["vs:term_status"] = `${entry.status}`;
         if (entry.see_also && entry.see_also.length > 0) {
-            const urls = entry.see_also.map( (link: Link): string => link.url);
-            target["rdfs:seeAlso"] = urls;
+            target["rdfs:seeAlso"] = entry.see_also.map( (link: Link): string => link.url);
         }
     }
 
@@ -147,28 +146,30 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the properties
         const properties: JSON[] = [];
         for (const prop of vocab.properties) {
-            const pr_object: JSON = {};
-            pr_object["@id"] = `${global.vocab_prefix}:${prop.id}`;
-            if (prop.type.length === 1) {
-                pr_object["@type"] = prop.type[0];
-            } else {
-                pr_object["@type"] = prop.type;
+            if (!prop.external) {
+                const pr_object: JSON = {};
+                pr_object["@id"] = `${global.vocab_prefix}:${prop.id}`;
+                if (prop.type.length === 1) {
+                    pr_object["@type"] = prop.type[0];
+                } else {
+                    pr_object["@type"] = prop.type;
+                }
+                if (prop.status === Status.deprecated) {
+                    pr_object["owl:deprecated"] = true;
+                }
+                if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
+                    pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf;
+                }
+                if (prop.domain) {
+                    pr_object["rdfs:domain"] = multiDomain(prop.domain);
+                }
+                if (prop.range) {
+                    pr_object["rdfs:range"] = multiRange(prop.range);
+                }
+                commonFields(pr_object, prop);
+                contexts(pr_object, prop);
+                properties.push(pr_object);
             }
-            if (prop.status === Status.deprecated) {
-                pr_object["owl:deprecated"] = true;
-            }
-            if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
-                pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf;
-            }
-            if (prop.domain) {
-                pr_object["rdfs:domain"] = multiDomain(prop.domain);
-            }
-            if (prop.range) {
-                pr_object["rdfs:range"] = multiRange(prop.range);
-            }
-            commonFields(pr_object, prop);
-            contexts(pr_object, prop);
-            properties.push(pr_object);
         }
         if (properties.length > 0) jsonld.rdfs_properties = properties;
     }
@@ -177,22 +178,24 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the classes
         const classes: JSON[] = [];
         for (const cl of vocab.classes) {
-            const cl_object: JSON = {};
-            cl_object["@id"]   = `${global.vocab_prefix}:${cl.id}`;
-            if (cl.type.length === 1) {
-                cl_object["@type"] = cl.type[0]
-            } else {
-                cl_object["@type"] = cl.type;
+            if (!cl.external) {
+                const cl_object: JSON = {};
+                cl_object["@id"] = `${global.vocab_prefix}:${cl.id}`;
+                if (cl.type.length === 1) {
+                    cl_object["@type"] = cl.type[0]
+                } else {
+                    cl_object["@type"] = cl.type;
+                }
+                if (cl.status === Status.deprecated) {
+                    cl_object["owl:deprecated"] = true
+                }
+                if (cl.subClassOf && cl.subClassOf.length > 0) {
+                    cl_object["rdfs:subClassOf"] = cl.subClassOf;
+                }
+                commonFields(cl_object, cl);
+                contexts(cl_object, cl);
+                classes.push(cl_object);
             }
-            if (cl.status === Status.deprecated) {
-                cl_object["owl:deprecated"] = true
-            }
-            if (cl.subClassOf && cl.subClassOf.length > 0) {
-                cl_object["rdfs:subClassOf"] = cl.subClassOf;
-            }
-            commonFields(cl_object,cl);
-            contexts(cl_object, cl);
-            classes.push(cl_object)
         }
         if (classes.length > 0) jsonld.rdfs_classes = classes;
     }
@@ -201,19 +204,21 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the individuals
         const individuals: JSON[] = [];
         for (const ind of vocab.individuals) {
-            const ind_object: JSON = {};
-            ind_object["@id"]   = `${global.vocab_prefix}:${ind.id}`;
-            if (ind.type.length === 1) {
-                ind_object["@type"] = ind.type[0]
-            } else {
-                ind_object["@type"] = ind.type;
+            if (!ind.external) {
+                const ind_object: JSON = {};
+                ind_object["@id"] = `${global.vocab_prefix}:${ind.id}`;
+                if (ind.type.length === 1) {
+                    ind_object["@type"] = ind.type[0]
+                } else {
+                    ind_object["@type"] = ind.type;
+                }
+                if (ind.status === Status.deprecated) {
+                    ind_object["owl:deprecated"] = true
+                }
+                commonFields(ind_object, ind);
+                contexts(ind_object, ind);
+                individuals.push(ind_object);
             }
-            if (ind.status === Status.deprecated) {
-                ind_object["owl:deprecated"] = true
-            }
-            commonFields(ind_object,ind);
-            contexts(ind_object, ind);
-            individuals.push(ind_object);
         }
         if (individuals.length > 0) jsonld.rdfs_individuals = individuals;
     }
@@ -222,19 +227,22 @@ export function toJSONLD(vocab: Vocab): string {
         // Get the datatypes
         const datatypes: JSON[] = [];
         for (const dt of vocab.datatypes) {
-            const dt_object: JSON = {};
-            dt_object["@id"] = `${global.vocab_prefix}:${dt.id}`;
-            dt_object["@type"] = `rdfs:Datatype`;
-            if (dt.subClassOf && dt.subClassOf.length > 0) {
-                dt_object["rdfs:subClassOf"] = dt.subClassOf;
+            if (!dt.external) {
+                const dt_object: JSON = {};
+                dt_object["@id"] = `${global.vocab_prefix}:${dt.id}`;
+                dt_object["@type"] = `rdfs:Datatype`;
+                if (dt.subClassOf && dt.subClassOf.length > 0) {
+                    dt_object["rdfs:subClassOf"] = dt.subClassOf;
+                }
+                commonFields(dt_object, dt);
+                contexts(dt_object, dt);
+                datatypes.push(dt_object);
             }
-            commonFields(dt_object,dt);
-            contexts(dt_object, dt);
-            datatypes.push(dt_object);
         }
         if (datatypes.length > 0) jsonld.rdfs_datatypes = datatypes;
 
     }
 
+    // Done... just turn the result into bona fide json
     return JSON.stringify(jsonld, null, 4);
 }

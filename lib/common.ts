@@ -6,8 +6,8 @@
  */
 
 /**
- * List of datatypes that are formally defined in the RDF World, and are beyond the
- * list of core, XSD datatypes
+ * List of datatypes that are formally defined in the RDF World beyond the
+ * list of XSD datatypes.
  */
 export const EXTRA_DATATYPES: string[] = [
     "rdf:JSON",
@@ -27,13 +27,20 @@ export enum Status {
 }
 
 /**
-* Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
-*/
+ * Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
+ * This information is used in the HTML generation, for example, to decide whether a section in the template
+ * should be removed (because it is empty), or not.
+ */
 export class StatusCounter {
     private stableNum    = 0;
     private reservedNum  = 0;
     private deprecateNum = 0;
 
+    /**
+     * Increase the relevant counter.
+     *
+     * @param status
+     */
     add(status: Status): void {
         switch (status) {
             case Status.stable: {
@@ -50,6 +57,11 @@ export class StatusCounter {
             }
         }
     }
+
+    /**
+     * Return the relevant counter value.
+     * @param status
+     */
     counter(status: Status): number {
         switch (status) {
             case Status.stable: return this.stableNum; 
@@ -60,43 +72,60 @@ export class StatusCounter {
 }
 
 /**
- * Context references
+ * Context references. Lists, for a context, the terms that are listed in them.
+ * Used when generating the list of terms used by a context in, e.g., the HTML output.
+ * Terms in the values are identified by their CURIE (i.e., the namespace is also included)
  */
 export interface Contexts {
     [ctx: string]: string[];
 }
 
 /**
- * Placeholder for some global data. 
+ * Placeholder for some global data. This class has only one instance ({@link global}); see its
+ * documentation for the meaning of the different fields.
  */
-interface GlobalData {
+export interface GlobalData {
+    /** Vocabulary prefix for the vocabulary being handled. */
     vocab_prefix     : string,
+
+    /** Vocabulary URL for the vocabulary being handled. */
     vocab_url        : string,
+
+    /** Default context URL for the vocabulary being handled. */
     vocab_context   ?: string,
+
+    /**
+     * Counter for the terms with various status values.
+     * Some serializers (e.g. HTML) may optimize/improve the final
+     * output if one of the categories have no entries whatsoever.
+     */
     status_counter   : StatusCounter,
+
+    /**
+     * Inverted info for contexts: for each context the list of relevant terms are listed.
+     */
     context_mentions : Contexts;
+
+    /**
+     * List of "real" curies that occur in the vocabulary as terms. These are, usually,
+     * external terms but, in theory, may also be bona fide terms defined as part of this
+     * vocabulary.
+     *
+     * Used to set the right 'id' values for cross-references in the generated HTML file
+     */
+    real_curies      : string[];
 }
 
 /**
  * As it name says: some global data that are needed by most of the media type specific modules.
  */
 export const global: GlobalData = {
-    /** Vocabulary prefix for the vocabulary being handled */
-    vocab_prefix   : "",
-    /** Vocabulary URL for the vocabulary being handled */
-    vocab_url      : "",
-    /** Default context URL for the vocabulary being handled */
-    vocab_context  : "",
-    /** 
-     * Counter for the terms with various status values.
-     * Some serializers (eg HTML) may optimize/improve the final
-     * output if one of the categories have no entries whatsoever.
-     */
-    status_counter : new StatusCounter(),
-    /**
-     * Inverted info for contexts: for each context the list of relevant terms are listed
-     */
+    vocab_prefix     : "",
+    vocab_url        : "",
+    vocab_context    : "",
+    status_counter   : new StatusCounter(),
     context_mentions : {} as Contexts,
+    real_curies      : [],
 } 
 
 /**
@@ -116,11 +145,11 @@ export interface Example {
 }
 
 /** 
-* Superset of all YAML entries expressed in TS. Look at the Readme.md file for what they are meant for.
-*
-* Used to induce some extra checks by TS compile time; the classes are converted into
-* the common classes in this module
-*/
+ * Superset of all YAML entries, expressed in TS. Look at the Readme.md file for what they are meant for.
+ *
+ * Instances of the classes are converted into the internal classes (e.g., {@link RDFClass},
+ * {@link RDFProperty}, etc.) in the `convert` module.
+ */
 export interface RawVocabEntry {
     id           : string;
     property    ?: string;
@@ -132,16 +161,17 @@ export interface RawVocabEntry {
     range       ?: string[];
     deprecated  ?: boolean;
     status      ?: Status;
+    external    ?: boolean;
     defined_by  ?: string[];
     comment     ?: string;
     see_also    ?: Link[];
     example     ?: Example[];
     dataset     ?: boolean;
     context     ?: string[];
-};
+}
 
 /**
- * This is the structure of the YAML file itself. Note that only vocab and ontology is required, everything else is optional
+ * This is the structure of the YAML file itself. Note that only vocab and ontology are required, everything else is optional
  */
 export interface RawVocab {
     vocab       : RawVocabEntry[];
@@ -154,9 +184,9 @@ export interface RawVocab {
 }
 
 /**
- * Type needed for the JSON Schema validation interface
+ * Type needed for the JSON Schema validation interface.
  * 
- * One of the two values are null, depending on the validation result.
+ * One of the two values are null, depending on the validation result. (That is how Ajv works…)
  */
 export interface ValidationResults {
     /** 
@@ -170,7 +200,7 @@ export interface ValidationResults {
 
 /**
  * This is a shortened version of the full Ajv error message (the schema is very simple,
- * the generic Ajv error message is way to complex for this use)
+ * the generic Ajv error message is way too complex for our use)
  */
 export interface ValidationError {
     message ?: string,
@@ -178,26 +208,35 @@ export interface ValidationError {
     data    ?: any,
 }
 
+/* ************************************* Internal representation ***********************************/
 /**
- * Top level class for a term in general. Pretty much self-explanatory...
+ * Top level class for an RDF term in general. Pretty much self-explanatory...
  */
 export interface RDFTerm {
+    /** The _name_ of the term, without the namespace prefix. */
     id          : string;
+    /** The namespace prefix; usually the same as the vocabulary prefix, but not always (e.g., external terms). */
+    prefix     ?: string;
+    /** The types provided by the YAML file _and_ the generated types by the conversion (e.g., `rdf:Property`). */
     type        : string[];
+    /** The types provided by the YAML file */
     user_type  ?: string[];
     label       : string;
     comment    ?: string;
     defined_by ?: string[];
     see_also   ?: Link[];
+    /** This field is, in fact, potentially deprecated, because the status has taken over. Kept for backward compatibility. */
     deprecated ?: boolean;
     status     ?: Status;
+    /** Whether this term is really part of the vocabulary, or is defined externally. */
+    external   ?: boolean;
     example    ?: Example[];
     context     : string[];
 }
 
 /**
  * Extra information necessary for a class: its superclasses.
- * The cross references for domains and ranges are calculated.
+ * The cross-references for domains and ranges are calculated at conversion time.
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
@@ -209,7 +248,7 @@ export interface RDFClass extends RDFTerm {
 }
 
 /**
- * Extra information necessary for a property: its superproperties, range, and domain.
+ * Extra information necessary for a property: its super-properties, range, and domain.
  * None of these are required.
  */
 export interface RDFProperty extends RDFTerm {
@@ -230,14 +269,13 @@ export interface RDFIndividual extends RDFTerm {
 
 /**
  * Extra optional information is the superclass (ie, the datatypes that was used to derive this one).
- * The cross references for domains and ranges are calculated.
+ * The cross-references for domains and ranges are calculated.
  */
 export interface RDFDatatype extends RDFTerm {
     subClassOf        ?: string[],
-    range_of          : string[];
-    includes_range_of : string[];
+    range_of           : string[];
+    includes_range_of  : string[];
 }
-
 
 /**
  * Information for a prefix (to be used either as a prefix in Turtle or in the context of a JSON-LD).
@@ -250,7 +288,7 @@ export interface RDFPrefix {
 /**
  * Information for the ontology properties, i.e., properties that are defined on the top level. 
  * 
- * The third value (url) indicates whether the property is a URL value. For values extracted from the CSV
+ * The third value (url) indicates whether the property is a URL value. For values extracted from the YAML file
  * this is decided by checking whether the string can be considered to be a valid URL or not.
  */
 export interface OntologyProperty {
@@ -260,7 +298,7 @@ export interface OntologyProperty {
 }
 
 /**
- * A vocabulary consists of prefixes, top level (ontology) properties, classes, properties and,
+ * Representation of a full vocabulary: it consists of prefixes, top level (ontology) properties, classes, properties and,
  * possibly, datatypes and individuals…
  */
 export interface Vocab {

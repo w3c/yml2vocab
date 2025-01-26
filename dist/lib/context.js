@@ -1,10 +1,10 @@
 "use strict";
 /**
- * Generate a (minimal) JSON-LD context file for the vocabulary
- * (see the 'Vocab' interface).
- *
- * @packageDocumentation
- */
+* Generate a (minimal) JSON-LD context file for the vocabulary
+* (see the 'Vocab' interface).
+*
+* @packageDocumentation
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toContext = void 0;
 const common_1 = require("./common");

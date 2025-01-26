@@ -1,7 +1,6 @@
 /**
- * Convert the raw YAML description of the vocabulary into an internal representation 
- * (see the 'Vocab' interface).
- * 
+ * Convert the raw YAML description of the vocabulary into an internal representation.
+ *
  * @packageDocumentation
  */
 import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype } from './common';
@@ -12,7 +11,7 @@ import { validateWithSchema }                                                   
 /************************************************ Helper functions and constants **********************************/
 
 /**
- * Just a shorthand to make the code more readable... Checking whether a string can be considered as a URL
+ * Just a shorthand to make the code more readable... Checking whether a string can be considered as a URL.
  * 
  * @param value 
  * @returns 
@@ -28,7 +27,7 @@ const isURL = (value:string): boolean => {
 }
 
 /**
- * Turn the label text into a non-camel case
+ * Turn the label text into a non-camel case.
  * 
  * @param str 
  * @param separator 
@@ -42,27 +41,28 @@ function localeUnCamelise(str: string, separator = ' '): string {
         return str;
     } else {
         // First character is ignored; it can be upper or lower case
-        const retval: string[] = [str.charAt(0)];
+        const output: string[] = [str.charAt(0)];
         for (let i = 1; i < str.length; i++) {
             const char = str.charAt(i);
             if (isLocaleUpperCase(char)) {
                 // Got to the camel's hump
-                retval.push(separator);
-                retval.push(char.toLocaleLowerCase());
+                output.push(separator);
+                output.push(char.toLocaleLowerCase());
             } else {
-                retval.push(char);
+                output.push(char);
             }
         }
         // The first character must be capitalized:
-        retval[0] = retval[0].toLocaleUpperCase();
-        return retval.join('');
+        output[0] = output[0].toLocaleUpperCase();
+        return output.join('');
     }
 }
 
 /********************************************************************************/
 
 /**
- * These prefixes are added no matter what; they are not vocabulary specific
+ * These prefixes are added no matter what; they are not vocabulary specific,
+ * but used in the vocabulary.
  * 
  * @internal
  */
@@ -103,7 +103,8 @@ const defaultPrefixes: RDFPrefix[] = [
 
 
 /**
- * These ontology properties are added no matter what; they are not vocabulary specific
+ * These ontology properties are added no matter what; they are not vocabulary specific.
+ *
  * @internal
  */
 const defaultOntologyProperties: OntologyProperty[] = [
@@ -116,17 +117,19 @@ const defaultOntologyProperties: OntologyProperty[] = [
 
 
 /**
- * Although the YAML parsing is declared to produce a RawVocabEntry, it in fact does not
+ * Although the YAML parsing is declared to produce a {@link RawVocabEntry}, it in fact does not do it strictly
  * (e.g., some entries should be converted into arrays even if the YAML source has only a single item).
  * This function does some basic conversion for all the types, to make the processing later a bit simpler.
  * 
- * @param raw entry as it comes from the YAML parser
- * @returns a "real" RawVocabEntry instance
+ * @param raw entry as it comes from the YAML parser; in fact a generic (javascript-like) object.
+ * @returns a bona fide RawVocabEntry instance
  * @internal
  */
 function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
-    // Some entries are to be put into an array, even if there is only one item
-    const toArray = (val: undefined|string|string[]) : undefined|string[] => {
+    /* *************************** Bunch of helper functions to be used in the code below */
+
+    // Some entries are to be put into an array, even if there is only one item; this ensures a uniform handling.
+    const toArray = (val: undefined | string | string[]) : undefined | string[] => {
         if (val === undefined) {
             return undefined
         } else if (val.length === 0) {
@@ -138,7 +141,9 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         }
     };
 
-    // Almost like to array, except that instead of undefined a real default value is returned
+    // Almost like toArray, except that instead of undefined a real default value is returned.
+    // "vocab" is the shorthand, in the YAML definition, to the context file defined as part of the
+    // vocabulary heading.
     const toArrayContexts = (val: undefined | string | string[]): string[] => {
         if (val === undefined) {
             return ["vocab"];
@@ -152,19 +157,14 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     };
 
     // The "toSeeAlso" structure needs some special treatment and should also be turned into an array
-    const toSeeAlso = (val: undefined|Link|Link[]) : undefined|Link[] => {
+    const toSeeAlso = (val: undefined | Link | Link[]) : undefined | Link[] => {
         if (val === undefined) {
             return undefined
         } else if (Array.isArray(val) && val.length === 0) {
             return undefined
         } else {
             if (Array.isArray(val)) {
-                return val.map((raw): Link => {
-                    return {
-                        label : raw.label,
-                        url   : raw.url
-                    }
-                })
+                return val as Link[];
             } else {
                 return [{
                     label : val.label,
@@ -175,19 +175,14 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     }
 
     // The "toExample" structure needs some special treatment and should also be turned into an array
-    const toExample = (val: undefined|Example|Example[]) : undefined|Example[] => {
+    const toExample = (val: undefined | Example | Example[]) : undefined | Example[] => {
         if (val === undefined) {
             return undefined
         } else if (Array.isArray(val) && val.length === 0) {
             return undefined
         } else {
             if (Array.isArray(val)) {
-                return val.map((raw): Example => {
-                    return {
-                        label : raw.label,
-                        json  : raw.json
-                    }
-                })
+                return val as Example[];
             } else {
                 return [{
                     label : val.label,
@@ -197,7 +192,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         }
     }
 
-    // In some cases the YAML parser puts an extra `\n` character at the end of the comment line,
+    // In some cases the YAML parser puts an extra `\n` character at the end of the comment line;
     // this is removed
     const cleanComment = (val: string): string => {
         let final = val.endsWith('\n') ? val.slice(0,-1):val;
@@ -210,11 +205,10 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         return final;
     }
 
-    // The deprecation flag, as a separate value, is kept also for reasons of backward compatibility,
+    // The deprecation flag, as a separate value, is kept for reasons of backward compatibility,
     // but this makes the interpretation of the value(s) in the vocabulary a bit awkward. Later version
-    // (maybe even next version) would remove the deprecated flag from existing vocabularies, ie,
-    // switch to status, and all this will go away.
-
+    // may remove the deprecated flag from existing vocabularies, i.e., switch to status altogether,
+    // and all this will go away.
     const {status, deprecated} = ((): {status: Status, deprecated: boolean} => {
         if (raw.status !== undefined) {
             return { 
@@ -234,6 +228,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         }
     })();
 
+    // The official label should all ba lower case.
     const label = ((str: string|undefined): string => {
         if (str) {
             return str;
@@ -244,6 +239,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
             return "";
         }
     })(raw.label);
+
     return {
         id          : (raw.id) ? raw.id : "",
         property    : raw.property,
@@ -256,6 +252,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         deprecated  : deprecated,
         defined_by  : toArray(raw.defined_by) ?? [],
         status      : status,
+        external    : raw.external,
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
@@ -266,7 +263,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
 
 /**
  * Run the entry finalization function through all entries in the vocabulary
- * as parsed from YAML
+ * as parsed from YAML.
  * 
  * @param raw 
  * @returns 
@@ -283,51 +280,71 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
     // It is perfectly fine if the vocab is not encoded as an array in YAML
     if (!Array.isArray(raw.vocab)) raw.vocab = [raw.vocab];
 
+    // The extra filter is used to keep the valid entries only. For example, an external
+    // term without a clear definition must be ignored.
+    const classes = raw.class?.map(finalizeRawEntry).filter((entry) => entry !== null)
+    const property = raw.property?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const individual = raw.individual?.map(finalizeRawEntry).filter((entry) => entry !== null)
+    const datatypes = raw.datatype?.map(finalizeRawEntry).filter((entry) => entry !== null)
+
     return {
         vocab      : raw.vocab.map(finalizeRawEntry),
         prefix     : raw.prefix?.map(finalizeRawEntry),
         ontology   : raw.ontology?.map(finalizeRawEntry),
-        class      : raw.class?.map(finalizeRawEntry),
-        property   : raw.property?.map(finalizeRawEntry),
-        individual : raw.individual?.map(finalizeRawEntry),
-        datatype   : raw.datatype?.map(finalizeRawEntry),
+        class      : classes,
+        property   : property,
+        individual : individual,
+        datatype   : datatypes,
     }
 }
 
 /******************************************* External entry point **********************************/
 /**
- * Parse and interpret the YAML file's raw content. This is, essentially, just translation of the 
- * YAML file structure into the its internal equivalent representation with only a very few changes.
- * See the interface definition of 'RawVocabEntry' for the details.
+ * Parse and interpret the YAML file's raw content. This is, essentially, a translation of the
+ * YAML file structure into its internal equivalent representation with only a very few changes.
+ * See the interface definition of {@link RawVocabEntry} for the details.
  * 
  * The result is ephemeral, in the sense that it is then immediately transformed into a proper internal 
- * representation of the vocabulary using the `Vocab` interface. This is done 
+ * representation of the vocabulary using the {@link Vocab} interface. This is done
  * in a separate function for a better readability of the code.
  * 
- * @param vocab_source YAML file content
+ * @param vocab_source YAML file content (reading in the file must be done beforehand)
  * @returns
  * 
  * @throws {ValidationError} Error in the schema validation or when parsing the YAML content
  */
 export function getData(vocab_source: string): Vocab {
+
+    // Run the incoming YAML through a schema validation, and return the
+    // generated object if everything is fine.
     const validation_results: ValidationResults = validateWithSchema(vocab_source);
     if (validation_results.vocab === null) {
-        const error = JSON.stringify(validation_results,null,4);
-        throw(new TypeError(`JSON Schema validation error`, {cause: error}));
+        const error = JSON.stringify(validation_results.error, null, 4);
+        throw(new TypeError(`JSON Schema validation error`, {cause: '\n' + error}));
     }
+    // Clean up the raw vocab representation.
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
+
+    /************************************** local utility methods *****************************************************/
+
+    //
+    // Reminder: there is a, initially empty, global structure, initialized in common.ts
+    // These functions will also update that global structure when applicable
 
     // Establish the final context reference(s), if any, for a term.
     // As a side effect, the 'inverse' info, ie, the list of terms per context, is
-    // created in the global data structure
-    const final_contexts = (raw: RawVocabEntry): string[] => {
+    // created in the global data structure.
+    // "curie" is the CURIE encoded id of the term, ie, namespace:name format.
+    const final_contexts = (raw: RawVocabEntry, curie: string ): string[] => {
         if (raw.context === undefined) return [];
 
         // replace the value of "vocab" by the global context, then
         // get the possible "none" out of the way.
         const contexts = raw.context.map((val: string): string => {
             if (val === "vocab") {
-                // The global context may not have been set...
+                // The global context may not have been set per TypeScript... although this
+                // function is invoked once that has been set already. Price to pay for
+                // Typescript checking...
                 return global.vocab_context !== undefined ? global.vocab_context : "none";
             } else {
                 return val;
@@ -339,22 +356,20 @@ export function getData(vocab_source: string): Vocab {
 
         // 'Inverse' info: add the term reference to the global data
         for (const ctx of ctx_s) {
-            if (ctx in global.context_mentions === false) {
+            if (!(ctx in global.context_mentions)) {
                 global.context_mentions[ctx] = [];
             }
-            global.context_mentions[ctx].push(raw.id);
+            global.context_mentions[ctx].push(curie);
         }
-
         return ctx_s;
     }
 
-
-    // Calculates cross references from properties to classes or datatypes; used
-    // to make the cross references for the property ranges and domains
+    // Calculates cross-references from properties to classes or datatypes; used
+    // to make the cross-references for the property ranges and domains
     // @param raw: raw entry for the class or datatype
     // @param refs: the range or domain array of the property
     // @return: whether the class/datatype is indeed in the range of the property
-    const crossref = (raw: RawVocabEntry, property: RDFProperty, refs: undefined|string[], single_ref: string[], multi_ref: string[]): boolean => {
+    const crossref = (raw: RawVocabEntry, property: RDFProperty, refs: undefined | string[], single_ref: string[], multi_ref: string[]): boolean => {
         if (refs) {
             // Remove the (possible) namespace reference from the CURIE
             const pure_refs = refs.map((range: string): string => {
@@ -369,12 +384,60 @@ export function getData(vocab_source: string): Vocab {
         return false;
     }
 
-    // Convert all the raw structures into their respective internal representations for 
+    // Handling external terms, that are characterized by the fact that they are identified as a CURIE in
+    // the YAML file. The prefix and the term must be separated.
+    // To make the handling of all this uniform, the core term also get the (default) prefix stored in their
+    // structure.
+    const check_id = (raw: RawVocabEntry): { prefix: string,  id: string, external: boolean } => {
+        // see if the id is a CURIE; it is then treated differently.
+
+        // An error condition is also checked on the fly: if a term is not external, either
+        // defined_by or comment should also be set
+        const [prefix, value] = raw.id.split(":");
+
+        const output = ((): { prefix: string, id: string, external: boolean } => {
+            if (value === undefined) {
+                // Not a curie. Check the 'external' flag: it should not be true
+                if (raw.external) {
+                    throw (new Error(`${raw.id} is set to be external, but the id is not a CURIE`));
+                }
+                return {
+                    id       : raw.id,
+                    prefix   : global.vocab_prefix,
+                    external : false,
+                }
+            } else {
+                // A real curie, which may or may not be external. By default, it is.
+                const external = raw.external ?? true;
+                if (!global.real_curies.includes(raw.id)) global.real_curies.push(raw.id);
+                return {prefix: prefix, id: value, external}
+            }
+        })();
+
+        // Extra check for the possible error
+        if (!output.external) {
+            if ((raw.comment === undefined || raw.comment === "") &&
+                (raw.defined_by === undefined || raw.defined_by.length === 0)
+            ) {
+                throw (new Error(`${raw.id} is incomplete: either "defined_by" or "comment" should be provided.`));
+            }
+        }
+        return output;
+    }
+
+    /************************************** local utility methods *****************************************************/
+
+    // Convert all the raw structures into their respective internal representations for
     // prefixes, ontology properties, classes, etc.
 
     // Get the extra prefixes and combine them with the defaults. Note that the 'vocab' category
     // should be added to the list, too, but it needs a special treatment (eg, it is
     // explicitly displayed in the HTML output), hence these values are also stored globally.
+    // Note also the default prefix array added to the mix...
+    //
+    // The YAML file does not necessarily store the "vocab" as an array, but may; so the
+    // vocab entry is always stored as an array. This makes the first entry of this
+    // concatenation a bit strange...
     const prefixes: RDFPrefix[] = [
         ...vocab.vocab.map((raw: RawVocabEntry): RDFPrefix => {
             if (raw.id === undefined) {
@@ -394,8 +457,8 @@ export function getData(vocab_source: string): Vocab {
                 url    : raw.value,
             }
         }),
-        ...((vocab["prefix"] &&  vocab["prefix"].length > 0) 
-            ? vocab["prefix"].map((raw: RawVocabEntry): RDFPrefix => {
+        ...((vocab.prefix &&  vocab.prefix.length > 0)
+            ? vocab.prefix.map((raw: RawVocabEntry): RDFPrefix => {
                 return {
                     prefix : raw.id,
                     url    : (raw.value) ? raw.value : "UNDEFINED PREFIX VALUE",
@@ -423,6 +486,7 @@ export function getData(vocab_source: string): Vocab {
     // the extra owl types added depending on the range
     const properties: RDFProperty[] = (vocab.property !== undefined) ?
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
+            const {prefix, id, external} = check_id(raw);
             const user_type: string[] = (raw.type === undefined) ? [] : raw.type      
             const types: string[] = [
                 ...(raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],                      
@@ -450,7 +514,7 @@ export function getData(vocab_source: string): Vocab {
                 }
             }
             return {
-                id            : raw.id,
+                id            : id,
                 type          : types,
                 user_type     : user_type,
                 label         : raw.label,
@@ -458,19 +522,22 @@ export function getData(vocab_source: string): Vocab {
                 deprecated    : raw.deprecated,
                 defined_by    : raw.defined_by,
                 status        : raw.status,
+                external      : external,
+                prefix        : prefix,
                 subPropertyOf : raw.upper_value,
                 see_also      : raw.see_also,
                 range         : range,
                 domain        : raw.domain,
                 example       : raw.example,
                 dataset       : raw.dataset,
-                context       : final_contexts(raw),
+                context       : final_contexts(raw, `${prefix}:${id}`),
             }
         }) : [];
 
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
     const classes: RDFClass[] = (vocab.class !== undefined) ? 
         vocab.class.map((raw: RawVocabEntry): RDFClass => {
+            const {prefix, id, external} = check_id(raw);
             const user_type: string[] = (raw.type === undefined) ? [] : raw.type;
             const types: string[] = [
                 ...(raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"],
@@ -486,14 +553,14 @@ export function getData(vocab_source: string): Vocab {
             // but the deno typescript checker complains...
             global.status_counter.add(raw.status ? raw.status : Status.stable);
 
-            // Get all domain/range cross references
+            // Get all domain/range cross-references
             for (const property of properties) {
                 crossref(raw, property, property.range, range_of, includes_range_of);
                 crossref(raw, property, property.domain, domain_of, included_in_domain_of);
             }
 
             return {
-                id         : raw.id,
+                id         : id,
                 type       : types,
                 user_type  : user_type,
                 label      : raw.label,
@@ -501,10 +568,12 @@ export function getData(vocab_source: string): Vocab {
                 deprecated : raw.deprecated,
                 defined_by : raw.defined_by,
                 status     : raw.status,
+                external   : external,
+                prefix     : prefix,
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context    : final_contexts(raw),
+                context       : final_contexts(raw, `${prefix}:${id}`),
                 range_of, domain_of, included_in_domain_of, includes_range_of
             }
         }) : [];
@@ -512,6 +581,7 @@ export function getData(vocab_source: string): Vocab {
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
     const individuals: RDFIndividual[] = (vocab.individual !== undefined) ?
         vocab.individual.map((raw:RawVocabEntry): RDFIndividual => {
+            const {prefix, id, external} = check_id(raw);
             // In the former version the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
@@ -520,22 +590,25 @@ export function getData(vocab_source: string): Vocab {
                 ...(raw.upper_value !== undefined) ? raw.upper_value : []
             ];
             return {
-                id            : raw.id,
+                id            : id,
                 label         : raw.label,
                 comment       : raw.comment,
                 deprecated    : raw.deprecated,
                 defined_by    : raw.defined_by,
                 status        : raw.status,
+                external      : external,
+                prefix        : prefix,
                 type          : [...new Set(type)],
                 see_also      : raw.see_also,
                 example       : raw.example,
-                context       : final_contexts(raw),
+                context       : final_contexts(raw, `${prefix}:${id}`),
             }
         }) : [];
 
     // Get the datatypes. 
     const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
         vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
+            const {prefix, id, external} = check_id(raw);
             // In the former version the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
@@ -557,17 +630,19 @@ export function getData(vocab_source: string): Vocab {
             }
 
             return {
-                id: raw.id,
-                subClassOf: (raw.upper_value !== undefined) ? raw.upper_value : [],
+                id         : id,
+                subClassOf : (raw.upper_value !== undefined) ? raw.upper_value : [],
                 label      : raw.label,
                 comment    : raw.comment,
                 deprecated : raw.deprecated,
                 defined_by : raw.defined_by,
                 status     : raw.status,
+                external   : external,
+                prefix     : prefix,
                 type       : [...new Set(type)],
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context    : final_contexts(raw),
+                context       : final_contexts(raw, `${prefix}:${id}`),
                 range_of, includes_range_of
             };
         }) : [];
