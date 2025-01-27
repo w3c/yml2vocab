@@ -6,7 +6,7 @@
 * @packageDocumentation
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toContext = void 0;
+exports.toContext = toContext;
 const common_1 = require("./common");
 // These are the context statements appearing in all 
 // embedded contexts, as well as the top level one.
@@ -103,4 +103,3 @@ function toContext(vocab) {
     // That is it... return the nicely formatted JSON text 
     return JSON.stringify({ "@context": top_level }, null, 4);
 }
-exports.toContext = toContext;

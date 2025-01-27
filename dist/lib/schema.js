@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateWithSchema = void 0;
+exports.validateWithSchema = validateWithSchema;
 /**
  * Import the YAML file, validate against a JSON schema, and return the data as an object.
  *
@@ -54,7 +54,6 @@ function validateWithSchema(yaml_raw_content) {
         };
     }
 }
-exports.validateWithSchema = validateWithSchema;
 /**
  * The schema itself...
  */

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toHTML = void 0;
+exports.toHTML = toHTML;
 const common_1 = require("./common");
 const jsdom_1 = require("jsdom");
 const node_crypto_1 = require("node:crypto");
@@ -754,4 +754,3 @@ function toHTML(vocab, template_text) {
     // I wish it was possible to generate a properly formatted HTML source, but I am not sure how to do that
     return `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
 }
-exports.toHTML = toHTML;

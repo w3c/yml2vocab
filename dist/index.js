@@ -5,7 +5,9 @@
  * @module
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generate_vocabulary_files = exports.generateVocabularyFiles = exports.VocabGeneration = void 0;
+exports.VocabGeneration = void 0;
+exports.generateVocabularyFiles = generateVocabularyFiles;
+exports.generate_vocabulary_files = generate_vocabulary_files;
 const convert_1 = require("./lib/convert");
 const turtle_1 = require("./lib/turtle");
 const jsonld_1 = require("./lib/jsonld");
@@ -136,7 +138,6 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
         console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}`);
     }
 }
-exports.generateVocabularyFiles = generateVocabularyFiles;
 //
 // This function is retained for historical reasons, before the naming conventions have been changed to camel case for functions.
 // Older usage may rely on this format, and there is no reason to make them invalid...
@@ -152,4 +153,3 @@ exports.generateVocabularyFiles = generateVocabularyFiles;
 async function generate_vocabulary_files(yaml_file_name, template_file_name, context) {
     return await generateVocabularyFiles(yaml_file_name, template_file_name, context);
 }
-exports.generate_vocabulary_files = generate_vocabulary_files;

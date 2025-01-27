@@ -328,7 +328,7 @@ export function getData(vocab_source: string): Vocab {
     /************************************** local utility methods *****************************************************/
 
     //
-    // Reminder: there is a, initially empty, global structure, initialized in common.ts
+    // Reminder: there is an initially empty global structure, initialized in common.ts
     // These functions will also update that global structure when applicable
 
     // Establish the final context reference(s), if any, for a term.

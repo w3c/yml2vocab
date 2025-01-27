@@ -1,5 +1,3 @@
-import * as process from "node:process";
-
 /**
  * Import the YAML file, validate against a JSON schema, and return the data as an object.
  *

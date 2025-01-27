@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toTurtle = void 0;
+exports.toTurtle = toTurtle;
 /**
  * Convert the internal representation of the vocabulary into turtle
  * (see the 'Vocab' interface).
@@ -162,4 +162,3 @@ function toTurtle(vocab) {
     }
     return turtle;
 }
-exports.toTurtle = toTurtle;

@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toJSONLD = void 0;
+exports.toJSONLD = toJSONLD;
 const common_1 = require("./common");
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
@@ -242,4 +242,3 @@ function toJSONLD(vocab) {
     // Done... just turn the result into bona fide json
     return JSON.stringify(jsonld, null, 4);
 }
-exports.toJSONLD = toJSONLD;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getData = void 0;
+exports.getData = getData;
 /**
  * Convert the raw YAML description of the vocabulary into an internal representation.
  *
@@ -626,4 +626,3 @@ function getData(vocab_source) {
         }) : [];
     return { prefixes, ontology_properties, classes, properties, individuals, datatypes };
 }
-exports.getData = getData;

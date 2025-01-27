@@ -31,31 +31,31 @@ export function toContext(vocab: Vocab): string {
     const propertyContext = (property: RDFProperty, for_class = true): Context|string => {
         // the real id of the property...
         const url = `${global.vocab_url}${property.id}`
-        const retval: Context = {
+        const output: Context = {
             "@id" : url
         }
         if (for_class || property.type.includes("owl:ObjectProperty")) {
-            retval["@type"] = "@id";
+            output["@type"] = "@id";
         }
         // Try to catch the datatype settings; these can be used
         // to set these in the context as well
         if (property.range) {
             for (const range of property.range) {
                 if (range.startsWith("xsd:")) {
-                    retval["@type"] = range.replace('xsd:', 'http://www.w3.org/2001/XMLSchema#');
+                    output["@type"] = range.replace('xsd:', 'http://www.w3.org/2001/XMLSchema#');
                     break;
                 } else if (range === "rdf:List") {
-                    retval["@container"] = "@list"
+                    output["@container"] = "@list"
                 }
             } 
         }
         if (property.dataset) {
-            retval["@container"] = "@graph";
+            output["@container"] = "@graph";
         }
 
         // if only the URL is set, it makes the context simpler to use its direct value,
         // no need for an indirection
-        return (Object.keys(retval).length === 1) ? url: retval;
+        return (Object.keys(output).length === 1) ? url: output;
     }
 
     // This is the top level context that will be returned to the caller
@@ -110,7 +110,7 @@ export function toContext(vocab: Vocab): string {
         top_level[individual.id] = `${global.vocab_url}${individual.id}`
     }
 
-    // Add the individuals
+    // Add the datatypes
     for (const datatype of vocab.datatypes) {
         top_level[datatype.id] = `${global.vocab_url}${datatype.id}`;
     }
