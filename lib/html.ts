@@ -802,12 +802,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }
 
-    // That is it... generate the output
-    // To generate a properly formatted HTML source, consider using a library like 'pretty' or 'js-beautify'.
-    // Example: 
-    // import { format } from 'pretty';
-    // return format(`<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`, { ocd: true });
-
     return `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
 }
 
