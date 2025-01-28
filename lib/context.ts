@@ -24,17 +24,17 @@ const preamble: Context = {
  * Generate the minimal JSON-LD context for the vocabulary.
  *
  * @param vocab - The internal representation of the vocabulary
- * @returns
+ * @returns - the full context in string (ready to be written to a file)
  */
 export function toContext(vocab: Vocab): string {
     // Generation of a unit for properties
-    const propertyContext = (property: RDFProperty, for_class = true): Context|string => {
+    const propertyContext = (property: RDFProperty, forClass = true): Context|string => {
         // the real id of the property...
-        const url = `${global.vocab_url}${property.id}`
+        const url = `${global.vocab_url}${property.id}`;
         const output: Context = {
             "@id" : url
         }
-        if (for_class || property.type.includes("owl:ObjectProperty")) {
+        if (forClass || property.type.includes("owl:ObjectProperty")) {
             output["@type"] = "@id";
         }
         // Try to catch the datatype settings; these can be used
@@ -45,7 +45,7 @@ export function toContext(vocab: Vocab): string {
                     output["@type"] = range.replace('xsd:', 'http://www.w3.org/2001/XMLSchema#');
                     break;
                 } else if (range === "rdf:List") {
-                    output["@container"] = "@list"
+                    output["@container"] = "@list";
                 }
             } 
         }
@@ -107,7 +107,7 @@ export function toContext(vocab: Vocab): string {
 
     // Add the individuals
     for (const individual of vocab.individuals) {
-        top_level[individual.id] = `${global.vocab_url}${individual.id}`
+        top_level[individual.id] = `${global.vocab_url}${individual.id}`;
     }
 
     // Add the datatypes

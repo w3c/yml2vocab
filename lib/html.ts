@@ -33,7 +33,7 @@ class MiniDOM {
     private readonly _localDocument: Document;
 
     constructor(html_text: string) {
-        const doc = (new JSDOM(html_text)).window._document;
+        const doc = (new JSDOM(html_text)).window.document;
         if (doc) {
             this._localDocument = doc;
         } else {
@@ -58,7 +58,9 @@ class MiniDOM {
     addChild(parent: Element, element: string, content: string | undefined = undefined): Element {
         const new_element = this._localDocument.createElement(element);
         parent.appendChild(new_element);
-        if (content !== undefined) new_element.innerHTML = content;
+        if (content !== undefined) {
+            new_element.innerHTML = content;
+        }
         return new_element;
     }
 
@@ -211,17 +213,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             // curie
             output = computeHash(curie) /* curie */;
 
-            // This is still a matter of discussion... I am not sure that this is the
-            // right approach. However, I am an RDF oriented person...
-            // h4 = document.addChild(section,'h4', `<code>${curie}</code>`);
             document.addChild(section,'h4', `<code>${item.id}</code>`);
-
-            // A single RDFa statement is added to the lot to ensure a proper relationship
-            // to the "real" URL of the external term
-            section.setAttribute('about', `${vocab_url}${curie}`);
-            section.setAttribute('rel', 'owl:sameAs');
-            section.setAttribute('resource', `${curie}`);
-
             const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
 
             if (item.status !== Status.stable) {
@@ -368,7 +360,8 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 return { id_prefix : 'reserved_', intro_prefix: '<em><strong>reserved</strong></em>' };
             case Status.stable :
                 return { id_prefix : '', intro_prefix : '' };
-
+            default :
+                throw new Error(`Unknown status: ${status}`);
         }
     }
 
@@ -810,7 +803,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     }
 
     // That is it... generate the output
-    // I wish it was possible to generate a properly formatted HTML source, but I am not sure how to do that
+    // To generate a properly formatted HTML source, consider using a library like 'pretty' or 'js-beautify'.
+    // Example: 
+    // import { format } from 'pretty';
+    // return format(`<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`, { ocd: true });
+
     return `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
 }
 

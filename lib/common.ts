@@ -14,7 +14,7 @@ export const EXTRA_DATATYPES: string[] = [
     "rdf:HTML",
     "rdf:XMLLiteral",
     "rdf:PlainLiteral",
-    "rdf:langString"
+    "rdf:langString",
 ]
 
 /**
@@ -23,7 +23,7 @@ export const EXTRA_DATATYPES: string[] = [
 export enum Status {
     stable     = "stable", 
     reserved   = "reserved", 
-    deprecated = "deprecated"
+    deprecated = "deprecated",
 }
 
 /**
@@ -32,9 +32,9 @@ export enum Status {
  * should be removed (because it is empty), or not.
  */
 export class StatusCounter {
-    private stableNum    = 0;
-    private reservedNum  = 0;
-    private deprecateNum = 0;
+    private stableNum     = 0;
+    private reservedNum   = 0;
+    private deprecatedNum = 0;
 
     /**
      * Increase the relevant counter.
@@ -52,7 +52,7 @@ export class StatusCounter {
                 return;
             }
             case Status.deprecated: {
-                this.deprecateNum++; 
+                this.deprecatedNum++; 
                 return;
             }
         }
@@ -66,7 +66,8 @@ export class StatusCounter {
         switch (status) {
             case Status.stable: return this.stableNum; 
             case Status.reserved: return this.reservedNum;
-            case Status.deprecated: return this.deprecateNum;
+            case Status.deprecated: return this.deprecatedNum;
+            default: throw new Error(`Unknown term status: ${status}`);
         }
     }
 }
@@ -86,20 +87,20 @@ export interface Contexts {
  */
 export interface GlobalData {
     /** Vocabulary prefix for the vocabulary being handled. */
-    vocab_prefix     : string,
+    vocab_prefix     : string;
 
     /** Vocabulary URL for the vocabulary being handled. */
-    vocab_url        : string,
+    vocab_url        : string;
 
     /** Default context URL for the vocabulary being handled. */
-    vocab_context   ?: string,
+    vocab_context   ?: string;
 
     /**
      * Counter for the terms with various status values.
      * Some serializers (e.g. HTML) may optimize/improve the final
      * output if one of the categories have no entries whatsoever.
      */
-    status_counter   : StatusCounter,
+    status_counter   : StatusCounter;
 
     /**
      * Inverted info for contexts: for each context the list of relevant terms are listed.
@@ -194,7 +195,7 @@ export interface ValidationResults {
      * If the content is valid, the error array is empty. Otherwise, the vocab field is null, and
      * the validation error(s) are returned.
      */
-    vocab : RawVocab | null,
+    vocab : RawVocab | null;
     error : ValidationError[];
 }
 
@@ -203,9 +204,9 @@ export interface ValidationResults {
  * the generic Ajv error message is way too complex for our use)
  */
 export interface ValidationError {
-    message ?: string,
-    params  ?: any,
-    data    ?: any,
+    message ?: string;
+    params  ?: any;
+    data    ?: any;
 }
 
 /* ************************************* Internal representation ***********************************/
@@ -302,11 +303,11 @@ export interface OntologyProperty {
  * possibly, datatypes and individuals…
  */
 export interface Vocab {
-    prefixes            : RDFPrefix[],
-    ontology_properties : OntologyProperty[]
-    classes             : RDFClass[],
-    properties          : RDFProperty[],
-    individuals         : RDFIndividual[],
-    datatypes           : RDFDatatype[],
+    prefixes            : RDFPrefix[];
+    ontology_properties : OntologyProperty[];
+    classes             : RDFClass[];
+    properties          : RDFProperty[];
+    individuals         : RDFIndividual[];
+    datatypes           : RDFDatatype[];
 }
 
