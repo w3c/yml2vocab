@@ -483,7 +483,10 @@ export function getData(vocab_source: string): Vocab {
     ];
 
     // Get the properties. Note the special treatment for deprecated properties, as well as 
-    // the extra owl types added depending on the range
+    // the extra owl types added depending on the range.
+    //
+    // Note that the function sets the object property or datatype property types in the obvious cases.
+    // These extra types are also added when handling a class or a datatype, looking up the references.
     const properties: RDFProperty[] = (vocab.property !== undefined) ?
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
             const {prefix, id, external} = check_id(raw);
@@ -555,7 +558,12 @@ export function getData(vocab_source: string): Vocab {
 
             // Get all domain/range cross-references
             for (const property of properties) {
-                crossref(raw, property, property.range, range_of, includes_range_of);
+                const is_obj_property = crossref(raw, property, property.range, range_of, includes_range_of);
+                // the relevant property should be marked as an object property!
+                if (is_obj_property) {
+                    // a bit convoluted, but trying to avoid repeating the extra entry
+                    property.type = [...((new Set(property.type)).add('owl:ObjectProperty'))];
+                }
                 crossref(raw, property, property.domain, domain_of, included_in_domain_of);
             }
 
