@@ -9,7 +9,7 @@ import { Vocab, global, RDFProperty } from './common';
 
 // Just to get an extra help from TS if I mistype something...
 interface Context {
-    [index: string]: string|Context|boolean;
+    [index: string]: string|Context|boolean|null;
 }
 
 // These are the context statements appearing in all 
@@ -67,6 +67,7 @@ export function toContext(vocab: Vocab): string {
         }
         if (property.dataset) {
             output["@container"] = "@graph";
+            output["@type"]      = "@id";
         }
 
         // if only the URL is set, it makes the context simpler to use its direct value,

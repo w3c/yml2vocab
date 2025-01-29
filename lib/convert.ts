@@ -256,7 +256,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
-        dataset     : (raw.dataset === undefined) ? false : raw.dataset,
+        dataset     : raw.dataset ?? false,
         context     : toArrayContexts(raw.context)
     }
 }
