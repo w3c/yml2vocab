@@ -30,11 +30,20 @@ export function toContext(vocab: Vocab): string {
     // Generation of a unit for properties
     const propertyContext = (property: RDFProperty, forClass = true): Context|string => {
         // the real id of the property...
-        const url = `${global.vocab_url}${property.id}`;
+
+        const baseUrl: string = (()=> {
+            for (const pr of vocab.prefixes) {
+                if (property.prefix === pr.prefix) {
+                    return pr.url;
+                }
+            }
+            return global.vocab_url
+        })();
+        const url = `${baseUrl}${property.id}`;
         const output: Context = {
             "@id" : url
         }
-        if (forClass || property.type.includes("owl:ObjectProperty")) {
+        if (forClass && property.type.includes("owl:ObjectProperty")) {
             output["@type"] = "@id";
         }
         // Try to catch the datatype settings; these can be used
@@ -44,8 +53,15 @@ export function toContext(vocab: Vocab): string {
                 if (range.startsWith("xsd:")) {
                     output["@type"] = range.replace('xsd:', 'http://www.w3.org/2001/XMLSchema#');
                     break;
+                } else if (range === "rdf:JSON") {
+                    output["@type"] = "@json";
+                    break;
+                } else if (["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString"].includes(range)) {
+                    output["@type"] = range.replace("rdf:", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+                    break;
                 } else if (range === "rdf:List") {
                     output["@container"] = "@list";
+                    break;
                 }
             } 
         }

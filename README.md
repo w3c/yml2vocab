@@ -90,7 +90,7 @@ yml2vocab [-v vocab_file_name] [-t template_file_name] [-c]
 
 Running this script generates the `vocab_file_name.ttl`, `vocab_file_name.jsonld`, and `vocab_file_name.html` files for the Turtle, JSON-LD, and HTML+RDFa versions, respectively. The script relies on the `vocab_file_name.yml` file for the vocabulary specification in YAML and a `template_file_name` file for a template file. The defaults are `vocabulary` and `template.html`, respectively.
 
-If the `-c` flag is also set, the additional `vocab_file_name_context.jsonld` is also generated, containing a simple `@context` structure that can be used as a separate `@context` file or embedded in a JSON file. Note that this is a "minimal" JSON-LD file, which does not necessarily use all the sophistication that JSON-LD [defines](https://www.w3.org/TR/json-ld11/#the-context) for `@context`; these may have to be added manually.
+If the `-c` flag is also set, the additional `vocab_file_name.context.jsonld` is also generated, containing a simple `@context` structure that can be used as a separate `@context` file or embedded in a JSON file. Note that this is a "minimal" JSON-LD file, which does not necessarily use all the sophistication that JSON-LD [defines](https://www.w3.org/TR/json-ld11/#the-context) for `@context`; these may have to be added manually.
 
 #### Running from a Javascript/TypeScript program
 
