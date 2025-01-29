@@ -31,24 +31,42 @@
                 "@protected": true,
                 "id": "@id",
                 "type": "@type",
-                "credentialSchema": "https://www.w3.org/2018/credentials#credentialSchema",
-                "credentialStatus": "https://www.w3.org/2018/credentials#credentialStatus",
+                "credentialSchema": {
+                    "@id": "https://www.w3.org/2018/credentials#credentialSchema",
+                    "@type": "@id"
+                },
+                "credentialStatus": {
+                    "@id": "https://www.w3.org/2018/credentials#credentialStatus",
+                    "@type": "@id"
+                },
                 "credentialSubject": {
                     "@id": "https://www.w3.org/2018/credentials#credentialSubject",
                     "@type": "@id"
                 },
-                "evidence": "https://www.w3.org/2018/credentials#evidence",
+                "evidence": {
+                    "@id": "https://www.w3.org/2018/credentials#evidence",
+                    "@type": "@id"
+                },
                 "issuer": {
                     "@id": "https://www.w3.org/2018/credentials#issuer",
                     "@type": "@id"
                 },
-                "refreshService": "https://www.w3.org/2018/credentials#refreshService",
-                "renderMethod": "https://www.w3.org/2018/credentials#renderMethod",
+                "refreshService": {
+                    "@id": "https://www.w3.org/2018/credentials#refreshService",
+                    "@type": "@id"
+                },
+                "renderMethod": {
+                    "@id": "https://www.w3.org/2018/credentials#renderMethod",
+                    "@type": "@id"
+                },
                 "relatedResource": {
                     "@id": "https://www.w3.org/2018/credentials#relatedResource",
                     "@type": "@id"
                 },
-                "termsOfUse": "https://www.w3.org/2018/credentials#termsOfUse",
+                "termsOfUse": {
+                    "@id": "https://www.w3.org/2018/credentials#termsOfUse",
+                    "@type": "@id"
+                },
                 "validFrom": {
                     "@id": "https://www.w3.org/2018/credentials#validFrom",
                     "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
@@ -74,7 +92,10 @@
                     "@id": "https://www.w3.org/2018/credentials#holder",
                     "@type": "@id"
                 },
-                "termsOfUse": "https://www.w3.org/2018/credentials#termsOfUse",
+                "termsOfUse": {
+                    "@id": "https://www.w3.org/2018/credentials#termsOfUse",
+                    "@type": "@id"
+                },
                 "validFrom": {
                     "@id": "https://www.w3.org/2018/credentials#validFrom",
                     "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
@@ -85,13 +106,16 @@
                 },
                 "verifiableCredential": {
                     "@id": "https://www.w3.org/2018/credentials#verifiableCredential",
-                    "@container": "@graph",
-                    "@type": "@id"
+                    "@type": "@id",
+                    "@container": "@graph"
                 }
             }
         },
         "confidenceMethod": "https://www.w3.org/2018/credentials#confidenceMethod",
-        "digestSRI": "https://www.w3.org/2018/credentials#digestSRI",
+        "digestSRI": {
+            "@id": "https://www.w3.org/2018/credentials#digestSRI",
+            "@type": "https://www.w3.org/2018/credentials#sriString"
+        },
         "expirationDate": {
             "@id": "https://www.w3.org/2018/credentials#expirationDate",
             "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
@@ -99,6 +123,10 @@
         "issuanceDate": {
             "@id": "https://www.w3.org/2018/credentials#issuanceDate",
             "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+        },
+        "description": {
+            "@id": "http://schema.org/description",
+            "@type": "http://www.w3.org/2001/XMLSchema#string"
         },
         "proof": {
             "@id": "https://w3id.org/security#proof",

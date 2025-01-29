@@ -169,7 +169,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 } else {
                     // it is fairly unnecessary to make references to some of the core
                     // vocabularies, like rdf or xsd, which do not have a proper HTML target
-                    // anyway... (alas!)
+                    // anyway...
                     const no_url = ['rdf', 'xsd', 'rdfs', 'owl'];
                     if (no_url.includes(components[0]) === false) {
                         for (const prefix_def of vocab.prefixes.slice(1)) {

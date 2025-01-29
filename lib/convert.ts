@@ -385,7 +385,7 @@ export function getData(vocab_source: string): Vocab {
         return false;
     }
 
-    // Handling external terms, that are characterized by the fact that they are identified as a CURIE in
+    // Handling external terms. These are characterized by the fact that they are identified as a CURIE in
     // the YAML file. The prefix and the term must be separated.
     // To make the handling of all this uniform, the core term also get the (default) prefix stored in their
     // structure.

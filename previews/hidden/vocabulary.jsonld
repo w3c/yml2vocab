@@ -96,7 +96,10 @@
     "rdfs_properties": [
         {
             "@id": "cred:credentialSchema",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "cred:CredentialSchema",
             "rdfs:label": "Credential schema",
@@ -111,7 +114,10 @@
         },
         {
             "@id": "cred:credentialStatus",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "cred:CredentialStatus",
             "rdfs:label": "Credential status",
@@ -126,7 +132,10 @@
         },
         {
             "@id": "cred:confidenceMethod",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
             "rdfs:range": "cred:ConfidenceMethod",
             "rdfs:label": "Confidence method",
             "rdfs:isDefinedBy": "https://w3c-ccg.github.io/confidence-method-spec/",
@@ -177,7 +186,10 @@
         },
         {
             "@id": "cred:evidence",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "cred:CredentialEvidence",
             "rdfs:label": "Evidence",
@@ -290,7 +302,10 @@
         },
         {
             "@id": "cred:refreshService",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "cred:RefreshService",
             "rdfs:label": "Refresh service",
@@ -305,7 +320,10 @@
         },
         {
             "@id": "cred:renderMethod",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
             "rdfs:domain": "cred:VerifiableCredential",
             "rdfs:range": "cred:RenderMethod",
             "rdfs:label": "Render method",
@@ -331,7 +349,10 @@
         },
         {
             "@id": "cred:termsOfUse",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
             "rdfs:domain": {
                 "owl:unionOf": [
                     "cred:VerifiableCredential",
@@ -397,7 +418,10 @@
         },
         {
             "@id": "cred:verifiableCredential",
-            "@type": "rdf:Property",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
             "rdfs:domain": "cred:VerifiablePresentation",
             "rdfs:range": "cred:VerifiableCredentialGraph",
             "rdfs:label": "Verifiable credential graph",
