@@ -165,7 +165,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             } else {
                 // The target may be an external term within the vocabulary!
                 if (global.real_curies.includes(curie)) {
-                    return `<a href="#${curie}"><code>${curie}</code></a>`
+                    return `<a href="#${computeHash(curie)}"><code>${components[1]}</code></a>`
                 } else {
                     // it is fairly unnecessary to make references to some of the core
                     // vocabularies, like rdf or xsd, which do not have a proper HTML target

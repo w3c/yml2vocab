@@ -377,7 +377,8 @@ export function getData(vocab_source: string): Vocab {
                 return terms.length === 1 ? range : terms[1];
             });
             if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
-                (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id);
+                const id_to_store = (global.vocab_prefix !== property.prefix) ? `${property.prefix}:${property.id}` : property.id;
+                (pure_refs.length === 1 ? single_ref : multi_ref).push(id_to_store);
                 return true;
             }
         }
@@ -581,7 +582,7 @@ export function getData(vocab_source: string): Vocab {
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context       : final_contexts(raw, `${prefix}:${id}`),
+                context    : final_contexts(raw, `${prefix}:${id}`),
                 range_of, domain_of, included_in_domain_of, includes_range_of
             }
         }) : [];
