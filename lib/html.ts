@@ -206,6 +206,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     const commonFields = (section: Element, item: RDFTerm): string => {
         // by default, the id of the term should be used for the enclosing section
         let output = item.id;
+        let external_warning_text = ""
 
         // External terms have a different behavior: ranges/domains should be ignored, and no RDFa should be
         // generated.
@@ -239,12 +240,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             }
 
             const url = ns.url + item.id;
-            const warning_text = `
+            external_warning_text = `
                 <b>This term is formally defined in another vocabulary</b>
                 (as <a href="${url}">${curie}</a>), but is frequently used with this vocabulary and has been 
                 included to aid readability of this document.
             `
-            document.addChild(section, 'p', warning_text);
             if (item.defined_by) {
                 // By the logic of the program, at this point defined_by is always defined
                 // but picky compilers, like deno, push me to put this extra condition
@@ -301,6 +301,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             if (!item.external) {
                 div.setAttribute('property', 'rdfs:comment');
                 div.setAttribute('datatype', 'rdf:HTML')
+            } else {
+                const warning = document.addChild(section, 'p', external_warning_text);
+                warning.setAttribute('class', 'note')
             }
         } else if (item.type.includes("owl:ObjectProperty")) {
             document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
