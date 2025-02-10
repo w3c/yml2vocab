@@ -81,6 +81,22 @@ class MiniDOM {
     }
 
     /**
+         * Add some HTMLtext to an element, including the obligatory checks that Typescript imposes
+         * 
+         * @param content - text to add
+         * @param element HTML Element to add it to
+         * @returns 
+         * 
+         * @internal
+         */
+    addHTMLText(content: string, element: Element | null): Element | null {
+        if (element) {
+            element.innerHTML = content;
+        }
+        return element;
+    }
+
+    /**
      * Just the mirroring of the official DOM call.
      * 
      * @param id 
@@ -397,7 +413,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             document.addText(title, document.getElementsByTagName('title')[0]);
             document.addText(title, document.getElementById('title'));    
          } catch(_e) {
-            console.log("Vocabulary warning: title is not provided.")
+            console.log("Vocabulary warning: ontology title is not provided.")
          }
 
         const date = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:date')[0].value;
@@ -405,9 +421,16 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
         try {
             const description = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:description')[0].value;
-            document.addText(description, document.getElementById('description'));    
+            const descriptionElement = document.getElementById('description');
+            if (descriptionElement !== null) {
+                document.addHTMLText(description, descriptionElement); 
+                descriptionElement.setAttribute('datatype', 'rdf:HTML');
+                descriptionElement.setAttribute('property', 'dc:description');
+            } else {
+                console.log("Vocabulary warning: ontology description is not provided.")
+            }
         } catch(_e) {
-            console.log("Vocabulary warning: description is not provided.")
+            console.log("Vocabulary warning: ontology description is not provided.")
         }
 
         try {
@@ -419,7 +442,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 a.setAttribute('property', 'rdfs:seeAlso')
             }
         } catch(_e) {
-            console.log("Vocabulary warning: no reference to specification provided.")
+            console.log("Vocabulary warning: no reference to the ontology specification provided.")
         }
     }
 

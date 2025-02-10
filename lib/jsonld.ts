@@ -133,6 +133,11 @@ export function toJSONLD(vocab: Vocab): string {
         for (const ont of vocab.ontology_properties) {
             if (ont.property === 'dc:date' || ont.url) {
                 jsonld[ont.property] = ont.value;
+            } else if (ont.property === 'dc:description') {
+                jsonld[ont.property] = {
+                    "@value" : ont.value,
+                    "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+                }
             } else {
                 jsonld[ont.property] = {
                     "@value" : ont.value,

@@ -74,6 +74,8 @@ export function toTurtle(vocab: Vocab): string {
         for (const ont of vocab.ontology_properties) {
             if (ont.property === 'dc:date') {
                 turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`
+            } else if (ont.property === 'dc:description') {
+                turtle += `    dc:description """${ont.value}"""^^@rdf:HTML ;\n`
             } else {
                 if (ont.url) {
                     turtle += `    ${ont.property} <${ont.value}> ;\n`;
