@@ -486,7 +486,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             if (term.startsWith(global.vocab_prefix)) {
                                 return term.split(':')[1];
                             } else {
-                                return term;
+                                return computeHash(term);
                             }
                         })();
                         document.addChild(ul, 'li', `<a href="#${reference}"><code>${term}<code></li>`);
