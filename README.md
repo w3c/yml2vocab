@@ -25,7 +25,7 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
   - The `example` key refers to on or more blocks with `label` and `json` keys, providing a (JSON) example with a title. These examples are placed, in the HTML version, to the end of the section referring to a term (the examples are ignored in the Turtle and the JSON-LD versions). Care should be taken to use the `"|"` [block style indicator](https://yaml-multiline.info) in the YAML file for the examples.
 
 - Top level blocks:
-  - `vocab`: a block with the `id` and the `value` keys defining the prefix and the URL of the vocabulary, respectively. The `id` provides a prefix that can be used in the vocabulary descriptions, e.g., for cross-references. The additional, optional `context` key may provide a default context file reference (as a URI), used by all terms unless locally overwritten (see above).
+  - `vocab`: a block with the `id` and the `value` keys defining the prefix and the URL of the vocabulary, respectively. The `id` provides a prefix that can be used in the vocabulary descriptions, e.g., for cross-references. The additional, optional `context` key may provide a default context file reference (as a URI), used by all terms unless locally overwritten (see above). Note that the `context` key is required if the HTML template includes a context section.
 
   - `prefix`: definition of a prefixes, and corresponding URLs, for each external vocabulary in use, defined by the `id` and `value` keys, respectively. 
 

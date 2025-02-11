@@ -472,6 +472,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             if (ctx_keys.length > 0) {
                 // An item for each context file
                 for (const ctx of ctx_keys) {
+                    if (global.context_mentions[ctx].length === 0) {
+                        continue;
+                    }
+
                     const li = document.addChild(ctx_ul, 'li');
 
                     const a  = document.addChild(li, 'a', `<code>${ctx}</code>`);
