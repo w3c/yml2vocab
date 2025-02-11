@@ -115,10 +115,12 @@ export function toContext(vocab: Vocab): string {
         const prefixed_id = `${global.vocab_prefix}:${cl.id}`;
         // Get all the properties that have this class in its domain
         for (const prop of vocab.properties) {
-            if (prop.domain && prop.domain.includes(prefixed_id)) {
-                // bingo, this property can be added here
-                embedded[prop.id] = propertyContext(prop);
-                class_properties.add(prop.id);
+            if (prop.domain) {
+                if (prop.domain.includes(prefixed_id) || prop.domain.includes(cl.id)) {
+                    // bingo, this property can be added here
+                    embedded[prop.id] = propertyContext(prop);
+                    class_properties.add(prop.id);
+                }
             }
         }
 
