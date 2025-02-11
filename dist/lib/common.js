@@ -16,7 +16,7 @@ exports.EXTRA_DATATYPES = [
     "rdf:HTML",
     "rdf:XMLLiteral",
     "rdf:PlainLiteral",
-    "rdf:langString"
+    "rdf:langString",
 ];
 /**
  * Characterization of a class/property/individual on whether it is stable or not.
@@ -35,7 +35,7 @@ var Status;
 class StatusCounter {
     stableNum = 0;
     reservedNum = 0;
-    deprecateNum = 0;
+    deprecatedNum = 0;
     /**
      * Increase the relevant counter.
      *
@@ -52,7 +52,7 @@ class StatusCounter {
                 return;
             }
             case Status.deprecated: {
-                this.deprecateNum++;
+                this.deprecatedNum++;
                 return;
             }
         }
@@ -65,7 +65,8 @@ class StatusCounter {
         switch (status) {
             case Status.stable: return this.stableNum;
             case Status.reserved: return this.reservedNum;
-            case Status.deprecated: return this.deprecateNum;
+            case Status.deprecated: return this.deprecatedNum;
+            default: throw new Error(`Unknown term status: ${status}`);
         }
     }
 }

@@ -13,8 +13,7 @@ const common_1 = require("./common");
  * Nothing complex, just a straightforward conversion of the information into the turtle syntax.
  *
  * @param vocab - The internal representation of the vocabulary
- * @returns
- * @async
+ * @returns - the full Turtle representation of the vocabulary
  */
 function toTurtle(vocab) {
     // Handling of the domain is a bit complicated due to the usage
@@ -74,6 +73,9 @@ function toTurtle(vocab) {
         for (const ont of vocab.ontology_properties) {
             if (ont.property === 'dc:date') {
                 turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`;
+            }
+            else if (ont.property === 'dc:description') {
+                turtle += `    dc:description """${ont.value}"""^^@rdf:HTML ;\n`;
             }
             else {
                 if (ont.url) {

@@ -1,11 +1,11 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateWithSchema = validateWithSchema;
 /**
  * Import the YAML file, validate against a JSON schema, and return the data as an object.
  *
  * @packageDocumentation
  */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateWithSchema = validateWithSchema;
 const schemasafe_1 = require("@exodus/schemasafe");
 const yaml = require("yaml");
 /**

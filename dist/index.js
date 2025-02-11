@@ -123,7 +123,7 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
             node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template)),
         ];
         if (context) {
-            fs_writes.push(node_fs_1.promises.writeFile(`${basename}_context.jsonld`, conversion.getContext()));
+            fs_writes.push(node_fs_1.promises.writeFile(`${basename}.context.jsonld`, conversion.getContext()));
         }
         const write_errors = (await Promise.allSettled(fs_writes))
             .filter((result) => result.status === "rejected")

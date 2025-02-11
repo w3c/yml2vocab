@@ -24,7 +24,7 @@ export declare enum Status {
 export declare class StatusCounter {
     private stableNum;
     private reservedNum;
-    private deprecateNum;
+    private deprecatedNum;
     /**
      * Increase the relevant counter.
      *

@@ -15,42 +15,73 @@ const preamble = {
     "id": "@id",
     "type": "@type",
 };
+// Minor utility: return the full URL for a prefix
+function prefix_url(prefix, vocab) {
+    if (!prefix) {
+        // This never happens per the program logic, but we keep TS happy...
+        return common_1.global.vocab_url;
+    }
+    for (const pr of vocab.prefixes) {
+        if (pr.prefix === prefix) {
+            return pr.url;
+        }
+    }
+    return common_1.global.vocab_url;
+}
 /**
  * Generate the minimal JSON-LD context for the vocabulary.
  *
  * @param vocab - The internal representation of the vocabulary
- * @returns
+ * @returns - the full context in string (ready to be written to a file)
  */
 function toContext(vocab) {
     // Generation of a unit for properties
-    const propertyContext = (property, for_class = true) => {
+    const propertyContext = (property, forClass = true) => {
         // the real id of the property...
-        const url = `${common_1.global.vocab_url}${property.id}`;
-        const retval = {
+        const baseUrl = prefix_url(property.prefix, vocab);
+        const url = `${baseUrl}${property.id}`;
+        const output = {
             "@id": url
         };
-        if (for_class || property.type.includes("owl:ObjectProperty")) {
-            retval["@type"] = "@id";
+        if (forClass && property.type.includes("owl:ObjectProperty")) {
+            output["@type"] = "@id";
         }
         // Try to catch the datatype settings; these can be used
         // to set these in the context as well
         if (property.range) {
             for (const range of property.range) {
                 if (range.startsWith("xsd:")) {
-                    retval["@type"] = range.replace('xsd:', 'http://www.w3.org/2001/XMLSchema#');
+                    output["@type"] = range.replace("xsd:", "http://www.w3.org/2001/XMLSchema#");
+                    break;
+                }
+                else if (range === "rdf:JSON") {
+                    output["@type"] = "@json";
+                    break;
+                }
+                else if (["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString"].includes(range)) {
+                    output["@type"] = range.replace("rdf:", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
                     break;
                 }
                 else if (range === "rdf:List") {
-                    retval["@container"] = "@list";
+                    output["@container"] = "@list";
+                    break;
+                }
+                else if (property.type.includes("owl:DatatypeProperty")) {
+                    // This is the case when the property refers to an explicitly defined, non-standard datatype
+                    const [range_prefix, range_reference] = range.split(":");
+                    const range_url = prefix_url(range_prefix, vocab);
+                    output["@type"] = range_url + range_reference;
+                    break;
                 }
             }
         }
         if (property.dataset) {
-            retval["@container"] = "@graph";
+            output["@container"] = "@graph";
+            output["@type"] = "@id";
         }
         // if only the URL is set, it makes the context simpler to use its direct value,
         // no need for an indirection
-        return (Object.keys(retval).length === 1) ? url : retval;
+        return (Object.keys(output).length === 1) ? url : output;
     };
     // This is the top level context that will be returned to the caller
     const top_level = { ...preamble };
@@ -96,7 +127,7 @@ function toContext(vocab) {
     for (const individual of vocab.individuals) {
         top_level[individual.id] = `${common_1.global.vocab_url}${individual.id}`;
     }
-    // Add the individuals
+    // Add the datatypes
     for (const datatype of vocab.datatypes) {
         top_level[datatype.id] = `${common_1.global.vocab_url}${datatype.id}`;
     }

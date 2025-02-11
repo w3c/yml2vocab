@@ -10,7 +10,6 @@ import { Vocab } from './common';
  * Nothing complex, just a straightforward conversion of the information into the turtle syntax.
  *
  * @param vocab - The internal representation of the vocabulary
- * @returns
- * @async
+ * @returns - the full Turtle representation of the vocabulary
  */
 export declare function toTurtle(vocab: Vocab): string;

@@ -1,3 +1,8 @@
+/**
+ * Import the YAML file, validate against a JSON schema, and return the data as an object.
+ *
+ * @packageDocumentation
+ */
 import { ValidationResults } from './common';
 /**
  * Perform a JSON Schema validation on the YAML content. Done by converting the YAML content into
