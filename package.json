@@ -1,6 +1,6 @@
 {
   "name": "yml2vocab",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Generation of vocabulary files starting by YAML",
   "homepage": "https://github.com/w3c/yml2vocab",
   "repository": {
@@ -36,6 +36,7 @@
     "local_di": "ts-node main.ts -v local/di/vocabulary.yml -t local/di/template.html -c",
     "local_sl": "ts-node main.ts -v local/sl/vocabulary.yml -t local/sl/template.html -c",
     "local_vcdm_nolink": "ts-node main.ts -v local/tests/vcdm/vocabulary.yml -t local/tests/vcdm/template.html -c",
+    "local_ident": "ts-node main.ts -v local/tests/identification/vocabulary.yml -t local/tests/identification/template.html -c",
     "preview_vcdm": "ts-node main.ts -v previews/vcdm/vocabulary.yml -t previews/vcdm/template.html",
     "preview_di": "ts-node main.ts -v previews/di/vocabulary.yml -t previews/di/template.html"
   },

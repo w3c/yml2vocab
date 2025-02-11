@@ -5,11 +5,11 @@
  * @packageDocumentation
  */
 
-import { Vocab, global, RDFProperty } from './common';
+import { Vocab, global, RDFProperty, RDFTerm } from './common';
 
 // Just to get an extra help from TS if I mistype something...
 interface Context {
-    [index: string]: string|Context|boolean;
+    [index: string]: string|Context|boolean|null;
 }
 
 // These are the context statements appearing in all 
@@ -19,6 +19,20 @@ const preamble: Context = {
     "id" : "@id",
     "type": "@type",
 };
+
+// Minor utility: return the full URL for a prefix
+function prefix_url(prefix: string | undefined, vocab: Vocab): string {
+    if (!prefix) {
+        // This never happens per the program logic, but we keep TS happy...
+        return global.vocab_url;
+    }
+    for (const pr of vocab.prefixes) {
+        if (pr.prefix === prefix) {
+            return pr.url;
+        }
+    }
+    return global.vocab_url;
+}
 
 /**
  * Generate the minimal JSON-LD context for the vocabulary.
@@ -30,11 +44,12 @@ export function toContext(vocab: Vocab): string {
     // Generation of a unit for properties
     const propertyContext = (property: RDFProperty, forClass = true): Context|string => {
         // the real id of the property...
-        const url = `${global.vocab_url}${property.id}`;
+        const baseUrl = prefix_url(property.prefix, vocab);
+        const url = `${baseUrl}${property.id}`;
         const output: Context = {
             "@id" : url
         }
-        if (forClass || property.type.includes("owl:ObjectProperty")) {
+        if (forClass && property.type.includes("owl:ObjectProperty")) {
             output["@type"] = "@id";
         }
         // Try to catch the datatype settings; these can be used
@@ -42,15 +57,30 @@ export function toContext(vocab: Vocab): string {
         if (property.range) {
             for (const range of property.range) {
                 if (range.startsWith("xsd:")) {
-                    output["@type"] = range.replace('xsd:', 'http://www.w3.org/2001/XMLSchema#');
+                    output["@type"] = range.replace("xsd:", "http://www.w3.org/2001/XMLSchema#");
+                    break;
+                } else if (range === "rdf:JSON") {
+                    output["@type"] = "@json";
+                    break;
+                } else if (["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString"].includes(range)) {
+                    output["@type"] = range.replace("rdf:", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
                     break;
                 } else if (range === "rdf:List") {
                     output["@container"] = "@list";
+                    break;
+                } else if (property.type.includes("owl:DatatypeProperty")) {
+                    // This is the case when the property refers to an explicitly defined, non-standard datatype
+                    const [range_prefix, range_reference] = range.split(":");
+                    const range_url = prefix_url(range_prefix, vocab)
+                    output["@type"] = range_url + range_reference;
+                    break;
                 }
+
             } 
         }
         if (property.dataset) {
             output["@container"] = "@graph";
+            output["@type"]      = "@id";
         }
 
         // if only the URL is set, it makes the context simpler to use its direct value,

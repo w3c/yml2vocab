@@ -256,7 +256,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
-        dataset     : (raw.dataset === undefined) ? false : raw.dataset,
+        dataset     : raw.dataset ?? false,
         context     : toArrayContexts(raw.context)
     }
 }
@@ -377,14 +377,15 @@ export function getData(vocab_source: string): Vocab {
                 return terms.length === 1 ? range : terms[1];
             });
             if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
-                (pure_refs.length === 1 ? single_ref : multi_ref).push(property.id);
+                const id_to_store = (global.vocab_prefix !== property.prefix) ? `${property.prefix}:${property.id}` : property.id;
+                (pure_refs.length === 1 ? single_ref : multi_ref).push(id_to_store);
                 return true;
             }
         }
         return false;
     }
 
-    // Handling external terms, that are characterized by the fact that they are identified as a CURIE in
+    // Handling external terms. These are characterized by the fact that they are identified as a CURIE in
     // the YAML file. The prefix and the term must be separated.
     // To make the handling of all this uniform, the core term also get the (default) prefix stored in their
     // structure.
@@ -483,7 +484,10 @@ export function getData(vocab_source: string): Vocab {
     ];
 
     // Get the properties. Note the special treatment for deprecated properties, as well as 
-    // the extra owl types added depending on the range
+    // the extra owl types added depending on the range.
+    //
+    // Note that the function sets the object property or datatype property types in the obvious cases.
+    // These extra types are also added when handling a class or a datatype, looking up the references.
     const properties: RDFProperty[] = (vocab.property !== undefined) ?
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
             const {prefix, id, external} = check_id(raw);
@@ -555,7 +559,12 @@ export function getData(vocab_source: string): Vocab {
 
             // Get all domain/range cross-references
             for (const property of properties) {
-                crossref(raw, property, property.range, range_of, includes_range_of);
+                const is_obj_property = crossref(raw, property, property.range, range_of, includes_range_of);
+                // the relevant property should be marked as an object property!
+                if (is_obj_property) {
+                    // a bit convoluted, but trying to avoid repeating the extra entry
+                    property.type = [...((new Set(property.type)).add('owl:ObjectProperty'))];
+                }
                 crossref(raw, property, property.domain, domain_of, included_in_domain_of);
             }
 
@@ -573,7 +582,7 @@ export function getData(vocab_source: string): Vocab {
                 subClassOf : raw.upper_value,
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context       : final_contexts(raw, `${prefix}:${id}`),
+                context    : final_contexts(raw, `${prefix}:${id}`),
                 range_of, domain_of, included_in_domain_of, includes_range_of
             }
         }) : [];

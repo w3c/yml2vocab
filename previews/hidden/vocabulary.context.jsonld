@@ -17,7 +17,7 @@
                 "type": "@type",
                 "jsonSchema": {
                     "@id": "https://www.w3.org/2018/credentials#jsonSchema",
-                    "@type": "@id"
+                    "@type": "@json"
                 }
             }
         },
@@ -74,6 +74,10 @@
                 "validUntil": {
                     "@id": "https://www.w3.org/2018/credentials#validUntil",
                     "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+                },
+                "name": {
+                    "@id": "http://schema.org/name",
+                    "@type": "http://www.w3.org/2001/XMLSchema#string"
                 }
             }
         },
@@ -102,12 +106,16 @@
                 },
                 "verifiableCredential": {
                     "@id": "https://www.w3.org/2018/credentials#verifiableCredential",
-                    "@type": "@id"
+                    "@type": "@id",
+                    "@container": "@graph"
                 }
             }
         },
         "confidenceMethod": "https://www.w3.org/2018/credentials#confidenceMethod",
-        "digestSRI": "https://www.w3.org/2018/credentials#digestSRI",
+        "digestSRI": {
+            "@id": "https://www.w3.org/2018/credentials#digestSRI",
+            "@type": "https://www.w3.org/2018/credentials#sriString"
+        },
         "expirationDate": {
             "@id": "https://www.w3.org/2018/credentials#expirationDate",
             "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
@@ -116,9 +124,15 @@
             "@id": "https://www.w3.org/2018/credentials#issuanceDate",
             "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
         },
-        "name": "https://www.w3.org/2018/credentials#name",
-        "proof": "https://www.w3.org/2018/credentials#proof",
-        "digestMultibase": "https://www.w3.org/2018/credentials#digestMultibase",
+        "description": {
+            "@id": "http://schema.org/description",
+            "@type": "http://www.w3.org/2001/XMLSchema#string"
+        },
+        "proof": {
+            "@id": "https://w3id.org/security#proof",
+            "@container": "@graph",
+            "@type": "@id"
+        },
         "sriString": "https://www.w3.org/2018/credentials#sriString",
         "multibase": "https://www.w3.org/2018/credentials#multibase"
     }

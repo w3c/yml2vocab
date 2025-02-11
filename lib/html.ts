@@ -81,6 +81,22 @@ class MiniDOM {
     }
 
     /**
+         * Add some HTMLtext to an element, including the obligatory checks that Typescript imposes
+         * 
+         * @param content - text to add
+         * @param element HTML Element to add it to
+         * @returns 
+         * 
+         * @internal
+         */
+    addHTMLText(content: string, element: Element | null): Element | null {
+        if (element) {
+            element.innerHTML = content;
+        }
+        return element;
+    }
+
+    /**
      * Just the mirroring of the official DOM call.
      * 
      * @param id 
@@ -165,11 +181,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             } else {
                 // The target may be an external term within the vocabulary!
                 if (global.real_curies.includes(curie)) {
-                    return `<a href="#${curie}"><code>${curie}</code></a>`
+                    return `<a href="#${computeHash(curie)}"><code>${components[1]}</code></a>`
                 } else {
                     // it is fairly unnecessary to make references to some of the core
                     // vocabularies, like rdf or xsd, which do not have a proper HTML target
-                    // anyway... (alas!)
+                    // anyway...
                     const no_url = ['rdf', 'xsd', 'rdfs', 'owl'];
                     if (no_url.includes(components[0]) === false) {
                         for (const prefix_def of vocab.prefixes.slice(1)) {
@@ -190,6 +206,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     const commonFields = (section: Element, item: RDFTerm): string => {
         // by default, the id of the term should be used for the enclosing section
         let output = item.id;
+        let external_warning_text = ""
 
         // External terms have a different behavior: ranges/domains should be ignored, and no RDFa should be
         // generated.
@@ -223,12 +240,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             }
 
             const url = ns.url + item.id;
-            const warning_text = `
+            external_warning_text = `
                 <b>This term is formally defined in another vocabulary</b>
                 (as <a href="${url}">${curie}</a>), but is frequently used with this vocabulary and has been 
                 included to aid readability of this document.
             `
-            document.addChild(section, 'p', warning_text);
             if (item.defined_by) {
                 // By the logic of the program, at this point defined_by is always defined
                 // but picky compilers, like deno, push me to put this extra condition
@@ -285,6 +301,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             if (!item.external) {
                 div.setAttribute('property', 'rdfs:comment');
                 div.setAttribute('datatype', 'rdf:HTML')
+            } else {
+                const warning = document.addChild(section, 'p', external_warning_text);
+                warning.setAttribute('class', 'note')
             }
         } else if (item.type.includes("owl:ObjectProperty")) {
             document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
@@ -397,7 +416,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             document.addText(title, document.getElementsByTagName('title')[0]);
             document.addText(title, document.getElementById('title'));    
          } catch(_e) {
-            console.log("Vocabulary warning: title is not provided.")
+            console.log("Vocabulary warning: ontology title is not provided.")
          }
 
         const date = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:date')[0].value;
@@ -405,9 +424,16 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
         try {
             const description = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:description')[0].value;
-            document.addText(description, document.getElementById('description'));    
+            const descriptionElement = document.getElementById('description');
+            if (descriptionElement !== null) {
+                document.addHTMLText(description, descriptionElement); 
+                descriptionElement.setAttribute('datatype', 'rdf:HTML');
+                descriptionElement.setAttribute('property', 'dc:description');
+            } else {
+                console.log("Vocabulary warning: ontology description is not provided.")
+            }
         } catch(_e) {
-            console.log("Vocabulary warning: description is not provided.")
+            console.log("Vocabulary warning: ontology description is not provided.")
         }
 
         try {
@@ -419,7 +445,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 a.setAttribute('property', 'rdfs:seeAlso')
             }
         } catch(_e) {
-            console.log("Vocabulary warning: no reference to specification provided.")
+            console.log("Vocabulary warning: no reference to the ontology specification provided.")
         }
     }
 
@@ -446,6 +472,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             if (ctx_keys.length > 0) {
                 // An item for each context file
                 for (const ctx of ctx_keys) {
+                    if (global.context_mentions[ctx].length === 0) {
+                        continue;
+                    }
+
                     const li = document.addChild(ctx_ul, 'li');
 
                     const a  = document.addChild(li, 'a', `<code>${ctx}</code>`);
@@ -460,7 +490,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             if (term.startsWith(global.vocab_prefix)) {
                                 return term.split(':')[1];
                             } else {
-                                return term;
+                                return computeHash(term);
                             }
                         })();
                         document.addChild(ul, 'li', `<a href="#${reference}"><code>${term}<code></li>`);

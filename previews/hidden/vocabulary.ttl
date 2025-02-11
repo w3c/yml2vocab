@@ -15,11 +15,11 @@ cred: a owl:Ontology ;
     dc:title """Verifiable Credentials Vocabulary v2.0"""@en ;
     dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL-2.0]]"""@en ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2025-01-21"^^xsd:date ;
+    dc:date "2025-01-29"^^xsd:date ;
 .
 
 # Property definitions
-cred:credentialSchema a rdf:Property ;
+cred:credentialSchema a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:CredentialSchema ;
     rdfs:label "Credential schema" ;
@@ -27,7 +27,7 @@ cred:credentialSchema a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-cred:credentialStatus a rdf:Property ;
+cred:credentialStatus a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:CredentialStatus ;
     rdfs:label "Credential status" ;
@@ -35,7 +35,7 @@ cred:credentialStatus a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-cred:confidenceMethod a rdf:Property ;
+cred:confidenceMethod a rdf:Property, owl:ObjectProperty ;
     rdfs:range cred:ConfidenceMethod ;
     rdfs:label "Confidence method" ;
     rdfs:isDefinedBy <https://w3c-ccg.github.io/confidence-method-spec/>, <https://www.w3.org/2018/credentials#> ;
@@ -57,7 +57,7 @@ cred:digestSRI a rdf:Property, owl:DatatypeProperty ;
     rdfs:seeAlso <https://www.w3.org/TR/SRI/#the-integrity-attribute> ;
 .
 
-cred:evidence a rdf:Property ;
+cred:evidence a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:CredentialEvidence ;
     rdfs:label "Evidence" ;
@@ -105,7 +105,7 @@ cred:issuer a rdf:Property, owl:ObjectProperty ;
     vs:term_status "stable" ;
 .
 
-cred:refreshService a rdf:Property ;
+cred:refreshService a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:RefreshService ;
     rdfs:label "Refresh service" ;
@@ -113,7 +113,7 @@ cred:refreshService a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-cred:renderMethod a rdf:Property ;
+cred:renderMethod a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:RenderMethod ;
     rdfs:label "Render method" ;
@@ -128,7 +128,7 @@ cred:relatedResource a rdf:Property, owl:ObjectProperty ;
     vs:term_status "stable" ;
 .
 
-cred:termsOfUse a rdf:Property ;
+cred:termsOfUse a rdf:Property, owl:ObjectProperty ;
     rdfs:domain [ owl:unionOf (cred:VerifiableCredential cred:VerifiablePresentation) ] ;
     rdfs:range cred:TermsOfUse ;
     rdfs:label "Terms of use" ;
@@ -152,19 +152,13 @@ cred:validUntil a rdf:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-cred:verifiableCredential a rdf:Property ;
+cred:verifiableCredential a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiablePresentation ;
     rdfs:range cred:VerifiableCredentialGraph ;
     rdfs:label "Verifiable credential graph" ;
     rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
-
-https://www.w3.org/2018/credentials#schema:name owl:sameAs schema:name ;
-
-https://www.w3.org/2018/credentials#sec:proof owl:sameAs sec:proof ;
-
-https://www.w3.org/2018/credentials#sec:digestMultibase owl:sameAs sec:digestMultibase ;
 
 # Class definitions
 cred:CredentialEvidence a rdfs:Class ;
@@ -265,8 +259,6 @@ cred:sriString a rdfs:Datatype ;
     rdfs:seeAlso <https://www.w3.org/TR/SRI/#the-integrity-attribute> ;
 .
 
-https://www.w3.org/2018/credentials#sec:multibase owl:sameAs sec:multibase ;
-
 # Context files and their mentions
 <https://www.w3.org/ns/credentials/v2> a jsonld:Context ;
     schema:mentions
@@ -288,8 +280,8 @@ https://www.w3.org/2018/credentials#sec:multibase owl:sameAs sec:multibase ;
         cred:validUntil,
         cred:verifiableCredential,
         schema:name,
+        schema:description,
         sec:proof,
-        sec:digestMultibase,
         cred:EnvelopedVerifiableCredential,
         cred:EnvelopedVerifiablePresentation,
         cred:JsonSchema,
