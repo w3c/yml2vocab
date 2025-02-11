@@ -202,9 +202,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     };
 
     // Factor out all common fields for the terms
-    // return the value that can be used as the id value of the section in HTML
+    // return the value that must be used as the id value of the containing section in HTML
     const commonFields = (section: Element, item: RDFTerm): string => {
         // by default, the id of the term should be used for the enclosing section
+        // In the case of external terms, this is not the case...
         let output = item.id;
         let external_warning_text = ""
 
@@ -212,23 +213,29 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         // generated.
         if (item.external) {
             // Check whether the term's prefix is indeed defined
-            const ns = ((pr: string | undefined, id: string): RDFPrefix => {
+            const ns = ((pr: string | undefined, id: string): string => {
                 if (pr === undefined) {
                     throw new Error(`No prefix has been generated for the external term "${id}"`);
                 }
                 for (const prefix of vocab.prefixes) {
                     if (prefix.prefix === pr) {
-                        return prefix;
+                        return prefix.url;
                     }
                 }
                 throw new Error(`Unknown prefix for the external term "${id}": "${pr}"`);
             })(item.prefix, item.id);
 
-            const curie = ns.prefix + ':' + item.id;
+            const curie = item.prefix + ':' + item.id;
             // For external terms, the id of the enclosing section should not be the
             // id of the term; it could be misleading. Instead, it is set to the full
             // curie
-            output = computeHash(curie) /* curie */;
+            output = computeHash(curie);
+
+            external_warning_text = `
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="${ns + item.id}">${curie}</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            `;
 
             document.addChild(section,'h4', `<code>${item.id}</code>`);
             const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
@@ -239,12 +246,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 document.addChild(span, 'em', ` (${item.status})`);
             }
 
-            const url = ns.url + item.id;
-            external_warning_text = `
-                <b>This term is formally defined in another vocabulary</b>
-                (as <a href="${url}">${curie}</a>), but is frequently used with this vocabulary and has been 
-                included to aid readability of this document.
-            `
             if (item.defined_by) {
                 // By the logic of the program, at this point defined_by is always defined
                 // but picky compilers, like deno, push me to put this extra condition
@@ -301,12 +302,15 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             if (!item.external) {
                 div.setAttribute('property', 'rdfs:comment');
                 div.setAttribute('datatype', 'rdf:HTML')
-            } else {
-                const warning = document.addChild(section, 'p', external_warning_text);
-                warning.setAttribute('class', 'note')
             }
         } else if (item.type.includes("owl:ObjectProperty")) {
             document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
+        }
+
+        // Add the external warning, if applicable
+        if (item.external) {
+            const warning = document.addChild(section, 'p', external_warning_text);
+            warning.setAttribute('class', 'note')
         }
 
         if (item.see_also && item.see_also.length > 0) {
@@ -334,19 +338,17 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
 
         if (!item.external) {
-            // This does not display, it is only here for RDFa's sake!
+            // These do not display, they are only here for RDFa's sake!
             const span = document.addChild(section, 'span');
             span.setAttribute('property', 'rdfs:isDefinedBy');
             span.setAttribute('resource', `${vocab_prefix}:`);
 
-            // This does not display, it is only here for RDFa's sake!
             const status_span = document.addChild(section, 'span');
             status_span.setAttribute('style', 'display: none');
             status_span.setAttribute('property', 'vs:term_status');
             document.addText(`${item.status}`, status_span);
 
             if (item.deprecated) {
-                // This does not display, it is only here for RDFa's sake!
                 const span = document.addChild(section, 'span');
                 span.setAttribute('property', 'owl:deprecated');
                 span.setAttribute('datatype', 'xsd:boolean');
