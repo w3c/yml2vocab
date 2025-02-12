@@ -103,7 +103,9 @@ export function toContext(vocab: Vocab): string {
     // Add the classes; note that this will also cover the mapping of
     // all properties whose domain include a top level class
     for (const cl of vocab.classes) {
-        const url = `${global.vocab_url}${cl.id}`;
+        const base_url = cl.prefix ? prefix_url(cl.prefix, vocab) : global.vocab_url;
+        const url = `${base_url}${cl.id}`;
+
         // Create an embedded context for the class
         // starting with the preamble and the final URL for the class
         const embedded: Context = {
@@ -112,7 +114,7 @@ export function toContext(vocab: Vocab): string {
 
         // The domain field in the property structure contains
         // the prefixed version of the class ID...
-        const prefixed_id = `${global.vocab_prefix}:${cl.id}`;
+        const prefixed_id = `${cl.prefix}:${cl.id}`;
         // Get all the properties that have this class in its domain
         for (const prop of vocab.properties) {
             if (prop.domain) {
