@@ -56,6 +56,7 @@ export function toContext(vocab: Vocab): string {
         // to set these in the context as well
         if (property.range) {
             for (const range of property.range) {
+                const [range_prefix, range_reference] = range.split(":");
                 if (range.startsWith("xsd:")) {
                     output["@type"] = range.replace("xsd:", "http://www.w3.org/2001/XMLSchema#");
                     break;
@@ -70,12 +71,16 @@ export function toContext(vocab: Vocab): string {
                     break;
                 } else if (property.type.includes("owl:DatatypeProperty")) {
                     // This is the case when the property refers to an explicitly defined, non-standard datatype
-                    const [range_prefix, range_reference] = range.split(":");
                     const range_url = prefix_url(range_prefix, vocab)
                     output["@type"] = range_url + range_reference;
                     break;
+                } else {
+                    // if range is a class, then it is a reference
+                    if (vocab.classes.find(cl => cl.id === range_reference)) {
+                        output["@type"] = "@id";
+                        break;
+                    }
                 }
-
             } 
         }
         if (property.dataset) {
