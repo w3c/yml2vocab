@@ -50,6 +50,7 @@ function toContext(vocab) {
         // to set these in the context as well
         if (property.range) {
             for (const range of property.range) {
+                const [range_prefix, range_reference] = range.split(":");
                 if (range.startsWith("xsd:")) {
                     output["@type"] = range.replace("xsd:", "http://www.w3.org/2001/XMLSchema#");
                     break;
@@ -68,10 +69,16 @@ function toContext(vocab) {
                 }
                 else if (property.type.includes("owl:DatatypeProperty")) {
                     // This is the case when the property refers to an explicitly defined, non-standard datatype
-                    const [range_prefix, range_reference] = range.split(":");
                     const range_url = prefix_url(range_prefix, vocab);
                     output["@type"] = range_url + range_reference;
                     break;
+                }
+                else {
+                    // if range is a class, then it is a reference
+                    if (vocab.classes.find(cl => cl.id === range_reference)) {
+                        output["@type"] = "@id";
+                        break;
+                    }
                 }
             }
         }
@@ -95,7 +102,8 @@ function toContext(vocab) {
     // Add the classes; note that this will also cover the mapping of
     // all properties whose domain include a top level class
     for (const cl of vocab.classes) {
-        const url = `${common_1.global.vocab_url}${cl.id}`;
+        const base_url = cl.prefix ? prefix_url(cl.prefix, vocab) : common_1.global.vocab_url;
+        const url = `${base_url}${cl.id}`;
         // Create an embedded context for the class
         // starting with the preamble and the final URL for the class
         const embedded = {
@@ -103,13 +111,15 @@ function toContext(vocab) {
         };
         // The domain field in the property structure contains
         // the prefixed version of the class ID...
-        const prefixed_id = `${common_1.global.vocab_prefix}:${cl.id}`;
+        const prefixed_id = `${cl.prefix}:${cl.id}`;
         // Get all the properties that have this class in its domain
         for (const prop of vocab.properties) {
-            if (prop.domain && prop.domain.includes(prefixed_id)) {
-                // bingo, this property can be added here
-                embedded[prop.id] = propertyContext(prop);
-                class_properties.add(prop.id);
+            if (prop.domain) {
+                if (prop.domain.includes(prefixed_id) || prop.domain.includes(cl.id)) {
+                    // bingo, this property can be added here
+                    embedded[prop.id] = propertyContext(prop);
+                    class_properties.add(prop.id);
+                }
             }
         }
         // If no properties are added, then the embedded context is unnecessary

@@ -28,6 +28,7 @@
     "generate": "ts-node main.ts",
     "docs": "typedoc index.ts main.ts lib/*",
     "dist": "tsc",
+    "distribute": "npm run dist && npm run docs",
     "test_di": "ts-node main.ts -v example/security.yml -t example/security_template.html -c",
     "test_vcdm": "ts-node main.ts -v example/credentials.yml -t example/template.html -c",
     "test": "ts-node main.ts -v example/test.yml -t example/test_template.html -c",
