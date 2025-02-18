@@ -175,13 +175,13 @@ export interface RawVocabEntry {
  * This is the structure of the YAML file itself. Note that only vocab and ontology are required, everything else is optional
  */
 export interface RawVocab {
-    vocab       : RawVocabEntry[];
-    prefix     ?: RawVocabEntry[];
-    ontology    : RawVocabEntry[];
-    class      ?: RawVocabEntry[];
-    property   ?: RawVocabEntry[];
-    individual ?: RawVocabEntry[];
-    datatype   ?: RawVocabEntry[];
+    vocab        : RawVocabEntry[];
+    prefixes    ?: RawVocabEntry[];
+    ontology     : RawVocabEntry[];
+    classes     ?: RawVocabEntry[];
+    properties  ?: RawVocabEntry[];
+    individuals ?: RawVocabEntry[];
+    datatypes   ?: RawVocabEntry[];
 }
 
 /**
@@ -210,6 +210,15 @@ export interface ValidationError {
 }
 
 /* ************************************* Internal representation ***********************************/
+
+export enum TermType {
+    class       = "class",
+    property    = "property",
+    individual  = "individual",
+    datatype    = "datatype",
+    unknown     = "unknown",
+}
+
 /**
  * Top level class for an RDF term in general. Pretty much self-explanatory...
  */
@@ -217,7 +226,13 @@ export interface RDFTerm {
     /** The _name_ of the term, without the namespace prefix. */
     id          : string;
     /** The namespace prefix; usually the same as the vocabulary prefix, but not always (e.g., external terms). */
-    prefix     ?: string;
+    prefix      : string;
+    /** The ID used in the HTML listing. It is, usually, the same as the id, except for an external term */
+    html_id     : string;
+    /** The full URL of the term */
+    url         : string;
+    /** The exact term type; used in the categorization of the terms */
+    term_type   : TermType;
     /** The types provided by the YAML file _and_ the generated types by the conversion (e.g., `rdf:Property`). */
     type        : string[];
     /** The types provided by the YAML file */
@@ -241,11 +256,11 @@ export interface RDFTerm {
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
-    subClassOf           ?: string[];
-    range_of              : string[];
-    domain_of             : string[];
-    included_in_domain_of : string[];
-    includes_range_of     : string[];
+    subClassOf            : RDFClass[];
+    range_of              : RDFProperty[];
+    domain_of             : RDFProperty[];
+    included_in_domain_of : RDFProperty[];
+    includes_range_of     : RDFProperty[];
 }
 
 /**
@@ -253,10 +268,10 @@ export interface RDFClass extends RDFTerm {
  * None of these are required.
  */
 export interface RDFProperty extends RDFTerm {
-    subPropertyOf ?: string[];
-    domain        ?: string[];
-    range         ?: string[];
-    dataset       ?: boolean;
+    subPropertyOf : RDFProperty[];
+    domain        : RDFClass[];
+    range         : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
+    dataset       : boolean;
 }
 
 /**
@@ -273,9 +288,9 @@ export interface RDFIndividual extends RDFTerm {
  * The cross-references for domains and ranges are calculated.
  */
 export interface RDFDatatype extends RDFTerm {
-    subClassOf        ?: string[],
-    range_of           : string[];
-    includes_range_of  : string[];
+    subClassOf        : RDFDatatype[],
+    range_of          : RDFProperty[];
+    includes_range_of : RDFProperty[];
 }
 
 /**

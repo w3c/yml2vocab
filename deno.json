@@ -28,6 +28,7 @@
         "./html"             : "./html.ts",
         "./jsonld"           : "./jsonld.ts",
         "./schema"           : "./schema.ts",
+        "./factory"          : "./factory.ts",
         "./turtle"           : "./turtle.ts",
         "./lib/common"       : "./lib/common.ts",
         "./lib/context"      : "./lib/context.ts",
