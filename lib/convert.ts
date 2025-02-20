@@ -6,10 +6,9 @@
 import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix,  RDFDatatype, RDFTerm } from './common';
 import { OntologyProperty, Vocab, Link, Status, Example }                         from './common';
 import { RawVocabEntry, RawVocab, ValidationResults, global }                     from './common';
-import { TermType }                                                               from './common'; 
 import { EXTRA_DATATYPES }                                                        from "./common";
 import { validateWithSchema }                                                     from './schema';
-import { RDFTermFactory }                                                         from './factory';
+import { RDFTermFactory, factory }                                                from './factory';
 
 /******************************************** Helper functions and constants **********************************/
 
@@ -28,15 +27,6 @@ function isURL(value:string): boolean {
         return false;
     }
 }
-
-
-/**
- * Check the equality of two Terms
- */
-function termEquals(term1: RDFTerm, term2: RDFTerm): boolean {
-    return term1.id === term2.id && term1.prefix === term2.prefix;
-}
-
 
 /**
  * Turn the label text into a non-camel case.
@@ -355,12 +345,12 @@ export function getData(vocab_source: string): Vocab {
     // As a side effect, the 'inverse' info, ie, the list of terms per context, is
     // created in the global data structure.
     // "curie" is the CURIE encoded id of the term, ie, namespace:name format.
-    const final_contexts = (raw: RawVocabEntry, curie: string ): string[] => {
+    const final_contexts = (raw: RawVocabEntry, term: RDFTerm ): string[] => {
         if (raw.context === undefined) return [];
 
         // replace the value of "vocab" by the global context, then
         // get the possible "none" out of the way.
-        const contexts = raw.context.map((val: string): string => {
+        const contexts: string[] = raw.context.map((val: string): string => {
             if (val === "vocab") {
                 // The global context may not have been set per TypeScript... although this
                 // function is invoked once that has been set already. Price to pay for
@@ -379,7 +369,7 @@ export function getData(vocab_source: string): Vocab {
             if (!(ctx in global.context_mentions)) {
                 global.context_mentions[ctx] = [];
             }
-            global.context_mentions[ctx].push(curie);
+            global.context_mentions[ctx].push(term);
         }
         return ctx_s;
     }
@@ -406,10 +396,10 @@ export function getData(vocab_source: string): Vocab {
                     } else {
                         if (factory.has(rg)) {
                             const term: RDFTerm = factory.get(rg);
-                            if (term.term_type === TermType.class) {
+                            if (RDFTermFactory.isClass(term)) {
                                 extra_types.push("owl:ObjectProperty");
                                 range.push(term);
-                            } else if (term.term_type === TermType.datatype) {
+                            } else if (RDFTermFactory.isDatatype(term)) {
                                 extra_types.push("owl:DatatypeProperty");
                                 range.push(term);
                             } else {
@@ -521,7 +511,7 @@ export function getData(vocab_source: string): Vocab {
     // the terms, classes, properties, etc, but avoid duplicates.
     // Using the factory will ensure to have a smooth creation of subproperties, range or domain arrays
     // as needed, with cross references.
-    const factory = new RDFTermFactory(prefixes);
+    factory.initialize(prefixes);
 
     /********************************************************************************************/
     // Get the datatypes. 
@@ -551,11 +541,11 @@ export function getData(vocab_source: string): Vocab {
                 deprecated        : raw.deprecated,
                 defined_by        : raw.defined_by,
                 status            : raw.status,
-                type              : [...new Set(type)],
+                type              : [...new Set(type)].map(t => factory.term(t)),
                 subClassOf        : raw.upper_value?.map((val: string): RDFClass => factory.datatype(val)),
                 see_also          : raw.see_also,
                 example           : raw.example,
-                context           : final_contexts(raw, `${output.prefix}:${output.id}`),
+                context           : final_contexts(raw, output),
                 range_of          : [],            // these are set later, when all classes and properties are defined
                 includes_range_of : [],   // these are set later, when all classes and properties are defined
             });
@@ -583,8 +573,8 @@ export function getData(vocab_source: string): Vocab {
             global.status_counter.add(raw.status ? raw.status : Status.stable);
 
             Object.assign(output, {
-                type                  : types,
-                user_type             : user_type,
+                type                  : types.map(t => factory.term(t)),
+                user_type             : user_type.map(t => factory.term(t)),
                 label                 : raw.label,
                 comment               : raw.comment,
                 deprecated            : raw.deprecated,
@@ -593,7 +583,7 @@ export function getData(vocab_source: string): Vocab {
                 subClassOf            : raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
                 see_also              : raw.see_also,
                 example               : raw.example,
-                context               : final_contexts(raw, `${output.prefix}:${output.id}`),
+                context               : final_contexts(raw, output),
                 range_of              : [],      // these are set later, when all classes and properties are defined 
                 domain_of             : [],      // these are set later, when all classes and properties are defined
                 included_in_domain_of : [],      // these are set later, when all classes and properties are defined
@@ -631,8 +621,8 @@ export function getData(vocab_source: string): Vocab {
             ];
 
             Object.assign(output, {
-                type          : types,
-                user_type     : user_type,
+                type          : types.map(t => factory.term(t)),
+                user_type     : user_type.map(t => factory.term(t)),
                 label         : raw.label,
                 comment       : raw.comment,
                 deprecated    : raw.deprecated,
@@ -644,7 +634,7 @@ export function getData(vocab_source: string): Vocab {
                 domain        : raw.domain?.map(val => factory.class(val)),
                 example       : raw.example,
                 dataset       : raw.dataset,
-                context       : final_contexts(raw, `${output.prefix}:${output.id}`),
+                context       : final_contexts(raw, output),
             });
             return output;
         }) : [];
@@ -671,10 +661,10 @@ export function getData(vocab_source: string): Vocab {
                 deprecated : raw.deprecated,
                 defined_by : raw.defined_by,
                 status     : raw.status,
-                type       : [...new Set(type)],
+                type       : [...new Set(type)].map(t => factory.term(t)),
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context    : final_contexts(raw, `${output.prefix}:${output.id}`),
+                context    : final_contexts(raw, output),
             });
             return output;
         }) : [];
@@ -684,12 +674,12 @@ export function getData(vocab_source: string): Vocab {
     for (const current_class of classes) {
         for (const prop of properties) {
             if (prop.range.length > 0) {
-                if (prop.range.find((val: RDFTerm) => termEquals(val, current_class))) {
+                if (prop.range.find((val: RDFTerm) => RDFTermFactory.equals(val, current_class))) {
                     ((prop.range.length > 1) ? current_class.includes_range_of : current_class.range_of).push(prop);
                 }
             }
             if (prop.domain.length > 0) {
-                if (prop.domain.find((val: RDFTerm) => termEquals(val, current_class))) {
+                if (prop.domain.find((val: RDFTerm) => RDFTermFactory.equals(val, current_class))) {
                     ((prop.domain.length > 1) ? current_class.included_in_domain_of : current_class.domain_of).push(prop);
                 }
             }
@@ -699,7 +689,7 @@ export function getData(vocab_source: string): Vocab {
     for (const current_datatype of datatypes) {
         for (const prop of properties) {
             if (prop.range.length > 0) {
-                if (prop.range.find((val: RDFTerm) => termEquals(val, current_datatype))) {
+                if (prop.range.find((val: RDFTerm) => RDFTermFactory.equals(val, current_datatype))) {
                     ((prop.range.length > 1) ? current_datatype.includes_range_of : current_datatype.range_of).push(prop);
                 }
             }

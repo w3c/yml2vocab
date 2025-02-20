@@ -18,7 +18,8 @@ export function toTurtle(vocab: Vocab): string {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct if there are several domains; factored it here to make the 
     // code more readable.
-    const multiDomain = (value: string[]): string => {
+    const multiDomain = (term: RDFTerm[]): string => {
+        const value: string[] = term.map((t: RDFTerm): string => t.curie)
         if (value.length === 1) {
             return value[0];
         } else {
@@ -27,7 +28,8 @@ export function toTurtle(vocab: Vocab): string {
     }
 
     // This is just for symmetry v.a.v. the domain...
-    const multiRange = (value: string[]): string => {
+    const multiRange = (term: RDFTerm[]): string => {
+        const value: string[] = term.map((t: RDFTerm): string => t.curie);
         if (value.length === 1) {
             return value[0];
         } else {
@@ -163,7 +165,7 @@ export function toTurtle(vocab: Vocab): string {
             turtle += `<${ctx}> a jsonld:Context ;\n`;
             turtle += `    schema:mentions\n`
             turtle += (global.context_mentions[ctx].map(
-                (term: string): string => `        ${term}`
+                (term: RDFTerm): string => `        ${term.curie}`
             ).join(",\n")) + " ;\n\n"
         }
     }

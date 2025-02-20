@@ -78,7 +78,7 @@ export class StatusCounter {
  * Terms in the values are identified by their CURIE (i.e., the namespace is also included)
  */
 export interface Contexts {
-    [ctx: string]: string[];
+    [ctx: string]: RDFTerm[];
 }
 
 /**
@@ -217,6 +217,7 @@ export enum TermType {
     individual  = "individual",
     datatype    = "datatype",
     unknown     = "unknown",
+    fullUrl     = "fullUrl",
 }
 
 /**
@@ -229,14 +230,16 @@ export interface RDFTerm {
     prefix      : string;
     /** The ID used in the HTML listing. It is, usually, the same as the id, except for an external term */
     html_id     : string;
+    /** The curie of the term. Used this way, for example, in turtle */
+    curie       : string;
     /** The full URL of the term */
     url         : string;
     /** The exact term type; used in the categorization of the terms */
     term_type   : TermType;
     /** The types provided by the YAML file _and_ the generated types by the conversion (e.g., `rdf:Property`). */
-    type        : string[];
+    type        : RDFTerm[];
     /** The types provided by the YAML file */
-    user_type  ?: string[];
+    user_type  ?: RDFTerm[];
     label       : string;
     comment    ?: string;
     defined_by ?: string[];

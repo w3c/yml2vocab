@@ -57,7 +57,8 @@ export function toJSONLD(vocab: Vocab): string {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct; factored it here to make the 
     // code more readable.
-    const multiDomain = (value: string[]): unknown => {
+    const multiDomain = (term: RDFTerm[]): unknown => {
+        const value: string[] = term.map((t: RDFTerm): string => t.curie);
         if (value.length === 1) {
             return value[0];
         } else {
@@ -68,7 +69,8 @@ export function toJSONLD(vocab: Vocab): string {
     }
 
     // This is just for symmetry v.a.v. the domain...
-    const multiRange = (value: string[]): unknown => {
+    const multiRange = (term: RDFTerm[]): unknown => {
+        const value: string[] = term.map((t: RDFTerm): string => t.curie);
         if (value.length === 1) {
             return value[0];
         } else {
@@ -248,6 +250,6 @@ export function toJSONLD(vocab: Vocab): string {
 
     }
 
-    // Done... just turn the result into bona fide json
+    // Done... just turn the result into bona fide (and readable) json
     return JSON.stringify(jsonld, null, 4);
 }
