@@ -1,8 +1,3 @@
-/**
- * Convert the raw YAML description of the vocabulary into an internal representation.
- *
- * @packageDocumentation
- */
 import { Vocab } from './common';
 /******************************************* External entry point **********************************/
 /**

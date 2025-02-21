@@ -55,7 +55,8 @@ function toJSONLD(vocab) {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct; factored it here to make the 
     // code more readable.
-    const multiDomain = (value) => {
+    const multiDomain = (term) => {
+        const value = term.map((t) => t.curie);
         if (value.length === 1) {
             return value[0];
         }
@@ -66,7 +67,8 @@ function toJSONLD(vocab) {
         }
     };
     // This is just for symmetry v.a.v. the domain...
-    const multiRange = (value) => {
+    const multiRange = (term) => {
+        const value = term.map((t) => t.curie);
         if (value.length === 1) {
             return value[0];
         }
@@ -245,6 +247,6 @@ function toJSONLD(vocab) {
         if (datatypes.length > 0)
             jsonld.rdfs_datatypes = datatypes;
     }
-    // Done... just turn the result into bona fide json
+    // Done... just turn the result into bona fide (and readable) json
     return JSON.stringify(jsonld, null, 4);
 }

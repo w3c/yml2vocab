@@ -43,7 +43,7 @@ export declare class StatusCounter {
  * Terms in the values are identified by their CURIE (i.e., the namespace is also included)
  */
 export interface Contexts {
-    [ctx: string]: string[];
+    [ctx: string]: RDFTerm[];
 }
 /**
  * Placeholder for some global data. This class has only one instance ({@link global}); see its
@@ -123,12 +123,12 @@ export interface RawVocabEntry {
  */
 export interface RawVocab {
     vocab: RawVocabEntry[];
-    prefix?: RawVocabEntry[];
+    prefixes?: RawVocabEntry[];
     ontology: RawVocabEntry[];
-    class?: RawVocabEntry[];
-    property?: RawVocabEntry[];
-    individual?: RawVocabEntry[];
-    datatype?: RawVocabEntry[];
+    classes?: RawVocabEntry[];
+    properties?: RawVocabEntry[];
+    individuals?: RawVocabEntry[];
+    datatypes?: RawVocabEntry[];
 }
 /**
  * Type needed for the JSON Schema validation interface.
@@ -153,6 +153,14 @@ export interface ValidationError {
     params?: any;
     data?: any;
 }
+export declare enum TermType {
+    class = "class",
+    property = "property",
+    individual = "individual",
+    datatype = "datatype",
+    unknown = "unknown",
+    fullUrl = "fullUrl"
+}
 /**
  * Top level class for an RDF term in general. Pretty much self-explanatory...
  */
@@ -160,11 +168,19 @@ export interface RDFTerm {
     /** The _name_ of the term, without the namespace prefix. */
     id: string;
     /** The namespace prefix; usually the same as the vocabulary prefix, but not always (e.g., external terms). */
-    prefix?: string;
+    prefix: string;
+    /** The ID used in the HTML listing. It is, usually, the same as the id, except for an external term */
+    html_id: string;
+    /** The curie of the term. Used this way, for example, in turtle */
+    curie: string;
+    /** The full URL of the term */
+    url: string;
+    /** The exact term type; used in the categorization of the terms */
+    term_type: TermType;
     /** The types provided by the YAML file _and_ the generated types by the conversion (e.g., `rdf:Property`). */
-    type: string[];
+    type: RDFTerm[];
     /** The types provided by the YAML file */
-    user_type?: string[];
+    user_type?: RDFTerm[];
     label: string;
     comment?: string;
     defined_by?: string[];
@@ -183,21 +199,21 @@ export interface RDFTerm {
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
-    subClassOf?: string[];
-    range_of: string[];
-    domain_of: string[];
-    included_in_domain_of: string[];
-    includes_range_of: string[];
+    subClassOf: RDFClass[];
+    range_of: RDFProperty[];
+    domain_of: RDFProperty[];
+    included_in_domain_of: RDFProperty[];
+    includes_range_of: RDFProperty[];
 }
 /**
  * Extra information necessary for a property: its super-properties, range, and domain.
  * None of these are required.
  */
 export interface RDFProperty extends RDFTerm {
-    subPropertyOf?: string[];
-    domain?: string[];
-    range?: string[];
-    dataset?: boolean;
+    subPropertyOf: RDFProperty[];
+    domain: RDFClass[];
+    range: RDFTerm[];
+    dataset: boolean;
 }
 /**
  * No extra information is necessary for an individual, but it makes the code
@@ -211,9 +227,9 @@ export interface RDFIndividual extends RDFTerm {
  * The cross-references for domains and ranges are calculated.
  */
 export interface RDFDatatype extends RDFTerm {
-    subClassOf?: string[];
-    range_of: string[];
-    includes_range_of: string[];
+    subClassOf: RDFDatatype[];
+    range_of: RDFProperty[];
+    includes_range_of: RDFProperty[];
 }
 /**
  * Information for a prefix (to be used either as a prefix in Turtle or in the context of a JSON-LD).

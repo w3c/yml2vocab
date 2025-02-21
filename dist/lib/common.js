@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.global = exports.StatusCounter = exports.Status = exports.EXTRA_DATATYPES = void 0;
+exports.TermType = exports.global = exports.StatusCounter = exports.Status = exports.EXTRA_DATATYPES = void 0;
 /**
  * List of datatypes that are formally defined in the RDF World beyond the
  * list of XSD datatypes.
@@ -82,3 +82,13 @@ exports.global = {
     context_mentions: {},
     real_curies: [],
 };
+/* ************************************* Internal representation ***********************************/
+var TermType;
+(function (TermType) {
+    TermType["class"] = "class";
+    TermType["property"] = "property";
+    TermType["individual"] = "individual";
+    TermType["datatype"] = "datatype";
+    TermType["unknown"] = "unknown";
+    TermType["fullUrl"] = "fullUrl";
+})(TermType || (exports.TermType = TermType = {}));
