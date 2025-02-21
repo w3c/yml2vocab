@@ -6,9 +6,8 @@
  */
 import { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, RDFPrefix, TermType } from './common';
 import { Vocab, RDFTerm, global, Status }                                         from './common';
-import { MiniDOM }                                                      from './minidom';
-import { RDFTermFactory, factory }                                      from './factory';
-
+import { MiniDOM }                                                                from './minidom';
+import { RDFTermFactory, factory }                                                from './factory';
 
 // This object is need for a proper formatting of some text
 const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
@@ -45,7 +44,6 @@ const bnode = (): string => {
  * @returns
  */
 export function toHTML(vocab: Vocab, template_text: string): string {
-
     // Get the DOM of the template
     const document: MiniDOM = new MiniDOM(template_text);
 
@@ -127,7 +125,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
         if (item.comment !== "") {
             let description = item.comment;
-            if (factory.includesCurie(item.type, "owl:ObjectProperty")) {
+            if (RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
                 description += "<br><br>The property's value should be a URL, i.e., not a literal."
             }
             const div = document.addChild(section, 'div', description);
@@ -135,7 +133,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 div.setAttribute('property', 'rdfs:comment');
                 div.setAttribute('datatype', 'rdf:HTML')
             }
-        } else if (factory.includesCurie(item.type, "owl:ObjectProperty")) {
+        } else if (RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
             document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
         }
 
@@ -463,14 +461,14 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             const dd = document.addChild(dl, 'dd');
                             dd.setAttribute('property', 'rdfs:range');
                             if (item.range.length === 1) {
-                                dd.setAttribute('resource',item.range[0])
+                                dd.setAttribute('resource',item.range[0].curie)
                                 dd.innerHTML = termHTMLReference(item.range[0]);
                             } else {
                                 document.addText('Intersection of:', dd)
                                 document.addChild(dd, 'br')
                                 for (const entry of item.range) {
                                     const r_span = document.addChild(dd, 'span')
-                                    r_span.setAttribute('resource', entry);
+                                    r_span.setAttribute('resource', entry.curie);
                                     r_span.innerHTML = termHTMLReference(entry);
                                     document.addChild(dd, 'br')
                                 }
@@ -482,7 +480,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             const dd = document.addChild(dl, 'dd');
                             dd.setAttribute('property', 'rdfs:domain')
                             if (item.domain.length === 1) {
-                                dd.setAttribute('resource',item.domain[0])
+                                dd.setAttribute('resource',item.domain[0].curie)
                                 dd.innerHTML = termHTMLReference(item.domain[0]);
                             } else {
                                 // The union-of list is to be enclosed in a bnode in RDF
@@ -496,7 +494,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                                     sp.setAttribute('about', u_bnode);
                                     sp.setAttribute('inlist', 'true');
                                     sp.setAttribute('property', 'owl:unionOf');
-                                    sp.setAttribute('resource', entry);
+                                    sp.setAttribute('resource', entry.curie);
                                     sp.innerHTML = termHTMLReference(entry);
                                     document.addChild(dd, 'br')
                                 }

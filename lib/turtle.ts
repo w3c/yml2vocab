@@ -14,7 +14,6 @@ import { Vocab, global, RDFTerm, Link, Status } from './common';
  * @returns - the full Turtle representation of the vocabulary
  */
 export function toTurtle(vocab: Vocab): string {
-
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct if there are several domains; factored it here to make the 
     // code more readable.

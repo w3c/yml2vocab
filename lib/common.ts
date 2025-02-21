@@ -175,13 +175,13 @@ export interface RawVocabEntry {
  * This is the structure of the YAML file itself. Note that only vocab and ontology are required, everything else is optional
  */
 export interface RawVocab {
-    vocab        : RawVocabEntry[];
-    prefixes    ?: RawVocabEntry[];
-    ontology     : RawVocabEntry[];
-    classes     ?: RawVocabEntry[];
-    properties  ?: RawVocabEntry[];
-    individuals ?: RawVocabEntry[];
-    datatypes   ?: RawVocabEntry[];
+    vocab       : RawVocabEntry[];
+    prefix     ?: RawVocabEntry[];
+    ontology    : RawVocabEntry[];
+    class      ?: RawVocabEntry[];
+    property   ?: RawVocabEntry[];
+    individual ?: RawVocabEntry[];
+    datatype   ?: RawVocabEntry[];
 }
 
 /**

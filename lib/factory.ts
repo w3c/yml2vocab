@@ -1,5 +1,5 @@
-import { RDFTerm, RDFProperty, RDFClass, RDFDatatype, RDFIndividual, TermType } from "./common.ts";
-import { global, RDFPrefix, }                                                   from "./common.ts";
+import { RDFTerm, RDFProperty, RDFClass, RDFDatatype, RDFIndividual, TermType } from "./common";
+import { global, RDFPrefix, }                                                   from "./common";
 import { createHash }                                                           from 'node:crypto';
 
 
@@ -89,12 +89,12 @@ export class RDFTermFactory {
      */
     class(curie: string): RDFClass {
         const extras = {
-            subClassOf:            [],
-            range_of:              [],
-            domain_of:             [],
-            included_in_domain_of: [],
-            includes_range_of:     [],
-            term_type:             TermType.class,
+            subClassOf            : [] as RDFClass[],
+            range_of              : [] as RDFProperty[],
+            domain_of             : [] as RDFProperty[],
+            included_in_domain_of : [] as RDFProperty[],
+            includes_range_of     : [] as RDFProperty[],
+            term_type             : TermType.class,
         }
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
@@ -118,11 +118,11 @@ export class RDFTermFactory {
      */
     property(curie: string): RDFProperty {
         const extras = {
-            subPropertyOf: [],
-            domain:        [],
-            range:         [],
-            dataset:       false,
-            term_type:     TermType.property,
+            subPropertyOf : [] as RDFProperty[],
+            domain        : [] as RDFClass[],
+            range         : [] as RDFTerm[],
+            dataset       : false,
+            term_type     : TermType.property,
         }
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
@@ -146,8 +146,7 @@ export class RDFTermFactory {
      */
     individual(curie: string): RDFIndividual {
         const extras = {
-            type:       [],
-            term_type:  TermType.individual,}
+            term_type  : TermType.individual,}
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
             if (output?.term_type === TermType.individual) {
@@ -170,10 +169,11 @@ export class RDFTermFactory {
      */ 
     datatype(curie: string): RDFDatatype {
         const extras = {
-            subClassOf:        [],
-            range_of:          [],
-            includes_range_of: [],
-            term_type:         TermType.datatype,}
+            subClassOf        : [] as RDFDatatype[],
+            range_of          : [] as RDFProperty[],
+            includes_range_of : [] as RDFProperty[],
+            term_type         : TermType.datatype,
+        }
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
             if (output?.term_type === TermType.datatype) {
@@ -298,7 +298,6 @@ export class RDFTermFactory {
     static includesCurie(terms: RDFTerm[], curie: string): boolean {
         return terms.some((t) => t.curie === curie);
     }
-
 }
 
 export const factory = new RDFTermFactory();
@@ -323,81 +322,81 @@ export const factory = new RDFTermFactory();
  * If this is done at the end of all processing, the classes of datatypes, but even unknowns, are already defined
  */
 // //**** Testing */
-function test() {
-    const testPrefixes: RDFPrefix[] = [
-        {
-            prefix: "a",
-            url: "http://example.org/", 
-        },
-        {
-            prefix: "dc",
-            url: "http://purl.org/dc/terms/",
-        },
-        {
-            prefix: "dcterms",
-            url: "http://purl.org/dc/terms/",
-        },
-        {
-            prefix: "owl",
-            url: "http://www.w3.org/2002/07/owl#",
-        },
-        {
-            prefix: "rdf",
-            url: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-        },
-        {
-            prefix: "rdfs",
-            url: "http://www.w3.org/2000/01/rdf-schema#"
-        },
-        {
-            prefix: "xsd",
-            url: "http://www.w3.org/2001/XMLSchema#"
-        },
-        {
-            prefix: "vs",
-            url: "http://www.w3.org/2003/06/sw-vocab-status/ns#"
-        },
-        {
-            prefix: "schema",
-            url: "http://schema.org/"
-        },
-        {
-            prefix: "jsonld",
-            url: "http://www.w3.org/ns/json-ld#"
-        }
-    ];
+// function test() {
+//     const testPrefixes: RDFPrefix[] = [
+//         {
+//             prefix: "a",
+//             url: "http://example.org/", 
+//         },
+//         {
+//             prefix: "dc",
+//             url: "http://purl.org/dc/terms/",
+//         },
+//         {
+//             prefix: "dcterms",
+//             url: "http://purl.org/dc/terms/",
+//         },
+//         {
+//             prefix: "owl",
+//             url: "http://www.w3.org/2002/07/owl#",
+//         },
+//         {
+//             prefix: "rdf",
+//             url: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+//         },
+//         {
+//             prefix: "rdfs",
+//             url: "http://www.w3.org/2000/01/rdf-schema#"
+//         },
+//         {
+//             prefix: "xsd",
+//             url: "http://www.w3.org/2001/XMLSchema#"
+//         },
+//         {
+//             prefix: "vs",
+//             url: "http://www.w3.org/2003/06/sw-vocab-status/ns#"
+//         },
+//         {
+//             prefix: "schema",
+//             url: "http://schema.org/"
+//         },
+//         {
+//             prefix: "jsonld",
+//             url: "http://www.w3.org/ns/json-ld#"
+//         }
+//     ];
 
-    Object.assign(global, { 
-    vocab_prefix: "a",
-    vocab_url: "http://example.org/",
-    });
+//     Object.assign(global, { 
+//     vocab_prefix: "a",
+//     vocab_url: "http://example.org/",
+//     });
 
-    factory.initialize(testPrefixes);
+//     factory.initialize(testPrefixes);
 
-    let C: RDFClass = factory.class("a:c");
-    const P: RDFProperty = factory.property("a:p");
+//     let C: RDFClass = factory.class("a:c");
+//     const P: RDFProperty = factory.property("a:p");
 
-    const domain = {
-        domain: [C],
-    }
+//     const domain = {
+//         domain: [C],
+//     }
 
-    Object.assign(P, domain);
+//     Object.assign(P, domain);
 
-    const extra = {
-        subClassOf: [factory.class("rdf:cc")],
-        range_of: [factory.property("schema:pp")],
-    };
+//     const extra = {
+//         subClassOf: [factory.class("rdf:cc")],
+//         range_of: [factory.property("schema:pp")],
+//     };
 
-    Object.assign(C, extra);
+//     Object.assign(C, extra);
 
-    console.log(P);
+//     console.log(P);
 
-    if (P.domain && P.domain.length !== 0) {
-        const Q: RDFClass = P.domain[0];
-        Q.subClassOf.push(factory.class("xsd:i"));
-    }   
+//     if (P.domain && P.domain.length !== 0) {
+//         const Q: RDFClass = P.domain[0];
+//         Q.subClassOf.push(factory.class("xsd:i"));
+//     }   
 
-    console.log(C)
-}
+//     console.log(C)
+// }
 
-test();
+// test();

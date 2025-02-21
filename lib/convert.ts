@@ -73,8 +73,8 @@ const defaultPrefixes: RDFPrefix[] = [
         url    : "http://purl.org/dc/terms/",
     },
     {
-        prefix: "dcterms",
-        url: "http://purl.org/dc/terms/",
+        prefix : "dcterms",
+        url    : "http://purl.org/dc/terms/",
     },
     {
         prefix : "owl",
@@ -292,19 +292,19 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
 
     // The extra filter is used to keep the valid entries only. For example, an external
     // term without a clear definition must be ignored.
-    const classes     = raw.classes?.map(finalizeRawEntry).filter((entry) => entry !== null)
-    const properties  = raw.properties?.map(finalizeRawEntry).filter((entry) => entry !== null);
-    const individuals = raw.individuals?.map(finalizeRawEntry).filter((entry) => entry !== null)
-    const datatypes   = raw.datatypes?.map(finalizeRawEntry).filter((entry) => entry !== null)
+    const classes     = raw.class?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const properties  = raw.property?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const individuals = raw.individual?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const datatypes   = raw.datatype?.map(finalizeRawEntry).filter((entry) => entry !== null);
 
     return {
-        vocab        : raw.vocab.map(finalizeRawEntry),
-        prefixes     : raw.prefixes?.map(finalizeRawEntry),
-        ontology     : raw.ontology?.map(finalizeRawEntry),
-        classes      : classes,
-        properties   : properties,
-        individuals  : individuals,
-        datatypes    : datatypes,
+        vocab      : raw.vocab.map(finalizeRawEntry),
+        prefix     : raw.prefix?.map(finalizeRawEntry),
+        ontology   : raw.ontology?.map(finalizeRawEntry),
+        class      : classes,
+        property   : properties,
+        individual : individuals,
+        datatype   : datatypes,
     }
 }
 
@@ -334,7 +334,6 @@ export function getData(vocab_source: string): Vocab {
     }
     // Clean up the raw vocab representation.
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
-
     /************************************** local utility methods *****************************************************/
     //
     // Reminder: there is an initially empty global structure, initialized in common.ts
@@ -461,6 +460,7 @@ export function getData(vocab_source: string): Vocab {
     // The YAML file does not necessarily store the "vocab" as an array, but may; so the
     // vocab entry is always stored as an array. This makes the first entry of this
     // concatenation a bit strange...
+
     const prefixes: RDFPrefix[] = [
         ...vocab.vocab.map((raw: RawVocabEntry): RDFPrefix => {
             if (raw.id === undefined) {
@@ -480,8 +480,8 @@ export function getData(vocab_source: string): Vocab {
                 url    : raw.value,
             }
         }),
-        ...((vocab.prefixes &&  vocab.prefixes.length > 0)
-            ? vocab.prefixes.map((raw: RawVocabEntry): RDFPrefix => {
+        ...((vocab.prefix &&  vocab.prefix.length > 0)
+            ? vocab.prefix.map((raw: RawVocabEntry): RDFPrefix => {
                 return {
                     prefix : raw.id,
                     url    : (raw.value) ? raw.value : "UNDEFINED PREFIX VALUE",
@@ -515,8 +515,8 @@ export function getData(vocab_source: string): Vocab {
 
     /********************************************************************************************/
     // Get the datatypes. 
-    const datatypes: RDFDatatype[] = (vocab.datatypes !== undefined) ?
-        vocab.datatypes.map((raw: RawVocabEntry): RDFDatatype => {
+    const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
+        vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
             const output: RDFDatatype = factory.datatype(raw.id);
 
             // Extra check for possible error for external terms
@@ -551,11 +551,11 @@ export function getData(vocab_source: string): Vocab {
             });
             return output;
     }) : [];
-
+    
     /********************************************************************************************/
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
-    const classes: RDFClass[] = (vocab.classes !== undefined) ?
-        vocab.classes.map((raw: RawVocabEntry): RDFClass => {
+    const classes: RDFClass[] = (vocab.class !== undefined) ?
+        vocab.class.map((raw: RawVocabEntry): RDFClass => {
             const output: RDFClass = factory.class(raw.id);
 
             // Extra check for possible error for external terms
@@ -598,8 +598,8 @@ export function getData(vocab_source: string): Vocab {
     //
     // Note that the function sets the object property or datatype property types in the obvious cases.
     // These extra types are also added when handling a class or a datatype, looking up the references.
-    const properties: RDFProperty[] = (vocab.properties !== undefined) ?
-        vocab.properties.map((raw: RawVocabEntry): RDFProperty => {
+    const properties: RDFProperty[] = (vocab.property !== undefined) ?
+        vocab.property.map((raw: RawVocabEntry): RDFProperty => {
             const output: RDFProperty = factory.property(raw.id);
 
             // Extra check for possible error for external terms
@@ -641,8 +641,8 @@ export function getData(vocab_source: string): Vocab {
 
     /********************************************************************************************/
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
-    const individuals: RDFIndividual[] = (vocab.individuals !== undefined) ?
-        vocab.individuals.map((raw:RawVocabEntry): RDFIndividual => {
+    const individuals: RDFIndividual[] = (vocab.individual !== undefined) ?
+        vocab.individual.map((raw:RawVocabEntry): RDFIndividual => {
             const output = factory.individual(raw.id);
 
             // Extra check for possible error for external terms
@@ -673,29 +673,29 @@ export function getData(vocab_source: string): Vocab {
     // Set the domain and range of the back references for ranges/domains for classes and datatypes.
     for (const current_class of classes) {
         for (const prop of properties) {
-            if (prop.range.length > 0) {
+            if (prop.range?.length > 0) {
                 if (prop.range.find((val: RDFTerm) => RDFTermFactory.equals(val, current_class))) {
                     ((prop.range.length > 1) ? current_class.includes_range_of : current_class.range_of).push(prop);
                 }
             }
-            if (prop.domain.length > 0) {
+            if (prop.domain?.length > 0) {
                 if (prop.domain.find((val: RDFTerm) => RDFTermFactory.equals(val, current_class))) {
                     ((prop.domain.length > 1) ? current_class.included_in_domain_of : current_class.domain_of).push(prop);
                 }
             }
         }
     }
-
+    
     for (const current_datatype of datatypes) {
         for (const prop of properties) {
-            if (prop.range.length > 0) {
+            if (prop.range?.length > 0) {
                 if (prop.range.find((val: RDFTerm) => RDFTermFactory.equals(val, current_datatype))) {
                     ((prop.range.length > 1) ? current_datatype.includes_range_of : current_datatype.range_of).push(prop);
                 }
             }
         }
     }
-    
+
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary
     return {prefixes, ontology_properties, classes, properties, individuals, datatypes}
