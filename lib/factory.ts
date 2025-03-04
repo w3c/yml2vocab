@@ -49,11 +49,14 @@ export class RDFTermFactory {
                 label:      "",
                 external:   true,
                 context:    [],
+                toString(): string {
+                    return this.curie;
+                }
             };
             this.terms.set(curie, output);
             return output;
         } else {
-            const [prefix, reference, baseUrl, external] = ((): [string, string, string, boolean] => {
+            const [prefix, reference, baseUrl, outsider] = ((): [string, string, string, boolean] => {
                 if (curie.includes(":")) {
                     const [prefix, reference] = curie.split(":");
                     const baseUrl = this.prefixes.find((p) => p.prefix === prefix)?.url;
@@ -70,14 +73,17 @@ export class RDFTermFactory {
             const output: RDFTerm = { 
                 id:         reference,
                 prefix:     prefix,
-                html_id:    external ? computeHash(curie) : reference,
+                html_id:    outsider ? computeHash(curie) : reference,
                 curie:      curie,
                 url:        `${baseUrl}${reference}`,
                 type:       [],
                 term_type:  TermType.unknown,
                 label:      "",
-                external:   external,
+                external:   false,
                 context:    [],
+                toString(): string {
+                    return `${this.prefix}:${this.id}`;
+                }
             };
             this.terms.set(curie, output);
             return output;
@@ -102,6 +108,11 @@ export class RDFTermFactory {
                 return output as RDFClass;
             } else if (output?.term_type === TermType.unknown) {
                 Object.assign(output, extras);
+                // A hack. A datatype may appear as a class (which is semantically true)
+                // but should not be treated as a class
+                if( bona_fide_prefixes.includes(output.prefix)) {
+                    output.term_type = TermType.unknown;
+                }
                 return output as RDFClass;
             } else {
                 throw new Error(`Term ${curie} exists, and it is not a class`);

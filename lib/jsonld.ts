@@ -54,11 +54,13 @@ const generic_context = {
  * @returns
  */
 export function toJSONLD(vocab: Vocab): string {
+    const termToStringCallback = (t: RDFTerm): string => `${t}`;
+
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct; factored it here to make the 
     // code more readable.
     const multiDomain = (term: RDFTerm[]): unknown => {
-        const value: string[] = term.map((t: RDFTerm): string => t.curie);
+        const value: string[] = term.map(termToStringCallback);
         if (value.length === 1) {
             return value[0];
         } else {
@@ -70,7 +72,7 @@ export function toJSONLD(vocab: Vocab): string {
 
     // This is just for symmetry v.a.v. the domain...
     const multiRange = (term: RDFTerm[]): unknown => {
-        const value: string[] = term.map((t: RDFTerm): string => t.curie);
+        const value: string[] = term.map(termToStringCallback);
         if (value.length === 1) {
             return value[0];
         } else {
@@ -155,17 +157,17 @@ export function toJSONLD(vocab: Vocab): string {
         for (const prop of vocab.properties) {
             if (!prop.external) {
                 const pr_object: JSON = {};
-                pr_object["@id"] = `${global.vocab_prefix}:${prop.id}`;
+                pr_object["@id"] = `${prop}`;
                 if (prop.type.length === 1) {
-                    pr_object["@type"] = prop.type[0];
+                    pr_object["@type"] = `${prop.type[0]}`;
                 } else {
-                    pr_object["@type"] = prop.type;
+                    pr_object["@type"] = prop.type.map(termToStringCallback);
                 }
                 if (prop.status === Status.deprecated) {
                     pr_object["owl:deprecated"] = true;
                 }
                 if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
-                    pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf;
+                    pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf.map(termToStringCallback);
                 }
                 if (prop.domain) {
                     pr_object["rdfs:domain"] = multiDomain(prop.domain);
@@ -187,17 +189,17 @@ export function toJSONLD(vocab: Vocab): string {
         for (const cl of vocab.classes) {
             if (!cl.external) {
                 const cl_object: JSON = {};
-                cl_object["@id"] = `${global.vocab_prefix}:${cl.id}`;
+                cl_object["@id"] = `${cl}`;
                 if (cl.type.length === 1) {
-                    cl_object["@type"] = cl.type[0]
+                    cl_object["@type"] = `${cl.type[0]}`;
                 } else {
-                    cl_object["@type"] = cl.type;
+                    cl_object["@type"] = cl.type.map(termToStringCallback);
                 }
                 if (cl.status === Status.deprecated) {
                     cl_object["owl:deprecated"] = true
                 }
                 if (cl.subClassOf && cl.subClassOf.length > 0) {
-                    cl_object["rdfs:subClassOf"] = cl.subClassOf;
+                    cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
                 }
                 commonFields(cl_object, cl);
                 contexts(cl_object, cl);
@@ -213,11 +215,11 @@ export function toJSONLD(vocab: Vocab): string {
         for (const ind of vocab.individuals) {
             if (!ind.external) {
                 const ind_object: JSON = {};
-                ind_object["@id"] = `${global.vocab_prefix}:${ind.id}`;
+                ind_object["@id"] = `${ind}`;
                 if (ind.type.length === 1) {
-                    ind_object["@type"] = ind.type[0]
+                    ind_object["@type"] = `${ind.type[0]}`;
                 } else {
-                    ind_object["@type"] = ind.type;
+                    ind_object["@type"] = ind.type.map(termToStringCallback);
                 }
                 if (ind.status === Status.deprecated) {
                     ind_object["owl:deprecated"] = true
@@ -236,10 +238,10 @@ export function toJSONLD(vocab: Vocab): string {
         for (const dt of vocab.datatypes) {
             if (!dt.external) {
                 const dt_object: JSON = {};
-                dt_object["@id"] = `${global.vocab_prefix}:${dt.id}`;
-                dt_object["@type"] = `rdfs:Datatype`;
+                dt_object["@id"] = `${dt}`;
+                dt_object["@type"] = "rdfs:Datatype";
                 if (dt.subClassOf && dt.subClassOf.length > 0) {
-                    dt_object["rdfs:subClassOf"] = dt.subClassOf;
+                    dt_object["rdfs:subClassOf"] = dt.subClassOf.map(termToStringCallback);
                 }
                 commonFields(dt_object, dt);
                 contexts(dt_object, dt);

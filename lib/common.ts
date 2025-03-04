@@ -251,6 +251,9 @@ export interface RDFTerm {
     external   ?: boolean;
     example    ?: Example[];
     context     : string[];
+
+    /** This is to simplify the text conversion of the terms to strings; it usually refers to the curie */
+    toString    : () => string;
 }
 
 /**

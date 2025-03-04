@@ -14,11 +14,13 @@ import { Vocab, global, RDFTerm, Link, Status } from './common';
  * @returns - the full Turtle representation of the vocabulary
  */
 export function toTurtle(vocab: Vocab): string {
+    const termToStringCallback = (t: RDFTerm): string => `${t}`;
+
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct if there are several domains; factored it here to make the 
     // code more readable.
     const multiDomain = (term: RDFTerm[]): string => {
-        const value: string[] = term.map((t: RDFTerm): string => t.curie)
+        const value: string[] = term.map(termToStringCallback)
         if (value.length === 1) {
             return value[0];
         } else {
@@ -28,7 +30,7 @@ export function toTurtle(vocab: Vocab): string {
 
     // This is just for symmetry v.a.v. the domain...
     const multiRange = (term: RDFTerm[]): string => {
-        const value: string[] = term.map((t: RDFTerm): string => t.curie);
+        const value: string[] = term.map(termToStringCallback);
         if (value.length === 1) {
             return value[0];
         } else {
@@ -93,11 +95,16 @@ export function toTurtle(vocab: Vocab): string {
         for (const prop of vocab.properties) {
             // External definitions should be ignored
             if (!prop.external) {
-                turtle += `${global.vocab_prefix}:${prop.id} a ${prop.type.join(", ")} ;\n`;
+                turtle += `${prop} a ${prop.type.join(", ")} ;\n`;
                 if (prop.status === Status.deprecated) {
                     turtle += `    owl:deprecated true ;\n`;
                 }
                 if (prop.subPropertyOf) {
+                    // some magic is happening here...
+                    // the results of the `${prop.subPropertyOf.join(", ")}` is an array
+                    // of object, but by virtue of the string interpretation, each object
+                    // is converted to a string automatically (by calling the toString() method)
+                    // and the result is a comma-separated list of the stringified objects.
                     turtle += `    rdfs:subPropertyOf ${prop.subPropertyOf.join(", ")} ;\n`;
                 }
                 if (prop.domain) {
@@ -115,11 +122,12 @@ export function toTurtle(vocab: Vocab): string {
         turtle += "# Class definitions\n"
         for (const cl of vocab.classes) {
             if (!cl.external) {
-                turtle += `${global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
+                turtle += `${cl} a ${cl.type.join(", ")} ;\n`;
                 if (cl.status === Status.deprecated) {
                     turtle += `    owl:deprecated true ;\n`;
                 }
                 if (cl.subClassOf && cl.subClassOf.length > 0) {
+                    // See the comment on magic in the property section...
                     turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
                 }
                 commonFields(cl);
@@ -132,7 +140,8 @@ export function toTurtle(vocab: Vocab): string {
         turtle += "# Definitions of individuals\n"
         for (const ind of vocab.individuals) {
             if (!ind.external) {
-                turtle += `${global.vocab_prefix}:${ind.id} a ${ind.type.join(", ")} ;\n`;
+                // See the comment on magic in the property section...
+                turtle += `${ind} a ${ind.type.join(", ")} ;\n`;
                 if (ind.status === Status.deprecated) {
                     turtle += `    owl:deprecated true ;\n`;
                 }
@@ -145,11 +154,12 @@ export function toTurtle(vocab: Vocab): string {
         turtle += "# Definitions of datatypes\n"
         for (const dt of vocab.datatypes) {
             if (!dt.external) {
-                turtle += `${global.vocab_prefix}:${dt.id} a rdfs:Datatype ;\n`
+                turtle += `${dt} a rdfs:Datatype ;\n`
                 if (dt.status === Status.deprecated) {
                     turtle += `    owl:deprecated true ;\n`;
                 }
                 if (dt.subClassOf && dt.subClassOf.length > 0) {
+                    // See the comment on magic in the property section...
                     turtle += `    rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
                 }
                 commonFields(dt);
@@ -164,7 +174,7 @@ export function toTurtle(vocab: Vocab): string {
             turtle += `<${ctx}> a jsonld:Context ;\n`;
             turtle += `    schema:mentions\n`
             turtle += (global.context_mentions[ctx].map(
-                (term: RDFTerm): string => `        ${term.curie}`
+                (term: RDFTerm): string => `        ${term}`
             ).join(",\n")) + " ;\n\n"
         }
     }

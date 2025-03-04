@@ -424,9 +424,14 @@ export function getData(vocab_source: string): Vocab {
 
     // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
     // This function raises an error if this is not the case
-    const check_external = (raw: RawVocabEntry, output: RDFTerm): void => {
+    const set_and_check_external = (raw: RawVocabEntry, output: RDFTerm): void => {
+        if (output.prefix !== global.vocab_prefix) {
+            // We have a term that is not part of the vocabulary but, nevertheless
+            // defined in the YAML file. This is an external term.
+            output.external = true;
+        }
         // Extra check for the possible error
-        if (!output.external) {
+        else {
             if ((raw.comment === undefined || raw.comment === "") &&
                 (raw.defined_by === undefined || raw.defined_by.length === 0)) 
             {
@@ -520,7 +525,7 @@ export function getData(vocab_source: string): Vocab {
             const output: RDFDatatype = factory.datatype(raw.id);
 
             // Extra check for possible error for external terms
-            check_external(raw, output);
+            set_and_check_external(raw, output);
 
             // In the former version of the package the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
@@ -559,7 +564,7 @@ export function getData(vocab_source: string): Vocab {
             const output: RDFClass = factory.class(raw.id);
 
             // Extra check for possible error for external terms
-            check_external(raw, output);
+            set_and_check_external(raw, output);
 
             const user_type: string[] = (raw.type === undefined) ? [] : raw.type;
             const types: string[] = [
@@ -603,7 +608,7 @@ export function getData(vocab_source: string): Vocab {
             const output: RDFProperty = factory.property(raw.id);
 
             // Extra check for possible error for external terms
-            check_external(raw, output);
+            set_and_check_external(raw, output);
 
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
@@ -646,7 +651,7 @@ export function getData(vocab_source: string): Vocab {
             const output = factory.individual(raw.id);
 
             // Extra check for possible error for external terms
-            check_external(raw, output);
+            set_and_check_external(raw, output);
 
             // In the former version the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility

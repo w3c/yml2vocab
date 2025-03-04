@@ -53,8 +53,27 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     const termHTMLReference = (term: RDFTerm): string => {
         if (term.term_type === TermType.fullUrl) {
             return `<a href="${term.curie}"><code>${term.curie}</code></a>`;
+        } else if (term.term_type === TermType.unknown) {
+            // Typical case: an xsd datatype; a full curie is displayed, but
+            // no link (would be unnecessary)
+            return `<code>${term.curie}</code>`;
+        } else if (term.prefix === vocab_prefix) {
+            // This is a term from the same vocabulary, it is locally defined
+            // and the id should only be displayed.
+            return `<a href="#${term.html_id}"><code>${term.id}</code></a>`; 
+        } else if (term.external) {
+            // console.log(JSON.stringify(term, null, 4));
+            // This is a term from another vocabulary, but the definition is included
+            // as an 'external' term. Typical case is a schema.org term
+            // It displays similarly as a locally defined term, but it is kept
+            // separately in the code, if we decide to change things
+            return `<a href="#${term.html_id}"><code>${term.id}</code></a>`; 
         } else {
-            return `<a href="${term.html_id}"><code>${term.id}</code></a>`; 
+            // This is a term from another vocabulary, and the definition is not included
+            // so it should be clearly referred to as external and link to its
+            // "real" identity. Typical case is cred:CredentialStatus used from 
+            // another vocabulary.
+            return `<a href="${term.url}"><code>${term.curie}</code></a>`;
         }
     }
 
@@ -461,7 +480,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                             const dd = document.addChild(dl, 'dd');
                             dd.setAttribute('property', 'rdfs:range');
                             if (item.range.length === 1) {
-                                dd.setAttribute('resource',item.range[0].curie)
+                                dd.setAttribute('resource', item.range[0].curie)
                                 dd.innerHTML = termHTMLReference(item.range[0]);
                             } else {
                                 document.addText('Intersection of:', dd)
