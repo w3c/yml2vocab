@@ -379,13 +379,15 @@ export function getData(vocab_source: string): Vocab {
     //
     // The function also sets the possible values of a (pure) datatype or object property as extra types
     // to be added to the enclosing property
-    const get_ranges = (factory: RDFTermFactory, raw: RawVocabEntry, id: string): { extra_types: string[], range: RDFTerm[] } => {
+    const get_ranges = (factory: RDFTermFactory, raw: RawVocabEntry, id: string): { extra_types: string[], range: RDFTerm[], strongURL: boolean } => {
         let extra_types: string[] = [];
-        const range: RDFTerm[] = [];
+        const range: RDFTerm[]    = [];
+        let strongURL: boolean    = false;
 
         if (raw.range && raw.range.length > 0) {
             if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
                 extra_types.push("owl:ObjectProperty");
+                strongURL = true;
             } else {
                 for (const rg of raw.range) {
                     if (rg.startsWith("xsd") === true || EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
@@ -419,7 +421,7 @@ export function getData(vocab_source: string): Vocab {
         if (extra_types.length > 1) {
             extra_types = [];
         };
-        return { extra_types, range }
+        return { extra_types, range, strongURL }
     }
 
     // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
@@ -594,6 +596,7 @@ export function getData(vocab_source: string): Vocab {
                 included_in_domain_of : [],      // these are set later, when all classes and properties are defined
                 includes_range_of     : [],      // these are set later, when all classes and properties are defined
             });
+
             return output;
         }) : [];
 
@@ -616,7 +619,7 @@ export function getData(vocab_source: string): Vocab {
             global.status_counter.add(raw.status ? raw.status : Status.stable);
 
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
-            const { extra_types, range } = get_ranges(factory, raw, output.id);
+            const { extra_types, range, strongURL } = get_ranges(factory, raw, output.id);
 
             const user_type: string[] = (raw.type === undefined) ? [] : raw.type      
             const types: string[] = [
@@ -639,6 +642,7 @@ export function getData(vocab_source: string): Vocab {
                 domain        : raw.domain?.map(val => factory.class(val)),
                 example       : raw.example,
                 dataset       : raw.dataset,
+                strongURL     : strongURL,
                 context       : final_contexts(raw, output),
             });
             return output;
@@ -700,6 +704,7 @@ export function getData(vocab_source: string): Vocab {
             }
         }
     }
+
 
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary

@@ -4,10 +4,10 @@
  * 
  * @packageDocumentation
  */
-import { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, RDFPrefix, TermType } from './common';
-import { Vocab, RDFTerm, global, Status }                                         from './common';
-import { MiniDOM }                                                                from './minidom';
-import { RDFTermFactory, factory }                                                from './factory';
+import { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, TermType } from './common';
+import { Vocab, RDFTerm, global, Status }                              from './common';
+import { MiniDOM }                                                     from './minidom';
+import { RDFTermFactory }                                              from './factory';
 
 // This object is need for a proper formatting of some text
 const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
@@ -53,20 +53,24 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     const termHTMLReference = (term: RDFTerm): string => {
         if (term.term_type === TermType.fullUrl) {
             return `<a href="${term.curie}"><code>${term.curie}</code></a>`;
-        } else if (term.term_type === TermType.unknown) {
+        } else if (term.term_type === TermType.core) {
             // Typical case: an xsd datatype; a full curie is displayed, but
             // no link (would be unnecessary)
             return `<code>${term.curie}</code>`;
+        } else if (term.term_type === TermType.unknown) {
+            // Typical case: an xsd datatype; a full curie is displayed, but
+            // no link (would be unnecessary)
+            return `<a href="${term.url}"><code>${term.curie}</code></a>`;
         } else if (term.prefix === vocab_prefix) {
             // This is a term from the same vocabulary, it is locally defined
             // and the id should only be displayed.
             return `<a href="#${term.html_id}"><code>${term.id}</code></a>`; 
         } else if (term.external) {
-            // console.log(JSON.stringify(term, null, 4));
             // This is a term from another vocabulary, but the definition is included
-            // as an 'external' term. Typical case is a schema.org term
+            // as an 'external' term. Typical case is a schema.org term listed in the vocabulary definition
             // It displays similarly as a locally defined term, but it is kept
-            // separately in the code, if we decide to change things
+            // separately in the code, if we decide to change things.
+            // Note that the value of html_id is different; in this case, it is a hash value
             return `<a href="#${term.html_id}"><code>${term.id}</code></a>`; 
         } else {
             // This is a term from another vocabulary, and the definition is not included
@@ -77,15 +81,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
         }
     }
 
-
-    // Factor out all common fields for the terms
-    // return the value that must be used as the id value of the containing section in HTML
+    // Handle the common fields for the terms
     const commonFields = (section: Element, item: RDFTerm): void => {
-
         // External terms have a different behavior: ranges/domains should be ignored, and no RDFa should be
         // generated.
         if (item.external) {
-
             document.addChild(section,'h4', `<code>${item.id}</code>`);
             const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
 
@@ -144,8 +144,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
         if (item.comment !== "") {
             let description = item.comment;
-            if (RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
-                description += "<br><br>The property's value should be a URL, i.e., not a literal."
+            if (RDFTermFactory.isProperty(item)) {
+                if ((item as RDFProperty).strongURL) {
+                    description += "<br><br>The property's value should be a URL, i.e., not a literal."
+                }
             }
             const div = document.addChild(section, 'div', description);
             if (!item.external) {
@@ -153,7 +155,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 div.setAttribute('datatype', 'rdf:HTML')
             }
         } else if (RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
-            document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
+            if (RDFTermFactory.isProperty(item)) {
+                if ((item as RDFProperty).strongURL) {
+                    document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
+                }
+            }
         }
 
         // Add the external warning, if applicable
@@ -269,8 +275,8 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             const title = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:title')[0].value;
             document.addText(title, document.getElementsByTagName('title')[0]);
             document.addText(title, document.getElementById('title'));    
-         } catch(_e) {
-            console.log("Vocabulary warning: ontology title is not provided.")
+         } catch(e) {
+            console.log(`Vocabulary warning: ontology title is not provided. (${e})`);
          }
 
         const date = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:date')[0].value;
@@ -284,22 +290,26 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 descriptionElement.setAttribute('datatype', 'rdf:HTML');
                 descriptionElement.setAttribute('property', 'dc:description');
             } else {
-                console.log("Vocabulary warning: ontology description is not provided.")
+                console.log("Vocabulary warning: ontology description is not provided.");
             }
-        } catch(_e) {
-            console.log("Vocabulary warning: ontology description is not provided.")
+        } catch(e) {
+            console.log(`Vocabulary warning: ontology description is not provided. (${e})`);
         }
 
         try {
-            const see_also = vocab.ontology_properties.filter((property): boolean => property.property === 'rdfs:seeAlso')[0].value;
-            const target = document.getElementById('see_also');
-            if (target) {
-                const a = document.addChild(target, 'a', see_also)
-                a.setAttribute('href', see_also);
-                a.setAttribute('property', 'rdfs:seeAlso')
+            const see_also = vocab.ontology_properties.filter((property): boolean => property.property === 'rdfs:seeAlso');
+            if (see_also && see_also.length > 0) {
+                const target = document.getElementById('see_also');
+                if (target) {
+                    const a = document.addChild(target, 'a', see_also[0].value)
+                    a.setAttribute('href', see_also[0].value);
+                    a.setAttribute('property', 'rdfs:seeAlso')
+                }
+            } else {
+                console.log(`Vocabulary warning: no reference to the ontology specification provided.`)
             }
-        } catch(_e) {
-            console.log("Vocabulary warning: no reference to the ontology specification provided.")
+        } catch(e) {
+            console.warn(`Vocabulary warning: no reference to the ontology specification provided. (${e})`)
         }
     }
 
@@ -340,7 +350,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                     document.addChild(details, 'summary', 'term list');
                     const ul = document.addChild(details, 'ul');
                     for (const term of global.context_mentions[ctx]) {
-                        document.addChild(ul, 'li', `<a href="#${term.html_id}"><code>${term.id}<code></li>`);
+                        document.addChild(ul, 'li', `<a href="#${term.html_id}"><code>${term}<code></li>`);
                     }
                 }
             } else {

@@ -74,10 +74,10 @@ export class RDFTermFactory {
                 id:         reference,
                 prefix:     prefix,
                 html_id:    outsider ? computeHash(curie) : reference,
-                curie:      curie,
+                curie:      `${prefix}:${reference}`,
                 url:        `${baseUrl}${reference}`,
                 type:       [],
-                term_type:  TermType.unknown,
+                term_type:  bona_fide_prefixes.includes(prefix) ? TermType.core : TermType.unknown,
                 label:      "",
                 external:   false,
                 context:    [],
@@ -85,7 +85,7 @@ export class RDFTermFactory {
                     return `${this.prefix}:${this.id}`;
                 }
             };
-            this.terms.set(curie, output);
+            this.terms.set(output.curie, output);
             return output;
         }
     }
@@ -106,7 +106,7 @@ export class RDFTermFactory {
             const output = this.terms.get(curie);
             if (output?.term_type === TermType.class) {
                 return output as RDFClass;
-            } else if (output?.term_type === TermType.unknown) {
+            } else if (output?.term_type === TermType.unknown || output?.term_type === TermType.core) {
                 Object.assign(output, extras);
                 // A hack. A datatype may appear as a class (which is semantically true)
                 // but should not be treated as a class
@@ -133,13 +133,14 @@ export class RDFTermFactory {
             domain        : [] as RDFClass[],
             range         : [] as RDFTerm[],
             dataset       : false,
+            strongURL     : false,
             term_type     : TermType.property,
         }
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
             if (output?.term_type === TermType.property) {
                 return output as RDFProperty;
-            } else if (output?.term_type === TermType.unknown) {
+            } else if (output?.term_type === TermType.unknown || output?.term_type === TermType.core) {
                 Object.assign(output, extras);
                 return output as RDFProperty;
             } else {
@@ -162,7 +163,7 @@ export class RDFTermFactory {
             const output = this.terms.get(curie);
             if (output?.term_type === TermType.individual) {
                 return output as RDFIndividual;
-            } else if (output?.term_type === TermType.unknown) {
+            } else if (output?.term_type === TermType.unknown || output?.term_type === TermType.core) {
                 Object.assign(output, extras);
                 return output as RDFIndividual;
             } else {
@@ -189,7 +190,7 @@ export class RDFTermFactory {
             const output = this.terms.get(curie);
             if (output?.term_type === TermType.datatype) {
                 return output as RDFDatatype;
-            } else if (output?.term_type === TermType.unknown) {
+            } else if (output?.term_type === TermType.unknown || output?.term_type === TermType.core) {
                 Object.assign(output, extras);
                 return output as RDFDatatype;
             } else {

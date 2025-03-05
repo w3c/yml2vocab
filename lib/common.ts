@@ -216,7 +216,12 @@ export enum TermType {
     property    = "property",
     individual  = "individual",
     datatype    = "datatype",
+    // This is a term standing for "core" terms, i.e., terms in RDF, xsd, rdfs, etc.
+    core        = "core",
+    // This is a term not defined in the vocabulary, but used in the context of the vocabulary;
+    // Its URL should be displayed whenever appropriate
     unknown     = "unknown",
+    // This is not a real term, but just a URL that has been used as a term
     fullUrl     = "fullUrl",
 }
 
@@ -278,6 +283,7 @@ export interface RDFProperty extends RDFTerm {
     domain        : RDFClass[];
     range         : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
     dataset       : boolean;
+    strongURL     : boolean;    // Whether the property object should be required to be a real URL
 }
 
 /**

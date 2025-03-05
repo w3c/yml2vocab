@@ -43,7 +43,7 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
    
     Note that both the `domain` and the `range` keys can take an array of class references as values. For the former this means the resulting domain is the _union_ of the referred classes, whereas for the latter it is the _intersection_.
   
-    The `range` key may also use the (single) `IRI` (or `URL`) term instead of class references. This keyword denotes a property that has no explicit range, but whose objects are expected to be IRI references. The generated vocabulary annotates these properties as belonging to the `owl:ObjectProperty` class, which is the term reserved for properties whose objects are not supposed to be literals.
+    The `range` key may also use the (single) `IRI` (or `URL`) term instead of class references. This keyword denotes a property that has no explicit range, but whose objects are expected to be IRI references. The generated vocabulary annotates these properties as belonging to the `owl:ObjectProperty` class, which is the term reserved for properties whose objects are not supposed to be literals. A comment is also generated into the HTML description of the term.
 
     The `dataset` key can also be set to a boolean value. This key only influences the generated JSON-LD `@context`: if the value is `true`, the JSON-LD `@container` is set to the `@graph` value for the property, signalling that the value refers to a _dataset_ (or _graph_). See the [JSON-LD Specification](https://www.w3.org/TR/json-ld/#graph-containers) for further details.
   
