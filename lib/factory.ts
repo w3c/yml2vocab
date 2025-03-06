@@ -14,10 +14,12 @@ function computeHash(input: string, sh_func: string = "sha256"): string {
     return createHash(sh_func).update(input).digest('hex');
 }
 
+// Create a curie, if needed, from a core term
 function createCurie(str: string): string {
     return str.includes(":") ? str : `${global.vocab_prefix}:${str}`;
- }
+}
 
+// Split a curie into prefix and reference (the reference may cotain colons)
 function splitCurie(str: string): [string, string] {
     const firstColonIndex = str.indexOf(":");
     if (firstColonIndex !== -1) {
@@ -89,19 +91,7 @@ export class RDFTermFactory {
                         return [prefix, reference, baseUrl, true, TermType.unknown];
                     }
                 }
-
-                // if (curie.includes(":")) {
-                //     const [prefix, reference] = curie.split(":");
-                //     const baseUrl = this.prefixes.find((p) => p.prefix === prefix)?.url;
-                //     if (!baseUrl) {
-                //         throw new Error(`Prefix ${prefix} not found`);
-                //     }
-                //     const external = !([global.vocab_prefix, ...bona_fide_prefixes].includes(prefix));
-                //     return [prefix, reference, baseUrl, external];
-                // } else {
-                //     return [global.vocab_prefix, curie, global.vocab_url, false];
-                // }
-            })();
+             })();
 
             const output: RDFTerm = { 
                 id:         reference,
@@ -355,101 +345,3 @@ export class RDFTermFactory {
 
 export const factory = new RDFTermFactory();
 
-/******************************************************************* Testing **************************/
-
-/**
- * 
- * Pseudo code for setting the range
- * 
- * See a curie defined by the user:
- * - if it has already been defined, retrieve it
- *   - if it is a class or a datatype, set the range; can be used to set the datatype or object property feature
- *   - if it is unknown, keep it as unknown, but if the prefix is xsd, or rdf:json and co, set it as a datatype property
- *   - otherwise, throw an error
- * - else, create a new, unknown term for the range
- * 
- * 
- * Define first classes and datatypes, this makes the stuff above work properly. The additional references for classes, ie,
- * the setting of domain_of etc, should be done in a separate step, after all classes and datatypes have been defined.
- *
- * If this is done at the end of all processing, the classes of datatypes, but even unknowns, are already defined
- */
-// //**** Testing */
-// function test() {
-//     const testPrefixes: RDFPrefix[] = [
-//         {
-//             prefix: "a",
-//             url: "http://example.org/", 
-//         },
-//         {
-//             prefix: "dc",
-//             url: "http://purl.org/dc/terms/",
-//         },
-//         {
-//             prefix: "dcterms",
-//             url: "http://purl.org/dc/terms/",
-//         },
-//         {
-//             prefix: "owl",
-//             url: "http://www.w3.org/2002/07/owl#",
-//         },
-//         {
-//             prefix: "rdf",
-//             url: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-//         },
-//         {
-//             prefix: "rdfs",
-//             url: "http://www.w3.org/2000/01/rdf-schema#"
-//         },
-//         {
-//             prefix: "xsd",
-//             url: "http://www.w3.org/2001/XMLSchema#"
-//         },
-//         {
-//             prefix: "vs",
-//             url: "http://www.w3.org/2003/06/sw-vocab-status/ns#"
-//         },
-//         {
-//             prefix: "schema",
-//             url: "http://schema.org/"
-//         },
-//         {
-//             prefix: "jsonld",
-//             url: "http://www.w3.org/ns/json-ld#"
-//         }
-//     ];
-
-//     Object.assign(global, { 
-//     vocab_prefix: "a",
-//     vocab_url: "http://example.org/",
-//     });
-
-//     factory.initialize(testPrefixes);
-
-//     let C: RDFClass = factory.class("a:c");
-//     const P: RDFProperty = factory.property("a:p");
-
-//     const domain = {
-//         domain: [C],
-//     }
-
-//     Object.assign(P, domain);
-
-//     const extra = {
-//         subClassOf: [factory.class("rdf:cc")],
-//         range_of: [factory.property("schema:pp")],
-//     };
-
-//     Object.assign(C, extra);
-
-//     console.log(P);
-
-//     if (P.domain && P.domain.length !== 0) {
-//         const Q: RDFClass = P.domain[0];
-//         Q.subClassOf.push(factory.class("xsd:i"));
-//     }   
-
-//     console.log(C)
-// }
-
-// test();

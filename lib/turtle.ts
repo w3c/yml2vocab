@@ -171,11 +171,16 @@ export function toTurtle(vocab: Vocab): string {
     if (ctx_s.length > 0) {
         turtle += "# Context files and their mentions\n"
         for (const ctx of ctx_s) {
+            const terms = global.context_mentions[ctx];
+            if (terms.length === 0) {
+                continue;
+            }
+            // The default sort is the alphabetical sort of the string representation, which is, in this case
+            // the curie of the term.
+            terms.sort();
             turtle += `<${ctx}> a jsonld:Context ;\n`;
             turtle += `    schema:mentions\n`
-            turtle += (global.context_mentions[ctx].map(
-                (term: RDFTerm): string => `        ${term}`
-            ).join(",\n")) + " ;\n\n"
+            turtle += (terms.map((term: RDFTerm): string => `        ${term}`).join(",\n")) + " ;\n\n"
         }
     }
 

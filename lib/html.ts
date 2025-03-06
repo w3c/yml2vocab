@@ -253,7 +253,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             const dd = document.addChild(dl, 'dd');
             dd.innerHTML = item.context.map((ctx: string): string => {
                 return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;
-            }).join(", ");
+            }).join(",<br> ");
         }
     }
 
@@ -276,7 +276,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             document.addText(title, document.getElementsByTagName('title')[0]);
             document.addText(title, document.getElementById('title'));    
          } catch(e) {
-            console.log(`Vocabulary warning: ontology title is not provided. (${e})`);
+            console.warn(`Vocabulary warning: ontology title is not provided. (${e})`);
          }
 
         const date = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:date')[0].value;
@@ -290,10 +290,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 descriptionElement.setAttribute('datatype', 'rdf:HTML');
                 descriptionElement.setAttribute('property', 'dc:description');
             } else {
-                console.log("Vocabulary warning: ontology description is not provided.");
+                console.warn("Vocabulary warning: ontology description is not provided.");
             }
         } catch(e) {
-            console.log(`Vocabulary warning: ontology description is not provided. (${e})`);
+            console.warn(`Vocabulary warning: ontology description is not provided. (${e})`);
         }
 
         try {
@@ -306,7 +306,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                     a.setAttribute('property', 'rdfs:seeAlso')
                 }
             } else {
-                console.log(`Vocabulary warning: no reference to the ontology specification provided.`)
+                console.warn(`Vocabulary warning: no reference to the ontology specification provided.`)
             }
         } catch(e) {
             console.warn(`Vocabulary warning: no reference to the ontology specification provided. (${e})`)
@@ -349,7 +349,13 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                     const details = document.addChild(li, 'details');
                     document.addChild(details, 'summary', 'term list');
                     const ul = document.addChild(details, 'ul');
-                    for (const term of global.context_mentions[ctx]) {
+
+                    const terms: RDFTerm[] = global.context_mentions[ctx];
+                    // The default sort is by the string version of the entries which is, in this case
+                    // the curie identifier of the term.
+                    terms.sort();
+
+                    for (const term of terms) {
                         document.addChild(ul, 'li', `<a href="#${term.html_id}"><code>${term}<code></li>`);
                     }
                 }
