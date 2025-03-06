@@ -14,6 +14,22 @@ function computeHash(input: string, sh_func: string = "sha256"): string {
     return createHash(sh_func).update(input).digest('hex');
 }
 
+function createCurie(str: string): string {
+    return str.includes(":") ? str : `${global.vocab_prefix}:${str}`;
+ }
+
+function splitCurie(str: string): [string, string] {
+    const firstColonIndex = str.indexOf(":");
+    if (firstColonIndex !== -1) {
+        const firstPart = str.substring(0, firstColonIndex);
+        const secondPart = str.substring(firstColonIndex + 1);
+        return [firstPart, secondPart];;
+    } else {
+        throw new Error(`Invalid curie (${str})`);
+    }
+}
+
+
 export class RDFTermFactory {
     private terms = new Map<string, RDFTerm>();
     private prefixes: RDFPrefix[] = [];
@@ -30,10 +46,12 @@ export class RDFTermFactory {
     /**
      * Create or retrieve an (unknown) term.
      */
-    term(curie: string): RDFTerm {
+    term(index: string): RDFTerm {
         if (this.prefixes.length === 0) {
             throw new Error("Prefixes not initialized");
         }
+
+        const curie = createCurie(index)
 
         if (this.terms.has(curie)) {
             return this.terms.get(curie)!;
@@ -56,33 +74,51 @@ export class RDFTermFactory {
             this.terms.set(curie, output);
             return output;
         } else {
-            const [prefix, reference, baseUrl, outsider] = ((): [string, string, string, boolean] => {
-                if (curie.includes(":")) {
-                    const [prefix, reference] = curie.split(":");
+            const [prefix, reference, baseUrl, outsider, term_type] = ((): [string, string, string, boolean, TermType] => {
+                const [prefix, reference] = splitCurie(curie);
+                if (prefix === global.vocab_prefix) {
+                    return [prefix, reference, global.vocab_url, false, TermType.unknown];
+                } else {
                     const baseUrl = this.prefixes.find((p) => p.prefix === prefix)?.url;
                     if (!baseUrl) {
-                        throw new Error(`Prefix ${prefix} not found`);
+                        throw new Error(`URL for prefix "${prefix}" not found`);
                     }
-                    const external = !([global.vocab_prefix, ...bona_fide_prefixes].includes(prefix));
-                    return [prefix, reference, baseUrl, external];
-                } else {
-                    return [global.vocab_prefix, curie, global.vocab_url, false];
+                    if (bona_fide_prefixes.includes(prefix)) {
+                        return [prefix, reference, baseUrl, false, TermType.core];
+                    } else {
+                        return [prefix, reference, baseUrl, true, TermType.unknown];
+                    }
                 }
+
+                // if (curie.includes(":")) {
+                //     const [prefix, reference] = curie.split(":");
+                //     const baseUrl = this.prefixes.find((p) => p.prefix === prefix)?.url;
+                //     if (!baseUrl) {
+                //         throw new Error(`Prefix ${prefix} not found`);
+                //     }
+                //     const external = !([global.vocab_prefix, ...bona_fide_prefixes].includes(prefix));
+                //     return [prefix, reference, baseUrl, external];
+                // } else {
+                //     return [global.vocab_prefix, curie, global.vocab_url, false];
+                // }
             })();
 
             const output: RDFTerm = { 
                 id:         reference,
                 prefix:     prefix,
                 html_id:    outsider ? computeHash(curie) : reference,
-                curie:      `${prefix}:${reference}`,
+                curie:      curie,
+                // curie:   `${prefix}:${reference}`,
                 url:        `${baseUrl}${reference}`,
                 type:       [],
-                term_type:  bona_fide_prefixes.includes(prefix) ? TermType.core : TermType.unknown,
+                term_type:  term_type,
+                // term_type: bona_fide_prefixes.includes(prefix) ? TermType.core : TermType.unknown,
                 label:      "",
-                external:   false,
+                // This is set to its final value at conversion time. It depends on whether a term is part of the definition in the yml file
+                external:   false,   
                 context:    [],
                 toString(): string {
-                    return `${this.prefix}:${this.id}`;
+                    return this.curie;
                 }
             };
             this.terms.set(output.curie, output);
@@ -93,7 +129,8 @@ export class RDFTermFactory {
     /**
      * Create or retrieve a class.
      */
-    class(curie: string): RDFClass {
+    class(index: string): RDFClass {
+        const curie = createCurie(index);
         const extras = {
             subClassOf            : [] as RDFClass[],
             range_of              : [] as RDFProperty[],
@@ -115,7 +152,7 @@ export class RDFTermFactory {
                 }
                 return output as RDFClass;
             } else {
-                throw new Error(`Term ${curie} exists, and it is not a class`);
+                throw new Error(`When creating a class: term ${curie} exists, and it is not a class`);
             }
         } else {
             const output: RDFTerm = this.term(curie);
@@ -127,7 +164,8 @@ export class RDFTermFactory {
     /**
      * Create or retrieve a property.
      */
-    property(curie: string): RDFProperty {
+    property(index: string): RDFProperty {
+        const curie = createCurie(index);
         const extras = {
             subPropertyOf : [] as RDFProperty[],
             domain        : [] as RDFClass[],
@@ -144,7 +182,7 @@ export class RDFTermFactory {
                 Object.assign(output, extras);
                 return output as RDFProperty;
             } else {
-                throw new Error(`Term ${curie} exists, and it is not a property`);
+                throw new Error(`When creating a property: term ${curie} exists, and it is not a property`);
             }
         } else {
             const output: RDFTerm = this.term(curie);
@@ -156,7 +194,8 @@ export class RDFTermFactory {
     /**
      * Create or retrieve an individual.
      */
-    individual(curie: string): RDFIndividual {
+    individual(index: string): RDFIndividual {
+        const curie = createCurie(index);
         const extras = {
             term_type  : TermType.individual,}
         if (this.terms.has(curie)) {
@@ -167,7 +206,7 @@ export class RDFTermFactory {
                 Object.assign(output, extras);
                 return output as RDFIndividual;
             } else {
-                throw new Error(`Term ${curie} exists, and it is not an individual`);
+                throw new Error(`When creating an individual: term ${curie} exists, and it is not an individual`);
             }
         } else {
             const output: RDFTerm = this.term(curie); 
@@ -179,7 +218,8 @@ export class RDFTermFactory {
     /**
      * Create or retrieve a datatype.
      */ 
-    datatype(curie: string): RDFDatatype {
+    datatype(index: string): RDFDatatype {
+        const curie = createCurie(index);
         const extras = {
             subClassOf        : [] as RDFDatatype[],
             range_of          : [] as RDFProperty[],
@@ -194,7 +234,7 @@ export class RDFTermFactory {
                 Object.assign(output, extras);
                 return output as RDFDatatype;
             } else {
-                throw new Error(`Term ${curie} exists, and it is not a datatype`);
+                throw new Error(`When creating a datatype: term ${curie} exists, and it is not a datatype`);
             }
         } else {
             const output: RDFTerm = this.term(curie);
@@ -218,7 +258,7 @@ export class RDFTermFactory {
             });
             return term as RDFClass;
         } else {
-            throw new Error(`Term ${term.id} is not an unknown term`);
+            throw new Error(`Term ${term.curie} is not an unknown term`);
         }
     }
 
@@ -235,22 +275,22 @@ export class RDFTermFactory {
             });
             return term as RDFDatatype;
         } else {
-            throw new Error("Term ${term.id} is not an unknown term");
+            throw new Error(`Term ${term.curie} is not an unknown term`);
         }
     }
 
     /**
      * Check whether a term with a curie has been defined.
      */ 
-    has(curie: string): boolean {
-        return this.terms.has(curie);
+    has(index: string): boolean {
+        return this.terms.has(createCurie(index));
     }
 
     /**
      * Get a term by curie.
      */
-    get(curie: string): RDFTerm | undefined {
-        return this.terms.get(curie);
+    get(index: string): RDFTerm | undefined {
+        return this.terms.get(createCurie(index));
     }
 
     /**
@@ -292,11 +332,11 @@ export class RDFTermFactory {
      * Equality of terms
      */
     static equals(a: RDFTerm, b: RDFTerm): boolean {
-        return a.id === b.id && a.prefix === b.prefix;
+        return a.curie === b.curie;
     }
 
     /**
-     * Includes a curie in a list of terms. 
+     * Is a term included in a list of terms. 
      * 
      */
     static includesTerm(terms: RDFTerm[], term: RDFTerm): boolean { 
@@ -304,10 +344,11 @@ export class RDFTermFactory {
     }
 
     /**
-      * Includes a curie in a list of terms. 
+      * Is a curie in a list of terms. 
       * 
       */
-    static includesCurie(terms: RDFTerm[], curie: string): boolean {
+    static includesCurie(terms: RDFTerm[], index: string): boolean {
+        const curie = createCurie(index)
         return terms.some((t) => t.curie === curie);
     }
 }
