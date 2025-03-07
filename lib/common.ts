@@ -166,6 +166,7 @@ export interface RawVocabEntry {
     defined_by  ?: string[];
     comment     ?: string;
     see_also    ?: Link[];
+    known_as    ?: string;
     example     ?: Example[];
     dataset     ?: boolean;
     context     ?: string[];
@@ -285,6 +286,8 @@ export interface RDFTerm {
     see_also   ?: Link[];
     /** This field is, in fact, potentially deprecated, because the status has taken over. Kept for backward compatibility. */
     deprecated ?: boolean;
+    /** Alternative label to be used, e.g., in a context file. Rarely used. */
+    known_as   ?: string;
     status     ?: Status;
     /** Whether this term is really part of the vocabulary, or is defined externally. */
     external   ?: boolean;

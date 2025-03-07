@@ -122,14 +122,14 @@ export function toContext(vocab: Vocab): string {
             if (prop.domain) {
                 if (RDFTermFactory.includesTerm(prop.domain, cl)) {
                     // bingo, this property can be added here
-                    embedded[prop.id] = propertyContext(prop);
+                    embedded[prop.known_as ?? prop.id] = propertyContext(prop);
                     class_properties.add(prop.id);
                 }
             }
         }
 
         // If no properties are added, then the embedded context is unnecessary
-        top_level[cl.id] = (Object.keys(embedded).length === Object.keys(preamble).length) 
+        top_level[cl.known_as ?? cl.id] = (Object.keys(embedded).length === Object.keys(preamble).length) 
             ? url 
             : { "@id": url, "@context": embedded };
     }
@@ -138,18 +138,18 @@ export function toContext(vocab: Vocab): string {
     // previous step
     for (const prop of vocab.properties) {
         if (!class_properties.has(prop.id)) {
-            top_level[prop.id] = propertyContext(prop, false);
+            top_level[prop.known_as ?? prop.id] = propertyContext(prop, false);
         }
     }
 
     // Add the individuals
     for (const individual of vocab.individuals) {
-        top_level[individual.id] = `${global.vocab_url}${individual.id}`;
+        top_level[individual.known_as ?? individual.id] = `${global.vocab_url}${individual.id}`;
     }
 
     // Add the datatypes
     for (const datatype of vocab.datatypes) {
-        top_level[datatype.id] = `${global.vocab_url}${datatype.id}`;
+        top_level[datatype.known_as ?? datatype.id] = `${global.vocab_url}${datatype.id}`;
     }
 
 

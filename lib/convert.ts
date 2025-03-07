@@ -265,6 +265,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
+        known_as    : raw.known_as,
         dataset     : raw.dataset ?? false,
         context     : toArrayContexts(raw.context)
     }
@@ -555,6 +556,7 @@ export function getData(vocab_source: string): Vocab {
                 type              : [...new Set(type)].map(t => factory.term(t)),
                 subClassOf        : raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
                 see_also          : raw.see_also,
+                known_as          : raw.known_as,
                 example           : raw.example,
                 context           : final_contexts(raw, output),
                 range_of          : [],            // these are set later, when all classes and properties are defined
@@ -593,6 +595,7 @@ export function getData(vocab_source: string): Vocab {
                 status                : raw.status,
                 subClassOf            : raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
                 see_also              : raw.see_also,
+                known_as              : raw.known_as,
                 example               : raw.example,
                 context               : final_contexts(raw, output),
                 range_of              : [],      // these are set later, when all classes and properties are defined 
@@ -645,6 +648,7 @@ export function getData(vocab_source: string): Vocab {
                 range         : range,
                 domain        : raw.domain?.map(val => factory.class(val)),
                 example       : raw.example,
+                known_as      : raw.known_as,
                 dataset       : raw.dataset,
                 strongURL     : strongURL,
                 context       : final_contexts(raw, output),
@@ -677,6 +681,7 @@ export function getData(vocab_source: string): Vocab {
                 type       : [...new Set(type)].map(t => factory.term(t)),
                 see_also   : raw.see_also,
                 example    : raw.example,
+                known_as   : raw.known_as,
                 context    : final_contexts(raw, output),
             });
             return output;
