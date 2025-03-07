@@ -356,7 +356,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                     terms.sort();
 
                     for (const term of terms) {
-                        document.addChild(ul, 'li', `<a href="#${term.html_id}"><code>${term}<code></li>`);
+                        document.addChild(ul, 'li', `<a href="#${term.html_id}"><code>${term.id}<code></li>`);
                     }
                 }
             } else {

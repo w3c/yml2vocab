@@ -1,13 +1,20 @@
+/**
+ * A factory object for the creation of RDF Terms.
+ * 
+ * The main reason for using this factory is that fact that some terms may be used before they are formally defined.
+ * The factory will create a term with the minimal information needed, and then promote it to a class, property, etc., 
+ * when defined.
+ * 
+ * Also: some terms refer to internal terms, i.e., defined by the input yml file, and some refer to external terms,
+ * i.e., defined by external ontologies. The factory will put in the correct properties, used by the generator functions
+ * to HTML, Turtle, or JSON-LD.
+ * 
+ * @packageDocumentation
+ */
+
 import { RDFTerm, RDFProperty, RDFClass, RDFDatatype, RDFIndividual, TermType } from "./common";
-import { global, RDFPrefix, }                                                   from "./common";
+import { global, RDFPrefix, bona_fide_urls, bona_fide_prefixes }                from "./common";
 import { createHash }                                                           from 'node:crypto';
-
-
-const bona_fide_urls = [
-    "http:", "https:", "mailto:", "urn:", "doi:", 
-    "ftp:", "did:", "tel:", "geo:", "cid:", "mid:", "news:", "nfs:", "tag:"
-];
-const bona_fide_prefixes = ["rdf", "rdfs", "owl", "xsd", "dc", "dcterms", "jsonld"];
 
 // Calculate the SHA hash of a string. Used to encode the id of external terms
 function computeHash(input: string, sh_func: string = "sha256"): string {
@@ -31,6 +38,23 @@ function splitCurie(str: string): [string, string] {
     }
 }
 
+/**
+ * A factory object for the creation of RDF Terms.
+ * 
+ * The main reason for using this factory is that fact that some terms may be used before they are formally defined.
+ * The factory will create a term with the minimal information needed, and then promote it to a class, property, etc., 
+ * when defined.
+ * 
+ * Also: some terms refer to internal terms, i.e., defined by the input yml file, and some refer to external terms,
+ * i.e., defined by external ontologies. The factory will put in the correct properties, used by the generator functions
+ * to HTML, Turtle, or JSON-LD.
+ * 
+ * Terms are stored in an internal map, indexed by their _curie_. The curie is used even if the term is defined locally;
+ * the general prefix of the vocabulary (defined in the yml file) is used for that purpose.
+ * 
+ * Note that the factory includes some methods that are not (yet?) used in the package. They are included for possible future use.
+ * 
+ */
 
 export class RDFTermFactory {
     private terms = new Map<string, RDFTerm>();
@@ -46,7 +70,7 @@ export class RDFTermFactory {
     }
 
     /**
-     * Create or retrieve an (unknown) term.
+     * Create or retrieve an term. When created, the term is initially considered as an `unknown` term.
      */
     term(index: string): RDFTerm {
         if (this.prefixes.length === 0) {
@@ -235,6 +259,8 @@ export class RDFTermFactory {
 
     /**
      * Promote an unknown term to a class. This is necessary when a term is used, e.g., in a range or domain, before it is defined.
+     * 
+     * (Currently unused in the pacakage.)
      */
     promoteToClass(term: RDFTerm): RDFClass {
         if (term.term_type === TermType.unknown) {
@@ -254,6 +280,8 @@ export class RDFTermFactory {
 
     /**
      * Promote an unknown term to a datatype. This is necessary when a term is used, e.g., in a range or domain, before it is defined.
+     * 
+     * (Currently unused in the package.)
      */
     promoteToDatatype(term: RDFTerm): RDFDatatype {
         if (term.term_type === TermType.unknown) {
@@ -278,6 +306,8 @@ export class RDFTermFactory {
 
     /**
      * Get a term by curie.
+     * 
+     * (Currently unused in the package.)
      */
     get(index: string): RDFTerm | undefined {
         return this.terms.get(createCurie(index));
@@ -299,6 +329,8 @@ export class RDFTermFactory {
 
     /**
      * Typeguard for individuals.
+     * 
+     * (Currently unused in the package.)
      */
     static isIndividual(term: RDFTerm): term is RDFIndividual {
         return term.term_type === TermType.individual;
@@ -313,6 +345,8 @@ export class RDFTermFactory {
 
     /**
      * Typeguard for unknown terms.
+     * 
+     * (Currently unused in the package.)
      */
     static isUnknown(term: RDFTerm): term is RDFTerm {
         return term.term_type === TermType.unknown;
@@ -320,6 +354,7 @@ export class RDFTermFactory {
 
     /**
      * Equality of terms
+     * 
      */
     static equals(a: RDFTerm, b: RDFTerm): boolean {
         return a.curie === b.curie;
@@ -334,7 +369,7 @@ export class RDFTermFactory {
     }
 
     /**
-      * Is a curie in a list of terms. 
+      * Does a curie identify a term in a list of terms. 
       * 
       */
     static includesCurie(terms: RDFTerm[], index: string): boolean {
@@ -343,5 +378,8 @@ export class RDFTermFactory {
     }
 }
 
+/**
+ * The (only) factory object used in the package.
+ */
 export const factory = new RDFTermFactory();
 

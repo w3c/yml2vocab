@@ -1,0 +1,179 @@
+{
+    "@context": {
+        "dd": "https://www.w3.org/ns/did#",
+        "sec": "https://w3id.org/security#",
+        "act": "https://www.w3.org/ns/activitystreams#",
+        "dc": "http://purl.org/dc/terms/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "vs": "http://www.w3.org/2003/06/sw-vocab-status/ns#",
+        "schema": "http://schema.org/",
+        "jsonld": "http://www.w3.org/ns/json-ld#",
+        "dc:date": {
+            "@type": "xsd:date"
+        },
+        "rdfs:domain": {
+            "@type": "@id"
+        },
+        "rdfs:range": {
+            "@type": "@id"
+        },
+        "rdfs:seeAlso": {
+            "@type": "@id"
+        },
+        "rdfs:subClassOf": {
+            "@type": "@id"
+        },
+        "rdfs:subPropertyOf": {
+            "@type": "@id"
+        },
+        "owl:equivalentClass": {
+            "@type": "@vocab"
+        },
+        "owl:equivalentProperty": {
+            "@type": "@vocab"
+        },
+        "owl:oneOf": {
+            "@container": "@list",
+            "@type": "@vocab"
+        },
+        "owl:deprecated": {
+            "@type": "xsd:boolean"
+        },
+        "owl:imports": {
+            "@type": "@id"
+        },
+        "owl:versionInfo": {
+            "@type": "@id"
+        },
+        "owl:inverseOf": {
+            "@type": "@vocab"
+        },
+        "owl:unionOf": {
+            "@container": "@list",
+            "@type": "@vocab"
+        },
+        "rdfs_classes": {
+            "@reverse": "rdfs:isDefinedBy",
+            "@type": "@id"
+        },
+        "rdfs_properties": {
+            "@reverse": "rdfs:isDefinedBy",
+            "@type": "@id"
+        },
+        "rdfs_instances": {
+            "@reverse": "rdfs:isDefinedBy",
+            "@type": "@id"
+        },
+        "rdfs_datatypes": {
+            "@reverse": "rdfs:isDefinedBy",
+            "@type": "@id"
+        },
+        "mentioned": {
+            "@reverse": "schema:mentions",
+            "@type": "@id"
+        },
+        "dc:title": {
+            "@container": "@language"
+        },
+        "dc:description": {
+            "@container": "@language"
+        }
+    },
+    "@id": "https://www.w3.org/ns/did#",
+    "@type": "owl:Ontology",
+    "dc:title": {
+        "@value": "DID Vocabulary",
+        "@language": "en"
+    },
+    "dc:description": {
+        "@value": "vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of the W3C Controlled Identifier Document.\n",
+        "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+    },
+    "rdfs:seeAlso": "https://www.w3.org/TR/did-1.1/",
+    "dc:date": "2025-03-07",
+    "rdfs_properties": [
+        {
+            "@id": "dd:service",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
+            "rdfs:domain": "dd:DecentralizedIdentifierDocument",
+            "rdfs:range": "dd:Service",
+            "rdfs:label": "Service",
+            "rdfs:comment": {
+                "@value": "<div>The associated value must be a set of services, where each service is described by a map.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/did-1.1/#services",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/did/v1.1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "dd:serviceEndpoint",
+            "@type": [
+                "rdf:Property",
+                "owl:ObjectProperty"
+            ],
+            "rdfs:domain": "dd:Service",
+            "rdfs:range": [],
+            "rdfs:label": "Service endpoint",
+            "rdfs:comment": {
+                "@value": "<div>Refers to the service endpoint, which is a URL that can be used to access the service.</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/did-1.1/#services",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/did/v1.1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        }
+    ],
+    "rdfs_classes": [
+        {
+            "@id": "dd:DecentralizedIdentifierDocument",
+            "@type": "rdfs:Class",
+            "rdfs:subClassOf": [
+                "sec:ControlledIdentifierDocument"
+            ],
+            "rdfs:label": "Decentralized Identifier Document",
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/did-1.1/#data-model",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/did/v1.1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        },
+        {
+            "@id": "dd:Service",
+            "@type": "rdfs:Class",
+            "rdfs:label": "Service",
+            "rdfs:comment": {
+                "@value": "<div>A service is a set of properties that describe a service endpoint, and should be defined through subclasses to this class. In order to maximize interoperability, the service type and its associated properties should be registered in the [[[did-spec-registries]]] [[did-spec-registries]].</div>",
+                "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+            },
+            "rdfs:isDefinedBy": "https://www.w3.org/TR/did-1.1/#services",
+            "vs:term_status": "stable",
+            "mentioned": [
+                {
+                    "@id": "https://www.w3.org/ns/did/v1.1",
+                    "@type": "jsonld:Context"
+                }
+            ]
+        }
+    ]
+}

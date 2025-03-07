@@ -1,0 +1,86 @@
+@prefix dd: <https://www.w3.org/ns/did#> .
+@prefix sec: <https://w3id.org/security#> .
+@prefix act: <https://www.w3.org/ns/activitystreams#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix schema: <http://schema.org/> .
+@prefix jsonld: <http://www.w3.org/ns/json-ld#> .
+
+# Ontology definition
+dd: a owl:Ontology ;
+    dc:title """DID Vocabulary"""@en ;
+    dc:description """vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of the W3C Controlled Identifier Document.
+"""^^@rdf:HTML ;
+    rdfs:seeAlso <https://www.w3.org/TR/did-1.1/> ;
+    dc:date "2025-03-07"^^xsd:date ;
+.
+
+# Property definitions
+dd:service a rdf:Property, owl:ObjectProperty ;
+    rdfs:domain dd:DecentralizedIdentifierDocument ;
+    rdfs:range dd:Service ;
+    rdfs:label "Service" ;
+    rdfs:comment """<div>The associated value must be a set of services, where each service is described by a map.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/did-1.1/#services>, <https://www.w3.org/ns/did#> ;
+    vs:term_status "stable" ;
+.
+
+dd:serviceEndpoint a rdf:Property, owl:ObjectProperty ;
+    rdfs:domain dd:Service ;
+    rdfs:range  ;
+    rdfs:label "Service endpoint" ;
+    rdfs:comment """<div>Refers to the service endpoint, which is a URL that can be used to access the service.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/did-1.1/#services>, <https://www.w3.org/ns/did#> ;
+    vs:term_status "stable" ;
+.
+
+# Class definitions
+dd:DecentralizedIdentifierDocument a rdfs:Class ;
+    rdfs:subClassOf sec:ControlledIdentifierDocument ;
+    rdfs:label "Decentralized Identifier Document" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/did-1.1/#data-model>, <https://www.w3.org/ns/did#> ;
+    vs:term_status "stable" ;
+.
+
+dd:Service a rdfs:Class ;
+    rdfs:label "Service" ;
+    rdfs:comment """<div>A service is a set of properties that describe a service endpoint, and should be defined through subclasses to this class. In order to maximize interoperability, the service type and its associated properties should be registered in the [[[did-spec-registries]]] [[did-spec-registries]].</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/did-1.1/#services>, <https://www.w3.org/ns/did#> ;
+    vs:term_status "stable" ;
+.
+
+
+
+# Context files and their mentions
+<https://www.w3.org/ns/did/v1.1> a jsonld:Context ;
+    schema:mentions
+        act:alsoKnownAs,
+        dd:DecentralizedIdentifierDocument,
+        dd:Service,
+        dd:service,
+        dd:serviceEndpoint,
+        sec:ControlledIdentifierDocument,
+        sec:VerificationMethod,
+        sec:assertionMethod,
+        sec:authentication,
+        sec:capabilityDelegationMethod,
+        sec:capabilityInvocationMethod,
+        sec:controller,
+        sec:keyAgreementMethod,
+        sec:verificationMethod ;
+
+<https://w3id.org/security/data-integrity/v2> a jsonld:Context ;
+    schema:mentions
+        sec:assertionMethod,
+        sec:authentication,
+        sec:capabilityDelegationMethod,
+        sec:capabilityInvocationMethod,
+        sec:controller,
+        sec:keyAgreementMethod,
+        sec:verificationMethod ;
+

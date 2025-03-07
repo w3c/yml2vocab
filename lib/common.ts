@@ -28,7 +28,7 @@ export enum Status {
 
 /**
  * Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
- * This information is used in the HTML generation, for example, to decide whether a section in the template
+ * This information is used in the HTML generation to decide whether the relevant section(s) in the template
  * should be removed (because it is empty), or not.
  */
 export class StatusCounter {
@@ -211,17 +211,51 @@ export interface ValidationError {
 
 /* ************************************* Internal representation ***********************************/
 
+/**
+ * URL schemes; curies may be false when using these prefixes; they are, in fact, full URLs.
+ */
+export const bona_fide_urls = [
+    "http:", "https:", "mailto:", "urn:", "doi:",
+    "ftp:", "did:", "tel:", "geo:", "cid:", "mid:", "news:", "nfs:", "tag:"
+];
+
+/**
+ * Prefixes that are not defined in the vocabulary but frequently used, and are considered
+ * as "part of the RDF world". They are listed as prefixes vocabulary, but their terms
+ * are not displayed with a URL.
+ */
+export const bona_fide_prefixes = ["rdf", "rdfs", "owl", "xsd", "dc", "dcterms", "jsonld"];
+
+/**
+ * Type of the term: class, property, individual, datatype, but also some transient, internal types
+ * that categorize terms
+ */
 export enum TermType {
     class       = "class",
     property    = "property",
     individual  = "individual",
     datatype    = "datatype",
-    // This is a term standing for "core" terms, i.e., terms in RDF, xsd, rdfs, etc.
+
+    /** 
+     * This is a "core" term, i.e., terms in RDF, xsd, rdfs, etc.
+     * Their full URL-s are unused, because they are well-known.
+     */
     core        = "core",
-    // This is a term not defined in the vocabulary, but used in the context of the vocabulary;
-    // Its URL should be displayed whenever appropriate
+
+    /*
+    * This is a term that is not defined in the vocabulary, but used in the context of a vocabulary item
+    * description. The URL should be displayed whenever appropriate.
+    *
+    * This is often a transient term: it is created during the conversion process because it appears
+    * as a reference (supertype, domain, range, etc.) but gets its final category only later in the process.
+    */
     unknown     = "unknown",
-    // This is not a real term, but just a URL that has been used as a term
+
+    /** 
+     * This is not a real term, but just a URL that has been used as a term
+     * (e.g., in the domain or range of a property).
+     * See also {@link bona_fide_urls}.
+     */
     fullUrl     = "fullUrl",
 }
 

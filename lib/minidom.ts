@@ -70,14 +70,14 @@ export class MiniDOM {
     }
 
     /**
-         * Add some HTMLtext to an element, including the obligatory checks that Typescript imposes
-         * 
-         * @param content - text to add
-         * @param element HTML Element to add it to
-         * @returns 
-         * 
-         * @internal
-         */
+     * Add some HTMLtext to an element, including the obligatory checks that Typescript imposes
+     * 
+     * @param content - text to add
+     * @param element HTML Element to add it to
+     * @returns 
+     * 
+     * @internal
+     */
     addHTMLText(content: string, element: Element | null): Element | null {
         if (element) {
             element.innerHTML = content;

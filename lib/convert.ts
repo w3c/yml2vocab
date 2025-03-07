@@ -396,15 +396,19 @@ export function getData(vocab_source: string): Vocab {
                         range.push(factory.term(rg));
                     } else {
                         if (factory.has(rg)) {
-                            const term: RDFTerm = factory.get(rg);
-                            if (RDFTermFactory.isClass(term)) {
-                                extra_types.push("owl:ObjectProperty");
-                                range.push(term);
-                            } else if (RDFTermFactory.isDatatype(term)) {
-                                extra_types.push("owl:DatatypeProperty");
-                                range.push(term);
+                            const term: RDFTerm | undefined = factory.get(rg);
+                            if (term !== undefined) {
+                                if (RDFTermFactory.isClass(term)) {
+                                    extra_types.push("owl:ObjectProperty");
+                                    range.push(term);
+                                } else if (RDFTermFactory.isDatatype(term)) {
+                                    extra_types.push("owl:DatatypeProperty");
+                                    range.push(term);
+                                } else {
+                                    throw(new Error(`The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`));
+                                }
                             } else {
-                                throw(new Error(`The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`));
+                                throw(new Error(`The range ${rg} of the property ${id} is not defined in this vocabulary`));
                             }
                         } else {
                             // By now, local classes and datatypes have been accounted for; the only remaining

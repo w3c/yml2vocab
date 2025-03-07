@@ -5,8 +5,8 @@
  * @packageDocumentation
  */
 
-import { Vocab, global, RDFProperty, RDFTerm } from './common';
-import { RDFTermFactory, factory }             from './factory';
+import { Vocab, global, RDFProperty } from './common';
+import { RDFTermFactory }             from './factory';
 
 // Just to get an extra help from TS if I mistype something...
 interface Context {
