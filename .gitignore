@@ -1,5 +1,7 @@
 node_modules/
-local/
+local/*
+local/*/*
+local/local_run.sh
 example/*.ttl
 example/*.json
 example/*.jsonld

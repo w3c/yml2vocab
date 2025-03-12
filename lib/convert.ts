@@ -3,12 +3,14 @@
  *
  * @packageDocumentation
  */
-import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, OntologyProperty, Vocab, Link, Status, Example, RDFDatatype } from './common';
-import { RawVocabEntry, RawVocab, ValidationResults, global }                                                           from './common';
-import { EXTRA_DATATYPES }                                                                                              from "./common";
-import { validateWithSchema }                                                                                           from './schema';
+import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix,  RDFDatatype, RDFTerm } from './common';
+import { OntologyProperty, Vocab, Link, Status, Example }                         from './common';
+import { RawVocabEntry, RawVocab, ValidationResults, global }                     from './common';
+import { EXTRA_DATATYPES }                                                        from "./common";
+import { validateWithSchema }                                                     from './schema';
+import { RDFTermFactory, factory }                                                from './factory';
 
-/************************************************ Helper functions and constants **********************************/
+/******************************************** Helper functions and constants **********************************/
 
 /**
  * Just a shorthand to make the code more readable... Checking whether a string can be considered as a URL.
@@ -17,7 +19,7 @@ import { validateWithSchema }                                                   
  * @returns 
  * @internal
  */
-const isURL = (value:string): boolean => {
+function isURL(value:string): boolean {
     try {
         new URL(value);
         return true;
@@ -58,17 +60,20 @@ function localeUnCamelise(str: string, separator = ' '): string {
     }
 }
 
-/********************************************************************************/
 
 /**
  * These prefixes are added no matter what; they are not vocabulary specific,
- * but used in the vocabulary.
+ * but likely to be used in the vocabulary.
  * 
  * @internal
  */
 const defaultPrefixes: RDFPrefix[] = [
     {
         prefix : "dc",
+        url    : "http://purl.org/dc/terms/",
+    },
+    {
+        prefix : "dcterms",
         url    : "http://purl.org/dc/terms/",
     },
     {
@@ -117,7 +122,7 @@ const defaultOntologyProperties: OntologyProperty[] = [
 
 
 /**
- * Although the YAML parsing is declared to produce a {@link RawVocabEntry}, it in fact does not do it strictly
+ * Although the YAML parsing is declared to produce a {@link RawVocabEntry}, in fact does not do it strictly
  * (e.g., some entries should be converted into arrays even if the YAML source has only a single item).
  * This function does some basic conversion for all the types, to make the processing later a bit simpler.
  * 
@@ -205,6 +210,8 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         return final;
     }
 
+    /* ********************** Bunch of constant calculations to be used in the code below **********/
+
     // The deprecation flag, as a separate value, is kept for reasons of backward compatibility,
     // but this makes the interpretation of the value(s) in the vocabulary a bit awkward. Later version
     // may remove the deprecated flag from existing vocabularies, i.e., switch to status altogether,
@@ -240,6 +247,8 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         }
     })(raw.label);
 
+    /* ***************************** Do the real cleanup *****************************/
+
     return {
         id          : (raw.id) ? raw.id : "",
         property    : raw.property,
@@ -256,10 +265,12 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         comment     : (raw.comment) ? cleanComment(raw.comment) : "",
         see_also    : toSeeAlso(raw.see_also),
         example     : toExample(raw.example),
+        known_as    : raw.known_as,
         dataset     : raw.dataset ?? false,
         context     : toArrayContexts(raw.context)
     }
 }
+
 
 /**
  * Run the entry finalization function through all entries in the vocabulary
@@ -282,18 +293,18 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
 
     // The extra filter is used to keep the valid entries only. For example, an external
     // term without a clear definition must be ignored.
-    const classes = raw.class?.map(finalizeRawEntry).filter((entry) => entry !== null)
-    const property = raw.property?.map(finalizeRawEntry).filter((entry) => entry !== null);
-    const individual = raw.individual?.map(finalizeRawEntry).filter((entry) => entry !== null)
-    const datatypes = raw.datatype?.map(finalizeRawEntry).filter((entry) => entry !== null)
+    const classes     = raw.class?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const properties  = raw.property?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const individuals = raw.individual?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const datatypes   = raw.datatype?.map(finalizeRawEntry).filter((entry) => entry !== null);
 
     return {
         vocab      : raw.vocab.map(finalizeRawEntry),
         prefix     : raw.prefix?.map(finalizeRawEntry),
         ontology   : raw.ontology?.map(finalizeRawEntry),
         class      : classes,
-        property   : property,
-        individual : individual,
+        property   : properties,
+        individual : individuals,
         datatype   : datatypes,
     }
 }
@@ -324,23 +335,22 @@ export function getData(vocab_source: string): Vocab {
     }
     // Clean up the raw vocab representation.
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
-
     /************************************** local utility methods *****************************************************/
-
     //
     // Reminder: there is an initially empty global structure, initialized in common.ts
     // These functions will also update that global structure when applicable
+
 
     // Establish the final context reference(s), if any, for a term.
     // As a side effect, the 'inverse' info, ie, the list of terms per context, is
     // created in the global data structure.
     // "curie" is the CURIE encoded id of the term, ie, namespace:name format.
-    const final_contexts = (raw: RawVocabEntry, curie: string ): string[] => {
+    const final_contexts = (raw: RawVocabEntry, term: RDFTerm ): string[] => {
         if (raw.context === undefined) return [];
 
         // replace the value of "vocab" by the global context, then
         // get the possible "none" out of the way.
-        const contexts = raw.context.map((val: string): string => {
+        const contexts: string[] = raw.context.map((val: string): string => {
             if (val === "vocab") {
                 // The global context may not have been set per TypeScript... although this
                 // function is invoked once that has been set already. Price to pay for
@@ -359,78 +369,101 @@ export function getData(vocab_source: string): Vocab {
             if (!(ctx in global.context_mentions)) {
                 global.context_mentions[ctx] = [];
             }
-            global.context_mentions[ctx].push(curie);
+            global.context_mentions[ctx].push(term);
         }
         return ctx_s;
     }
 
-    // Calculates cross-references from properties to classes or datatypes; used
-    // to make the cross-references for the property ranges and domains
-    // @param raw: raw entry for the class or datatype
-    // @param refs: the range or domain array of the property
-    // @return: whether the class/datatype is indeed in the range of the property
-    const crossref = (raw: RawVocabEntry, property: RDFProperty, refs: undefined | string[], single_ref: string[], multi_ref: string[]): boolean => {
-        if (refs) {
-            // Remove the (possible) namespace reference from the CURIE
-            const pure_refs = refs.map((range: string): string => {
-                const terms = range.split(':');
-                return terms.length === 1 ? range : terms[1];
-            });
-            if (pure_refs.length !== 0 && pure_refs.indexOf(raw.id) !== -1) {
-                const id_to_store = (global.vocab_prefix !== property.prefix) ? `${property.prefix}:${property.id}` : property.id;
-                (pure_refs.length === 1 ? single_ref : multi_ref).push(id_to_store);
-                return true;
+    //
+    // Convert the ranges of a property into the internal representation. The range can be a class, a datatype, or
+    // an unknown term fully defined outside of this vocabulary.
+    //
+    // The function also sets the possible values of a (pure) datatype or object property as extra types
+    // to be added to the enclosing property
+    const get_ranges = (factory: RDFTermFactory, raw: RawVocabEntry, id: string): { extra_types: string[], range: RDFTerm[], strongURL: boolean } => {
+        let extra_types: string[] = [];
+        const range: RDFTerm[]    = [];
+        let strongURL: boolean    = false;
+
+        if (raw.range && raw.range.length > 0) {
+            if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
+                extra_types.push("owl:ObjectProperty");
+                strongURL = true;
+            } else {
+                for (const rg of raw.range) {
+                    if (rg.startsWith("xsd") === true || EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
+                        // The datatype is a simple one, not a class; a term nevertheless, to make it uniform
+                        extra_types.push("owl:DatatypeProperty");
+                        range.push(factory.term(rg));
+                    } else {
+                        if (factory.has(rg)) {
+                            const term: RDFTerm | undefined = factory.get(rg);
+                            if (term !== undefined) {
+                                if (RDFTermFactory.isClass(term)) {
+                                    extra_types.push("owl:ObjectProperty");
+                                    range.push(term);
+                                } else if (RDFTermFactory.isDatatype(term)) {
+                                    extra_types.push("owl:DatatypeProperty");
+                                    range.push(term);
+                                } else {
+                                    throw(new Error(`The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`));
+                                }
+                            } else {
+                                throw(new Error(`The range ${rg} of the property ${id} is not defined in this vocabulary`));
+                            }
+                        } else {
+                            // By now, local classes and datatypes have been accounted for; the only remaining
+                            // possibility is that this is an unknown (outside) term
+                            range.push(factory.term(rg));
+                        }
+                    }
+                }
             }
         }
-        return false;
+
+        extra_types = [ ...new Set(extra_types) ];  // remove duplicates
+        // In fact, the length of the types must be 0 or 1, otherwise, it is a general property that can have any range
+        if (extra_types.length > 1) {
+            extra_types = [];
+        };
+        return { extra_types, range, strongURL }
     }
 
-    // Handling external terms. These are characterized by the fact that they are identified as a CURIE in
-    // the YAML file. The prefix and the term must be separated.
-    // To make the handling of all this uniform, the core term also get the (default) prefix stored in their
-    // structure.
-    const check_id = (raw: RawVocabEntry): { prefix: string,  id: string, external: boolean } => {
-        // see if the id is a CURIE; it is then treated differently.
-
-        // An error condition is also checked on the fly: if a term is not external, either
-        // defined_by or comment should also be set
-        const [prefix, value] = raw.id.split(":");
-
-        const output = ((): { prefix: string, id: string, external: boolean } => {
-            if (value === undefined) {
-                // Not a curie. Check the 'external' flag: it should not be true
-                if (raw.external) {
-                    throw (new Error(`${raw.id} is set to be external, but the id is not a CURIE`));
-                }
-                return {
-                    id       : raw.id,
-                    prefix   : global.vocab_prefix,
-                    external : false,
-                }
-            } else {
-                // A real curie, which may or may not be external. By default, it is.
-                const external = raw.external ?? true;
-                if (!global.real_curies.includes(raw.id)) global.real_curies.push(raw.id);
-                return {prefix: prefix, id: value, external}
-            }
-        })();
-
+    // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
+    // This function raises an error if this is not the case
+    const set_and_check_external = (raw: RawVocabEntry, output: RDFTerm): void => {
+        if (output.prefix !== global.vocab_prefix) {
+            // We have a term that is not part of the vocabulary but, nevertheless
+            // defined in the YAML file. This is an external term.
+            output.external = true;
+        }
         // Extra check for the possible error
-        if (!output.external) {
+        else {
             if ((raw.comment === undefined || raw.comment === "") &&
-                (raw.defined_by === undefined || raw.defined_by.length === 0)
-            ) {
+                (raw.defined_by === undefined || raw.defined_by.length === 0)) 
+            {
                 throw (new Error(`${raw.id} is incomplete: either "defined_by" or "comment" should be provided.`));
             }
         }
-        return output;
     }
 
-    /************************************** local utility methods *****************************************************/
+    /*****************************************************************************************************************/
+    /************************************** Main processing part *****************************************************/
+    /*****************************************************************************************************************/
 
     // Convert all the raw structures into their respective internal representations for
-    // prefixes, ontology properties, classes, etc.
+    // prefixes, ontology properties, classes, etc. This is done as a series of map operations on the
+    // raw classes, properties, etc, with the mapping function converting the raw structure into the
+    // internal representation.
 
+    // Each mapping function has a similar structure: generate a new RDFTerm (with the necessary category) via a
+    // term factory (which will also initialize the common keys for the term), then add the specific keys.
+
+    // Note that, at the end of all that, a second "pass" is done to set the references from classes and datatypes
+    // to the properties that have them as domain resp. range. This is added to the internal representation to aid
+    // cross references mainly in the HTML representation.
+
+    /********************************************************************************************/
     // Get the extra prefixes and combine them with the defaults. Note that the 'vocab' category
     // should be added to the list, too, but it needs a special treatment (eg, it is
     // explicitly displayed in the HTML output), hence these values are also stored globally.
@@ -439,6 +472,7 @@ export function getData(vocab_source: string): Vocab {
     // The YAML file does not necessarily store the "vocab" as an array, but may; so the
     // vocab entry is always stored as an array. This makes the first entry of this
     // concatenation a bit strange...
+
     const prefixes: RDFPrefix[] = [
         ...vocab.vocab.map((raw: RawVocabEntry): RDFPrefix => {
             if (raw.id === undefined) {
@@ -470,6 +504,7 @@ export function getData(vocab_source: string): Vocab {
         ...defaultPrefixes
     ];
 
+    /********************************************************************************************/
     // Get the ontology properties. Note that there are also default ontology properties
     // that are added to what the YAML input provides
     const ontology_properties: OntologyProperty[] = [
@@ -483,6 +518,96 @@ export function getData(vocab_source: string): Vocab {
         ...defaultOntologyProperties,
     ];
 
+    /********************************************************************************************/
+    // We have to set up a term factory for the RDF Terms. That factory will be used to create
+    // the terms, classes, properties, etc, but avoid duplicates.
+    // Using the factory will ensure to have a smooth creation of subproperties, range or domain arrays
+    // as needed, with cross references.
+    factory.initialize(prefixes);
+
+    /********************************************************************************************/
+    // Get the datatypes. 
+    const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
+        vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
+            const output: RDFDatatype = factory.datatype(raw.id);
+
+            // Extra check for possible error for external terms
+            set_and_check_external(raw, output);
+
+            // In the former version of the package the user's type was done via the upper_value property, which was not clean
+            // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
+            // To be sure, an extra action below is necessary to make sure there are no repeated entries.
+            const type = [
+                ...(raw.type !== undefined) ? raw.type : [],
+                ...(raw.upper_value !== undefined) ? raw.upper_value : []
+            ];
+
+            // Calculate the number of entries in various categories
+            // The conditional assignment is actually unnecessary per the earlier processing,
+            // but the deno typescript checker complains...
+            global.status_counter.add(raw.status ? raw.status : Status.stable);
+
+            Object. assign(output, {
+                label             : raw.label,
+                comment           : raw.comment,
+                deprecated        : raw.deprecated,
+                defined_by        : raw.defined_by,
+                status            : raw.status,
+                type              : [...new Set(type)].map(t => factory.term(t)),
+                subClassOf        : raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
+                see_also          : raw.see_also,
+                known_as          : raw.known_as,
+                example           : raw.example,
+                context           : final_contexts(raw, output),
+                range_of          : [],            // these are set later, when all classes and properties are defined
+                includes_range_of : [],   // these are set later, when all classes and properties are defined
+            });
+            return output;
+    }) : [];
+    
+    /********************************************************************************************/
+    // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
+    const classes: RDFClass[] = (vocab.class !== undefined) ?
+        vocab.class.map((raw: RawVocabEntry): RDFClass => {
+            const output: RDFClass = factory.class(raw.id);
+
+            // Extra check for possible error for external terms
+            set_and_check_external(raw, output);
+
+            const user_type: string[] = (raw.type === undefined) ? [] : raw.type;
+            const types: string[] = [
+                ...(raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"],
+                ...user_type
+            ];
+
+            // Calculate the number of entries in various categories
+            // The conditional assignment is actually unnecessary per the earlier processing,
+            // but the deno typescript checker complains...
+            global.status_counter.add(raw.status ? raw.status : Status.stable);
+
+            Object.assign(output, {
+                type                  : types.map(t => factory.term(t)),
+                user_type             : user_type.map(t => factory.term(t)),
+                label                 : raw.label,
+                comment               : raw.comment,
+                deprecated            : raw.deprecated,
+                defined_by            : raw.defined_by,
+                status                : raw.status,
+                subClassOf            : raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
+                see_also              : raw.see_also,
+                known_as              : raw.known_as,
+                example               : raw.example,
+                context               : final_contexts(raw, output),
+                range_of              : [],      // these are set later, when all classes and properties are defined 
+                domain_of             : [],      // these are set later, when all classes and properties are defined
+                included_in_domain_of : [],      // these are set later, when all classes and properties are defined
+                includes_range_of     : [],      // these are set later, when all classes and properties are defined
+            });
+
+            return output;
+        }) : [];
+
+    /********************************************************************************************/
     // Get the properties. Note the special treatment for deprecated properties, as well as 
     // the extra owl types added depending on the range.
     //
@@ -490,107 +615,56 @@ export function getData(vocab_source: string): Vocab {
     // These extra types are also added when handling a class or a datatype, looking up the references.
     const properties: RDFProperty[] = (vocab.property !== undefined) ?
         vocab.property.map((raw: RawVocabEntry): RDFProperty => {
-            const {prefix, id, external} = check_id(raw);
-            const user_type: string[] = (raw.type === undefined) ? [] : raw.type      
-            const types: string[] = [
-                ...(raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],                      
-                ...user_type
-            ];
+            const output: RDFProperty = factory.property(raw.id);
+
+            // Extra check for possible error for external terms
+            set_and_check_external(raw, output);
 
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
             global.status_counter.add(raw.status ? raw.status : Status.stable);
-            let range = raw.range;
-            if (range && range.length > 0) {
-                if (range.length === 1 && (range[0].toUpperCase() === "IRI" || range[0].toUpperCase() === "URL")) {
-                    types.push("owl:ObjectProperty");
-                    range = undefined;
-                } else {
-                    let isDTProperty = true;
-                    for (const rg of range) {
-                        if (!(rg.startsWith("xsd") === true || EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined)) {
-                            isDTProperty = false;
-                            break;
-                        }
-                    }
-                    if (isDTProperty) types.push("owl:DatatypeProperty");
-                }
-            }
-            return {
-                id            : id,
-                type          : types,
-                user_type     : user_type,
+
+            // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
+            const { extra_types, range, strongURL } = get_ranges(factory, raw, output.id);
+
+            const user_type: string[] = (raw.type === undefined) ? [] : raw.type      
+            const types: string[] = [
+                ...(raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"], 
+                ...extra_types,                     
+                ...user_type
+            ];
+
+            Object.assign(output, {
+                type          : types.map(t => factory.term(t)),
+                user_type     : user_type.map(t => factory.term(t)),
                 label         : raw.label,
                 comment       : raw.comment,
                 deprecated    : raw.deprecated,
                 defined_by    : raw.defined_by,
                 status        : raw.status,
-                external      : external,
-                prefix        : prefix,
-                subPropertyOf : raw.upper_value,
+                subPropertyOf : raw.upper_value?.map((val: string): RDFProperty => factory.property(val)),
                 see_also      : raw.see_also,
                 range         : range,
-                domain        : raw.domain,
+                domain        : raw.domain?.map(val => factory.class(val)),
                 example       : raw.example,
+                known_as      : raw.known_as,
                 dataset       : raw.dataset,
-                context       : final_contexts(raw, `${prefix}:${id}`),
-            }
+                strongURL     : strongURL,
+                context       : final_contexts(raw, output),
+            });
+            return output;
         }) : [];
 
-    // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
-    const classes: RDFClass[] = (vocab.class !== undefined) ? 
-        vocab.class.map((raw: RawVocabEntry): RDFClass => {
-            const {prefix, id, external} = check_id(raw);
-            const user_type: string[] = (raw.type === undefined) ? [] : raw.type;
-            const types: string[] = [
-                ...(raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"],
-                ...user_type
-            ];
-            const range_of: string[] = [];
-            const domain_of: string[] = [];
-            const included_in_domain_of: string[] = [];
-            const includes_range_of: string[] = [];
-
-            // Calculate the number of entries in various categories
-            // The conditional assignment is actually unnecessary per the earlier processing,
-            // but the deno typescript checker complains...
-            global.status_counter.add(raw.status ? raw.status : Status.stable);
-
-            // Get all domain/range cross-references
-            for (const property of properties) {
-                const is_obj_property = crossref(raw, property, property.range, range_of, includes_range_of);
-                // the relevant property should be marked as an object property!
-                if (is_obj_property) {
-                    // a bit convoluted, but trying to avoid repeating the extra entry
-                    property.type = [...((new Set(property.type)).add('owl:ObjectProperty'))];
-                }
-                crossref(raw, property, property.domain, domain_of, included_in_domain_of);
-            }
-
-            return {
-                id         : id,
-                type       : types,
-                user_type  : user_type,
-                label      : raw.label,
-                comment    : raw.comment,
-                deprecated : raw.deprecated,
-                defined_by : raw.defined_by,
-                status     : raw.status,
-                external   : external,
-                prefix     : prefix,
-                subClassOf : raw.upper_value,
-                see_also   : raw.see_also,
-                example    : raw.example,
-                context    : final_contexts(raw, `${prefix}:${id}`),
-                range_of, domain_of, included_in_domain_of, includes_range_of
-            }
-        }) : [];
-
+    /********************************************************************************************/
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
     const individuals: RDFIndividual[] = (vocab.individual !== undefined) ?
         vocab.individual.map((raw:RawVocabEntry): RDFIndividual => {
-            const {prefix, id, external} = check_id(raw);
+            const output = factory.individual(raw.id);
+
+            // Extra check for possible error for external terms
+            set_and_check_external(raw, output);
+
             // In the former version the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
@@ -598,63 +672,50 @@ export function getData(vocab_source: string): Vocab {
                 ...(raw.type !== undefined) ? raw.type : [],
                 ...(raw.upper_value !== undefined) ? raw.upper_value : []
             ];
-            return {
-                id            : id,
-                label         : raw.label,
-                comment       : raw.comment,
-                deprecated    : raw.deprecated,
-                defined_by    : raw.defined_by,
-                status        : raw.status,
-                external      : external,
-                prefix        : prefix,
-                type          : [...new Set(type)],
-                see_also      : raw.see_also,
-                example       : raw.example,
-                context       : final_contexts(raw, `${prefix}:${id}`),
-            }
-        }) : [];
-
-    // Get the datatypes. 
-    const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
-        vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
-            const {prefix, id, external} = check_id(raw);
-            // In the former version the user's type was done via the upper_value property, which was not clean
-            // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
-            // To be sure, an extra action below is necessary to make sure there are no repeated entries.
-            const type = [
-                ...(raw.type !== undefined) ? raw.type : [],
-                ...(raw.upper_value !== undefined) ? raw.upper_value : []
-            ];
-
-            const range_of: string[] = [];
-            const includes_range_of: string[] = [];
-
-            // Get the range cross-references
-            for (const property of properties) {
-                const is_dt_property = crossref(raw, property, property.range, range_of, includes_range_of);
-                if (is_dt_property) {
-                    // a bit convoluted, but trying to avoid repeating the extra entry
-                    property.type = [...((new Set(property.type)).add('owl:DatatypeProperty'))]
-                }
-            }
-
-            return {
-                id         : id,
-                subClassOf : (raw.upper_value !== undefined) ? raw.upper_value : [],
+            Object.assign(output, {
                 label      : raw.label,
                 comment    : raw.comment,
                 deprecated : raw.deprecated,
                 defined_by : raw.defined_by,
                 status     : raw.status,
-                external   : external,
-                prefix     : prefix,
-                type       : [...new Set(type)],
+                type       : [...new Set(type)].map(t => factory.term(t)),
                 see_also   : raw.see_also,
                 example    : raw.example,
-                context       : final_contexts(raw, `${prefix}:${id}`),
-                range_of, includes_range_of
-            };
+                known_as   : raw.known_as,
+                context    : final_contexts(raw, output),
+            });
+            return output;
         }) : [];
+
+    /********************************************************************************************/
+    // Set the domain and range of the back references for ranges/domains for classes and datatypes.
+    for (const current_class of classes) {
+        for (const prop of properties) {
+            if (prop.range?.length > 0) {
+                if (prop.range.find((val: RDFTerm) => RDFTermFactory.equals(val, current_class))) {
+                    ((prop.range.length > 1) ? current_class.includes_range_of : current_class.range_of).push(prop);
+                }
+            }
+            if (prop.domain?.length > 0) {
+                if (prop.domain.find((val: RDFTerm) => RDFTermFactory.equals(val, current_class))) {
+                    ((prop.domain.length > 1) ? current_class.included_in_domain_of : current_class.domain_of).push(prop);
+                }
+            }
+        }
+    }
     
+    for (const current_datatype of datatypes) {
+        for (const prop of properties) {
+            if (prop.range?.length > 0) {
+                if (prop.range.find((val: RDFTerm) => RDFTermFactory.equals(val, current_datatype))) {
+                    ((prop.range.length > 1) ? current_datatype.includes_range_of : current_datatype.range_of).push(prop);
+                }
+            }
+        }
+    }
+
+
+    /********************************************************************************************/
+    // We're all set: return the internal representation of the vocabulary
     return {prefixes, ontology_properties, classes, properties, individuals, datatypes}
 }

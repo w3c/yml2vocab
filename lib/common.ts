@@ -28,7 +28,7 @@ export enum Status {
 
 /**
  * Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
- * This information is used in the HTML generation, for example, to decide whether a section in the template
+ * This information is used in the HTML generation to decide whether the relevant section(s) in the template
  * should be removed (because it is empty), or not.
  */
 export class StatusCounter {
@@ -78,7 +78,7 @@ export class StatusCounter {
  * Terms in the values are identified by their CURIE (i.e., the namespace is also included)
  */
 export interface Contexts {
-    [ctx: string]: string[];
+    [ctx: string]: RDFTerm[];
 }
 
 /**
@@ -166,6 +166,7 @@ export interface RawVocabEntry {
     defined_by  ?: string[];
     comment     ?: string;
     see_also    ?: Link[];
+    known_as    ?: string;
     example     ?: Example[];
     dataset     ?: boolean;
     context     ?: string[];
@@ -210,6 +211,55 @@ export interface ValidationError {
 }
 
 /* ************************************* Internal representation ***********************************/
+
+/**
+ * URL schemes; curies may be false when using these prefixes; they are, in fact, full URLs.
+ */
+export const bona_fide_urls = [
+    "http:", "https:", "mailto:", "urn:", "doi:",
+    "ftp:", "did:", "tel:", "geo:", "cid:", "mid:", "news:", "nfs:", "tag:"
+];
+
+/**
+ * Prefixes that are not defined in the vocabulary but frequently used, and are considered
+ * as "part of the RDF world". They are listed as prefixes vocabulary, but their terms
+ * are not displayed with a URL.
+ */
+export const bona_fide_prefixes = ["rdf", "rdfs", "owl", "xsd", "dc", "dcterms", "jsonld"];
+
+/**
+ * Type of the term: class, property, individual, datatype, but also some transient, internal types
+ * that categorize terms
+ */
+export enum TermType {
+    class       = "class",
+    property    = "property",
+    individual  = "individual",
+    datatype    = "datatype",
+
+    /** 
+     * This is a "core" term, i.e., terms in RDF, xsd, rdfs, etc.
+     * Their full URL-s are unused, because they are well-known.
+     */
+    core        = "core",
+
+    /*
+    * This is a term that is not defined in the vocabulary, but used in the context of a vocabulary item
+    * description. The URL should be displayed whenever appropriate.
+    *
+    * This is often a transient term: it is created during the conversion process because it appears
+    * as a reference (supertype, domain, range, etc.) but gets its final category only later in the process.
+    */
+    unknown     = "unknown",
+
+    /** 
+     * This is not a real term, but just a URL that has been used as a term
+     * (e.g., in the domain or range of a property).
+     * See also {@link bona_fide_urls}.
+     */
+    fullUrl     = "fullUrl",
+}
+
 /**
  * Top level class for an RDF term in general. Pretty much self-explanatory...
  */
@@ -217,22 +267,35 @@ export interface RDFTerm {
     /** The _name_ of the term, without the namespace prefix. */
     id          : string;
     /** The namespace prefix; usually the same as the vocabulary prefix, but not always (e.g., external terms). */
-    prefix     ?: string;
+    prefix      : string;
+    /** The ID used in the HTML listing. It is, usually, the same as the id, except for an external term */
+    html_id     : string;
+    /** The curie of the term. Used this way, for example, in turtle */
+    curie       : string;
+    /** The full URL of the term */
+    url         : string;
+    /** The exact term type; used in the categorization of the terms */
+    term_type   : TermType;
     /** The types provided by the YAML file _and_ the generated types by the conversion (e.g., `rdf:Property`). */
-    type        : string[];
+    type        : RDFTerm[];
     /** The types provided by the YAML file */
-    user_type  ?: string[];
+    user_type  ?: RDFTerm[];
     label       : string;
     comment    ?: string;
     defined_by ?: string[];
     see_also   ?: Link[];
     /** This field is, in fact, potentially deprecated, because the status has taken over. Kept for backward compatibility. */
     deprecated ?: boolean;
+    /** Alternative label to be used, e.g., in a context file. Rarely used. */
+    known_as   ?: string;
     status     ?: Status;
     /** Whether this term is really part of the vocabulary, or is defined externally. */
     external   ?: boolean;
     example    ?: Example[];
     context     : string[];
+
+    /** This is to simplify the text conversion of the terms to strings; it usually refers to the curie */
+    toString    : () => string;
 }
 
 /**
@@ -241,11 +304,11 @@ export interface RDFTerm {
  * None is required.
  */
 export interface RDFClass extends RDFTerm {
-    subClassOf           ?: string[];
-    range_of              : string[];
-    domain_of             : string[];
-    included_in_domain_of : string[];
-    includes_range_of     : string[];
+    subClassOf            : RDFClass[];
+    range_of              : RDFProperty[];
+    domain_of             : RDFProperty[];
+    included_in_domain_of : RDFProperty[];
+    includes_range_of     : RDFProperty[];
 }
 
 /**
@@ -253,10 +316,11 @@ export interface RDFClass extends RDFTerm {
  * None of these are required.
  */
 export interface RDFProperty extends RDFTerm {
-    subPropertyOf ?: string[];
-    domain        ?: string[];
-    range         ?: string[];
-    dataset       ?: boolean;
+    subPropertyOf : RDFProperty[];
+    domain        : RDFClass[];
+    range         : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
+    dataset       : boolean;
+    strongURL     : boolean;    // Whether the property object should be required to be a real URL
 }
 
 /**
@@ -273,9 +337,9 @@ export interface RDFIndividual extends RDFTerm {
  * The cross-references for domains and ranges are calculated.
  */
 export interface RDFDatatype extends RDFTerm {
-    subClassOf        ?: string[],
-    range_of           : string[];
-    includes_range_of  : string[];
+    subClassOf        : RDFDatatype[],
+    range_of          : RDFProperty[];
+    includes_range_of : RDFProperty[];
 }
 
 /**

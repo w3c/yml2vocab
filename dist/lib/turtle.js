@@ -19,7 +19,8 @@ function toTurtle(vocab) {
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct if there are several domains; factored it here to make the 
     // code more readable.
-    const multiDomain = (value) => {
+    const multiDomain = (term) => {
+        const value = term.map((t) => t.curie);
         if (value.length === 1) {
             return value[0];
         }
@@ -28,7 +29,8 @@ function toTurtle(vocab) {
         }
     };
     // This is just for symmetry v.a.v. the domain...
-    const multiRange = (value) => {
+    const multiRange = (term) => {
+        const value = term.map((t) => t.curie);
         if (value.length === 1) {
             return value[0];
         }
@@ -159,7 +161,7 @@ function toTurtle(vocab) {
         for (const ctx of ctx_s) {
             turtle += `<${ctx}> a jsonld:Context ;\n`;
             turtle += `    schema:mentions\n`;
-            turtle += (common_1.global.context_mentions[ctx].map((term) => `        ${term}`).join(",\n")) + " ;\n\n";
+            turtle += (common_1.global.context_mentions[ctx].map((term) => `        ${term.curie}`).join(",\n")) + " ;\n\n";
         }
     }
     return turtle;

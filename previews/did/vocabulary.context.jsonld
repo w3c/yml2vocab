@@ -1,0 +1,63 @@
+{
+    "@context": {
+        "@protected": true,
+        "id": "@id",
+        "type": "@type",
+        "DecentralizedIdentifierDocument": {
+            "@id": "https://www.w3.org/ns/did#DecentralizedIdentifierDocument",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "service": {
+                    "@id": "https://www.w3.org/ns/did#service",
+                    "@type": "@id"
+                }
+            }
+        },
+        "Service": {
+            "@id": "https://www.w3.org/ns/did#Service",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "serviceEndpoint": {
+                    "@id": "https://www.w3.org/ns/did#serviceEndpoint",
+                    "@type": "@id"
+                }
+            }
+        },
+        "ControlledIdentifierDocument": "https://w3id.org/security#ControlledIdentifierDocument",
+        "VerificationMethod": "https://w3id.org/security#VerificationMethod",
+        "VerificationRelationship": "https://w3id.org/security#VerificationRelationship",
+        "controller": "https://w3id.org/security#controller",
+        "alsoKnownAs": {
+            "@id": "https://www.w3.org/ns/activitystreams#alsoKnownAs",
+            "@type": "http://www.w3.org/2001/XMLSchema#string"
+        },
+        "verificationMethod": {
+            "@id": "https://w3id.org/security#verificationMethod",
+            "@type": "@id"
+        },
+        "authentication": {
+            "@id": "https://w3id.org/security#authentication",
+            "@type": "@id"
+        },
+        "assertionMethod": {
+            "@id": "https://w3id.org/security#assertionMethod",
+            "@type": "@id"
+        },
+        "capabilityDelegationMethod": {
+            "@id": "https://w3id.org/security#capabilityDelegationMethod",
+            "@type": "@id"
+        },
+        "capabilityInvocationMethod": {
+            "@id": "https://w3id.org/security#capabilityInvocationMethod",
+            "@type": "@id"
+        },
+        "keyAgreementMethod": {
+            "@id": "https://w3id.org/security#keyAgreementMethod",
+            "@type": "@id"
+        }
+    }
+}

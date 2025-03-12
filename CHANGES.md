@@ -1,3 +1,17 @@
+## Version 1.6.0
+
+- A systematic re-write of the internals, triggered by the introduction of external terms. Previously, all cross-references (e.g., range, superclass, etc.) were done using the identifier of the terms. That led to lots of ugly code differentiating between terms defined in the vocab and curies appearing as, say, ranges. This situation was made worse by external terms.
+
+    This version uses RDFTerm interfaces (and its extensions for classed, properties, etc) overall. As it should from a modeling purposes: the array of ranges refer to an array of RDF Classes, superproperties to Properties, etc. This made the code cleaner and many of the ugly code disappeared.
+
+- A minor change for the JSON-LD Context generation. It does happen that the name used in the context file should be different than what the official label is. Eg., `keyAgreement` vs. `keyAgreementMethod`. This is ugly but sometimes necessary for backward compatibility reasons. A new key in yml, `knownAs`, may be used to set this alternative name. It is used exclusively in the context generation.
+
+## Version 1.5.0 - 1.5.6
+
+- Adding the "external" term feature. Terms that are not formally defined in the vocabulary, but added explicitly to make cross references more understandable and appear in the context file. Typical case are `schema.org` terms that are used all over the place.
+- The code has been made fully compatible with [deno](https://deno.land). With the presence of a `deno.json` file for handling imports, the same code can be used with node.js/npm and deno interchangeably.
+- The JSON-LD `@context` generation aspect has been significantly improved and debugged, to make it really usable by smaller projects.
+
 ## Version 1.4.8
 
 - Adding the possibility of explicitly setting a resource type via the (new) `type` property.
@@ -9,7 +23,6 @@
 ## Version 1.4.6
 
 - Label is now optional
-
 
 ## Version 1.4.5
 

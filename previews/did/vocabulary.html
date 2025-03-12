@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <title>DID Vocabulary</title>
+    <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c"></script>
+    <script>
+      function remove_status_remark() {
+          const sotd = document.getElementById("sotd");
+          const p = sotd.getElementsByTagName('p')[0];
+          sotd.removeChild(p);
+      }
+      // Note: The vocabulary URL must be adapted for the given environment!!!!
+      function massageSVGLinks(utils, content, url) {
+        const retval = content
+          .replace('<svg', '<svg aria-details="#vocabulary-diagram-alt" ')
+          .replace(/xlink:href/g, 'href')
+          .replace(/href="https:\/\/w3id.org\/security#/g, 'href="#');
+        return retval;
+      }
+    </script>
+    <script class="remove">
+      var respecConfig = {
+        localBiblio: {
+        },
+        specStatus:  "base",
+        shortName:   "ns/security",
+        thisVersion: "https://w3c.github.io/vc-data-integrity/vocab/security/vocabulary.html",
+        latestVersion: "https://w3id.org/security",
+        doJsonLd:    true,
+        editors: [{
+          name:       "Ivan Herman",
+          url:        "https://www.w3.org/People/Ivan/",
+          company:    "W3C",
+          w3cid:      7382,
+          orcid:      "0000-0003-0782-2704",
+          companyURL: "https://www.w3.org",
+        },{
+          name:       "Manu Sporny",
+          url:        "http://manu.sporny.org/",
+          company:    "Digital Bazaar",
+          companyURL: "http://digitalbazaar.com/",
+          w3cid:      41758,
+        },{
+          name:       "Dave Longley",
+          company:    "Digital Bazaar",
+          companyURL: "http://digitalbazaar.com/",
+          w3cid:      48025,
+        }],
+        // group : "vc",
+        // github: {
+				// 	repoURL: "https://github.com/w3c/vc-data-model",
+				// 	branch: "main"
+				// },
+        alternateFormats: [
+          {uri: "vocabulary.ttl", label: "Turtle"},
+          {uri: "vocabulary.jsonld", label: "JSON-LD"}
+        ],
+        inlineCSS: true,
+        doRDFa: false,
+        noIDLIn: true,
+        noLegacyStyle: false
+      };
+    </script>
+    <style type="text/css">
+      dl.terms dt {
+        float: left;
+        clear: left;
+        width: 10vw;
+      }
+
+      dl.terms dd {
+        margin-left: 15vw;
+      }
+
+      dl.terms dd:after {
+          content: '';
+          display: block;
+          clear: both;
+          margin-bottom: 5px;
+      }
+      table.rdfs-definition td {
+        vertical-align: top;
+        margin-right: 2em;
+      }
+      .bold {
+        font-weight: bold;
+      }
+      /* code {
+        color: red;
+      } */
+
+      .term_definitions section {
+        border-bottom-style: solid ;
+        border-bottom-width: 1px;
+        border-bottom-color: darkgrey;
+      }
+
+      .annoy {
+        background: hsla(40,100%,50%,0.95);
+		    color: black;
+		    padding: .75em 1em;
+		    border: red;
+		    border-style: solid none;
+		    box-shadow: 0 2px 8px black;
+		    text-align: center;
+      }
+
+      summary {
+        font-weight: normal !important;
+      }
+
+    </style>
+  </head>
+  <body typeof="owl:Ontology" resource="https://www.w3.org/ns/did#" prefix="dd: https://www.w3.org/ns/did# sec: https://w3id.org/security# act: https://www.w3.org/ns/activitystreams# dc: http://purl.org/dc/terms/ dcterms: http://purl.org/dc/terms/ owl: http://www.w3.org/2002/07/owl# rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# rdfs: http://www.w3.org/2000/01/rdf-schema# xsd: http://www.w3.org/2001/XMLSchema# vs: http://www.w3.org/2003/06/sw-vocab-status/ns# schema: http://schema.org/ jsonld: http://www.w3.org/ns/json-ld#">
+    <section id="abstract">
+      <p>This document describes the <span property="dc:title" id="title">DID Vocabulary</span>, i.e.,
+         the <span property="dc:description" id="description" datatype="rdf:HTML">vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of the W3C Controlled Identifier Document.
+</span>.
+      </p>
+      <p>Alternate versions of the vocabulary definition exist in
+        <a rel="alternate" href="vocabulary.ttl">Turtle</a> and
+        <a rel="alternate" href="vocabulary.jsonld">JSON-LD</a>.
+      </p>
+      <dl>
+        <dt>Published:</dt><dd><time property="dc:date" id="time">2025-03-07</time></dd>
+        <dt>Version Info:</dt>
+        <dd>2.0</dd>
+        <dt id="see_also">See Also: <a href="https://www.w3.org/TR/did-1.1/" property="rdfs:seeAlso">https://www.w3.org/TR/did-1.1/</a></dt>
+       </dl>
+    </section>
+    <section id="sotd">
+      <p>
+        Comments regarding this document are welcome. Please file issues
+        directly on <a href="https://github.com/w3c/did/issues/">GitHub</a>, or send them to
+        <a href="mailto:public-did-wg@w3.org">mailto:public-did-wg@w3.org</a>
+        (<a href="mailto:public-did-wg@w3.org?subject=subscribe">subscribe</a>,
+        <a href="https://lists.w3.org/Archives/Public/public-did-wg">archives</a>).
+      </p>
+    </section>
+
+    <section>
+      <h2>Namespaces</h2>
+      <p>This specification makes use of the following namespaces:</p>
+      <dl class="terms" id="namespaces">
+      <dt><code>dd</code></dt><dd><code>https://www.w3.org/ns/did#</code></dd><dt><code>sec</code></dt><dd><code>https://w3id.org/security#</code></dd><dt><code>act</code></dt><dd><code>https://www.w3.org/ns/activitystreams#</code></dd><dt><code>dc</code></dt><dd><code>http://purl.org/dc/terms/</code></dd><dt><code>dcterms</code></dt><dd><code>http://purl.org/dc/terms/</code></dd><dt><code>owl</code></dt><dd><code>http://www.w3.org/2002/07/owl#</code></dd><dt><code>rdf</code></dt><dd><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></dd><dt><code>rdfs</code></dt><dd><code>http://www.w3.org/2000/01/rdf-schema#</code></dd><dt><code>xsd</code></dt><dd><code>http://www.w3.org/2001/XMLSchema#</code></dd><dt><code>vs</code></dt><dd><code>http://www.w3.org/2003/06/sw-vocab-status/ns#</code></dd><dt><code>schema</code></dt><dd><code>http://schema.org/</code></dd><dt><code>jsonld</code></dt><dd><code>http://www.w3.org/ns/json-ld#</code></dd></dl>
+    </section>
+
+    <section>
+      <h2><code>@context</code> files</h2>
+      <p>The following <code>@context</code> files make use of the terms defined in this specification:</p>
+      <ul id="contexts">
+      <li><a href="https://www.w3.org/ns/did/v1.1" typeof="jsonld:Context"><code>https://www.w3.org/ns/did/v1.1</code></a><details><summary>term list</summary><ul><li><a href="#48822c12a756bd261f9babc30708a3615e22a02e358b7991af1e71dd33ac835e"><code>act:alsoKnownAs<code></code></code></a></li><li><a href="#DecentralizedIdentifierDocument"><code>dd:DecentralizedIdentifierDocument<code></code></code></a></li><li><a href="#Service"><code>dd:Service<code></code></code></a></li><li><a href="#service"><code>dd:service<code></code></code></a></li><li><a href="#serviceEndpoint"><code>dd:serviceEndpoint<code></code></code></a></li><li><a href="#f2712f17220e9cb2d0da26ddbcdebc4952fb8e75a9a98d263a3a42193272d7ab"><code>sec:ControlledIdentifierDocument<code></code></code></a></li><li><a href="#f86afab826bcca5b3e05eb69372daa91c1374c67f1b0efdd18fe9b0af2ede12d"><code>sec:VerificationMethod<code></code></code></a></li><li><a href="#10d00a7c47e538fb0e83de5be81a81b96c2c4e26578d8d9ec717d6875d841eaf"><code>sec:assertionMethod<code></code></code></a></li><li><a href="#afed65d63e211837b30a28b453fbe4f178a904e31d7951f775ff045d96fdb02a"><code>sec:authentication<code></code></code></a></li><li><a href="#5ff1ad800ccae3960d51351157d6937fb32952ced9941f7a635e68bf33996bdb"><code>sec:capabilityDelegationMethod<code></code></code></a></li><li><a href="#875adbb30e96b67c602c3c33f224f7e30229f68548ecbf0a3377063ad0c9d662"><code>sec:capabilityInvocationMethod<code></code></code></a></li><li><a href="#fa33984b561b2c3989b0776a4d3123f09d9ac86360b74214ed53484a7f8670ca"><code>sec:controller<code></code></code></a></li><li><a href="#8827535202f240739423d6c9080fbfd0e75fd033d8e2da42273cf5f5ef066b8d"><code>sec:keyAgreementMethod<code></code></code></a></li><li><a href="#845f8cac7281e04d4bc2207f7a85d42507778854a7a4a5e077084a67655739ee"><code>sec:verificationMethod<code></code></code></a></li></ul></details></li><li><a href="https://w3id.org/security/data-integrity/v2" typeof="jsonld:Context"><code>https://w3id.org/security/data-integrity/v2</code></a><details><summary>term list</summary><ul><li><a href="#10d00a7c47e538fb0e83de5be81a81b96c2c4e26578d8d9ec717d6875d841eaf"><code>sec:assertionMethod<code></code></code></a></li><li><a href="#afed65d63e211837b30a28b453fbe4f178a904e31d7951f775ff045d96fdb02a"><code>sec:authentication<code></code></code></a></li><li><a href="#5ff1ad800ccae3960d51351157d6937fb32952ced9941f7a635e68bf33996bdb"><code>sec:capabilityDelegationMethod<code></code></code></a></li><li><a href="#875adbb30e96b67c602c3c33f224f7e30229f68548ecbf0a3377063ad0c9d662"><code>sec:capabilityInvocationMethod<code></code></code></a></li><li><a href="#fa33984b561b2c3989b0776a4d3123f09d9ac86360b74214ed53484a7f8670ca"><code>sec:controller<code></code></code></a></li><li><a href="#8827535202f240739423d6c9080fbfd0e75fd033d8e2da42273cf5f5ef066b8d"><code>sec:keyAgreementMethod<code></code></code></a></li><li><a href="#845f8cac7281e04d4bc2207f7a85d42507778854a7a4a5e077084a67655739ee"><code>sec:verificationMethod<code></code></code></a></li></ul></details></li></ul>
+    </section>
+
+    <section id="term_definitions">
+      <h1>Regular terms</h1>
+
+      <section id="property_definitions" class="term_definitions">
+        <h2>Property definitions</h2>
+      <p>The following are  property definitions in the <code>dd</code> namespace.</p><section id="fa33984b561b2c3989b0776a4d3123f09d9ac86360b74214ed53484a7f8670ca"><h4><code>controller</code></h4><p><em>Controller</em></p><p>See also the formal definitions <a href="https://www.w3.org/TR/cid-1.0/#defn-controller">here</a> and <a href="hhttps://www.w3.org/TR/did-1.1/#did-controller">here</a>.</p><p>The property's value should be a URL, i.e., not a literal.</p><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#controller">sec:controller</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span>,<br> <span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="48822c12a756bd261f9babc30708a3615e22a02e358b7991af1e71dd33ac835e"><h4><code>alsoKnownAs</code></h4><p><em>Also known as</em></p><p>See also the formal definitions <a href="https://www.w3.org/ns/activitystreams#">here</a> and <a href="https://www.w3.org/TR/did-1.1/#also-known-as">here</a>.</p><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://www.w3.org/ns/activitystreams#alsoKnownAs">act:alsoKnownAs</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span></dd></dl></section><section id="845f8cac7281e04d4bc2207f7a85d42507778854a7a4a5e077084a67655739ee"><h4><code>verificationMethod</code></h4><p><em>Verification method</em></p><p>See also the formal definitions <a href="https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod">here</a> and <a href="https://www.w3.org/TR/did-1.1/#verification-methods">here</a>.</p><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#verificationMethod">sec:verificationMethod</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span>,<br> <span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="afed65d63e211837b30a28b453fbe4f178a904e31d7951f775ff045d96fdb02a"><h4><code>authentication</code></h4><p><em>Authentication method</em></p><p>See also the formal definitions <a href="https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod">here</a> and <a href="https://www.w3.org/TR/did-1.1/#authentication">here</a>.</p><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#authentication">sec:authentication</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Type</dt><dd><span><a href="#353ebe81a7039d4326335f41fdb4b661ad372486fda717b17335a5e122d82c1f"><code>VerificationRelationship</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span>,<br> <span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="10d00a7c47e538fb0e83de5be81a81b96c2c4e26578d8d9ec717d6875d841eaf"><h4><code>assertionMethod</code></h4><p><em>Assertion method</em></p><p>See also the formal definitions <a href="https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod">here</a> and <a href="https://www.w3.org/TR/did-1.1/#assertion">here</a>.</p><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#assertionMethod">sec:assertionMethod</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Type</dt><dd><span><a href="#353ebe81a7039d4326335f41fdb4b661ad372486fda717b17335a5e122d82c1f"><code>VerificationRelationship</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span>,<br> <span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="5ff1ad800ccae3960d51351157d6937fb32952ced9941f7a635e68bf33996bdb"><h4><code>capabilityDelegationMethod</code></h4><p><em>Capability delegation method</em></p><p>See also the formal definitions <a href="https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod">here</a> and <a href="https://www.w3.org/TR/did-1.1/#capability-delegation">here</a>.</p><div>Historically, this property has often been expressed using `capabilityDelegation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityDelegation`) and the property identifier (`...#capabilityDelegationMethod`) is expected and should not trigger an error.</div><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#capabilityDelegationMethod">sec:capabilityDelegationMethod</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Type</dt><dd><span><a href="#353ebe81a7039d4326335f41fdb4b661ad372486fda717b17335a5e122d82c1f"><code>VerificationRelationship</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span>,<br> <span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="875adbb30e96b67c602c3c33f224f7e30229f68548ecbf0a3377063ad0c9d662"><h4><code>capabilityInvocationMethod</code></h4><p><em>Capability invocation method</em></p><p>See also the formal definitions <a href="https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod">here</a> and <a href="https://www.w3.org/TR/did-1.1/#capability-invocation">here</a>.</p><div>Historically, this property has often been expressed using `capabilityInvocation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityInvocation`) and the property identifier (`...#capabilityInvocationMethod`) is expected and should not trigger an error.</div><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#capabilityInvocationMethod">sec:capabilityInvocationMethod</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Type</dt><dd><span><a href="#353ebe81a7039d4326335f41fdb4b661ad372486fda717b17335a5e122d82c1f"><code>VerificationRelationship</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span>,<br> <span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="8827535202f240739423d6c9080fbfd0e75fd033d8e2da42273cf5f5ef066b8d"><h4><code>keyAgreementMethod</code></h4><p><em>Key agreement protocols</em></p><p>See also the formal definitions <a href="https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod">here</a> and <a href="https://www.w3.org/TR/did-1.1/#key-agreement">here</a>.</p><div>Historically, this property has often been expressed using `keyAgreement` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`keyAgreement`) and the property identifier (`...#keyAgreementMethod`) is expected and should not trigger an error.</div><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#keyAgreementMethod">sec:keyAgreementMethod</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Type</dt><dd><span><a href="#353ebe81a7039d4326335f41fdb4b661ad372486fda717b17335a5e122d82c1f"><code>VerificationRelationship</code></a></span><br></dd></dl><dl class="terms"><dt>Relevant <code>@contexts</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span>,<br> <span rev="schema:mentions"><a href="https://w3id.org/security/data-integrity/v2"><code>https://w3id.org/security/data-integrity/v2</code></a></span></dd></dl></section><section id="service" resource="dd:service" typeof="rdf:Property owl:ObjectProperty"><h4><code>service</code></h4><p><em>Service</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/did-1.1/#services">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">The associated value must be a set of services, where each service is described by a map.</div><span property="rdfs:isDefinedBy" resource="dd:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range:</dt><dd property="rdfs:range" resource="dd:Service"><a href="#Service"><code>Service</code></a></dd><dt>Domain:</dt><dd property="rdfs:domain" resource="dd:DecentralizedIdentifierDocument"><a href="#DecentralizedIdentifierDocument"><code>DecentralizedIdentifierDocument</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span></dd></dl></section><section id="serviceEndpoint" resource="dd:serviceEndpoint" typeof="rdf:Property owl:ObjectProperty"><h4><code>serviceEndpoint</code></h4><p><em>Service endpoint</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/did-1.1/#services">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">Refers to the service endpoint, which is a URL that can be used to access the service.<br><br>The property's value should be a URL, i.e., not a literal.</div><span property="rdfs:isDefinedBy" resource="dd:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Domain:</dt><dd property="rdfs:domain" resource="dd:Service"><a href="#Service"><code>Service</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span></dd></dl></section></section>
+
+      <section id="class_definitions" class="term_definitions">
+        <h2>Class definitions</h2>
+      <p>The following are  class definitions in the <code>dd</code> namespace.</p><section id="DecentralizedIdentifierDocument" resource="dd:DecentralizedIdentifierDocument" typeof="rdfs:Class"><h4><code>DecentralizedIdentifierDocument</code></h4><p><em>Decentralized Identifier Document</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/did-1.1/#data-model">formal definition of the term</a>.</p><span property="rdfs:isDefinedBy" resource="dd:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Subclass of:</dt><dd><span property="rdfs:subClassOf" resource="sec:ControlledIdentifierDocument"><a href="#f2712f17220e9cb2d0da26ddbcdebc4952fb8e75a9a98d263a3a42193272d7ab"><code>ControlledIdentifierDocument</code></a></span></dd></dl><dl class="terms"><dt>Domain of:</dt><dd><a href="#service"><code>service</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span></dd></dl></section><section id="Service" resource="dd:Service" typeof="rdfs:Class"><h4><code>Service</code></h4><p><em>Service</em></p><p>See the <a rel="rdfs:isDefinedBy" href="https://www.w3.org/TR/did-1.1/#services">formal definition of the term</a>.</p><div property="rdfs:comment" datatype="rdf:HTML">A service is a set of properties that describe a service endpoint, and should be defined through subclasses to this class. In order to maximize interoperability, the service type and its associated properties should be registered in the [[[did-spec-registries]]]&nbsp;[[did-spec-registries]].</div><span property="rdfs:isDefinedBy" resource="dd:"></span><span style="display: none" property="vs:term_status">stable</span><dl class="terms"><dt>Range of:</dt><dd><a href="#service"><code>service</code></a></dd><dt>Domain of:</dt><dd><a href="#serviceEndpoint"><code>serviceEndpoint</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span></dd></dl></section><section id="f2712f17220e9cb2d0da26ddbcdebc4952fb8e75a9a98d263a3a42193272d7ab"><h4><code>ControlledIdentifierDocument</code></h4><p><em>Controlled Identifier Document</em></p><p>See also the <a href="https://www.w3.org/TR/cid-1.0/#controlled-identifier-documents">formal definition of the term</a>.</p><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#ControlledIdentifierDocument">sec:ControlledIdentifierDocument</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span></dd></dl></section><section id="f86afab826bcca5b3e05eb69372daa91c1374c67f1b0efdd18fe9b0af2ede12d"><h4><code>VerificationMethod</code></h4><p><em>Verification method</em></p><p>See also the <a href="https://www.w3.org/TR/cid-1.0/#verification-methods">formal definition of the term</a>.</p><div>Instances of this class must be <a href="https://www.w3.org/TR/rdf11-concepts/#resources-and-statements">denoted by URLs</a>, i.e., they cannot be blank nodes.</div><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#VerificationMethod">sec:VerificationMethod</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p><dl class="terms"><dt>Range of:</dt><dd><a href="#845f8cac7281e04d4bc2207f7a85d42507778854a7a4a5e077084a67655739ee"><code>verificationMethod</code></a>, <a href="#afed65d63e211837b30a28b453fbe4f178a904e31d7951f775ff045d96fdb02a"><code>authentication</code></a>, <a href="#10d00a7c47e538fb0e83de5be81a81b96c2c4e26578d8d9ec717d6875d841eaf"><code>assertionMethod</code></a>, <a href="#5ff1ad800ccae3960d51351157d6937fb32952ced9941f7a635e68bf33996bdb"><code>capabilityDelegationMethod</code></a>, <a href="#875adbb30e96b67c602c3c33f224f7e30229f68548ecbf0a3377063ad0c9d662"><code>capabilityInvocationMethod</code></a>, <a href="#8827535202f240739423d6c9080fbfd0e75fd033d8e2da42273cf5f5ef066b8d"><code>keyAgreementMethod</code></a></dd></dl><dl class="terms"><dt>Relevant <code>@context</code>:</dt><dd><span rev="schema:mentions"><a href="https://www.w3.org/ns/did/v1.1"><code>https://www.w3.org/ns/did/v1.1</code></a></span></dd></dl></section><section id="353ebe81a7039d4326335f41fdb4b661ad372486fda717b17335a5e122d82c1f"><h4><code>VerificationRelationship</code></h4><p><em>Sec : verification relationship</em></p><p>See also the <a href="https://www.w3.org/TR/cid-1.0/#verification-relationships">formal definition of the term</a>.</p><div>Instances of this class are verification relationships like, for example, <a href="https://www.w3.org/TR/did-1.1/#authentication">authentication</a> or <a href="https://www.w3.org/TR/did-1.1/#assertion">assertionMethod</a>.</div><p class="note">
+                <b>This term is formally defined in another vocabulary</b>
+                (as <a href="https://w3id.org/security#VerificationRelationship">sec:VerificationRelationship</a>), but is frequently used with this vocabulary and has been 
+                included to aid readability of this document.
+            </p></section></section>
+  
+      
+  
+      
+    </section>   
+
+    
+
+       
+
+
+  
+
+</body></html>
