@@ -90,11 +90,11 @@
         "@language": "en"
     },
     "dc:description": {
-        "@value": "vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of the W3C Controlled Identifier Document.\n",
+        "@value": "vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of W3C Controlled Identifier Document.\n",
         "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/did-1.1/",
-    "dc:date": "2025-03-07",
+    "dc:date": "2025-03-25",
     "rdfs_properties": [
         {
             "@id": "dd:service",
@@ -150,13 +150,7 @@
             ],
             "rdfs:label": "Decentralized Identifier Document",
             "rdfs:isDefinedBy": "https://www.w3.org/TR/did-1.1/#data-model",
-            "vs:term_status": "stable",
-            "mentioned": [
-                {
-                    "@id": "https://www.w3.org/ns/did/v1.1",
-                    "@type": "jsonld:Context"
-                }
-            ]
+            "vs:term_status": "stable"
         },
         {
             "@id": "dd:Service",
@@ -167,13 +161,7 @@
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
             },
             "rdfs:isDefinedBy": "https://www.w3.org/TR/did-1.1/#services",
-            "vs:term_status": "stable",
-            "mentioned": [
-                {
-                    "@id": "https://www.w3.org/ns/did/v1.1",
-                    "@type": "jsonld:Context"
-                }
-            ]
+            "vs:term_status": "stable"
         }
     ]
 }

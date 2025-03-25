@@ -15,7 +15,7 @@ ontology:
 
   - property: dc:description
     value: |
-      vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of the W3C Controlled Identifier Document.
+      vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of W3C Controlled Identifier Document.
 
   - property: rdfs:seeAlso
     value: https://www.w3.org/TR/did-1.1/
@@ -25,20 +25,24 @@ class:
     label: Decentralized Identifier Document
     defined_by: https://www.w3.org/TR/did-1.1/#data-model
     upper_value: sec:ControlledIdentifierDocument
+    context: none
 
   - id: Service
     label: Service
     comment: A service is a set of properties that describe a service endpoint, and should be defined through subclasses to this class. In order to maximize interoperability, the service type and its associated properties should be registered in the [[[did-spec-registries]]] [[did-spec-registries]].
     defined_by: https://www.w3.org/TR/did-1.1/#services
+    context: none
 
   - id: sec:ControlledIdentifierDocument
     label: Controlled Identifier Document
     defined_by: https://www.w3.org/TR/cid-1.0/#controlled-identifier-documents
+    context: none
 
   - id: sec:VerificationMethod
     label: Verification method
     comment: Instances of this class must be <a href="https://www.w3.org/TR/rdf11-concepts/#resources-and-statements">denoted by URLs</a>, i.e., they cannot be blank nodes.
     defined_by: https://www.w3.org/TR/cid-1.0/#verification-methods
+    context: none
 
   - id: sec:VerificationRelationship
     comment: Instances of this class are verification relationships like, for example, <a href="https://www.w3.org/TR/did-1.1/#authentication">authentication</a> or <a href="https://www.w3.org/TR/did-1.1/#assertion">assertionMethod</a>.
@@ -51,7 +55,7 @@ property:
     label: Controller
     range: IRI
     defined_by: [https://www.w3.org/TR/cid-1.0/#defn-controller, hhttps://www.w3.org/TR/did-1.1/#did-controller]
-    context: [vocab, https://w3id.org/security/data-integrity/v2]
+    context: [vocab, https://w3id.org/security/data-integrity/v2, https://www.w3.org/ns/cid/v1]
 
   - id: act:alsoKnownAs
     label: Also known as
@@ -60,7 +64,7 @@ property:
     context: vocab
 
   - id: sec:verificationMethod
-    label: Verification method
+    label: Verification method  
     range: sec:VerificationMethod
     defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod, https://www.w3.org/TR/did-1.1/#verification-methods]
     context: [vocab, https://w3id.org/security/data-integrity/v2]
@@ -69,39 +73,42 @@ property:
     label: Authentication method
     range: sec:VerificationMethod
     type: sec:VerificationRelationship
-    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod, https://www.w3.org/TR/did-1.1/#authentication]
-    context: [vocab, https://w3id.org/security/data-integrity/v2]
+    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod]
+    context: [vocab, https://w3id.org/security/data-integrity/v2, https://www.w3.org/ns/cid/v1]
 
   - id: sec:assertionMethod
     label: Assertion method
     range: sec:VerificationMethod
     type: sec:VerificationRelationship
-    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod, https://www.w3.org/TR/did-1.1/#assertion]
-    context: [vocab, https://w3id.org/security/data-integrity/v2]
+    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod]
+    context: [vocab, https://w3id.org/security/data-integrity/v2, https://www.w3.org/ns/cid/v1]
 
   - id: sec:capabilityDelegationMethod
     label: Capability delegation method
     range: sec:VerificationMethod
     type: sec:VerificationRelationship
     comment: Historically, this property has often been expressed using `capabilityDelegation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityDelegation`) and the property identifier (`...#capabilityDelegationMethod`) is expected and should not trigger an error.
-    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod, https://www.w3.org/TR/did-1.1/#capability-delegation]
-    context: [vocab, https://w3id.org/security/data-integrity/v2]
+    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod]
+    context: [vocab, https://w3id.org/security/data-integrity/v2, https://www.w3.org/ns/cid/v1]
+    known_as: capabilityDelegation
 
   - id: sec:capabilityInvocationMethod
     label: Capability invocation method
     range: sec:VerificationMethod
     type: sec:VerificationRelationship
     comment: Historically, this property has often been expressed using `capabilityInvocation` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`capabilityInvocation`) and the property identifier (`...#capabilityInvocationMethod`) is expected and should not trigger an error.
-    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod, https://www.w3.org/TR/did-1.1/#capability-invocation]
-    context: [vocab, https://w3id.org/security/data-integrity/v2]
+    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod]
+    context: [vocab, https://w3id.org/security/data-integrity/v2, https://www.w3.org/ns/cid/v1]
+    known_as: capabilityInvocation
 
   - id: sec:keyAgreementMethod
     label: Key agreement protocols
     type: sec:VerificationRelationship
     range: sec:VerificationMethod
     comment: Historically, this property has often been expressed using `keyAgreement` as a shortened term in JSON-LD. Since this shortened term and its mapping to this property are in significant use in the ecosystem, the inconsistency between the short term name (`keyAgreement`) and the property identifier (`...#keyAgreementMethod`) is expected and should not trigger an error.
-    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod, https://www.w3.org/TR/did-1.1/#key-agreement]
-    context: [vocab, https://w3id.org/security/data-integrity/v2]
+    defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod]
+    context: [vocab, https://w3id.org/security/data-integrity/v2, https://www.w3.org/ns/cid/v1]
+    known_as: keyAgreement
 
   - id: service
     label: Service

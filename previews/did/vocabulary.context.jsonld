@@ -47,15 +47,15 @@
             "@id": "https://w3id.org/security#assertionMethod",
             "@type": "@id"
         },
-        "capabilityDelegationMethod": {
+        "capabilityDelegation": {
             "@id": "https://w3id.org/security#capabilityDelegationMethod",
             "@type": "@id"
         },
-        "capabilityInvocationMethod": {
+        "capabilityInvocation": {
             "@id": "https://w3id.org/security#capabilityInvocationMethod",
             "@type": "@id"
         },
-        "keyAgreementMethod": {
+        "keyAgreement": {
             "@id": "https://w3id.org/security#keyAgreementMethod",
             "@type": "@id"
         }

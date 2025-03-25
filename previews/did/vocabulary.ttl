@@ -14,10 +14,10 @@
 # Ontology definition
 dd: a owl:Ontology ;
     dc:title """DID Vocabulary"""@en ;
-    dc:description """vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of the W3C Controlled Identifier Document.
+    dc:description """vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of W3C Controlled Identifier Document.
 """^^@rdf:HTML ;
     rdfs:seeAlso <https://www.w3.org/TR/did-1.1/> ;
-    dc:date "2025-03-07"^^xsd:date ;
+    dc:date "2025-03-25"^^xsd:date ;
 .
 
 # Property definitions
@@ -60,12 +60,8 @@ dd:Service a rdfs:Class ;
 <https://www.w3.org/ns/did/v1.1> a jsonld:Context ;
     schema:mentions
         act:alsoKnownAs,
-        dd:DecentralizedIdentifierDocument,
-        dd:Service,
         dd:service,
         dd:serviceEndpoint,
-        sec:ControlledIdentifierDocument,
-        sec:VerificationMethod,
         sec:assertionMethod,
         sec:authentication,
         sec:capabilityDelegationMethod,
@@ -83,4 +79,13 @@ dd:Service a rdfs:Class ;
         sec:controller,
         sec:keyAgreementMethod,
         sec:verificationMethod ;
+
+<https://www.w3.org/ns/cid/v1> a jsonld:Context ;
+    schema:mentions
+        sec:assertionMethod,
+        sec:authentication,
+        sec:capabilityDelegationMethod,
+        sec:capabilityInvocationMethod,
+        sec:controller,
+        sec:keyAgreementMethod ;
 
