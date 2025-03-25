@@ -1,4 +1,4 @@
-# Security Vocabulary
+# DID Vocabulary
 
 - [In HTML+RDFa](./vocabulary.html)
 - [In Turtle](./vocabulary.ttl)
