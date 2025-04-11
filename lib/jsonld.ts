@@ -18,6 +18,7 @@ const generic_context = {
     "rdfs:seeAlso":             { "@type": "@id" },
     "rdfs:subClassOf":          { "@type": "@id" },
     "rdfs:subPropertyOf":       { "@type": "@id" },
+    "rdfs:isDefinedBy":         { "@type": "@id" },
     "owl:equivalentClass":      { "@type": "@vocab" },
     "owl:equivalentProperty":   { "@type": "@vocab" },
     "owl:oneOf":                { "@container": "@list", "@type": "@vocab" },
@@ -28,11 +29,9 @@ const generic_context = {
     "owl:unionOf":              { "@container": "@list", "@type": "@vocab" },
     "rdfs_classes":             { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_properties":          { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
-    "rdfs_instances":           { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
+    "rdfs_individuals":         { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "rdfs_datatypes":           { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
     "mentioned":                { "@reverse": "schema:mentions",  "@type": "@id" },
-    "dc:title":                 { "@container": "@language" },
-    "dc:description":           { "@container": "@language" },
 }
 
 /**
