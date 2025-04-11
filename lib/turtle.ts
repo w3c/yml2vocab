@@ -78,7 +78,7 @@ export function toTurtle(vocab: Vocab): string {
             if (ont.property === 'dc:date') {
                 turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`
             } else if (ont.property === 'dc:description') {
-                turtle += `    dc:description """${ont.value}"""^^@rdf:HTML ;\n`
+                turtle += `    dc:description """${ont.value}"""^^rdf:HTML ;\n`
             } else {
                 if (ont.url) {
                     turtle += `    ${ont.property} <${ont.value}> ;\n`;
@@ -111,7 +111,10 @@ export function toTurtle(vocab: Vocab): string {
                     turtle += `    rdfs:domain ${multiDomain(prop.domain)} ;\n`;
                 }
                 if (prop.range) {
-                    turtle += `    rdfs:range ${multiRange(prop.range)} ;\n`;
+                    const range = multiRange(prop.range);
+                    if (!(range === '' || range === '[]')) {
+                        turtle += `    rdfs:range ${multiRange(prop.range)} ;\n`;
+                    }
                 }
                 commonFields(prop);
             }
@@ -180,7 +183,7 @@ export function toTurtle(vocab: Vocab): string {
             terms.sort();
             turtle += `<${ctx}> a jsonld:Context ;\n`;
             turtle += `    schema:mentions\n`
-            turtle += (terms.map((term: RDFTerm): string => `        ${term}`).join(",\n")) + " ;\n\n"
+            turtle += (terms.map((term: RDFTerm): string => `        ${term}`).join(",\n")) + " ;\n.\n\n"
         }
     }
 
