@@ -16,11 +16,12 @@ const common_1 = require("./common");
  * @returns - the full Turtle representation of the vocabulary
  */
 function toTurtle(vocab) {
+    const termToStringCallback = (t) => `${t}`;
     // Handling of the domain is a bit complicated due to the usage
     // of the owl:unionOf construct if there are several domains; factored it here to make the 
     // code more readable.
     const multiDomain = (term) => {
-        const value = term.map((t) => t.curie);
+        const value = term.map(termToStringCallback);
         if (value.length === 1) {
             return value[0];
         }
@@ -30,7 +31,7 @@ function toTurtle(vocab) {
     };
     // This is just for symmetry v.a.v. the domain...
     const multiRange = (term) => {
-        const value = term.map((t) => t.curie);
+        const value = term.map(termToStringCallback);
         if (value.length === 1) {
             return value[0];
         }
@@ -77,7 +78,7 @@ function toTurtle(vocab) {
                 turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`;
             }
             else if (ont.property === 'dc:description') {
-                turtle += `    dc:description """${ont.value}"""^^@rdf:HTML ;\n`;
+                turtle += `    dc:description """${ont.value}"""^^rdf:HTML ;\n`;
             }
             else {
                 if (ont.url) {
@@ -95,18 +96,26 @@ function toTurtle(vocab) {
         for (const prop of vocab.properties) {
             // External definitions should be ignored
             if (!prop.external) {
-                turtle += `${common_1.global.vocab_prefix}:${prop.id} a ${prop.type.join(", ")} ;\n`;
+                turtle += `${prop} a ${prop.type.join(", ")} ;\n`;
                 if (prop.status === common_1.Status.deprecated) {
                     turtle += `    owl:deprecated true ;\n`;
                 }
                 if (prop.subPropertyOf) {
+                    // some magic is happening here...
+                    // the results of the `${prop.subPropertyOf.join(", ")}` is an array
+                    // of object, but by virtue of the string interpretation, each object
+                    // is converted to a string automatically (by calling the toString() method)
+                    // and the result is a comma-separated list of the stringified objects.
                     turtle += `    rdfs:subPropertyOf ${prop.subPropertyOf.join(", ")} ;\n`;
                 }
                 if (prop.domain) {
                     turtle += `    rdfs:domain ${multiDomain(prop.domain)} ;\n`;
                 }
                 if (prop.range) {
-                    turtle += `    rdfs:range ${multiRange(prop.range)} ;\n`;
+                    const range = multiRange(prop.range);
+                    if (!(range === '' || range === '[]')) {
+                        turtle += `    rdfs:range ${multiRange(prop.range)} ;\n`;
+                    }
                 }
                 commonFields(prop);
             }
@@ -116,11 +125,12 @@ function toTurtle(vocab) {
         turtle += "# Class definitions\n";
         for (const cl of vocab.classes) {
             if (!cl.external) {
-                turtle += `${common_1.global.vocab_prefix}:${cl.id} a ${cl.type.join(", ")} ;\n`;
+                turtle += `${cl} a ${cl.type.join(", ")} ;\n`;
                 if (cl.status === common_1.Status.deprecated) {
                     turtle += `    owl:deprecated true ;\n`;
                 }
                 if (cl.subClassOf && cl.subClassOf.length > 0) {
+                    // See the comment on magic in the property section...
                     turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
                 }
                 commonFields(cl);
@@ -132,7 +142,8 @@ function toTurtle(vocab) {
         turtle += "# Definitions of individuals\n";
         for (const ind of vocab.individuals) {
             if (!ind.external) {
-                turtle += `${common_1.global.vocab_prefix}:${ind.id} a ${ind.type.join(", ")} ;\n`;
+                // See the comment on magic in the property section...
+                turtle += `${ind} a ${ind.type.join(", ")} ;\n`;
                 if (ind.status === common_1.Status.deprecated) {
                     turtle += `    owl:deprecated true ;\n`;
                 }
@@ -144,11 +155,12 @@ function toTurtle(vocab) {
         turtle += "# Definitions of datatypes\n";
         for (const dt of vocab.datatypes) {
             if (!dt.external) {
-                turtle += `${common_1.global.vocab_prefix}:${dt.id} a rdfs:Datatype ;\n`;
+                turtle += `${dt} a rdfs:Datatype ;\n`;
                 if (dt.status === common_1.Status.deprecated) {
                     turtle += `    owl:deprecated true ;\n`;
                 }
                 if (dt.subClassOf && dt.subClassOf.length > 0) {
+                    // See the comment on magic in the property section...
                     turtle += `    rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
                 }
                 commonFields(dt);
@@ -159,9 +171,16 @@ function toTurtle(vocab) {
     if (ctx_s.length > 0) {
         turtle += "# Context files and their mentions\n";
         for (const ctx of ctx_s) {
+            const terms = common_1.global.context_mentions[ctx];
+            if (terms.length === 0) {
+                continue;
+            }
+            // The default sort is the alphabetical sort of the string representation, which is, in this case
+            // the curie of the term.
+            terms.sort();
             turtle += `<${ctx}> a jsonld:Context ;\n`;
             turtle += `    schema:mentions\n`;
-            turtle += (common_1.global.context_mentions[ctx].map((term) => `        ${term.curie}`).join(",\n")) + " ;\n\n";
+            turtle += (terms.map((term) => `        ${term}`).join(",\n")) + " ;\n.\n\n";
         }
     }
     return turtle;

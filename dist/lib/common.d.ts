@@ -18,7 +18,7 @@ export declare enum Status {
 }
 /**
  * Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
- * This information is used in the HTML generation, for example, to decide whether a section in the template
+ * This information is used in the HTML generation to decide whether the relevant section(s) in the template
  * should be removed (because it is empty), or not.
  */
 export declare class StatusCounter {
@@ -114,6 +114,7 @@ export interface RawVocabEntry {
     defined_by?: string[];
     comment?: string;
     see_also?: Link[];
+    known_as?: string;
     example?: Example[];
     dataset?: boolean;
     context?: string[];
@@ -123,12 +124,12 @@ export interface RawVocabEntry {
  */
 export interface RawVocab {
     vocab: RawVocabEntry[];
-    prefixes?: RawVocabEntry[];
+    prefix?: RawVocabEntry[];
     ontology: RawVocabEntry[];
-    classes?: RawVocabEntry[];
-    properties?: RawVocabEntry[];
-    individuals?: RawVocabEntry[];
-    datatypes?: RawVocabEntry[];
+    class?: RawVocabEntry[];
+    property?: RawVocabEntry[];
+    individual?: RawVocabEntry[];
+    datatype?: RawVocabEntry[];
 }
 /**
  * Type needed for the JSON Schema validation interface.
@@ -153,12 +154,36 @@ export interface ValidationError {
     params?: any;
     data?: any;
 }
+/**
+ * URL schemes; curies may be false when using these prefixes; they are, in fact, full URLs.
+ */
+export declare const bona_fide_urls: string[];
+/**
+ * Prefixes that are not defined in the vocabulary but frequently used, and are considered
+ * as "part of the RDF world". They are listed as prefixes vocabulary, but their terms
+ * are not displayed with a URL.
+ */
+export declare const bona_fide_prefixes: string[];
+/**
+ * Type of the term: class, property, individual, datatype, but also some transient, internal types
+ * that categorize terms
+ */
 export declare enum TermType {
     class = "class",
     property = "property",
     individual = "individual",
     datatype = "datatype",
+    /**
+     * This is a "core" term, i.e., terms in RDF, xsd, rdfs, etc.
+     * Their full URL-s are unused, because they are well-known.
+     */
+    core = "core",
     unknown = "unknown",
+    /**
+     * This is not a real term, but just a URL that has been used as a term
+     * (e.g., in the domain or range of a property).
+     * See also {@link bona_fide_urls}.
+     */
     fullUrl = "fullUrl"
 }
 /**
@@ -187,11 +212,15 @@ export interface RDFTerm {
     see_also?: Link[];
     /** This field is, in fact, potentially deprecated, because the status has taken over. Kept for backward compatibility. */
     deprecated?: boolean;
+    /** Alternative label to be used, e.g., in a context file. Rarely used. */
+    known_as?: string;
     status?: Status;
     /** Whether this term is really part of the vocabulary, or is defined externally. */
     external?: boolean;
     example?: Example[];
     context: string[];
+    /** This is to simplify the text conversion of the terms to strings; it usually refers to the curie */
+    toString: () => string;
 }
 /**
  * Extra information necessary for a class: its superclasses.
@@ -214,6 +243,7 @@ export interface RDFProperty extends RDFTerm {
     domain: RDFClass[];
     range: RDFTerm[];
     dataset: boolean;
+    strongURL: boolean;
 }
 /**
  * No extra information is necessary for an individual, but it makes the code

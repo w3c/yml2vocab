@@ -8,6 +8,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toContext = toContext;
 const common_1 = require("./common");
+const factory_1 = require("./factory");
 // These are the context statements appearing in all 
 // embedded contexts, as well as the top level one.
 const preamble = {
@@ -43,39 +44,38 @@ function toContext(vocab) {
         const output = {
             "@id": url
         };
-        if (forClass && property.type.includes("owl:ObjectProperty")) {
+        if (forClass && factory_1.RDFTermFactory.includesCurie(property.type, "owl:ObjectProperty")) {
             output["@type"] = "@id";
         }
         // Try to catch the datatype settings; these can be used
         // to set these in the context as well
         if (property.range) {
-            for (const range of property.range) {
-                const [range_prefix, range_reference] = range.split(":");
-                if (range.startsWith("xsd:")) {
-                    output["@type"] = range.replace("xsd:", "http://www.w3.org/2001/XMLSchema#");
+            for (const rangeTerm of property.range) {
+                const curie = rangeTerm.curie;
+                if (curie.startsWith("xsd:")) {
+                    output["@type"] = rangeTerm.url;
                     break;
                 }
-                else if (range === "rdf:JSON") {
+                else if (curie === "rdf:JSON") {
                     output["@type"] = "@json";
                     break;
                 }
-                else if (["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString"].includes(range)) {
-                    output["@type"] = range.replace("rdf:", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+                else if (["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString"].includes(curie)) {
+                    output["@type"] = rangeTerm.url;
                     break;
                 }
-                else if (range === "rdf:List") {
+                else if (curie === "rdf:List") {
                     output["@container"] = "@list";
                     break;
                 }
-                else if (property.type.includes("owl:DatatypeProperty")) {
+                else if (factory_1.RDFTermFactory.includesCurie(property.type, "owl:DatatypeProperty")) {
                     // This is the case when the property refers to an explicitly defined, non-standard datatype
-                    const range_url = prefix_url(range_prefix, vocab);
-                    output["@type"] = range_url + range_reference;
+                    output["@type"] = rangeTerm.url;
                     break;
                 }
                 else {
                     // if range is a class, then it is a reference
-                    if (vocab.classes.find(cl => cl.id === range_reference)) {
+                    if (factory_1.RDFTermFactory.isClass(rangeTerm)) {
                         output["@type"] = "@id";
                         break;
                     }
@@ -109,37 +109,35 @@ function toContext(vocab) {
         const embedded = {
             ...preamble
         };
-        // The domain field in the property structure contains
-        // the prefixed version of the class ID...
-        const prefixed_id = `${cl.prefix}:${cl.id}`;
         // Get all the properties that have this class in its domain
         for (const prop of vocab.properties) {
             if (prop.domain) {
-                if (prop.domain.includes(prefixed_id) || prop.domain.includes(cl.id)) {
+                if (factory_1.RDFTermFactory.includesTerm(prop.domain, cl)) {
                     // bingo, this property can be added here
-                    embedded[prop.id] = propertyContext(prop);
+                    embedded[prop.known_as ?? prop.id] = propertyContext(prop);
                     class_properties.add(prop.id);
                 }
             }
         }
         // If no properties are added, then the embedded context is unnecessary
-        top_level[cl.id] = (Object.keys(embedded).length === Object.keys(preamble).length) ?
-            url : { "@id": url, "@context": embedded };
+        top_level[cl.known_as ?? cl.id] = (Object.keys(embedded).length === Object.keys(preamble).length)
+            ? url
+            : { "@id": url, "@context": embedded };
     }
     // Add the properties that have not been handled in the 
     // previous step
     for (const prop of vocab.properties) {
         if (!class_properties.has(prop.id)) {
-            top_level[prop.id] = propertyContext(prop, false);
+            top_level[prop.known_as ?? prop.id] = propertyContext(prop, false);
         }
     }
     // Add the individuals
     for (const individual of vocab.individuals) {
-        top_level[individual.id] = `${common_1.global.vocab_url}${individual.id}`;
+        top_level[individual.known_as ?? individual.id] = `${common_1.global.vocab_url}${individual.id}`;
     }
     // Add the datatypes
     for (const datatype of vocab.datatypes) {
-        top_level[datatype.id] = `${common_1.global.vocab_url}${datatype.id}`;
+        top_level[datatype.known_as ?? datatype.id] = `${common_1.global.vocab_url}${datatype.id}`;
     }
     // That is it... return the nicely formatted JSON text 
     return JSON.stringify({ "@context": top_level }, null, 4);

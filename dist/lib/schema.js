@@ -217,6 +217,9 @@ const vocabSchema = `{
                     "type": "string",
                     "enum": ["stable", "reserved", "deprecated"]
                 },
+                "known_as": {
+                    "type": "string"
+                },
                 "external": {
                     "type": "boolean"
                 },

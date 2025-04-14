@@ -52,12 +52,38 @@ function toHTML(vocab, template_text) {
         if (term.term_type === common_1.TermType.fullUrl) {
             return `<a href="${term.curie}"><code>${term.curie}</code></a>`;
         }
+        else if (term.term_type === common_1.TermType.core) {
+            // Typical case: an xsd datatype; a full curie is displayed, but
+            // no link (would be unnecessary)
+            return `<code>${term.curie}</code>`;
+        }
+        else if (term.term_type === common_1.TermType.unknown) {
+            // Typical case: an xsd datatype; a full curie is displayed, but
+            // no link (would be unnecessary)
+            return `<a href="${term.url}"><code>${term.curie}</code></a>`;
+        }
+        else if (term.prefix === vocab_prefix) {
+            // This is a term from the same vocabulary, it is locally defined
+            // and the id should only be displayed.
+            return `<a href="#${term.html_id}"><code>${term.id}</code></a>`;
+        }
+        else if (term.external) {
+            // This is a term from another vocabulary, but the definition is included
+            // as an 'external' term. Typical case is a schema.org term listed in the vocabulary definition
+            // It displays similarly as a locally defined term, but it is kept
+            // separately in the code, if we decide to change things.
+            // Note that the value of html_id is different; in this case, it is a hash value
+            return `<a href="#${term.html_id}"><code>${term.id}</code></a>`;
+        }
         else {
-            return `<a href="${term.html_id}"><code>${term.id}</code></a>`;
+            // This is a term from another vocabulary, and the definition is not included
+            // so it should be clearly referred to as external and link to its
+            // "real" identity. Typical case is cred:CredentialStatus used from 
+            // another vocabulary.
+            return `<a href="${term.url}"><code>${term.curie}</code></a>`;
         }
     };
-    // Factor out all common fields for the terms
-    // return the value that must be used as the id value of the containing section in HTML
+    // Handle the common fields for the terms
     const commonFields = (section, item) => {
         // External terms have a different behavior: ranges/domains should be ignored, and no RDFa should be
         // generated.
@@ -115,8 +141,10 @@ function toHTML(vocab, template_text) {
         }
         if (item.comment !== "") {
             let description = item.comment;
-            if (factory_1.factory.includesCurie(item.type, "owl:ObjectProperty")) {
-                description += "<br><br>The property's value should be a URL, i.e., not a literal.";
+            if (factory_1.RDFTermFactory.isProperty(item)) {
+                if (item.strongURL) {
+                    description += "<br><br>The property's value should be a URL, i.e., not a literal.";
+                }
             }
             const div = document.addChild(section, 'div', description);
             if (!item.external) {
@@ -124,8 +152,12 @@ function toHTML(vocab, template_text) {
                 div.setAttribute('datatype', 'rdf:HTML');
             }
         }
-        else if (factory_1.factory.includesCurie(item.type, "owl:ObjectProperty")) {
-            document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
+        else if (factory_1.RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
+            if (factory_1.RDFTermFactory.isProperty(item)) {
+                if (item.strongURL) {
+                    document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
+                }
+            }
         }
         // Add the external warning, if applicable
         if (item.external) {
@@ -211,7 +243,7 @@ function toHTML(vocab, template_text) {
             const dd = document.addChild(dl, 'dd');
             dd.innerHTML = item.context.map((ctx) => {
                 return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;
-            }).join(", ");
+            }).join(",<br> ");
         }
     };
     /************ Functions to add specific content to the final HTML, based also on the template ********************/
@@ -231,8 +263,8 @@ function toHTML(vocab, template_text) {
             document.addText(title, document.getElementsByTagName('title')[0]);
             document.addText(title, document.getElementById('title'));
         }
-        catch (_e) {
-            console.log("Vocabulary warning: ontology title is not provided.");
+        catch (e) {
+            console.warn(`Vocabulary warning: ontology title is not provided. (${e})`);
         }
         const date = vocab.ontology_properties.filter((property) => property.property === 'dc:date')[0].value;
         document.addText(date, document.getElementById('time'));
@@ -245,23 +277,28 @@ function toHTML(vocab, template_text) {
                 descriptionElement.setAttribute('property', 'dc:description');
             }
             else {
-                console.log("Vocabulary warning: ontology description is not provided.");
+                console.warn("Vocabulary warning: ontology description is not provided.");
             }
         }
-        catch (_e) {
-            console.log("Vocabulary warning: ontology description is not provided.");
+        catch (e) {
+            console.warn(`Vocabulary warning: ontology description is not provided. (${e})`);
         }
         try {
-            const see_also = vocab.ontology_properties.filter((property) => property.property === 'rdfs:seeAlso')[0].value;
-            const target = document.getElementById('see_also');
-            if (target) {
-                const a = document.addChild(target, 'a', see_also);
-                a.setAttribute('href', see_also);
-                a.setAttribute('property', 'rdfs:seeAlso');
+            const see_also = vocab.ontology_properties.filter((property) => property.property === 'rdfs:seeAlso');
+            if (see_also && see_also.length > 0) {
+                const target = document.getElementById('see_also');
+                if (target) {
+                    const a = document.addChild(target, 'a', see_also[0].value);
+                    a.setAttribute('href', see_also[0].value);
+                    a.setAttribute('property', 'rdfs:seeAlso');
+                }
+            }
+            else {
+                console.warn(`Vocabulary warning: no reference to the ontology specification provided.`);
             }
         }
-        catch (_e) {
-            console.log("Vocabulary warning: no reference to the ontology specification provided.");
+        catch (e) {
+            console.warn(`Vocabulary warning: no reference to the ontology specification provided. (${e})`);
         }
     };
     // There is a separate list in the template for all the namespaces used by the vocabulary
@@ -296,7 +333,11 @@ function toHTML(vocab, template_text) {
                     const details = document.addChild(li, 'details');
                     document.addChild(details, 'summary', 'term list');
                     const ul = document.addChild(details, 'ul');
-                    for (const term of common_2.global.context_mentions[ctx]) {
+                    const terms = common_2.global.context_mentions[ctx];
+                    // The default sort is by the string version of the entries which is, in this case
+                    // the curie identifier of the term.
+                    terms.sort();
+                    for (const term of terms) {
                         document.addChild(ul, 'li', `<a href="#${term.html_id}"><code>${term.id}<code></li>`);
                     }
                 }
@@ -429,7 +470,7 @@ function toHTML(vocab, template_text) {
                             const dd = document.addChild(dl, 'dd');
                             dd.setAttribute('property', 'rdfs:range');
                             if (item.range.length === 1) {
-                                dd.setAttribute('resource', item.range[0]);
+                                dd.setAttribute('resource', item.range[0].curie);
                                 dd.innerHTML = termHTMLReference(item.range[0]);
                             }
                             else {
@@ -437,7 +478,7 @@ function toHTML(vocab, template_text) {
                                 document.addChild(dd, 'br');
                                 for (const entry of item.range) {
                                     const r_span = document.addChild(dd, 'span');
-                                    r_span.setAttribute('resource', entry);
+                                    r_span.setAttribute('resource', entry.curie);
                                     r_span.innerHTML = termHTMLReference(entry);
                                     document.addChild(dd, 'br');
                                 }
@@ -448,7 +489,7 @@ function toHTML(vocab, template_text) {
                             const dd = document.addChild(dl, 'dd');
                             dd.setAttribute('property', 'rdfs:domain');
                             if (item.domain.length === 1) {
-                                dd.setAttribute('resource', item.domain[0]);
+                                dd.setAttribute('resource', item.domain[0].curie);
                                 dd.innerHTML = termHTMLReference(item.domain[0]);
                             }
                             else {
@@ -463,7 +504,7 @@ function toHTML(vocab, template_text) {
                                     sp.setAttribute('about', u_bnode);
                                     sp.setAttribute('inlist', 'true');
                                     sp.setAttribute('property', 'owl:unionOf');
-                                    sp.setAttribute('resource', entry);
+                                    sp.setAttribute('resource', entry.curie);
                                     sp.innerHTML = termHTMLReference(entry);
                                     document.addChild(dd, 'br');
                                 }

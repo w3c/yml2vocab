@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TermType = exports.global = exports.StatusCounter = exports.Status = exports.EXTRA_DATATYPES = void 0;
+exports.TermType = exports.bona_fide_prefixes = exports.bona_fide_urls = exports.global = exports.StatusCounter = exports.Status = exports.EXTRA_DATATYPES = void 0;
 /**
  * List of datatypes that are formally defined in the RDF World beyond the
  * list of XSD datatypes.
@@ -29,7 +29,7 @@ var Status;
 })(Status || (exports.Status = Status = {}));
 /**
  * Simple counter to track how many terms are defined as `stable`, `reserved`, or `deprecated`.
- * This information is used in the HTML generation, for example, to decide whether a section in the template
+ * This information is used in the HTML generation to decide whether the relevant section(s) in the template
  * should be removed (because it is empty), or not.
  */
 class StatusCounter {
@@ -83,12 +83,46 @@ exports.global = {
     real_curies: [],
 };
 /* ************************************* Internal representation ***********************************/
+/**
+ * URL schemes; curies may be false when using these prefixes; they are, in fact, full URLs.
+ */
+exports.bona_fide_urls = [
+    "http:", "https:", "mailto:", "urn:", "doi:",
+    "ftp:", "did:", "tel:", "geo:", "cid:", "mid:", "news:", "nfs:", "tag:"
+];
+/**
+ * Prefixes that are not defined in the vocabulary but frequently used, and are considered
+ * as "part of the RDF world". They are listed as prefixes vocabulary, but their terms
+ * are not displayed with a URL.
+ */
+exports.bona_fide_prefixes = ["rdf", "rdfs", "owl", "xsd", "dc", "dcterms", "jsonld"];
+/**
+ * Type of the term: class, property, individual, datatype, but also some transient, internal types
+ * that categorize terms
+ */
 var TermType;
 (function (TermType) {
     TermType["class"] = "class";
     TermType["property"] = "property";
     TermType["individual"] = "individual";
     TermType["datatype"] = "datatype";
+    /**
+     * This is a "core" term, i.e., terms in RDF, xsd, rdfs, etc.
+     * Their full URL-s are unused, because they are well-known.
+     */
+    TermType["core"] = "core";
+    /*
+    * This is a term that is not defined in the vocabulary, but used in the context of a vocabulary item
+    * description. The URL should be displayed whenever appropriate.
+    *
+    * This is often a transient term: it is created during the conversion process because it appears
+    * as a reference (supertype, domain, range, etc.) but gets its final category only later in the process.
+    */
     TermType["unknown"] = "unknown";
+    /**
+     * This is not a real term, but just a URL that has been used as a term
+     * (e.g., in the domain or range of a property).
+     * See also {@link bona_fide_urls}.
+     */
     TermType["fullUrl"] = "fullUrl";
 })(TermType || (exports.TermType = TermType = {}));

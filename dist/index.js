@@ -135,7 +135,7 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
         // deno-lint-ignore no-explicit-any
     }
     catch (e) {
-        console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}`);
+        console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}\nStack: ${e.stack}`);
     }
 }
 //

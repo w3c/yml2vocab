@@ -262,6 +262,7 @@ function finalizeRawEntry(raw) {
         comment: (raw.comment) ? cleanComment(raw.comment) : "",
         see_also: toSeeAlso(raw.see_also),
         example: toExample(raw.example),
+        known_as: raw.known_as,
         dataset: raw.dataset ?? false,
         context: toArrayContexts(raw.context)
     };
@@ -286,18 +287,18 @@ function finalizeRawVocab(raw) {
         raw.vocab = [raw.vocab];
     // The extra filter is used to keep the valid entries only. For example, an external
     // term without a clear definition must be ignored.
-    const classes = raw.classes?.map(finalizeRawEntry).filter((entry) => entry !== null);
-    const properties = raw.properties?.map(finalizeRawEntry).filter((entry) => entry !== null);
-    const individuals = raw.individuals?.map(finalizeRawEntry).filter((entry) => entry !== null);
-    const datatypes = raw.datatypes?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const classes = raw.class?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const properties = raw.property?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const individuals = raw.individual?.map(finalizeRawEntry).filter((entry) => entry !== null);
+    const datatypes = raw.datatype?.map(finalizeRawEntry).filter((entry) => entry !== null);
     return {
         vocab: raw.vocab.map(finalizeRawEntry),
-        prefixes: raw.prefixes?.map(finalizeRawEntry),
+        prefix: raw.prefix?.map(finalizeRawEntry),
         ontology: raw.ontology?.map(finalizeRawEntry),
-        classes: classes,
-        properties: properties,
-        individuals: individuals,
-        datatypes: datatypes,
+        class: classes,
+        property: properties,
+        individual: individuals,
+        datatype: datatypes,
     };
 }
 /******************************************* External entry point **********************************/
@@ -369,9 +370,11 @@ function getData(vocab_source) {
     const get_ranges = (factory, raw, id) => {
         let extra_types = [];
         const range = [];
+        let strongURL = false;
         if (raw.range && raw.range.length > 0) {
             if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
                 extra_types.push("owl:ObjectProperty");
+                strongURL = true;
             }
             else {
                 for (const rg of raw.range) {
@@ -383,16 +386,21 @@ function getData(vocab_source) {
                     else {
                         if (factory.has(rg)) {
                             const term = factory.get(rg);
-                            if (factory_1.RDFTermFactory.isClass(term)) {
-                                extra_types.push("owl:ObjectProperty");
-                                range.push(term);
-                            }
-                            else if (factory_1.RDFTermFactory.isDatatype(term)) {
-                                extra_types.push("owl:DatatypeProperty");
-                                range.push(term);
+                            if (term !== undefined) {
+                                if (factory_1.RDFTermFactory.isClass(term)) {
+                                    extra_types.push("owl:ObjectProperty");
+                                    range.push(term);
+                                }
+                                else if (factory_1.RDFTermFactory.isDatatype(term)) {
+                                    extra_types.push("owl:DatatypeProperty");
+                                    range.push(term);
+                                }
+                                else {
+                                    throw (new Error(`The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`));
+                                }
                             }
                             else {
-                                throw (new Error(`The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`));
+                                throw (new Error(`The range ${rg} of the property ${id} is not defined in this vocabulary`));
                             }
                         }
                         else {
@@ -410,13 +418,18 @@ function getData(vocab_source) {
             extra_types = [];
         }
         ;
-        return { extra_types, range };
+        return { extra_types, range, strongURL };
     };
     // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
     // This function raises an error if this is not the case
-    const check_external = (raw, output) => {
+    const set_and_check_external = (raw, output) => {
+        if (output.prefix !== common_2.global.vocab_prefix) {
+            // We have a term that is not part of the vocabulary but, nevertheless
+            // defined in the YAML file. This is an external term.
+            output.external = true;
+        }
         // Extra check for the possible error
-        if (!output.external) {
+        else {
             if ((raw.comment === undefined || raw.comment === "") &&
                 (raw.defined_by === undefined || raw.defined_by.length === 0)) {
                 throw (new Error(`${raw.id} is incomplete: either "defined_by" or "comment" should be provided.`));
@@ -463,8 +476,8 @@ function getData(vocab_source) {
                 url: raw.value,
             };
         }),
-        ...((vocab.prefixes && vocab.prefixes.length > 0)
-            ? vocab.prefixes.map((raw) => {
+        ...((vocab.prefix && vocab.prefix.length > 0)
+            ? vocab.prefix.map((raw) => {
                 return {
                     prefix: raw.id,
                     url: (raw.value) ? raw.value : "UNDEFINED PREFIX VALUE",
@@ -494,11 +507,11 @@ function getData(vocab_source) {
     factory_1.factory.initialize(prefixes);
     /********************************************************************************************/
     // Get the datatypes. 
-    const datatypes = (vocab.datatypes !== undefined) ?
-        vocab.datatypes.map((raw) => {
+    const datatypes = (vocab.datatype !== undefined) ?
+        vocab.datatype.map((raw) => {
             const output = factory_1.factory.datatype(raw.id);
             // Extra check for possible error for external terms
-            check_external(raw, output);
+            set_and_check_external(raw, output);
             // In the former version of the package the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
@@ -519,6 +532,7 @@ function getData(vocab_source) {
                 type: [...new Set(type)].map(t => factory_1.factory.term(t)),
                 subClassOf: raw.upper_value?.map((val) => factory_1.factory.class(val)),
                 see_also: raw.see_also,
+                known_as: raw.known_as,
                 example: raw.example,
                 context: final_contexts(raw, output),
                 range_of: [], // these are set later, when all classes and properties are defined
@@ -528,11 +542,11 @@ function getData(vocab_source) {
         }) : [];
     /********************************************************************************************/
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
-    const classes = (vocab.classes !== undefined) ?
-        vocab.classes.map((raw) => {
+    const classes = (vocab.class !== undefined) ?
+        vocab.class.map((raw) => {
             const output = factory_1.factory.class(raw.id);
             // Extra check for possible error for external terms
-            check_external(raw, output);
+            set_and_check_external(raw, output);
             const user_type = (raw.type === undefined) ? [] : raw.type;
             const types = [
                 ...(raw.status === common_1.Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"],
@@ -552,6 +566,7 @@ function getData(vocab_source) {
                 status: raw.status,
                 subClassOf: raw.upper_value?.map((val) => factory_1.factory.class(val)),
                 see_also: raw.see_also,
+                known_as: raw.known_as,
                 example: raw.example,
                 context: final_contexts(raw, output),
                 range_of: [], // these are set later, when all classes and properties are defined 
@@ -567,17 +582,17 @@ function getData(vocab_source) {
     //
     // Note that the function sets the object property or datatype property types in the obvious cases.
     // These extra types are also added when handling a class or a datatype, looking up the references.
-    const properties = (vocab.properties !== undefined) ?
-        vocab.properties.map((raw) => {
+    const properties = (vocab.property !== undefined) ?
+        vocab.property.map((raw) => {
             const output = factory_1.factory.property(raw.id);
             // Extra check for possible error for external terms
-            check_external(raw, output);
+            set_and_check_external(raw, output);
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
             common_2.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
-            const { extra_types, range } = get_ranges(factory_1.factory, raw, output.id);
+            const { extra_types, range, strongURL } = get_ranges(factory_1.factory, raw, output.id);
             const user_type = (raw.type === undefined) ? [] : raw.type;
             const types = [
                 ...(raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],
@@ -597,18 +612,20 @@ function getData(vocab_source) {
                 range: range,
                 domain: raw.domain?.map(val => factory_1.factory.class(val)),
                 example: raw.example,
+                known_as: raw.known_as,
                 dataset: raw.dataset,
+                strongURL: strongURL,
                 context: final_contexts(raw, output),
             });
             return output;
         }) : [];
     /********************************************************************************************/
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
-    const individuals = (vocab.individuals !== undefined) ?
-        vocab.individuals.map((raw) => {
+    const individuals = (vocab.individual !== undefined) ?
+        vocab.individual.map((raw) => {
             const output = factory_1.factory.individual(raw.id);
             // Extra check for possible error for external terms
-            check_external(raw, output);
+            set_and_check_external(raw, output);
             // In the former version the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
@@ -625,6 +642,7 @@ function getData(vocab_source) {
                 type: [...new Set(type)].map(t => factory_1.factory.term(t)),
                 see_also: raw.see_also,
                 example: raw.example,
+                known_as: raw.known_as,
                 context: final_contexts(raw, output),
             });
             return output;
@@ -633,12 +651,12 @@ function getData(vocab_source) {
     // Set the domain and range of the back references for ranges/domains for classes and datatypes.
     for (const current_class of classes) {
         for (const prop of properties) {
-            if (prop.range.length > 0) {
+            if (prop.range?.length > 0) {
                 if (prop.range.find((val) => factory_1.RDFTermFactory.equals(val, current_class))) {
                     ((prop.range.length > 1) ? current_class.includes_range_of : current_class.range_of).push(prop);
                 }
             }
-            if (prop.domain.length > 0) {
+            if (prop.domain?.length > 0) {
                 if (prop.domain.find((val) => factory_1.RDFTermFactory.equals(val, current_class))) {
                     ((prop.domain.length > 1) ? current_class.included_in_domain_of : current_class.domain_of).push(prop);
                 }
@@ -647,7 +665,7 @@ function getData(vocab_source) {
     }
     for (const current_datatype of datatypes) {
         for (const prop of properties) {
-            if (prop.range.length > 0) {
+            if (prop.range?.length > 0) {
                 if (prop.range.find((val) => factory_1.RDFTermFactory.equals(val, current_datatype))) {
                     ((prop.range.length > 1) ? current_datatype.includes_range_of : current_datatype.range_of).push(prop);
                 }
