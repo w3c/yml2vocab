@@ -95,10 +95,6 @@ function toContext(vocab) {
     // Set of properties that are "handled" as parts of embedded contexts of classes.
     // This is used to avoid repeating the properties at the top level
     const class_properties = new Set();
-    // Not sure all the prefixes are necessary, but it probably does not harm...
-    // for (const prefix of vocab.prefixes) {
-    //     top_level[prefix.prefix] = prefix.url;
-    // }
     // Add the classes; note that this will also cover the mapping of
     // all properties whose domain include a top level class
     for (const cl of vocab.classes) {
@@ -133,11 +129,11 @@ function toContext(vocab) {
     }
     // Add the individuals
     for (const individual of vocab.individuals) {
-        top_level[individual.known_as ?? individual.id] = `${common_1.global.vocab_url}${individual.id}`;
+        top_level[individual.known_as ?? individual.id] = `${individual.url}`;
     }
     // Add the datatypes
     for (const datatype of vocab.datatypes) {
-        top_level[datatype.known_as ?? datatype.id] = `${common_1.global.vocab_url}${datatype.id}`;
+        top_level[datatype.known_as ?? datatype.id] = `${datatype.url}`;
     }
     // That is it... return the nicely formatted JSON text 
     return JSON.stringify({ "@context": top_level }, null, 4);
