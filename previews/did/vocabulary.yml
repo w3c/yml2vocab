@@ -50,6 +50,25 @@ class:
     upper_value: rdf:Property
     context: none
 
+  - id: sec:Multikey
+    label: Multikey Verification Method
+    upper_value: sec:VerificationMethod
+    defined_by: https://www.w3.org/TR/cid-1.0/#multikey
+    see_also:
+      - label: EdDSA Cryptosuites
+        url: https://www.w3.org/TR/vc-di-eddsa/#multikey
+      - label: ECDSA Cryptosuites
+        url: https://www.w3.org/TR/vc-di-ecdsa/#multikey
+      - label: BBS Cryptosuites
+        url: https://www.w3.org/TR/vc-di-bbs/#multikey
+    context: https://w3id.org/security/multikey/v1
+
+  - id: sec:JsonWebKey
+    label: JSON Web Key Verification Method
+    upper_value: sec:VerificationMethod
+    defined_by: https://www.w3.org/TR/cid-1.0/#jsonwebkey
+    context: https://w3id.org/security/jwk/v1
+
 property:
   - id: sec:controller
     label: Controller
@@ -109,6 +128,55 @@ property:
     defined_by: [https://www.w3.org/TR/cid-1.0/#dfn-verificationmethod]
     context: [vocab, https://w3id.org/security/data-integrity/v2, https://www.w3.org/ns/cid/v1]
     known_as: keyAgreement
+
+  - id: sec:publicKeyMultibase
+    label: Public key multibase
+    domain: sec:Multikey
+    range: sec:multibase
+    defined_by: https://www.w3.org/TR/cid-1.0/#dfn-publickeymultibase
+    see_also:
+      - label: multibase
+        url: https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03
+      - label: multicodec
+        url: https://github.com/multiformats/multicodec/blob/master/table.csv
+    context: https://w3id.org/security/multikey/v1
+
+  - id: sec:secretKeyMultibase
+    label: Secret key multibase
+    domain: sec:Multikey
+    range: sec:multibase
+    defined_by: https://www.w3.org/TR/cid-1.0/#dfn-secretkeymultibase
+    see_also:
+      - label: multibase format
+        url: https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03
+      - label: multicodec format
+        url: https://github.com/multiformats/multicodec/blob/master/table.csv
+    context: https://w3id.org/security/multikey/v1
+
+  - id: sec:publicKeyJwk
+    label: Public key JWK
+    range: rdf:JSON
+    domain: sec:JsonWebKey
+    defined_by: https://www.w3.org/TR/cid-1.0/#dfn-publickeyjwk
+    see_also:
+      - label: IANA JOSE
+        url: https://www.iana.org/assignments/jose/jose.xhtml
+      - label: RFC 7517
+        url: https://tools.ietf.org/html/rfc7517
+    context: https://w3id.org/security/jwk/v1
+
+  - id: secretKeyJwk
+    label: Secret key JWK
+    range: rdf:JSON
+    domain: sec:JsonWebKey
+    defined_by: https://www.w3.org/TR/cid-1.0/#dfn-secretkeyjwk
+    see_also:
+      - label: IANA JOSE
+        url: https://www.iana.org/assignments/jose/jose.xhtml
+      - label: RFC 7517
+        url: https://tools.ietf.org/html/rfc7517
+    context: https://w3id.org/security/jwk/v1
+
 
   - id: service
     label: Service
