@@ -30,6 +30,9 @@
         "rdfs:subPropertyOf": {
             "@type": "@id"
         },
+        "rdfs:isDefinedBy": {
+            "@type": "@id"
+        },
         "owl:equivalentClass": {
             "@type": "@vocab"
         },
@@ -64,7 +67,7 @@
             "@reverse": "rdfs:isDefinedBy",
             "@type": "@id"
         },
-        "rdfs_instances": {
+        "rdfs_individuals": {
             "@reverse": "rdfs:isDefinedBy",
             "@type": "@id"
         },
@@ -75,12 +78,6 @@
         "mentioned": {
             "@reverse": "schema:mentions",
             "@type": "@id"
-        },
-        "dc:title": {
-            "@container": "@language"
-        },
-        "dc:description": {
-            "@container": "@language"
         }
     },
     "@id": "https://www.w3.org/ns/did#",
@@ -94,7 +91,7 @@
         "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
     },
     "rdfs:seeAlso": "https://www.w3.org/TR/did-1.1/",
-    "dc:date": "2025-03-25",
+    "dc:date": "2025-05-20",
     "rdfs_properties": [
         {
             "@id": "dd:service",
@@ -102,7 +99,6 @@
                 "rdf:Property",
                 "owl:ObjectProperty"
             ],
-            "rdfs:domain": "dd:DecentralizedIdentifierDocument",
             "rdfs:range": "dd:Service",
             "rdfs:label": "Service",
             "rdfs:comment": {
@@ -142,16 +138,6 @@
         }
     ],
     "rdfs_classes": [
-        {
-            "@id": "dd:DecentralizedIdentifierDocument",
-            "@type": "rdfs:Class",
-            "rdfs:subClassOf": [
-                "sec:ControlledIdentifierDocument"
-            ],
-            "rdfs:label": "Decentralized Identifier Document",
-            "rdfs:isDefinedBy": "https://www.w3.org/TR/did-1.1/#data-model",
-            "vs:term_status": "stable"
-        },
         {
             "@id": "dd:Service",
             "@type": "rdfs:Class",

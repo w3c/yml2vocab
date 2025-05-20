@@ -15,14 +15,13 @@
 dd: a owl:Ontology ;
     dc:title """DID Vocabulary"""@en ;
     dc:description """vocabulary used to ensure the authenticity and integrity of W3C DID Documents, a profile of W3C Controlled Identifier Document.
-"""^^@rdf:HTML ;
+"""^^rdf:HTML ;
     rdfs:seeAlso <https://www.w3.org/TR/did-1.1/> ;
-    dc:date "2025-03-25"^^xsd:date ;
+    dc:date "2025-05-20"^^xsd:date ;
 .
 
 # Property definitions
 dd:service a rdf:Property, owl:ObjectProperty ;
-    rdfs:domain dd:DecentralizedIdentifierDocument ;
     rdfs:range dd:Service ;
     rdfs:label "Service" ;
     rdfs:comment """<div>The associated value must be a set of services, where each service is described by a map.</div>"""^^rdf:HTML ;
@@ -32,7 +31,6 @@ dd:service a rdf:Property, owl:ObjectProperty ;
 
 dd:serviceEndpoint a rdf:Property, owl:ObjectProperty ;
     rdfs:domain dd:Service ;
-    rdfs:range  ;
     rdfs:label "Service endpoint" ;
     rdfs:comment """<div>Refers to the service endpoint, which is a URL that can be used to access the service.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://www.w3.org/TR/did-1.1/#services>, <https://www.w3.org/ns/did#> ;
@@ -40,13 +38,6 @@ dd:serviceEndpoint a rdf:Property, owl:ObjectProperty ;
 .
 
 # Class definitions
-dd:DecentralizedIdentifierDocument a rdfs:Class ;
-    rdfs:subClassOf sec:ControlledIdentifierDocument ;
-    rdfs:label "Decentralized Identifier Document" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/did-1.1/#data-model>, <https://www.w3.org/ns/did#> ;
-    vs:term_status "stable" ;
-.
-
 dd:Service a rdfs:Class ;
     rdfs:label "Service" ;
     rdfs:comment """<div>A service is a set of properties that describe a service endpoint, and should be defined through subclasses to this class. In order to maximize interoperability, the service type and its associated properties should be registered in the [[[did-spec-registries]]] [[did-spec-registries]].</div>"""^^rdf:HTML ;
@@ -56,6 +47,7 @@ dd:Service a rdfs:Class ;
 
 
 
+# Definitions of datatypes
 # Context files and their mentions
 <https://www.w3.org/ns/did/v1.1> a jsonld:Context ;
     schema:mentions
@@ -68,7 +60,27 @@ dd:Service a rdfs:Class ;
         sec:capabilityInvocationMethod,
         sec:controller,
         sec:keyAgreementMethod,
+        sec:publicKeyJwk,
+        sec:publicKeyMultibase,
+        sec:secretKeyJwk,
+        sec:secretKeyMultibase,
         sec:verificationMethod ;
+.
+
+<https://w3id.org/security/multikey/v1> a jsonld:Context ;
+    schema:mentions
+        sec:Multikey,
+        sec:multibase,
+        sec:publicKeyMultibase,
+        sec:secretKeyMultibase ;
+.
+
+<https://w3id.org/security/jwk/v1> a jsonld:Context ;
+    schema:mentions
+        sec:JsonWebKey,
+        sec:publicKeyJwk,
+        sec:secretKeyJwk ;
+.
 
 <https://w3id.org/security/data-integrity/v2> a jsonld:Context ;
     schema:mentions
@@ -79,6 +91,7 @@ dd:Service a rdfs:Class ;
         sec:controller,
         sec:keyAgreementMethod,
         sec:verificationMethod ;
+.
 
 <https://www.w3.org/ns/cid/v1> a jsonld:Context ;
     schema:mentions
@@ -88,4 +101,5 @@ dd:Service a rdfs:Class ;
         sec:capabilityInvocationMethod,
         sec:controller,
         sec:keyAgreementMethod ;
+.
 

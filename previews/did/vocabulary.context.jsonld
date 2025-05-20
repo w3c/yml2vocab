@@ -3,18 +3,6 @@
         "@protected": true,
         "id": "@id",
         "type": "@type",
-        "DecentralizedIdentifierDocument": {
-            "@id": "https://www.w3.org/ns/did#DecentralizedIdentifierDocument",
-            "@context": {
-                "@protected": true,
-                "id": "@id",
-                "type": "@type",
-                "service": {
-                    "@id": "https://www.w3.org/ns/did#service",
-                    "@type": "@id"
-                }
-            }
-        },
         "Service": {
             "@id": "https://www.w3.org/ns/did#Service",
             "@context": {
@@ -27,9 +15,40 @@
                 }
             }
         },
-        "ControlledIdentifierDocument": "https://w3id.org/security#ControlledIdentifierDocument",
         "VerificationMethod": "https://w3id.org/security#VerificationMethod",
         "VerificationRelationship": "https://w3id.org/security#VerificationRelationship",
+        "Multikey": {
+            "@id": "https://w3id.org/security#Multikey",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "publicKeyMultibase": {
+                    "@id": "https://w3id.org/security#publicKeyMultibase",
+                    "@type": "https://w3id.org/security#multibase"
+                },
+                "secretKeyMultibase": {
+                    "@id": "https://w3id.org/security#secretKeyMultibase",
+                    "@type": "https://w3id.org/security#multibase"
+                }
+            }
+        },
+        "JsonWebKey": {
+            "@id": "https://w3id.org/security#JsonWebKey",
+            "@context": {
+                "@protected": true,
+                "id": "@id",
+                "type": "@type",
+                "publicKeyJwk": {
+                    "@id": "https://w3id.org/security#publicKeyJwk",
+                    "@type": "@json"
+                },
+                "secretKeyJwk": {
+                    "@id": "https://w3id.org/security#secretKeyJwk",
+                    "@type": "@json"
+                }
+            }
+        },
         "controller": "https://w3id.org/security#controller",
         "alsoKnownAs": {
             "@id": "https://www.w3.org/ns/activitystreams#alsoKnownAs",
@@ -58,6 +77,11 @@
         "keyAgreement": {
             "@id": "https://w3id.org/security#keyAgreementMethod",
             "@type": "@id"
-        }
+        },
+        "service": {
+            "@id": "https://www.w3.org/ns/did#service",
+            "@type": "@id"
+        },
+        "multibase": "https://w3id.org/security#multibase"
     }
 }
