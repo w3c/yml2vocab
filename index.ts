@@ -71,13 +71,13 @@ export class VocabGeneration {
 
     /* Deprecated; these are just to avoid problems for users of earlier versions */
     /** @internal */
-    get_turtle()                {return this.getTurtle()}
+    get_turtle(): string                {return this.getTurtle()}
     /** @internal */
-    get_jsonld()                {return this.getJSONLD()}
+    get_jsonld(): string                {return this.getJSONLD()}
     /** @internal */
-    get_html(template: string)  {return this.getHTML(template)}
+    get_html(template: string): string  {return this.getHTML(template)}
     /** @internal */
-    get_context()               {return this.getContext()}
+    get_context(): string               {return this.getContext()}
 }
 
 /**

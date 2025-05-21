@@ -1,5 +1,6 @@
 {
-    "version": "1.6.0",
+    "name": "@iherman/yml2vocab",
+    "version": "1.6.1",
     "description": "Generation of vocabulary files starting by YAML",
     "homepage": "https://github.com/w3c/yml2vocab",
     "nodeModulesDir": "none",
@@ -20,9 +21,10 @@
         "local_did": "cd local/tests/did;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c",
         "compile": "deno compile --allow-read --allow-write --allow-env main.ts"
     },
-    "main": "index.ts",
+    "exports": "./index.ts",
     "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
     "license": "W3C-20150513",
+    "exclude": ["dist/"],
     "imports": {
         "./lib/common"       : "./lib/common.ts",
         "./lib/context"      : "./lib/context.ts",
@@ -34,9 +36,9 @@
         "./lib/factory"      : "./lib/factory.ts",
         "./lib/minidom"      : "./lib/minidom.ts",
         "./index"            : "./index.ts",
-        "yaml"               : "npm:yaml",
-        "commander"          : "npm:commander",
-        "@exodus/schemasafe" : "npm:@exodus/schemasafe",
-        "jsdom"              : "npm:jsdom"
+        "yaml"               : "npm:yaml@^2.7.0",
+        "commander"          : "npm:commander@^13.1.0",
+        "@exodus/schemasafe" : "npm:@exodus/schemasafe@^1.3.0",
+        "jsdom"              : "npm:jsdom@^26.0.0"
     }
 }
