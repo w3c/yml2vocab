@@ -105,6 +105,12 @@ deno compile --allow-read --allow-write --allow-env main.ts
 
 which results in an executable file, called `yml2vocab`, that can be stored anywhere in the user's `$PATH`.
 
+The program can also be run without installing the package locally. Just do a:
+
+```
+deno run -A jsr:@iherman/yml2vocab/cli [-v vocab_file_name] [-t template_file_name] [-c]
+``` 
+
 #### Command line argument
 
 The script generates the `vocab_file_name.ttl`, `vocab_file_name.jsonld`, and `vocab_file_name.html` files for the Turtle, JSON-LD, and HTML+RDFa versions, respectively. The script relies on the `vocab_file_name.yml` file for the vocabulary specification in YAML and a `template_file_name` file for a template file. The defaults are `vocabulary` and `template.html`, respectively.

@@ -1,7 +1,7 @@
 {
     "name": "@iherman/yml2vocab",
-    "version": "1.6.1",
     "description": "Generation of vocabulary files starting by YAML",
+    "version": "1.6.1",
     "homepage": "https://github.com/w3c/yml2vocab",
     "nodeModulesDir": "none",
     "compilerOptions": {
@@ -12,16 +12,16 @@
         "url": "https://github.com/w3c/yml2vocab"
     },
     "tasks": {
-        "test": "cd test; deno run --allow-read --allow-write --allow-env ../main.ts -c",
-        "test_di": "cd test/di; deno run --allow-read --allow-write --allow-env ../../main.ts -c",
-        "test_vcdm": "cd test/vcdm; deno run --allow-read --allow-write --allow-env ../../main.ts -c",
-        "local_vcdm_nolink": "cd local/tests/vcdm;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c",
-        "local_test": "cd local/tests;  deno run --allow-read --allow-write --allow-env ../../main.ts -v local/tests/test.yml -t local/tests/test_template.html -c",
-        "local_ident": "cd local/tests/identification;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c",
-        "local_did": "cd local/tests/did;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c",
+        "local_vcdm_nolink": "(cd local/tests/vcdm;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
+        "local_test": "(cd local/tests;  deno run --allow-read --allow-write --allow-env ../../main.ts -v local/tests/test.yml -t local/tests/test_template.html -c)",
+        "local_ident": "(cd local/tests/identification;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
+        "local_did": "(cd local/tests/did;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
         "compile": "deno compile --allow-read --allow-write --allow-env main.ts"
     },
-    "exports": "./index.ts",
+    "exports": {
+        ".": "./index.ts",
+        "./cli": "./main.ts"
+    },
     "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
     "license": "W3C-20150513",
     "exclude": ["dist/"],
