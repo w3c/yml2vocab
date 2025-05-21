@@ -15,10 +15,12 @@ previews/vcdm/vocabulary.yml
 previews/vcdm/vocabulary.drawio
 previews/vcdm/template.html
 publish
+npm_publish
 package-lock.json
 .vscode/
 notes.md
 .Attic/
+.gitignore
 
 
 
