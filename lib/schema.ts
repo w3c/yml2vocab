@@ -4,9 +4,9 @@
  * @packageDocumentation
  */
 
-import { parser, ValidationError as VError }            from '@exodus/schemasafe';
-import * as yaml                                        from 'yaml';
-import { RawVocab, ValidationError, ValidationResults } from './common';
+import { parser, type ValidationError as VError }            from '@exodus/schemasafe';
+import * as yaml                                             from 'yaml';
+import type { RawVocab, ValidationError, ValidationResults } from './common';
 
 /**
  * Perform a JSON Schema validation on the YAML content. Done by converting the YAML content into 
