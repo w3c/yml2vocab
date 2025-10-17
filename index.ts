@@ -78,19 +78,19 @@ export class VocabGeneration {
      * @param template - Textual version of the vocabulary template
      * @returns 
      */
-    getHTML(template: string): string {
-        return toHTML(this.vocab, template);
+    getHTML(template: string, basename: string): string {
+        return toHTML(this.vocab, template, basename);
     }
 
     /* Deprecated; these are just to avoid problems for users of earlier versions */
     /** @internal */
-    get_turtle(): string                {return this.getTurtle()}
+    get_turtle(): string                               {return this.getTurtle()}
     /** @internal */
-    get_jsonld(): string                {return this.getJSONLD()}
+    get_jsonld(): string                               {return this.getJSONLD()}
     /** @internal */
-    get_html(template: string): string  {return this.getHTML(template)}
+    get_html(template: string, basename = ''): string  {return this.getHTML(template, basename)}
     /** @internal */
-    get_context(): string               {return this.getContext()}
+    get_context(): string                              {return this.getContext()}
 }
 
 /**
@@ -141,7 +141,7 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
         const fs_writes: Promise<void>[] = [
             fs.writeFile(`${basename}.ttl`, conversion.getTurtle()),
             fs.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-            fs.writeFile(`${basename}.html`, conversion.getHTML(template)),
+            fs.writeFile(`${basename}.html`, conversion.getHTML(template, basename)),
         ];
         if (context) {
             fs_writes.push(fs.writeFile(`${basename}.context.jsonld`, conversion.getContext()))

@@ -43,14 +43,14 @@ const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction'
  * @param template_text - The textual content of the template file 
  * @returns
  */
-export function toHTML(vocab: Vocab, template_text: string): string {               // RDFa: add a new argument: basename
+export function toHTML(vocab: Vocab, template_text: string, basename: string): string {               // RDFa: add a new argument: basename
     // Get the DOM of the template
     const document: MiniDOM = new MiniDOM(template_text);
 
     // The prefix and the URL for the vocabulary itself
     // I am just lazy to type things that are too long... :-)
     const vocab_prefix = global.vocab_prefix;
-    const vocab_url = global.vocab_url;
+    // const vocab_url = global.vocab_url;
 
     /*********************************** Utility functions ******************************************/
 
@@ -154,7 +154,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {           
                     description += "<br><br>The property's value should be a URL, i.e., not a literal."
                 }
             }
-            const div = document.addChild(section, 'div', description);
+            document.addChild(section, 'div', description);
             // if (!item.external) {                                                           // RDFa
             //     div.setAttribute('property', 'rdfs:comment');
             //     div.setAttribute('datatype', 'rdf:HTML')
@@ -272,7 +272,22 @@ export function toHTML(vocab: Vocab, template_text: string): string {           
     //         body.setAttribute('resource', vocab_url);
     //         body.setAttribute('prefix', vocab.prefixes.map((value): string => `${value.prefix}: ${value.url}`).join(' '));
     //     }
-    // }    
+    // }  
+    
+    const alternateLink = () => {
+        const head = document.getElementsByTagName('head')[0];
+        if (head && basename !== '') {
+            const link = document.addChild(head, 'link');
+            link.setAttribute('href', `${basename}.jsonld`);
+            link.setAttribute('rel', 'alternate');
+            link.setAttribute('type', 'application/ld+json');
+        }
+
+        // Hide this code here because it is related: removes an unnecessary
+        // RDFa link from the body if it is there.
+        // This is good for older template files...
+        (document.getElementsByTagName('body')[0])?.removeAttribute('typeof');
+    };
 
     // Get some generic metadata for the vocabulary that are part of the template text
     // These come from the ontology properties of the vocabulary.
@@ -656,8 +671,8 @@ export function toHTML(vocab: Vocab, template_text: string): string {           
     /*********************** The real processing part, making use of all these functions ****************************/
 
 
-    // 1. Set the necessary RDFa preamble into the body element
-    // rdfaPreamble();                                                                     // RDFa
+    // 1. Set the reference to the json-ld version into the header
+    alternateLink();
 
     // 2. Set the general properties on the ontology itself
     ontologyProperties();
