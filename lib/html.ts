@@ -15,12 +15,12 @@ const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction'
 /**
  * Generate a new bnode id for the "union of" constructs...
  */
-let idnum = 0;
-const bnode = (): string => {
-    const output = `_:a${idnum}`;
-    idnum++;
-    return output
-}
+// let idnum = 0;                              // RDFa
+// const bnode = (): string => {               // RDFa
+//     const output = `_:a${idnum}`;
+//     idnum++;
+//     return output
+// }
 
 /**
  * Generate the HTML representation of the vocabulary, based on an HTML template file. The
@@ -43,9 +43,14 @@ const bnode = (): string => {
  * @param template_text - The textual content of the template file 
  * @returns
  */
-export function toHTML(vocab: Vocab, template_text: string): string {
+export function toHTML(vocab: Vocab, template_text: string): string {               // RDFa: add a new argument: basename
     // Get the DOM of the template
     const document: MiniDOM = new MiniDOM(template_text);
+
+    // The prefix and the URL for the vocabulary itself
+    // I am just lazy to type things that are too long... :-)
+    const vocab_prefix = global.vocab_prefix;
+    const vocab_url = global.vocab_url;
 
     /*********************************** Utility functions ******************************************/
 
@@ -83,8 +88,6 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
     // Handle the common fields for the terms
     const commonFields = (section: Element, item: RDFTerm): void => {
-        // External terms have a different behavior: ranges/domains should be ignored, and no RDFa should be
-        // generated.
         if (item.external) {
             document.addChild(section,'h4', `<code>${item.id}</code>`);
             const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
@@ -112,8 +115,8 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 }
             }
         } else {
-            section.setAttribute('resource', `${vocab_prefix}:${item.id}`);
-            section.setAttribute('typeof', `${item.type.join(' ')}`);
+            // section.setAttribute('resource', `${vocab_prefix}:${item.id}`);             // RDFa
+            // section.setAttribute('typeof', `${item.type.join(' ')}`);                   // RDFa
 
             document.addChild(section, 'h4', `<code>${item.id}</code>`);
             const term = document.addChild(section, 'p', `<em>${item.label}</code>`);
@@ -131,11 +134,13 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                     case 0:
                         break;
                     case 1: {
-                        document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by[0]}">formal definition of the term</a>.`);
+//                        document.addChild(section, 'p', `See the <a rel="rdfs:isDefinedBy" href="${item.defined_by[0]}">formal definition of the term</a>.`);   // RDFa
+                        document.addChild(section, 'p', `See the <a href="${item.defined_by[0]}">formal definition of the term</a>.`); 
                         break;
                     }
                     default: {
-                        const refs: string[] = item.defined_by.map((def: string): string => `<a rel="rdfs:isDefinedBy" href="${def}">here</a>`);
+//                        const refs: string[] = item.defined_by.map((def: string): string => `<a rel="rdfs:isDefinedBy" href="${def}">here</a>`);                // RDFa
+                        const refs: string[] = item.defined_by.map((def: string): string => `<a href="${def}">here</a>`);
                         document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
                     }
                 }
@@ -150,10 +155,10 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 }
             }
             const div = document.addChild(section, 'div', description);
-            if (!item.external) {
-                div.setAttribute('property', 'rdfs:comment');
-                div.setAttribute('datatype', 'rdf:HTML')
-            }
+            // if (!item.external) {                                                           // RDFa
+            //     div.setAttribute('property', 'rdfs:comment');
+            //     div.setAttribute('datatype', 'rdf:HTML')
+            // }
         } else if (RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
             if (RDFTermFactory.isProperty(item)) {
                 if ((item as RDFProperty).strongURL) {
@@ -181,7 +186,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             for (const link of item.see_also) {
                 const a = document.addChild(dd, 'a', link.label);
                 a.setAttribute('href', link.url);
-                if (!item.external) a.setAttribute('property', 'rdfs:seeAlso');
+                // if (!item.external) a.setAttribute('property', 'rdfs:seeAlso');                 // RDFa
                 document.addChild(dd, 'br');
             }
         }
@@ -197,25 +202,25 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             }
         }
 
-        if (!item.external) {
-            // These do not display, they are only here for RDFa's sake!
-            const span = document.addChild(section, 'span');
-            span.setAttribute('property', 'rdfs:isDefinedBy');
-            span.setAttribute('resource', `${vocab_prefix}:`);
+        // if (!item.external) {                                                                   // RDFa
+        //     // These do not display, they are only here for RDFa's sake!
+        //     const span = document.addChild(section, 'span');
+        //     span.setAttribute('property', 'rdfs:isDefinedBy');
+        //     span.setAttribute('resource', `${vocab_prefix}:`);
 
-            const status_span = document.addChild(section, 'span');
-            status_span.setAttribute('style', 'display: none');
-            status_span.setAttribute('property', 'vs:term_status');
-            document.addText(`${item.status}`, status_span);
+        //     const status_span = document.addChild(section, 'span');
+        //     status_span.setAttribute('style', 'display: none');
+        //     status_span.setAttribute('property', 'vs:term_status');
+        //     document.addText(`${item.status}`, status_span);
 
-            if (item.deprecated) {
-                const span = document.addChild(section, 'span');
-                span.setAttribute('property', 'owl:deprecated');
-                span.setAttribute('datatype', 'xsd:boolean');
-                span.setAttribute('style', 'display: none');
-                document.addText('true', span);
-            }
-        }
+        //     if (item.deprecated) {
+        //         const span = document.addChild(section, 'span');
+        //         span.setAttribute('property', 'owl:deprecated');
+        //         span.setAttribute('datatype', 'xsd:boolean');
+        //         span.setAttribute('style', 'display: none');
+        //         document.addText('true', span);
+        //     }
+        // }
     }
 
     const setExample = (section: Element, item: RDFClass | RDFIndividual | RDFProperty): void => {
@@ -252,21 +257,22 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             document.addChild(dl, 'dt', `Relevant <code>${(item.context.length) > 1 ? "@contexts" : "@context"}</code>:`);
             const dd = document.addChild(dl, 'dd');
             dd.innerHTML = item.context.map((ctx: string): string => {
-                return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;
+//                return `<span rev="schema:mentions"><a href="${ctx}"><code>${ctx}</code></a></span>`;           // RDFa
+                return `<a href="${ctx}"><code>${ctx}</code></a>`; 
             }).join(",<br> ");
         }
     }
 
     /************ Functions to add specific content to the final HTML, based also on the template ********************/
 
-    // RDFa preamble.
-    const rdfaPreamble = () => {
-        const body = document.getElementsByTagName('body')[0];
-        if (body) {
-            body.setAttribute('resource', vocab_url);
-            body.setAttribute('prefix', vocab.prefixes.map((value): string => `${value.prefix}: ${value.url}`).join(' '));
-        }
-    }    
+    // // RDFa preamble.
+    // const rdfaPreamble = () => {                                                    // RDFa; rename, and create link element to basename.jsonld as a child to the header
+    //     const body = document.getElementsByTagName('body')[0];
+    //     if (body) {
+    //         body.setAttribute('resource', vocab_url);
+    //         body.setAttribute('prefix', vocab.prefixes.map((value): string => `${value.prefix}: ${value.url}`).join(' '));
+    //     }
+    // }    
 
     // Get some generic metadata for the vocabulary that are part of the template text
     // These come from the ontology properties of the vocabulary.
@@ -287,8 +293,8 @@ export function toHTML(vocab: Vocab, template_text: string): string {
             const descriptionElement = document.getElementById('description');
             if (descriptionElement !== null) {
                 document.addHTMLText(description, descriptionElement); 
-                descriptionElement.setAttribute('datatype', 'rdf:HTML');
-                descriptionElement.setAttribute('property', 'dc:description');
+                // descriptionElement.setAttribute('datatype', 'rdf:HTML');                            // RDFa
+                // descriptionElement.setAttribute('property', 'dc:description');                      // RDFa
             } else {
                 console.warn("Vocabulary warning: ontology description is not provided.");
             }
@@ -302,8 +308,8 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                 const target = document.getElementById('see_also');
                 if (target) {
                     const a = document.addChild(target, 'a', see_also[0].value)
-                    a.setAttribute('href', see_also[0].value);
-                    a.setAttribute('property', 'rdfs:seeAlso')
+                    a.setAttribute('href', see_also[0].value);                                
+                    // a.setAttribute('property', 'rdfs:seeAlso')                                      // RDFa
                 }
             } else {
                 console.warn(`Vocabulary warning: no reference to the ontology specification provided.`)
@@ -344,7 +350,7 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
                     const a  = document.addChild(li, 'a', `<code>${ctx}</code>`);
                     a.setAttribute('href', ctx);
-                    a.setAttribute('typeof','jsonld:Context');
+                    // a.setAttribute('typeof','jsonld:Context');                              // RDFa
 
                     const details = document.addChild(li, 'details');
                     document.addChild(details, 'summary', 'term list');
@@ -403,8 +409,8 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                         for (const superclass of item.subClassOf) {
                             const span = document.addChild(dd,'span');
                             span.innerHTML = termHTMLReference(superclass);
-                            span.setAttribute('property', 'rdfs:subClassOf');
-                            span.setAttribute('resource', superclass.curie);
+                            // span.setAttribute('property', 'rdfs:subClassOf');               // RDFa
+                            // span.setAttribute('resource', superclass.curie);                // RDFa
                         }
                     }
                     // Again an extra list for range/domain references, if applicable
@@ -480,8 +486,8 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                         for (const superproperty of item.subPropertyOf) {
                             const span = document.addChild(dd, 'span');
                             span.innerHTML = termHTMLReference(superproperty);
-                            span.setAttribute('property', 'rdfs:subPropertyOf');
-                            span.setAttribute('resource', superproperty.curie);
+                            // span.setAttribute('property', 'rdfs:subPropertyOf');                    // RDFa
+                            // span.setAttribute('resource', superproperty.curie);                     // RDFa
                             document.addChild(dd, 'br');
                         }
                     }
@@ -494,16 +500,16 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                         if (item.range && item.range.length > 0) {
                             document.addChild(dl, 'dt', 'Range:');
                             const dd = document.addChild(dl, 'dd');
-                            dd.setAttribute('property', 'rdfs:range');
+//                            dd.setAttribute('property', 'rdfs:range');                              // RDFa
                             if (item.range.length === 1) {
-                                dd.setAttribute('resource', item.range[0].curie)
+//                                dd.setAttribute('resource', item.range[0].curie)                    // RDFa
                                 dd.innerHTML = termHTMLReference(item.range[0]);
                             } else {
                                 document.addText('Intersection of:', dd)
                                 document.addChild(dd, 'br')
                                 for (const entry of item.range) {
                                     const r_span = document.addChild(dd, 'span')
-                                    r_span.setAttribute('resource', entry.curie);
+//                                    r_span.setAttribute('resource', entry.curie);                   // RDFa
                                     r_span.innerHTML = termHTMLReference(entry);
                                     document.addChild(dd, 'br')
                                 }
@@ -513,24 +519,25 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                         if (item.domain && item.domain.length > 0) {
                             document.addChild(dl, 'dt', 'Domain:');
                             const dd = document.addChild(dl, 'dd');
-                            dd.setAttribute('property', 'rdfs:domain')
+//                            dd.setAttribute('property', 'rdfs:domain')                              // RDFa
                             if (item.domain.length === 1) {
-                                dd.setAttribute('resource',item.domain[0].curie)
+//                                dd.setAttribute('resource',item.domain[0].curie)                    // RDFa
                                 dd.innerHTML = termHTMLReference(item.domain[0]);
                             } else {
                                 // The union-of list is to be enclosed in a bnode in RDF
                                 // this has to be added to the RDFa manually...
-                                const u_bnode = bnode();
-                                dd.setAttribute('resource', u_bnode)
+                                // const u_bnode = bnode();                                            // RDFa
+                                // dd.setAttribute('resource', u_bnode)                                // RDFa
                                 document.addText('Union of: ', dd);
                                 document.addChild(dd, 'br')
                                 for (const entry of item.domain) {
-                                    const sp = document.addChild(dd, 'span');
-                                    sp.setAttribute('about', u_bnode);
-                                    sp.setAttribute('inlist', 'true');
-                                    sp.setAttribute('property', 'owl:unionOf');
-                                    sp.setAttribute('resource', entry.curie);
-                                    sp.innerHTML = termHTMLReference(entry);
+                                    // const sp = document.addChild(dd, 'span');
+                                    // sp.setAttribute('about', u_bnode);                              // RDFa
+                                    // sp.setAttribute('inlist', 'true');                              // RDFa
+                                    // sp.setAttribute('property', 'owl:unionOf');                     // RDFa
+                                    // sp.setAttribute('resource', entry.curie);                       // RDFa
+                                    // sp.innerHTML = termHTMLReference(entry);
+                                    dd.innerHTML = termHTMLReference(entry);
                                     document.addChild(dd, 'br')
                                 }
                             }
@@ -549,8 +556,8 @@ export function toHTML(vocab: Vocab, template_text: string): string {
     // There is a check for a possible template error and also whether there are individual
     // definitions in the first place.
     //
-    // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)
-    // that makes things fairly confusing :-(
+    // // The generated DOM nodes get a bunch of RDFa properties (typeof, resource, property,...)          RDFa
+    // // that makes things fairly confusing :-(
     const individuals = (ind_list: RDFIndividual[], statusFilter: Status): void => {
         const { id_prefix, intro_prefix } = statusSignals(statusFilter);
         const section = document.getElementById(`${id_prefix}individual_definitions`);
@@ -606,10 +613,11 @@ export function toHTML(vocab: Vocab, template_text: string): string {
                         document.addChild(dl, 'dt', 'Derived from:');
                         const dd = document.addChild(dl, 'dd');
                         for (const superclass of item.subClassOf) {
-                            const span = document.addChild(dd, 'span');
-                            span.innerHTML = termHTMLReference(superclass);
-                            span.setAttribute('property', 'rdfs:subClassOf');
-                            span.setAttribute('resource', superclass.curie);
+                            dd.innerHTML = termHTMLReference(superclass);
+                            // const span = document.addChild(dd, 'span');                          // RDFa
+                            // span.innerHTML = termHTMLReference(superclass);                      // RDFa
+                        //     span.setAttribute('property', 'rdfs:subClassOf');                   // RDFa
+                        //     span.setAttribute('resource', superclass.curie);                    // RDFa
                         }
                     }
                     if (item.range_of.length > 0 || item.includes_range_of.length > 0) {
@@ -647,13 +655,9 @@ export function toHTML(vocab: Vocab, template_text: string): string {
 
     /*********************** The real processing part, making use of all these functions ****************************/
 
-    // The prefix and the URL for the vocabulary itself
-    // I am just lazy to type things that are too long... :-)
-    const vocab_prefix = global.vocab_prefix;
-    const vocab_url    = global.vocab_url;
 
     // 1. Set the necessary RDFa preamble into the body element
-    rdfaPreamble();
+    // rdfaPreamble();                                                                     // RDFa
 
     // 2. Set the general properties on the ontology itself
     ontologyProperties();

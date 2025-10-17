@@ -13,7 +13,7 @@
     },
     "tasks": {
         "local_vcdm_nolink": "(cd local/tests/vcdm;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
-        "local_test": "(cd local/tests;  deno run --allow-read --allow-write --allow-env ../../main.ts -v local/tests/test.yml -t local/tests/test_template.html -c)",
+        "local_test": "(cd local/tests;  deno run --allow-read --allow-write --allow-env ../../main.ts -v test.yml -t test_template.html -c)",
         "local_ident": "(cd local/tests/identification;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
         "local_did": "(cd local/tests/did;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
         "compile": "deno compile --allow-read --allow-write --allow-env main.ts"
