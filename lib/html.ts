@@ -8,6 +8,9 @@ import { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, TermType } from './c
 import { Vocab, RDFTerm, global, Status }                              from './common';
 import { MiniDOM }                                                     from './minidom';
 import { RDFTermFactory }                                              from './factory';
+import pretty                                                          from 'pretty';
+
+
 
 // This object is need for a proper formatting of some text
 const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
@@ -723,7 +726,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }
 
-    return `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
+    return pretty(`<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`, { ocd: true });
 }
 
 
