@@ -274,13 +274,18 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
     //     }
     // }  
     
-    const alternateLink = () => {
+    const alternateLinks = () => {
+        const addLink = (parent: Element, suffix:string, media_type: string): void => {
+            const link = document.addChild(parent, 'link');
+            link.setAttribute('href', `${basename}.${suffix}`);
+            link.setAttribute('rel', 'alternate');
+            link.setAttribute('type', media_type);
+        };
+
         const head = document.getElementsByTagName('head')[0];
         if (head && basename !== '') {
-            const link = document.addChild(head, 'link');
-            link.setAttribute('href', `${basename}.jsonld`);
-            link.setAttribute('rel', 'alternate');
-            link.setAttribute('type', 'application/ld+json');
+            addLink(head, 'jsonld', 'application/ld+json');
+            addLink(head, 'ttl', 'text/turtle');
         }
 
         // Hide this code here because it is related: removes an unnecessary
@@ -672,7 +677,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
 
 
     // 1. Set the reference to the json-ld version into the header
-    alternateLink();
+    alternateLinks();
 
     // 2. Set the general properties on the ontology itself
     ontologyProperties();
