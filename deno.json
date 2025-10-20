@@ -39,6 +39,7 @@
         "yaml"               : "npm:yaml@^2.7.0",
         "commander"          : "npm:commander@^13.1.0",
         "@exodus/schemasafe" : "npm:@exodus/schemasafe@^1.3.0",
-        "jsdom"              : "npm:jsdom@^26.0.0"
+        "jsdom"              : "npm:jsdom@^26.0.0",
+        "js-beautify"        : "npm:js-beautify@^1.15.4"
     }
 }

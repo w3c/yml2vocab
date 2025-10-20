@@ -8,9 +8,16 @@ import { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, TermType } from './c
 import { Vocab, RDFTerm, global, Status }                              from './common';
 import { MiniDOM }                                                     from './minidom';
 import { RDFTermFactory }                                              from './factory';
-// Unfortunately, I failed to create a code that works both in node and in deno; I gave up for now.
-// import * as beautify from 'js-beautify'
-// import pretty                                                          from 'pretty';
+import * as beautify                                                   from 'js-beautify';
+
+// Handle both Deno (ESM) and Node.js (CommonJS) module systems
+// type BeautifyModule = typeof beautify & { default?: { html: (text: string) => string; }; };
+// const htmlBeautify = (beautify as BeautifyModule).html || (beautify as BeautifyModule).default?.html;
+
+function getBeautify() {
+    type BeautifyModule = typeof beautify & { default?: typeof beautify; };
+    return (beautify as BeautifyModule).default || beautify;
+}
 
 
 
@@ -738,8 +745,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
     }
 
     const final_html = `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
-    return final_html;
-
+    return getBeautify().html(final_html);
 }
 
 
