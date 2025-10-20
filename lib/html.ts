@@ -8,7 +8,9 @@ import { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, TermType } from './c
 import { Vocab, RDFTerm, global, Status }                              from './common';
 import { MiniDOM }                                                     from './minidom';
 import { RDFTermFactory }                                              from './factory';
-import pretty                                                          from 'pretty';
+// Unfortunately, I failed to create a code that works both in node and in deno; I gave up for now.
+// import * as beautify from 'js-beautify'
+// import pretty                                                          from 'pretty';
 
 
 
@@ -735,7 +737,9 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }
 
-    return pretty(`<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`, { ocd: true });
+    const final_html = `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
+    return final_html;
+
 }
 
 
