@@ -1272,6 +1272,7 @@
         "npm:commander@^13.1.0",
         "npm:eslint@^9.19.0",
         "npm:jsdom@26",
+        "npm:pretty@2",
         "npm:ts-node@^10.9.2",
         "npm:typedoc@~0.27.6",
         "npm:typescript@^5.7.3",

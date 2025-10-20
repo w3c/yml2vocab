@@ -285,11 +285,20 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
             link.setAttribute('type', media_type);
         };
 
+        const addAref = (id: string, suffix: string): void => {
+            document.getElementById(id)?.setAttribute('href', `${basename}.${suffix}`)
+        }
+
         const head = document.getElementsByTagName('head')[0];
         if (head && basename !== '') {
             addLink(head, 'jsonld', 'application/ld+json');
             addLink(head, 'ttl', 'text/turtle');
         }
+
+        // Handle the alternate 'a' links, if any of them are 
+        // present in the template
+        addAref('alt-turtle', 'ttl');
+        addAref('alt-jsonld', 'jsonld');
 
         // Hide this code here because it is related: removes an unnecessary
         // RDFa link from the body if it is there.
