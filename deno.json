@@ -1,7 +1,7 @@
 {
     "name": "@iherman/yml2vocab",
     "description": "Generation of vocabulary files starting by YAML",
-    "version": "1.6.2",
+    "version": "1.7.0",
     "homepage": "https://github.com/w3c/yml2vocab",
     "nodeModulesDir": "none",
     "compilerOptions": {
