@@ -1,7 +1,7 @@
 {
     "name": "@iherman/yml2vocab",
     "description": "Generation of vocabulary files starting by YAML",
-    "version": "1.6.2",
+    "version": "1.7.0",
     "homepage": "https://github.com/w3c/yml2vocab",
     "nodeModulesDir": "none",
     "compilerOptions": {
@@ -13,7 +13,7 @@
     },
     "tasks": {
         "local_vcdm_nolink": "(cd local/tests/vcdm;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
-        "local_test": "(cd local/tests;  deno run --allow-read --allow-write --allow-env ../../main.ts -v local/tests/test.yml -t local/tests/test_template.html -c)",
+        "local_test": "(cd local/tests;  deno run --allow-read --allow-write --allow-env ../../main.ts -v test.yml -t test_template.html -c)",
         "local_ident": "(cd local/tests/identification;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
         "local_did": "(cd local/tests/did;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
         "compile": "deno compile --allow-read --allow-write --allow-env main.ts"
@@ -39,6 +39,7 @@
         "yaml"               : "npm:yaml@^2.7.0",
         "commander"          : "npm:commander@^13.1.0",
         "@exodus/schemasafe" : "npm:@exodus/schemasafe@^1.3.0",
-        "jsdom"              : "npm:jsdom@^26.0.0"
+        "jsdom"              : "npm:jsdom@^26.0.0",
+        "js-beautify"        : "npm:js-beautify@^1.15.4"
     }
 }
