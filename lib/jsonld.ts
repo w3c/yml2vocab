@@ -1,11 +1,13 @@
 /**
- * Convert the internal representation of the vocabulary into JSON-LD 
+ * Convert the internal representation of the vocabulary into JSON-LD
  * (see the 'Vocab' interface).
- * 
+ *
  * @packageDocumentation
  */
 
 import { Vocab, global, RDFTerm, Link, Status } from './common';
+import { beautify } from './beautify';
+
 
 type JSON = Record<string,unknown>;
 
@@ -36,19 +38,19 @@ const generic_context = {
 
 /**
  * Generate the JSON-LD representation of the vocabulary.
- * 
+ *
  * The function does not generate JSON-LD directly; instead, a standard JS object
- * is generated and the built-in JSON serializer takes care of the idiosyncrasies of 
+ * is generated and the built-in JSON serializer takes care of the idiosyncrasies of
  * the JSON syntax.
- * 
- * There is one neat trick in the generated code: the JSON-LD code, usually, 
- * becomes very complicated if the structure is not a tree. This problem is handled here 
- * by the repeated usage of reverse properties that put, in the JSON sense, 
- * the vocabulary itself on the top, linked to the individual terms via a 
- * (reversed) rdfs:isDefinedBy. (See the definition of the 'rdfs_classes', 
+ *
+ * There is one neat trick in the generated code: the JSON-LD code, usually,
+ * becomes very complicated if the structure is not a tree. This problem is handled here
+ * by the repeated usage of reverse properties that put, in the JSON sense,
+ * the vocabulary itself on the top, linked to the individual terms via a
+ * (reversed) rdfs:isDefinedBy. (See the definition of the 'rdfs_classes',
  * 'rdfs_properties', and 'rdfs_instances'). Thanks to Gregg Kellogg for that trick...
- * 
- * 
+ *
+ *
  * @param vocab - The internal representation of the vocabulary
  * @returns
  */
@@ -56,7 +58,7 @@ export function toJSONLD(vocab: Vocab): string {
     const termToStringCallback = (t: RDFTerm): string => `${t}`;
 
     // Handling of the domain is a bit complicated due to the usage
-    // of the owl:unionOf construct; factored it here to make the 
+    // of the owl:unionOf construct; factored it here to make the
     // code more readable.
     const multiDomain = (term: RDFTerm[]): unknown => {
         const value: string[] = term.map(termToStringCallback);
@@ -78,7 +80,7 @@ export function toJSONLD(vocab: Vocab): string {
             return value;
         }
     }
- 
+
     // This is the target object
     const jsonld: JSON = {}
 
@@ -109,7 +111,7 @@ export function toJSONLD(vocab: Vocab): string {
             target["mentioned"] = entry.context.map((ctx:string): JSON => {
                 return {
                     "@id": ctx,
-                    "@type": "jsonld:Context"                   
+                    "@type": "jsonld:Context"
                 }
             });
         }
@@ -128,7 +130,7 @@ export function toJSONLD(vocab: Vocab): string {
 
     // That is the core: the ID of the ontology itself!
     jsonld["@id"] = global.vocab_url;
-    
+
     // Here we go, category by category...
     {
         // The Ontology properties are all top level...
@@ -252,5 +254,7 @@ export function toJSONLD(vocab: Vocab): string {
     }
 
     // Done... just turn the result into bona fide (and readable) json
-    return JSON.stringify(jsonld, null, 4);
+    const final_jsonld = JSON.stringify(jsonld);
+    const nice_jsonld  = beautify(final_jsonld, 'jsonld')
+    return nice_jsonld;
 }
