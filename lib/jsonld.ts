@@ -5,9 +5,8 @@
  * @packageDocumentation
  */
 
-import { Vocab, global, RDFTerm, Link, Status } from './common';
-import { beautify } from './beautify';
-
+import { type Vocab, global, type RDFTerm, type Link, Status } from './common';
+import { beautify }                                            from './beautify';
 
 type JSON = Record<string,unknown>;
 

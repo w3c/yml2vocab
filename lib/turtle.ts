@@ -1,15 +1,15 @@
 /**
- * Convert the internal representation of the vocabulary into turtle 
+ * Convert the internal representation of the vocabulary into turtle
  * (see the 'Vocab' interface).
- * 
+ *
  * @packageDocumentation
  */
-import { Vocab, global, RDFTerm, Link, Status } from './common';
+import { type Vocab, global, type RDFTerm, type Link, Status } from './common';
 
 /**
  * Generate the Turtle representation of the vocabulary.
  * Nothing complex, just a straightforward conversion of the information into the turtle syntax.
- * 
+ *
  * @param vocab - The internal representation of the vocabulary
  * @returns - the full Turtle representation of the vocabulary
  */
@@ -17,7 +17,7 @@ export function toTurtle(vocab: Vocab): string {
     const termToStringCallback = (t: RDFTerm): string => `${t}`;
 
     // Handling of the domain is a bit complicated due to the usage
-    // of the owl:unionOf construct if there are several domains; factored it here to make the 
+    // of the owl:unionOf construct if there are several domains; factored it here to make the
     // code more readable.
     const multiDomain = (term: RDFTerm[]): string => {
         const value: string[] = term.map(termToStringCallback)
@@ -136,7 +136,7 @@ export function toTurtle(vocab: Vocab): string {
                 commonFields(cl);
             }
         }
-        turtle += "\n\n";    
+        turtle += "\n\n";
     }
 
     if (vocab.individuals.length > 0) {

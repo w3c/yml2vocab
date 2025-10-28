@@ -5,9 +5,9 @@
  * @packageDocumentation
  */
 
-import { Vocab, global, RDFProperty } from './common';
-import { RDFTermFactory }             from './factory';
-import { beautify }                   from './beautify';
+import { type Vocab, global, type RDFProperty } from './common';
+import { RDFTermFactory }                       from './factory';
+import { beautify }                             from './beautify';
 
 
 // Just to get an extra help from TS if I mistype something...

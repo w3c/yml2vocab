@@ -23,3 +23,10 @@ indent_size = 4
 
 [*.{json,jsonld}]
 indent_size = 2
+
+[*.{xml,svg}]
+indent_size = 4
+
+[*.{yml}]
+indent_size = 2
+

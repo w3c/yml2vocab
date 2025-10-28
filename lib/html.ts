@@ -4,11 +4,11 @@
  *
  * @packageDocumentation
  */
-import { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, TermType } from './common';
-import { Vocab, RDFTerm, global, Status }                              from './common';
-import { MiniDOM }                                                     from './minidom';
-import { RDFTermFactory }                                              from './factory';
-import { beautify }                                                    from './beautify';
+import type { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, Vocab, RDFTerm } from './common';
+import { global, Status, TermType }                                               from './common';
+import { MiniDOM }                                                                from './minidom';
+import { RDFTermFactory }                                                         from './factory';
+import { beautify }                                                               from './beautify';
 
 // This object is need for a proper formatting of some text
 const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
