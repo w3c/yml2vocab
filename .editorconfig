@@ -18,5 +18,8 @@ indent_size = 4
 [*.{ttl}]
 indent_size = 4
 
+[*.{jsonc}]
+indent_size = 4
+
 [*.{json,jsonld}]
 indent_size = 2

@@ -3,6 +3,9 @@
     "description": "Generation of vocabulary files starting by YAML",
     "version": "1.7.1",
     "homepage": "https://github.com/w3c/yml2vocab",
+    // We do not want to use the npm installation from deno
+    // npm packages used by the code is maintained separately
+    // by deno.
     "nodeModulesDir": "none",
     "compilerOptions": {
         "lib": ["dom", "deno.ns"]
@@ -12,11 +15,11 @@
         "url": "https://github.com/w3c/yml2vocab"
     },
     "tasks": {
-        "local_vcdm_nolink": "(cd local/tests/vcdm;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
-        "local_test": "(cd local/tests;  deno run --allow-read --allow-write --allow-env ../../main.ts -v test.yml -t test_template.html -c)",
-        "local_ident": "(cd local/tests/identification;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
-        "local_did": "(cd local/tests/did;  deno run --allow-read --allow-write --allow-env ../../../main.ts -c)",
-        "compile": "deno compile --allow-read --allow-write --allow-env main.ts"
+        "local_vcdm_nolink": "(cd local/tests/vcdm;  deno run --allow-all ../../../main.ts -c)",
+        "local_test": "(cd local/tests;  deno run --allow-all ../../main.ts -v test.yml -t test_template.html -c)",
+        "local_ident": "(cd local/tests/identification;  deno run --allow-all ../../../main.ts -c)",
+        "local_did": "(cd local/tests/did;  deno run --allow-all ../../../main.ts -c)",
+        "compile": "deno compile --allow-all main.ts"
     },
     "exports": {
         ".": "./index.ts",
@@ -24,7 +27,9 @@
     },
     "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
     "license": "W3C-20150513",
-    "exclude": ["dist/"],
+    // It is important to exclude the node.js specific things. Otherwise we get problems with, e.g.
+    // deno compilation...
+    "exclude": ["dist/", "node_modules/", "package.json"],
     "imports": {
         "./lib/common"       : "./lib/common.ts",
         "./lib/context"      : "./lib/context.ts",
