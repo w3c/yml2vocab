@@ -149,7 +149,6 @@ export function toContext(vocab: Vocab): string {
         top_level[datatype.known_as ?? datatype.id] = `${datatype.url}`;
     }
 
-
     // Done... just turn the result into bona fide (and readable) json
     const final_jsonld = JSON.stringify({ "@context": top_level });
     const nice_jsonld = beautify(final_jsonld, 'jsonld');

@@ -49,7 +49,6 @@ const generic_context = {
  * (reversed) rdfs:isDefinedBy. (See the definition of the 'rdfs_classes',
  * 'rdfs_properties', and 'rdfs_instances'). Thanks to Gregg Kellogg for that trick...
  *
- *
  * @param vocab - The internal representation of the vocabulary
  * @returns
  */

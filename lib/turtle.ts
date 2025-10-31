@@ -5,6 +5,24 @@
  * @packageDocumentation
  */
 import { type Vocab, global, type RDFTerm, type Link, Status } from './common';
+import { getEditorConfigOptions }                              from './beautify';
+
+const spaces: string = ((suffix: string): string => {
+    const options = getEditorConfigOptions(suffix);
+    // console.log(JSON.stringify(options,null,4))
+    if (options.indent_with_tabs) {
+        return "\t";
+    } else {
+        // We know that the indent size is always a number, but TS does not...
+        const number = typeof options.indent_size === 'number' ? options.indent_size : 4;
+        let output = "";
+        for (let i = 0; i < number; i++) {
+            output += " ";
+        }
+        return output;
+    }
+})('ttl');
+
 
 /**
  * Generate the Turtle representation of the vocabulary.
@@ -43,20 +61,20 @@ export function toTurtle(vocab: Vocab): string {
 
     // Factoring out the common fields
     const commonFields = (entry: RDFTerm): void => {
-        turtle += `    rdfs:label "${entry.label}" ;\n`;
+        turtle += `${spaces}rdfs:label "${entry.label}" ;\n`;
         if (entry.comment !== '') {
-            turtle += `    rdfs:comment """<div>${entry.comment}</div>"""^^rdf:HTML ;\n`;
+            turtle += `${spaces}rdfs:comment """<div>${entry.comment}</div>"""^^rdf:HTML ;\n`;
         }
         if (entry.defined_by && entry.defined_by.length !== 0) {
             const defs: string = entry.defined_by.map((def: string): string => `<${def}>`).join(", ");
-            turtle += `    rdfs:isDefinedBy ${defs}, <${global.vocab_url}> ;\n`;
+            turtle += `${spaces}rdfs:isDefinedBy ${defs}, <${global.vocab_url}> ;\n`;
         } else {
-            turtle += `    rdfs:isDefinedBy <${global.vocab_url}> ;\n`;
+            turtle += `${spaces}rdfs:isDefinedBy <${global.vocab_url}> ;\n`;
         }
-        turtle += `    vs:term_status "${entry.status}" ;\n`;
+        turtle += `${spaces}vs:term_status "${entry.status}" ;\n`;
         if (entry.see_also && entry.see_also.length > 0) {
             const urls = entry.see_also.map( (link: Link): string => `<${link.url}>`).join(", ");
-            turtle +=`    rdfs:seeAlso ${urls} ;\n`
+            turtle +=`${spaces}rdfs:seeAlso ${urls} ;\n`
         }
         turtle += ".\n\n";
     }
@@ -76,14 +94,14 @@ export function toTurtle(vocab: Vocab): string {
         turtle += `${global.vocab_prefix}: a owl:Ontology ;\n`;
         for (const ont of vocab.ontology_properties) {
             if (ont.property === 'dc:date') {
-                turtle += `    dc:date "${ont.value}"^^xsd:date ;\n`
+                turtle += `${spaces}dc:date "${ont.value}"^^xsd:date ;\n`
             } else if (ont.property === 'dc:description') {
-                turtle += `    dc:description """${ont.value}"""^^rdf:HTML ;\n`
+                turtle += `${spaces}dc:description """${ont.value}"""^^rdf:HTML ;\n`
             } else {
                 if (ont.url) {
-                    turtle += `    ${ont.property} <${ont.value}> ;\n`;
+                    turtle += `${spaces}${ont.property} <${ont.value}> ;\n`;
                 } else {
-                    turtle += `    ${ont.property} """${ont.value}"""@en ;\n`;
+                    turtle += `${spaces}${ont.property} """${ont.value}"""@en ;\n`;
                 }
             }
         }
@@ -97,7 +115,7 @@ export function toTurtle(vocab: Vocab): string {
             if (!prop.external) {
                 turtle += `${prop} a ${prop.type.join(", ")} ;\n`;
                 if (prop.status === Status.deprecated) {
-                    turtle += `    owl:deprecated true ;\n`;
+                    turtle += `${spaces}owl:deprecated true ;\n`;
                 }
                 if (prop.subPropertyOf) {
                     // some magic is happening here...
@@ -105,15 +123,15 @@ export function toTurtle(vocab: Vocab): string {
                     // of object, but by virtue of the string interpretation, each object
                     // is converted to a string automatically (by calling the toString() method)
                     // and the result is a comma-separated list of the stringified objects.
-                    turtle += `    rdfs:subPropertyOf ${prop.subPropertyOf.join(", ")} ;\n`;
+                    turtle += `${spaces}rdfs:subPropertyOf ${prop.subPropertyOf.join(", ")} ;\n`;
                 }
                 if (prop.domain) {
-                    turtle += `    rdfs:domain ${multiDomain(prop.domain)} ;\n`;
+                    turtle += `${spaces}rdfs:domain ${multiDomain(prop.domain)} ;\n`;
                 }
                 if (prop.range) {
                     const range = multiRange(prop.range);
                     if (!(range === '' || range === '[]')) {
-                        turtle += `    rdfs:range ${multiRange(prop.range)} ;\n`;
+                        turtle += `${spaces}rdfs:range ${multiRange(prop.range)} ;\n`;
                     }
                 }
                 commonFields(prop);
@@ -127,11 +145,11 @@ export function toTurtle(vocab: Vocab): string {
             if (!cl.external) {
                 turtle += `${cl} a ${cl.type.join(", ")} ;\n`;
                 if (cl.status === Status.deprecated) {
-                    turtle += `    owl:deprecated true ;\n`;
+                    turtle += `${spaces}owl:deprecated true ;\n`;
                 }
                 if (cl.subClassOf && cl.subClassOf.length > 0) {
                     // See the comment on magic in the property section...
-                    turtle += `    rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
+                    turtle += `${spaces}rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
                 }
                 commonFields(cl);
             }
@@ -146,7 +164,7 @@ export function toTurtle(vocab: Vocab): string {
                 // See the comment on magic in the property section...
                 turtle += `${ind} a ${ind.type.join(", ")} ;\n`;
                 if (ind.status === Status.deprecated) {
-                    turtle += `    owl:deprecated true ;\n`;
+                    turtle += `${spaces}owl:deprecated true ;\n`;
                 }
                 commonFields(ind);
             }
@@ -159,11 +177,11 @@ export function toTurtle(vocab: Vocab): string {
             if (!dt.external) {
                 turtle += `${dt} a rdfs:Datatype ;\n`
                 if (dt.status === Status.deprecated) {
-                    turtle += `    owl:deprecated true ;\n`;
+                    turtle += `${spaces}owl:deprecated true ;\n`;
                 }
                 if (dt.subClassOf && dt.subClassOf.length > 0) {
                     // See the comment on magic in the property section...
-                    turtle += `    rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
+                    turtle += `${spaces}rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
                 }
                 commonFields(dt);
             }
@@ -182,8 +200,8 @@ export function toTurtle(vocab: Vocab): string {
             // the curie of the term.
             terms.sort();
             turtle += `<${ctx}> a jsonld:Context ;\n`;
-            turtle += `    schema:mentions\n`
-            turtle += (terms.map((term: RDFTerm): string => `        ${term}`).join(",\n")) + " ;\n.\n\n"
+            turtle += `${spaces}schema:mentions\n`
+            turtle += (terms.map((term: RDFTerm): string => `${spaces}${spaces}${term}`).join(",\n")) + " ;\n.\n\n"
         }
     }
 

@@ -2,7 +2,7 @@
  * A factory object for the creation of RDF Terms.
  *
  * The main reason for using this factory is that fact that some terms may be used before they are formally defined.
- * The factory will create a term with the minimal information needed, and then promote it to a class, property, etc.,
+ * The factory will create a term with the minimal information needed, and then promotes it to a class, property, etc.,
  * when defined.
  *
  * Also: some terms refer to internal terms, i.e., defined by the input yml file, and some refer to external terms,
@@ -26,13 +26,13 @@ function createCurie(str: string): string {
     return str.includes(":") ? str : `${global.vocab_prefix}:${str}`;
 }
 
-// Split a curie into prefix and reference (the reference may cotain colons)
+// Split a curie into prefix and reference (the reference may contain colons)
 function splitCurie(str: string): [string, string] {
     const firstColonIndex = str.indexOf(":");
     if (firstColonIndex !== -1) {
         const firstPart = str.substring(0, firstColonIndex);
         const secondPart = str.substring(firstColonIndex + 1);
-        return [firstPart, secondPart];;
+        return [firstPart, secondPart];
     } else {
         throw new Error(`Invalid curie (${str})`);
     }
@@ -55,7 +55,6 @@ function splitCurie(str: string): [string, string] {
  * Note that the factory includes some methods that are not (yet?) used in the package. They are included for possible future use.
  *
  */
-
 export class RDFTermFactory {
     private terms = new Map<string, RDFTerm>();
     private prefixes: RDFPrefix[] = [];
@@ -82,6 +81,7 @@ export class RDFTermFactory {
         if (this.terms.has(curie)) {
             return this.terms.get(curie)!;
         } else if (bona_fide_urls.some((url) => curie.startsWith(url))) {
+            // This is definitely an external term using a "usual" url, ie, http, https, doi, etc
             const output: RDFTerm = {
                 id:         curie,
                 prefix:     "",
@@ -115,7 +115,7 @@ export class RDFTermFactory {
                         return [prefix, reference, baseUrl, true, TermType.unknown];
                     }
                 }
-             })();
+            })();
 
             const output: RDFTerm = {
                 id:         reference,
@@ -260,7 +260,7 @@ export class RDFTermFactory {
     /**
      * Promote an unknown term to a class. This is necessary when a term is used, e.g., in a range or domain, before it is defined.
      *
-     * (Currently unused in the pacakage.)
+     * (Currently unused in the package.)
      */
     promoteToClass(term: RDFTerm): RDFClass {
         if (term.term_type === TermType.unknown) {

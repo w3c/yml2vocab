@@ -328,9 +328,7 @@ export interface RDFProperty extends RDFTerm {
  * more readable if there is a separate interface for it. And one may never
  * know how things will evolve...
  */
-// deno-lint-ignore no-empty-interface
-export interface RDFIndividual extends RDFTerm {
-}
+export interface RDFIndividual extends RDFTerm {}
 
 /**
  * Extra optional information is the superclass (ie, the datatypes that was used to derive this one).

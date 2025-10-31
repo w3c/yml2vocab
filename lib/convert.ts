@@ -201,7 +201,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     // In some cases the YAML parser puts an extra `\n` character at the end of the comment line;
     // this is removed
     const cleanComment = (val: string): string => {
-        let final = val.endsWith('\n') ? val.slice(0,-1):val;
+        let final = val.endsWith('\n') ? val.slice(0,-1) : val;
         if (final.endsWith('"') && final.startsWith('"')) {
             final = final.slice(1,-1);
         }
@@ -473,7 +473,6 @@ export function getData(vocab_source: string): Vocab {
     // The YAML file does not necessarily store the "vocab" as an array, but may; so the
     // vocab entry is always stored as an array. This makes the first entry of this
     // concatenation a bit strange...
-
     const prefixes: RDFPrefix[] = [
         ...vocab.vocab.map((raw: RawVocabEntry): RDFPrefix => {
             if (raw.id === undefined) {
@@ -564,7 +563,8 @@ export function getData(vocab_source: string): Vocab {
                 includes_range_of : [],   // these are set later, when all classes and properties are defined
             });
             return output;
-    }) : [];
+        }
+    ) : [];
 
     /********************************************************************************************/
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
@@ -606,7 +606,8 @@ export function getData(vocab_source: string): Vocab {
             });
 
             return output;
-        }) : [];
+        }
+    ) : [];
 
     /********************************************************************************************/
     // Get the properties. Note the special treatment for deprecated properties, as well as
@@ -655,7 +656,8 @@ export function getData(vocab_source: string): Vocab {
                 context       : final_contexts(raw, output),
             });
             return output;
-        }) : [];
+        }
+    ) : [];
 
     /********************************************************************************************/
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
@@ -686,7 +688,8 @@ export function getData(vocab_source: string): Vocab {
                 context    : final_contexts(raw, output),
             });
             return output;
-        }) : [];
+        }
+    ) : [];
 
     /********************************************************************************************/
     // Set the domain and range of the back references for ranges/domains for classes and datatypes.
@@ -714,7 +717,6 @@ export function getData(vocab_source: string): Vocab {
             }
         }
     }
-
 
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary

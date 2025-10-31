@@ -15,10 +15,10 @@ indent_size = 4
 [*.{js,ts}]
 indent_size = 4
 
-[*.{ttl}]
+[*.ttl]
 indent_size = 4
 
-[*.{jsonc}]
+[*.jsonc]
 indent_size = 4
 
 [*.{json,jsonld}]
@@ -27,6 +27,6 @@ indent_size = 2
 [*.{xml,svg}]
 indent_size = 4
 
-[*.{yml}]
+[*.yml]
 indent_size = 2
 

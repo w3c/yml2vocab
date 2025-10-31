@@ -72,12 +72,13 @@ const configOptions: Record<string, ConfigOptions> = {};
  * @param suffix
  * @returns
  */
-function getEditorConfigOptions(suffix: string): ConfigOptions {
+export function getEditorConfigOptions(suffix: string): ConfigOptions {
     if (configOptions[suffix] !== undefined) {
         return configOptions[suffix];
     } else {
         const filepath = path.join(process.cwd(), `dummy.${suffix}`);
         const config = editorconfig.parseSync(filepath);
+
         // Convert editorconfig settings to js-beautify options
         // The number of relevant options from .editorconfig is surprisingly low. I may have
         // missed some...

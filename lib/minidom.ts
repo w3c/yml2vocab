@@ -1,22 +1,18 @@
 /**
- * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
- * the JSDOM and Deno's DOM WASM implementations; higher layers should not depend on these.
- * 
+ * A thin layer on top of the regular DOM Document. It was, originally, necessary to "hide" the
+ * differences between the JSDOM and Deno's DOM WASM implementations; higher layers were not supposed to depend on these.
+ * Then deno could handle npm packages like JSDOM natively with version>1.4, but some extra utilities were added to the
+ * class which made it useful on its own right... As these utilities were used in the package,
+ * I follow the wisdom of "ain't broken, don't fix it" :-)
+ *
  * @packageDocumentation
  */
 
 import { JSDOM } from 'jsdom';
 
 /**
- * A thin layer on top of the regular DOM Document. Necessary to "hide" the differences between
- * the JSDOM and Deno's DOM WASM implementations; higher layers should not depend on these.
- *
- * The class also includes some handy shorthands to make the code cleaner…
- * 
- * 2024-02-02: as of today, with deno v. >1.4, this layer is not necessary any more,
- * because jsdom finally runs with deno as well. The class has been kept as a separate layer
- * following the wisdom of "ain't broken, don't fix it" :-)
- * 
+ * A thin layer on top of the regular DOM Document.
+ * The class includes some handy shorthands to make the code cleaner…
  */
 export class MiniDOM {
     private readonly _localDocument: Document;
@@ -37,12 +33,12 @@ export class MiniDOM {
 
     /**
      * Add a new HTML Element to a parent, and return the new element.
-     * 
+     *
      * @param parent - The parent HTML Element
      * @param element - The new element's name
      * @param content - The new element's (HTML) content
      * @returns the new element
-     * 
+     *
      */
     addChild(parent: Element, element: string, content: string | undefined = undefined): Element {
         const new_element = this._localDocument.createElement(element);
@@ -55,11 +51,11 @@ export class MiniDOM {
 
     /**
      * Add some text to an element, including the obligatory checks that Typescript imposes
-     * 
+     *
      * @param content - text to add
      * @param element HTML Element to add it to
-     * @returns 
-     * 
+     * @returns
+     *
      * @internal
      */
     addText(content: string, element: Element | null): Element | null {
@@ -71,11 +67,11 @@ export class MiniDOM {
 
     /**
      * Add some HTMLtext to an element, including the obligatory checks that Typescript imposes
-     * 
+     *
      * @param content - text to add
      * @param element HTML Element to add it to
-     * @returns 
-     * 
+     * @returns
+     *
      * @internal
      */
     addHTMLText(content: string, element: Element | null): Element | null {
@@ -87,9 +83,9 @@ export class MiniDOM {
 
     /**
      * Just the mirroring of the official DOM call.
-     * 
-     * @param id 
-     * @returns 
+     *
+     * @param id
+     * @returns
      */
     getElementById(id: string): Element | null {
         return this._localDocument.getElementById(id);
@@ -97,9 +93,9 @@ export class MiniDOM {
 
     /**
       * Just the mirroring of the official DOM call.
-      * 
-      * @param tag 
-      * @returns 
+      *
+      * @param tag
+      * @returns
       */
     getElementsByTagName(tag: string): HTMLCollection {
         return this._localDocument.getElementsByTagName(tag);
@@ -107,8 +103,8 @@ export class MiniDOM {
 
     /**
      * Just the mirroring of the official DOM call.
-     * 
-     * @returns 
+     *
+     * @returns
      */
     innerHTML(): string {
         const output = this._localDocument.documentElement?.innerHTML;
