@@ -1,66 +1,66 @@
 {
-  "name": "yml2vocab",
-  "version": "1.7.1",
-  "description": "Generation of vocabulary files starting by YAML",
-  "homepage": "https://github.com/w3c/yml2vocab",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/w3c/yml2vocab.git"
-  },
-  "bugs": {
-    "url": "https://github.com/w3c/yml2vocab/issues"
-  },
-  "files": [
-    "LICENSE.md",
-    "README.md",
-    "CHANGES.md",
-    "dist/**/*"
-  ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "bin": {
-    "yml2vocab": "dist/main.js"
-  },
-  "engines": {
-    "node": ">=21.0.0"
-  },
-  "scripts": {
-    "generate": "ts-node main.ts",
-    "docs": "typedoc index.ts main.ts lib/*",
-    "dist": "tsc",
-    "distribute": "npm run dist && npm run docs",
-    "test_di": "ts-node main.ts -v example/security.yml -t example/security_template.html -c",
-    "test_vcdm": "ts-node main.ts -v example/credentials.yml -t example/template.html -c",
-    "test": "ts-node main.ts -v example/test.yml -t example/test_template.html -c",
-    "local_test": "ts-node main.ts -v local/tests/test.yml -t local/tests/test_template.html -c",
-    "local_vcdm": "ts-node main.ts -v local/vcdm/vocabulary.yml -t local/vcdm/template.html -c",
-    "local_di": "ts-node main.ts -v local/di/vocabulary.yml -t local/di/template.html -c",
-    "local_sl": "ts-node main.ts -v local/sl/vocabulary.yml -t local/sl/template.html -c",
-    "local_vcdm_nolink": "ts-node main.ts -v local/tests/vcdm/vocabulary.yml -t local/tests/vcdm/template.html -c",
-    "local_ident": "ts-node main.ts -v local/tests/identification/vocabulary.yml -t local/tests/identification/template.html -c",
-    "local_did": "ts-node main.ts -v local/tests/did/vocabulary.yml -t local/tests/did/template.html -c",
-    "preview_vcdm": "ts-node main.ts -v previews/vcdm/vocabulary.yml -t previews/vcdm/template.html",
-    "preview_di": "ts-node main.ts -v previews/di/vocabulary.yml -t previews/di/template.html"
-  },
-  "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
-  "license": "W3C-20150513",
-  "dependencies": {
-    "@exodus/schemasafe": "^1.3.0",
-    "@types/js-beautify": "^1.14.3",
-    "commander": "^13.1.0",
-    "editorconfig": "^3.0.1",
-    "js-beautify": "^1.15.4",
-    "jsdom": "^26.0.0",
-    "yaml": "^2.7.0"
-  },
-  "devDependencies": {
-    "@types/jsdom": "^21.1.7",
-    "@types/node": "^22.10.10",
-    "@typescript-eslint/eslint-plugin": "^8.21.0",
-    "@typescript-eslint/parser": "^8.21.0",
-    "eslint": "^9.19.0",
-    "ts-node": "^10.9.2",
-    "typedoc": "^0.27.6",
-    "typescript": "^5.7.3"
-  }
+    "name": "yml2vocab",
+    "version": "1.7.0",
+    "description": "Generation of vocabulary files starting by YAML",
+    "homepage": "https://github.com/w3c/yml2vocab",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/w3c/yml2vocab.git"
+    },
+    "bugs": {
+        "url": "https://github.com/w3c/yml2vocab/issues"
+    },
+    "files": [
+        "LICENSE.md",
+        "README.md",
+        "CHANGES.md",
+        "dist/**/*"
+    ],
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "bin": {
+        "yml2vocab": "dist/main.js"
+    },
+    "engines": {
+        "node": ">=21.0.0"
+    },
+    "scripts": {
+        "generate": "ts-node main.ts",
+        "docs": "typedoc index.ts main.ts lib/*",
+        "dist": "tsc",
+        "distribute": "npm run dist && npm run docs",
+        "test_di": "ts-node main.ts -v example/security.yml -t example/security_template.html -c",
+        "test_vcdm": "ts-node main.ts -v example/credentials.yml -t example/template.html -c",
+        "test": "ts-node main.ts -v example/test.yml -t example/test_template.html -c",
+        "local_test": "ts-node main.ts -v local/tests/test.yml -t local/tests/test_template.html -c",
+        "local_vcdm": "ts-node main.ts -v local/vcdm/vocabulary.yml -t local/vcdm/template.html -c",
+        "local_di": "ts-node main.ts -v local/di/vocabulary.yml -t local/di/template.html -c",
+        "local_sl": "ts-node main.ts -v local/sl/vocabulary.yml -t local/sl/template.html -c",
+        "local_vcdm_nolink": "ts-node main.ts -v local/tests/vcdm/vocabulary.yml -t local/tests/vcdm/template.html -c",
+        "local_ident": "ts-node main.ts -v local/tests/identification/vocabulary.yml -t local/tests/identification/template.html -c",
+        "local_did": "ts-node main.ts -v local/tests/did/vocabulary.yml -t local/tests/did/template.html -c",
+        "preview_vcdm": "ts-node main.ts -v previews/vcdm/vocabulary.yml -t previews/vcdm/template.html",
+        "preview_di": "ts-node main.ts -v previews/di/vocabulary.yml -t previews/di/template.html"
+    },
+    "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
+    "license": "W3C-20150513",
+    "dependencies": {
+        "@exodus/schemasafe": "^1.3.0",
+        "@types/js-beautify": "^1.14.3",
+        "commander": "^13.1.0",
+        "editorconfig": "^3.0.1",
+        "js-beautify": "^1.15.4",
+        "jsdom": "^26.0.0",
+        "yaml": "^2.7.0"
+    },
+    "devDependencies": {
+        "@types/jsdom": "^21.1.7",
+        "@types/node": "^22.10.10",
+        "@typescript-eslint/eslint-plugin": "^8.21.0",
+        "@typescript-eslint/parser": "^8.21.0",
+        "eslint": "^9.19.0",
+        "ts-node": "^10.9.2",
+        "typedoc": "^0.27.6",
+        "typescript": "^5.7.3"
+    }
 }

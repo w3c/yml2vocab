@@ -1,7 +1,7 @@
 {
     "name": "@iherman/yml2vocab",
     "description": "Generation of vocabulary files starting by YAML",
-    "version": "1.7.1",
+    "version": "1.7.0",
     "homepage": "https://github.com/w3c/yml2vocab",
     // We do not want to use the npm installation from deno
     // npm packages used by the code is maintained separately

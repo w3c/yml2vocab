@@ -2,7 +2,7 @@
 
 This list does not include all the tiny changes, bug handling, etc, only the changes in the main features.
 
-## Version 1.7.1
+## Version 1.7.0
 
 - The package does not generate RDFa any more. The usage of RDFa in the HTML represented a significant burden on the code itself, and also made the generated HTML messy. All this for no real benefit: RDFa is very rarely used these days. Instead, the JSON-LD and Turtle versions of the vocabulary are linked from the HTML header as alternate representations.
 
