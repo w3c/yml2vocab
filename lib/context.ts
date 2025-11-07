@@ -5,14 +5,14 @@
  * @packageDocumentation
  */
 
-import { type Vocab, global, type RDFProperty } from './common';
-import { RDFTermFactory }                       from './factory';
-import { beautify }                             from './beautify';
+import { type Vocab, global, Container, type RDFProperty } from './common';
+import { RDFTermFactory }                                  from './factory';
+import { beautify }                                        from './beautify';
 
 
 // Just to get an extra help from TS if I mistype something...
 interface Context {
-    [index: string]: string|Context|boolean|null;
+    [index: string]: string | string[] | Context | boolean | null;
 }
 
 // These are the context statements appearing in all
@@ -69,10 +69,7 @@ export function toContext(vocab: Vocab): string {
                 } else if (["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString"].includes(curie)) {
                     output["@type"] = rangeTerm.url;
                     break;
-                } else if (curie === "rdf:List") {
-                    output["@container"] = "@list";
-                    break;
-                } else if (RDFTermFactory.includesCurie(property.type, "owl:DatatypeProperty")) {
+                 } else if (RDFTermFactory.includesCurie(property.type, "owl:DatatypeProperty")) {
                     // This is the case when the property refers to an explicitly defined, non-standard datatype
                     output["@type"] = rangeTerm.url;
                     break;
@@ -86,8 +83,14 @@ export function toContext(vocab: Vocab): string {
             }
         }
         if (property.dataset) {
-            output["@container"] = "@graph";
+            if (property.container && property.container === Container.set) {
+                output["@container"] = ["@set", "@graph"];
+            } else {
+                output["@container"] = "@graph";
+            }
             output["@type"]      = "@id";
+        } else if (property.container !== undefined) {
+            output["@container"] = `@${property.container}`;
         }
 
         // if only the URL is set, it makes the context simpler to use its direct value,

@@ -7,7 +7,7 @@ import type { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, RDFDatatype, RDFT
 import { Status, global }                                                             from './common';
 import type { RawVocabEntry, RawVocab, ValidationResults  }                           from './common';
 import type { OntologyProperty, Vocab, Link, Example }                                from './common';
-import { EXTRA_DATATYPES }                                                            from "./common";
+import { EXTRA_DATATYPES, Container }                                                 from "./common";
 import { validateWithSchema }                                                         from './schema';
 import { RDFTermFactory, factory }                                                    from './factory';
 
@@ -268,6 +268,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         example     : toExample(raw.example),
         known_as    : raw.known_as,
         dataset     : raw.dataset ?? false,
+        container   : raw.container,
         context     : toArrayContexts(raw.context)
     }
 }
@@ -630,12 +631,47 @@ export function getData(vocab_source: string): Vocab {
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
             const { extra_types, range, strongURL } = get_ranges(factory, raw, output.id);
 
+            // A little hack to ensure backward compatibility: if the range includes rdf:List,
+            // it should be removed and the information put aside because that should now
+            // go to the separate "container" information.
+            const finalRange   = range.filter ((r: RDFTerm): boolean => r.curie !== "rdf:List");
+            const containerSet = (finalRange.length !== range.length);
+
             const user_type: string[] = (raw.type === undefined) ? [] : raw.type
             const types: string[] = [
                 ...(raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],
                 ...extra_types,
                 ...user_type
             ];
+
+            const dataset = ((): boolean => {
+                if (raw.dataset) {
+                    return true;
+                } else if (raw.container !== undefined && raw.container === Container.graph) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })();
+
+            const container = ((): Container | undefined => {
+                if (raw.container !== undefined) {
+                    if (raw.container !== Container.graph) {
+                        return raw.container
+                    } else {
+                        return undefined;
+                    }
+                } else if (containerSet) {
+                    return Container.list
+                } else {
+                    return undefined;
+                }
+            })();
+
+            // Checking one combination: it is disallowed in JSON-LD to define a container to be a list and a graph
+            if (container === Container.list && dataset) {
+                throw (new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`));
+            }
 
             Object.assign(output, {
                 type          : types.map(t => factory.term(t)),
@@ -647,11 +683,12 @@ export function getData(vocab_source: string): Vocab {
                 status        : raw.status,
                 subPropertyOf : raw.upper_value?.map((val: string): RDFProperty => factory.property(val)),
                 see_also      : raw.see_also,
-                range         : range,
+                range         : finalRange,
                 domain        : raw.domain?.map(val => factory.class(val)),
                 example       : raw.example,
                 known_as      : raw.known_as,
-                dataset       : raw.dataset,
+                dataset       : dataset,
+                container     : container,
                 strongURL     : strongURL,
                 context       : final_contexts(raw, output),
             });
