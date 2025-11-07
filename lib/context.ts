@@ -1,19 +1,21 @@
   /**
- * Generate a (minimal) JSON-LD context file for the vocabulary 
+ * Generate a (minimal) JSON-LD context file for the vocabulary
  * (see the 'Vocab' interface).
- * 
+ *
  * @packageDocumentation
  */
 
-import { Vocab, global, RDFProperty } from './common';
-import { RDFTermFactory }             from './factory';
+import { type Vocab, global, type RDFProperty } from './common';
+import { RDFTermFactory }                       from './factory';
+import { beautify }                             from './beautify';
+
 
 // Just to get an extra help from TS if I mistype something...
 interface Context {
     [index: string]: string|Context|boolean|null;
 }
 
-// These are the context statements appearing in all 
+// These are the context statements appearing in all
 // embedded contexts, as well as the top level one.
 const preamble: Context = {
     "@protected" : true,
@@ -81,7 +83,7 @@ export function toContext(vocab: Vocab): string {
                         break;
                     }
                 }
-            } 
+            }
         }
         if (property.dataset) {
             output["@container"] = "@graph";
@@ -124,12 +126,12 @@ export function toContext(vocab: Vocab): string {
         }
 
         // If no properties are added, then the embedded context is unnecessary
-        top_level[cl.known_as ?? cl.id] = (Object.keys(embedded).length === Object.keys(preamble).length) 
-            ? url 
+        top_level[cl.known_as ?? cl.id] = (Object.keys(embedded).length === Object.keys(preamble).length)
+            ? url
             : { "@id": url, "@context": embedded };
     }
 
-    // Add the properties that have not been handled in the 
+    // Add the properties that have not been handled in the
     // previous step
     for (const prop of vocab.properties) {
         if (!class_properties.has(prop.id)) {
@@ -147,7 +149,8 @@ export function toContext(vocab: Vocab): string {
         top_level[datatype.known_as ?? datatype.id] = `${datatype.url}`;
     }
 
-
-    // That is it... return the nicely formatted JSON text 
-    return JSON.stringify({"@context" : top_level}, null, 4);
+    // Done... just turn the result into bona fide (and readable) json
+    const final_jsonld = JSON.stringify({ "@context": top_level });
+    const nice_jsonld = beautify(final_jsonld, 'jsonld');
+    return nice_jsonld;
 }

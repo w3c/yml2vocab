@@ -3,20 +3,21 @@
  *
  * @packageDocumentation
  */
-import { RDFClass, RDFProperty, RDFIndividual, RDFPrefix,  RDFDatatype, RDFTerm } from './common';
-import { OntologyProperty, Vocab, Link, Status, Example }                         from './common';
-import { RawVocabEntry, RawVocab, ValidationResults, global }                     from './common';
-import { EXTRA_DATATYPES }                                                        from "./common";
-import { validateWithSchema }                                                     from './schema';
-import { RDFTermFactory, factory }                                                from './factory';
+import type { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, RDFDatatype, RDFTerm } from './common';
+import { Status, global }                                                             from './common';
+import type { RawVocabEntry, RawVocab, ValidationResults  }                           from './common';
+import type { OntologyProperty, Vocab, Link, Example }                                from './common';
+import { EXTRA_DATATYPES }                                                            from "./common";
+import { validateWithSchema }                                                         from './schema';
+import { RDFTermFactory, factory }                                                    from './factory';
 
 /******************************************** Helper functions and constants **********************************/
 
 /**
  * Just a shorthand to make the code more readable... Checking whether a string can be considered as a URL.
- * 
- * @param value 
- * @returns 
+ *
+ * @param value
+ * @returns
  * @internal
  */
 function isURL(value:string): boolean {
@@ -30,10 +31,10 @@ function isURL(value:string): boolean {
 
 /**
  * Turn the label text into a non-camel case.
- * 
- * @param str 
- * @param separator 
- * @returns 
+ *
+ * @param str
+ * @param separator
+ * @returns
  */
 function localeUnCamelise(str: string, separator = ' '): string {
     const isLocaleUpperCase = (char: string): boolean => {
@@ -64,7 +65,7 @@ function localeUnCamelise(str: string, separator = ' '): string {
 /**
  * These prefixes are added no matter what; they are not vocabulary specific,
  * but likely to be used in the vocabulary.
- * 
+ *
  * @internal
  */
 const defaultPrefixes: RDFPrefix[] = [
@@ -125,7 +126,7 @@ const defaultOntologyProperties: OntologyProperty[] = [
  * Although the YAML parsing is declared to produce a {@link RawVocabEntry}, in fact does not do it strictly
  * (e.g., some entries should be converted into arrays even if the YAML source has only a single item).
  * This function does some basic conversion for all the types, to make the processing later a bit simpler.
- * 
+ *
  * @param raw entry as it comes from the YAML parser; in fact a generic (javascript-like) object.
  * @returns a bona fide RawVocabEntry instance
  * @internal
@@ -200,7 +201,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     // In some cases the YAML parser puts an extra `\n` character at the end of the comment line;
     // this is removed
     const cleanComment = (val: string): string => {
-        let final = val.endsWith('\n') ? val.slice(0,-1):val;
+        let final = val.endsWith('\n') ? val.slice(0,-1) : val;
         if (final.endsWith('"') && final.startsWith('"')) {
             final = final.slice(1,-1);
         }
@@ -218,19 +219,19 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     // and all this will go away.
     const {status, deprecated} = ((): {status: Status, deprecated: boolean} => {
         if (raw.status !== undefined) {
-            return { 
-                status     : raw.status, 
+            return {
+                status     : raw.status,
                 deprecated : raw.status === Status.deprecated
             }
         } else if (raw.deprecated != undefined) {
-            return { 
-                status     : raw.deprecated ? Status.deprecated : Status.reserved, 
-                deprecated : raw.deprecated 
+            return {
+                status     : raw.deprecated ? Status.deprecated : Status.reserved,
+                deprecated : raw.deprecated
             }
         } else {
-            return { 
-                status     : Status.stable, 
-                deprecated : false 
+            return {
+                status     : Status.stable,
+                deprecated : false
             }
         }
     })();
@@ -275,9 +276,9 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
 /**
  * Run the entry finalization function through all entries in the vocabulary
  * as parsed from YAML.
- * 
- * @param raw 
- * @returns 
+ *
+ * @param raw
+ * @returns
  */
 function finalizeRawVocab(raw: RawVocab) : RawVocab {
     // Check whether the required entries (vocab and ontology) are present
@@ -314,14 +315,14 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
  * Parse and interpret the YAML file's raw content. This is, essentially, a translation of the
  * YAML file structure into its internal equivalent representation with only a very few changes.
  * See the interface definition of {@link RawVocabEntry} for the details.
- * 
- * The result is ephemeral, in the sense that it is then immediately transformed into a proper internal 
+ *
+ * The result is ephemeral, in the sense that it is then immediately transformed into a proper internal
  * representation of the vocabulary using the {@link Vocab} interface. This is done
  * in a separate function for a better readability of the code.
- * 
+ *
  * @param vocab_source YAML file content (reading in the file must be done beforehand)
  * @returns
- * 
+ *
  * @throws {ValidationError} Error in the schema validation or when parsing the YAML content
  */
 export function getData(vocab_source: string): Vocab {
@@ -360,7 +361,7 @@ export function getData(vocab_source: string): Vocab {
                 return val;
             }
         }).filter((val:string): boolean => val !== "none");
-        
+
         // Make sure that all entries are unique before returning it
         const ctx_s = [...new Set(contexts)];
 
@@ -440,7 +441,7 @@ export function getData(vocab_source: string): Vocab {
         // Extra check for the possible error
         else {
             if ((raw.comment === undefined || raw.comment === "") &&
-                (raw.defined_by === undefined || raw.defined_by.length === 0)) 
+                (raw.defined_by === undefined || raw.defined_by.length === 0))
             {
                 throw (new Error(`${raw.id} is incomplete: either "defined_by" or "comment" should be provided.`));
             }
@@ -472,7 +473,6 @@ export function getData(vocab_source: string): Vocab {
     // The YAML file does not necessarily store the "vocab" as an array, but may; so the
     // vocab entry is always stored as an array. This makes the first entry of this
     // concatenation a bit strange...
-
     const prefixes: RDFPrefix[] = [
         ...vocab.vocab.map((raw: RawVocabEntry): RDFPrefix => {
             if (raw.id === undefined) {
@@ -526,7 +526,7 @@ export function getData(vocab_source: string): Vocab {
     factory.initialize(prefixes);
 
     /********************************************************************************************/
-    // Get the datatypes. 
+    // Get the datatypes.
     const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
         vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
             const output: RDFDatatype = factory.datatype(raw.id);
@@ -563,8 +563,9 @@ export function getData(vocab_source: string): Vocab {
                 includes_range_of : [],   // these are set later, when all classes and properties are defined
             });
             return output;
-    }) : [];
-    
+        }
+    ) : [];
+
     /********************************************************************************************/
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
     const classes: RDFClass[] = (vocab.class !== undefined) ?
@@ -598,17 +599,18 @@ export function getData(vocab_source: string): Vocab {
                 known_as              : raw.known_as,
                 example               : raw.example,
                 context               : final_contexts(raw, output),
-                range_of              : [],      // these are set later, when all classes and properties are defined 
+                range_of              : [],      // these are set later, when all classes and properties are defined
                 domain_of             : [],      // these are set later, when all classes and properties are defined
                 included_in_domain_of : [],      // these are set later, when all classes and properties are defined
                 includes_range_of     : [],      // these are set later, when all classes and properties are defined
             });
 
             return output;
-        }) : [];
+        }
+    ) : [];
 
     /********************************************************************************************/
-    // Get the properties. Note the special treatment for deprecated properties, as well as 
+    // Get the properties. Note the special treatment for deprecated properties, as well as
     // the extra owl types added depending on the range.
     //
     // Note that the function sets the object property or datatype property types in the obvious cases.
@@ -628,10 +630,10 @@ export function getData(vocab_source: string): Vocab {
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
             const { extra_types, range, strongURL } = get_ranges(factory, raw, output.id);
 
-            const user_type: string[] = (raw.type === undefined) ? [] : raw.type      
+            const user_type: string[] = (raw.type === undefined) ? [] : raw.type
             const types: string[] = [
-                ...(raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"], 
-                ...extra_types,                     
+                ...(raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],
+                ...extra_types,
                 ...user_type
             ];
 
@@ -654,7 +656,8 @@ export function getData(vocab_source: string): Vocab {
                 context       : final_contexts(raw, output),
             });
             return output;
-        }) : [];
+        }
+    ) : [];
 
     /********************************************************************************************/
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
@@ -685,7 +688,8 @@ export function getData(vocab_source: string): Vocab {
                 context    : final_contexts(raw, output),
             });
             return output;
-        }) : [];
+        }
+    ) : [];
 
     /********************************************************************************************/
     // Set the domain and range of the back references for ranges/domains for classes and datatypes.
@@ -703,7 +707,7 @@ export function getData(vocab_source: string): Vocab {
             }
         }
     }
-    
+
     for (const current_datatype of datatypes) {
         for (const prop of properties) {
             if (prop.range?.length > 0) {
@@ -713,7 +717,6 @@ export function getData(vocab_source: string): Vocab {
             }
         }
     }
-
 
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary

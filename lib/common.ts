@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 /**
- * Common types and variables.
- * 
+ * Common types, variables, and utilities.
+ *
  * @packageDocumentation
  */
 
@@ -21,8 +21,8 @@ export const EXTRA_DATATYPES: string[] = [
  * Characterization of a class/property/individual on whether it is stable or not.
  */
 export enum Status {
-    stable     = "stable", 
-    reserved   = "reserved", 
+    stable     = "stable",
+    reserved   = "reserved",
     deprecated = "deprecated",
 }
 
@@ -44,15 +44,15 @@ export class StatusCounter {
     add(status: Status): void {
         switch (status) {
             case Status.stable: {
-                this.stableNum++; 
+                this.stableNum++;
                 return;
             }
             case Status.reserved: {
-                this.reservedNum++; 
+                this.reservedNum++;
                 return;
             }
             case Status.deprecated: {
-                this.deprecatedNum++; 
+                this.deprecatedNum++;
                 return;
             }
         }
@@ -64,7 +64,7 @@ export class StatusCounter {
      */
     counter(status: Status): number {
         switch (status) {
-            case Status.stable: return this.stableNum; 
+            case Status.stable: return this.stableNum;
             case Status.reserved: return this.reservedNum;
             case Status.deprecated: return this.deprecatedNum;
             default: throw new Error(`Unknown term status: ${status}`);
@@ -127,7 +127,7 @@ export const global: GlobalData = {
     status_counter   : new StatusCounter(),
     context_mentions : {} as Contexts,
     real_curies      : [],
-} 
+}
 
 /**
  * Generic structure for a hyperlink
@@ -145,7 +145,7 @@ export interface Example {
     json   : string;
 }
 
-/** 
+/**
  * Superset of all YAML entries, expressed in TS. Look at the Readme.md file for what they are meant for.
  *
  * Instances of the classes are converted into the internal classes (e.g., {@link RDFClass},
@@ -187,11 +187,11 @@ export interface RawVocab {
 
 /**
  * Type needed for the JSON Schema validation interface.
- * 
+ *
  * One of the two values are null, depending on the validation result. (That is how Ajv works…)
  */
 export interface ValidationResults {
-    /** 
+    /**
      * The YAML content converted into a JSON object; ready to be converted further.
      * If the content is valid, the error array is empty. Otherwise, the vocab field is null, and
      * the validation error(s) are returned.
@@ -237,7 +237,7 @@ export enum TermType {
     individual  = "individual",
     datatype    = "datatype",
 
-    /** 
+    /**
      * This is a "core" term, i.e., terms in RDF, xsd, rdfs, etc.
      * Their full URL-s are unused, because they are well-known.
      */
@@ -252,7 +252,7 @@ export enum TermType {
     */
     unknown     = "unknown",
 
-    /** 
+    /**
      * This is not a real term, but just a URL that has been used as a term
      * (e.g., in the domain or range of a property).
      * See also {@link bona_fide_urls}.
@@ -328,9 +328,7 @@ export interface RDFProperty extends RDFTerm {
  * more readable if there is a separate interface for it. And one may never
  * know how things will evolve...
  */
-// deno-lint-ignore no-empty-interface
-export interface RDFIndividual extends RDFTerm {
-}
+export interface RDFIndividual extends RDFTerm {}
 
 /**
  * Extra optional information is the superclass (ie, the datatypes that was used to derive this one).
@@ -351,8 +349,8 @@ export interface RDFPrefix {
 }
 
 /**
- * Information for the ontology properties, i.e., properties that are defined on the top level. 
- * 
+ * Information for the ontology properties, i.e., properties that are defined on the top level.
+ *
  * The third value (url) indicates whether the property is a URL value. For values extracted from the YAML file
  * this is decided by checking whether the string can be considered to be a valid URL or not.
  */

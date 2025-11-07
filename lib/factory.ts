@@ -1,20 +1,20 @@
 /**
  * A factory object for the creation of RDF Terms.
- * 
+ *
  * The main reason for using this factory is that fact that some terms may be used before they are formally defined.
- * The factory will create a term with the minimal information needed, and then promote it to a class, property, etc., 
+ * The factory will create a term with the minimal information needed, and then promotes it to a class, property, etc.,
  * when defined.
- * 
+ *
  * Also: some terms refer to internal terms, i.e., defined by the input yml file, and some refer to external terms,
  * i.e., defined by external ontologies. The factory will put in the correct properties, used by the generator functions
  * to HTML, Turtle, or JSON-LD.
- * 
+ *
  * @packageDocumentation
  */
 
-import { RDFTerm, RDFProperty, RDFClass, RDFDatatype, RDFIndividual, TermType } from "./common";
-import { global, RDFPrefix, bona_fide_urls, bona_fide_prefixes }                from "./common";
-import { createHash }                                                           from 'node:crypto';
+import type { RDFTerm, RDFProperty, RDFClass, RDFDatatype, RDFIndividual,  RDFPrefix } from './common';
+import { global, bona_fide_urls, bona_fide_prefixes, TermType }                        from './common';
+import { createHash }                                                                  from 'node:crypto';
 
 // Calculate the SHA hash of a string. Used to encode the id of external terms
 function computeHash(input: string, sh_func: string = "sha256"): string {
@@ -26,13 +26,13 @@ function createCurie(str: string): string {
     return str.includes(":") ? str : `${global.vocab_prefix}:${str}`;
 }
 
-// Split a curie into prefix and reference (the reference may cotain colons)
+// Split a curie into prefix and reference (the reference may contain colons)
 function splitCurie(str: string): [string, string] {
     const firstColonIndex = str.indexOf(":");
     if (firstColonIndex !== -1) {
         const firstPart = str.substring(0, firstColonIndex);
         const secondPart = str.substring(firstColonIndex + 1);
-        return [firstPart, secondPart];;
+        return [firstPart, secondPart];
     } else {
         throw new Error(`Invalid curie (${str})`);
     }
@@ -40,30 +40,29 @@ function splitCurie(str: string): [string, string] {
 
 /**
  * A factory object for the creation of RDF Terms.
- * 
+ *
  * The main reason for using this factory is that fact that some terms may be used before they are formally defined.
- * The factory will create a term with the minimal information needed, and then promote it to a class, property, etc., 
+ * The factory will create a term with the minimal information needed, and then promote it to a class, property, etc.,
  * when defined.
- * 
+ *
  * Also: some terms refer to internal terms, i.e., defined by the input yml file, and some refer to external terms,
  * i.e., defined by external ontologies. The factory will put in the correct properties, used by the generator functions
  * to HTML, Turtle, or JSON-LD.
- * 
+ *
  * Terms are stored in an internal map, indexed by their _curie_. The curie is used even if the term is defined locally;
  * the general prefix of the vocabulary (defined in the yml file) is used for that purpose.
- * 
+ *
  * Note that the factory includes some methods that are not (yet?) used in the package. They are included for possible future use.
- * 
+ *
  */
-
 export class RDFTermFactory {
     private terms = new Map<string, RDFTerm>();
     private prefixes: RDFPrefix[] = [];
 
     /**
      * Initialize the factory with a set of prefixes.
-     * 
-     * @param prefixes 
+     *
+     * @param prefixes
      */
     initialize(prefixes: RDFPrefix[]) {
         this.prefixes = prefixes;
@@ -82,6 +81,7 @@ export class RDFTermFactory {
         if (this.terms.has(curie)) {
             return this.terms.get(curie)!;
         } else if (bona_fide_urls.some((url) => curie.startsWith(url))) {
+            // This is definitely an external term using a "usual" url, ie, http, https, doi, etc
             const output: RDFTerm = {
                 id:         curie,
                 prefix:     "",
@@ -115,9 +115,9 @@ export class RDFTermFactory {
                         return [prefix, reference, baseUrl, true, TermType.unknown];
                     }
                 }
-             })();
+            })();
 
-            const output: RDFTerm = { 
+            const output: RDFTerm = {
                 id:         reference,
                 prefix:     prefix,
                 html_id:    outsider ? computeHash(curie) : reference,
@@ -129,7 +129,7 @@ export class RDFTermFactory {
                 // term_type: bona_fide_prefixes.includes(prefix) ? TermType.core : TermType.unknown,
                 label:      "",
                 // This is set to its final value at conversion time. It depends on whether a term is part of the definition in the yml file
-                external:   false,   
+                external:   false,
                 context:    [],
                 toString(): string {
                     return this.curie;
@@ -223,7 +223,7 @@ export class RDFTermFactory {
                 throw new Error(`When creating an individual: term ${curie} exists, and it is not an individual`);
             }
         } else {
-            const output: RDFTerm = this.term(curie); 
+            const output: RDFTerm = this.term(curie);
             Object.assign(output, extras);
             return output as RDFIndividual;
         }
@@ -231,7 +231,7 @@ export class RDFTermFactory {
 
     /**
      * Create or retrieve a datatype.
-     */ 
+     */
     datatype(index: string): RDFDatatype {
         const curie = createCurie(index);
         const extras = {
@@ -253,14 +253,14 @@ export class RDFTermFactory {
         } else {
             const output: RDFTerm = this.term(curie);
             Object.assign(output, extras);
-            return output as RDFDatatype;   
+            return output as RDFDatatype;
         }
     }
 
     /**
      * Promote an unknown term to a class. This is necessary when a term is used, e.g., in a range or domain, before it is defined.
-     * 
-     * (Currently unused in the pacakage.)
+     *
+     * (Currently unused in the package.)
      */
     promoteToClass(term: RDFTerm): RDFClass {
         if (term.term_type === TermType.unknown) {
@@ -280,7 +280,7 @@ export class RDFTermFactory {
 
     /**
      * Promote an unknown term to a datatype. This is necessary when a term is used, e.g., in a range or domain, before it is defined.
-     * 
+     *
      * (Currently unused in the package.)
      */
     promoteToDatatype(term: RDFTerm): RDFDatatype {
@@ -299,14 +299,14 @@ export class RDFTermFactory {
 
     /**
      * Check whether a term with a curie has been defined.
-     */ 
+     */
     has(index: string): boolean {
         return this.terms.has(createCurie(index));
     }
 
     /**
      * Get a term by curie.
-     * 
+     *
      * (Currently unused in the package.)
      */
     get(index: string): RDFTerm | undefined {
@@ -317,7 +317,7 @@ export class RDFTermFactory {
      * Typeguard for classes.
      */
     static isClass(term: RDFTerm): term is RDFClass {
-        return term.term_type === TermType.class;   
+        return term.term_type === TermType.class;
     }
 
     /**
@@ -329,12 +329,12 @@ export class RDFTermFactory {
 
     /**
      * Typeguard for individuals.
-     * 
+     *
      * (Currently unused in the package.)
      */
     static isIndividual(term: RDFTerm): term is RDFIndividual {
         return term.term_type === TermType.individual;
-    }   
+    }
 
     /**
      * Typeguard for datatypes.
@@ -345,7 +345,7 @@ export class RDFTermFactory {
 
     /**
      * Typeguard for unknown terms.
-     * 
+     *
      * (Currently unused in the package.)
      */
     static isUnknown(term: RDFTerm): term is RDFTerm {
@@ -354,23 +354,23 @@ export class RDFTermFactory {
 
     /**
      * Equality of terms
-     * 
+     *
      */
     static equals(a: RDFTerm, b: RDFTerm): boolean {
         return a.curie === b.curie;
     }
 
     /**
-     * Is a term included in a list of terms. 
-     * 
+     * Is a term included in a list of terms.
+     *
      */
-    static includesTerm(terms: RDFTerm[], term: RDFTerm): boolean { 
+    static includesTerm(terms: RDFTerm[], term: RDFTerm): boolean {
         return terms.some((t) => RDFTermFactory.equals(t, term));
     }
 
     /**
-      * Does a curie identify a term in a list of terms. 
-      * 
+      * Does a curie identify a term in a list of terms.
+      *
       */
     static includesCurie(terms: RDFTerm[], index: string): boolean {
         const curie = createCurie(index)

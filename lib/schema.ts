@@ -9,15 +9,15 @@ import * as yaml                                             from 'yaml';
 import type { RawVocab, ValidationError, ValidationResults } from './common';
 
 /**
- * Perform a JSON Schema validation on the YAML content. Done by converting the YAML content into 
+ * Perform a JSON Schema validation on the YAML content. Done by converting the YAML content into
  * a Javascript object (using the YAML parser) and checking the object against a schema.
- * 
+ *
  * @param yaml_raw_content The raw textual content of the YAML file (i.e, presumably after reading the file itself)
- * @returns 
+ * @returns
  */
 export function validateWithSchema(yaml_raw_content: string): ValidationResults {
     try {
-        // Get the JSON schema from the separate file
+        // Get the JSON schema; see below
         const schema = JSON.parse(vocabSchema);
 
         // deno-lint-ignore no-explicit-any
@@ -39,7 +39,7 @@ export function validateWithSchema(yaml_raw_content: string): ValidationResults 
             })
             return {
                 vocab: null,
-                error: errors ?? [], //errors ? errors : [],
+                error: errors ?? [],
             };
         } else {
             return {
