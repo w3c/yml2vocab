@@ -1,3 +1,13 @@
+# Changes
+
+This list does not include all the tiny changes, bug handling, etc, only the changes in the main features.
+
+## Version 1.7.1
+
+- The package does not generate RDFa any more. The usage of RDFa in the HTML represented a significant burden on the code itself, and also made the generated HTML messy. All this for no real benefit: RDFa is very rarely used these days. Instead, the JSON-LD and Turtle versions of the vocabulary are linked from the HTML header as alternate representations.
+
+- All the generated files (HTML, Turtle, JSON-LD) are formatted by, partially, taking into account a possible [`.editorconfig`](https://spec.editorconfig.org) file regarding indentation size and some more, minor control statements.
+
 ## Version 1.6.0
 
 - A systematic re-write of the internals, triggered by the introduction of external terms. Previously, all cross-references (e.g., range, superclass, etc.) were done using the identifier of the terms. That led to lots of ugly code differentiating between terms defined in the vocab and curies appearing as, say, ranges. This situation was made worse by external terms.
@@ -42,7 +52,7 @@
 
 ## Version 1.4.1
 
-- The default value set for `status` was set to `reserved`, rather than `stable`. 
+- The default value set for `status` was set to `reserved`, rather than `stable`.
 
 ## Version 1.4.0
 

@@ -80,10 +80,28 @@ export function getEditorConfigOptions(suffix: string): ConfigOptions {
         const config = editorconfig.parseSync(filepath);
 
         // Convert editorconfig settings to js-beautify options
-        // The number of relevant options from .editorconfig is surprisingly low. I may have
-        // missed some...
+        // The number of relevant options from .editorconfig is surprisingly low.
+        // I may have missed some...
+
+        const eol = ((): string => {
+            if (config.end_of_line) {
+                switch (config.end_of_line) {
+                    case 'crlf' :
+                        return '\r\n';
+                    case 'cr'   :
+                        return '\r'
+                    case 'lf'   :
+                    default     :
+                        return '\n';
+                }
+            } else {
+                return '\n';
+            }
+        })();
+
         const output: ConfigOptions = {
             max_preserve_newlines: 2,
+            eol,
             indent_with_tabs : (config.indent_style === 'tab'),
             end_with_newline : (config.insert_final_newline === true),
             indent_size      : (config.indent_size && typeof config.indent_size === 'number' ? config.indent_size : 4),

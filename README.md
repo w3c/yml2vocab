@@ -1,6 +1,6 @@
 # Generate RDFS vocabulary files from YAML
 
-This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-concepts/) vocabulary, described in [YAML](https://yaml.org/spec/1.2.2/), into a formal [RDFS](https://www.w3.org/TR/rdf-schema/) in [JSON-LD](https://www.w3.org/TR/json-ld11/), [Turtle](https://www.w3.org/TR/turtle/), and HTML. Optionally, a simple [JSON-LD `@context`](https://www.w3.org/TR/json-ld11/#the-context) is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements. 
+This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-concepts/) vocabulary, described in [YAML](https://yaml.org/spec/1.2.2/), into a formal [RDFS](https://www.w3.org/TR/rdf-schema/) in [JSON-LD](https://www.w3.org/TR/json-ld11/), [Turtle](https://www.w3.org/TR/turtle/), and HTML. Optionally, a simple [JSON-LD `@context`](https://www.w3.org/TR/json-ld11/#the-context) is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements.
 
 When running, the script relies on two files:
 
@@ -14,7 +14,7 @@ The vocabulary is defined in a YAML file, which contains several block sequences
 Each block sequence consists of blocks with the following keys:`id`, `property`, `value`, `label`, `upper_value`, `domain`, `range`, `deprecated`, `comment`, `status`, `defined_by`, `context`, and `see_also`. The interpretation of these key/value pairs may depend on the top level block where they reside, but some have a common interpretation.
 
 - Common key/value pairs for the `class`, `property`, `datatype`, and `individual` blocks:
-  - `label` refers to a short header label to the term. If missing, the capitalized value of `id` is used. 
+  - `label` refers to a short header label to the term. If missing, the capitalized value of `id` is used.
   - `comment` refers to a longer description of the term, and can be used for blocks in the `class`, `property` and `individual` top-level blocks. It may include [HTML Flow content elements](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories). The comment will be encapsulated into an HTML `<div>` element and will then be displayed verbatim in the HTML version of the vocabulary, and as a literal of type `rdf:HTML` in the JSON-LD and Turtle versions. Note that the Markdown syntax for simple formatting, like the use of backtick for `<code.../>`, may also be used.
   - `type` refers to RDF types. Note that the tool automatically adds types like `rdf:Property`, `rdfs:Class`, etc.; this key is to be used for the vocabulary specific types only.
   - `defined_by` should be a URL, or a list thereof, referring to the formal definition(s) of the term.
@@ -28,7 +28,7 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
 - Top level blocks:
   - `vocab`: a block with the `id` and the `value` keys defining the prefix and the URL of the vocabulary, respectively. The `id` provides a prefix that can be used in the vocabulary descriptions, e.g., for cross-references. The additional, optional `context` key may provide a default context file reference (as a URI), used by all terms unless locally overwritten (see above). Note that the `context` key is required if the HTML template includes a context section.
 
-  - `prefix`: definition of a prefixes, and corresponding URLs, for each external vocabulary in use, defined by the `id` and `value` keys, respectively. 
+  - `prefix`: definition of a prefixes, and corresponding URLs, for each external vocabulary in use, defined by the `id` and `value` keys, respectively.
 
     Some id/value pairs are defined by default, and it is not necessary to define them here. These are: `dc` (for `http://purl.org/dc/terms/`), `owl` (for `http://www.w3.org/2002/07/owl#`), `rdf` (for `http://www.w3.org/1999/02/22-rdf-syntax-ns#`), `rdfs` (for `http://www.w3.org/2000/01/rdf-schema#`), `xsd` (for `http://www.w3.org/2001/XMLSchema#`), and `schema` (for `http://schema.org/`).
 
@@ -39,15 +39,15 @@ Each block sequence consists of blocks with the following keys:`id`, `property`,
     The script automatically adds a `dc:date` key with the generation time as a value.
 
   - `class`: blocks of a class definitions. For each class he `id` key defines the class name (no prefix should be used here). Possible superclasses are defined by the `upper_value` key as a single term, or a sequence of terms.
- 
+
   - `property`: blocks of a property definitions. For each property the `id` key defines the property name (no prefix should be used here); possible superproperties are defined in the by the `upper_value` as a single term, or as a sequence of terms. The domain and range classes can also be provided as a single term, or as a sequence of terms, through the `domain` and `range` keys, respectively.
-   
+
     Note that both the `domain` and the `range` keys can take an array of class references as values. For the former this means the resulting domain is the _union_ of the referred classes, whereas for the latter it is the _intersection_.
-  
+
     The `range` key may also use the (single) `IRI` (or `URL`) term instead of class references. This keyword denotes a property that has no explicit range, but whose objects are expected to be IRI references. The generated vocabulary annotates these properties as belonging to the `owl:ObjectProperty` class, which is the term reserved for properties whose objects are not supposed to be literals. A comment is also generated into the HTML description of the term.
 
     The `dataset` key can also be set to a boolean value. This key only influences the generated JSON-LD `@context`: if the value is `true`, the JSON-LD `@container` is set to the `@graph` value for the property, signalling that the value refers to a _dataset_ (or _graph_). See the [JSON-LD Specification](https://www.w3.org/TR/json-ld/#graph-containers) for further details.
-  
+
   - `individual`: blocks of definitions of individuals, i.e., a single resources defined in the vocabulary. For each individual the `id` key defines the property name (no prefix should be used here); the possible types are defined in the block for `type` as a single term, or a sequence of terms. (Earlier versions of this tool used `upper_value` for the same purpose, but that usage, though still understood for backward compatibility reasons, is deprecated.)
 
   - `datatype`: blocks of datatype definitions. For each datatype the `id` key defines the datatype name (no prefix should be used here). The possible types are defined in the block for `upper_value` or for `type`, as a single term for possible datatype this is derived from.
@@ -58,18 +58,29 @@ There are some examples in the [example directory on GitHub](https://github.com/
 
 ### External terms
 
-The value of the `id` key is, usually, simple reference identifying the class, property, etc., as part of the vocabulary. It is also possible to use a [curie](https://www.w3.org/TR/curie/) instead of a simple reference. Such terms are considered to be _external_ terms: terms that are formally defined in another vocabulary, and are listed only to increase the readability of the vocabulary specification. (Typical cases are schema.org or Dublin Core terms, that are frequently used in combination with other vocabularies.) 
+The value of the `id` key is, usually, simple reference identifying the class, property, etc., as part of the vocabulary. It is also possible to use a [curie](https://www.w3.org/TR/curie/) instead of a simple reference. Such terms are considered to be _external_ terms: terms that are formally defined in another vocabulary, and are listed only to increase the readability of the vocabulary specification. (Typical cases are schema.org or Dublin Core terms, that are frequently used in combination with other vocabularies.)
 
-External terms, while they appear in the HTML document generated by the tool, do not bear formal RDF statements in Turtle, JSON-LD, or RDFa; they only appear as information only items in the generated document.
+External terms, while they appear in the HTML document generated by the tool, do not result in formal RDF statements in Turtle, JSON-LD, or RDFa; they only appear as information only items in the generated document.
 
 The prefix part of the curie _must_ be defined through the `prefix` top level block.
+
+## Formatting the output
+
+Some efforts are made to make the output files (HTML, JSON-LD, and Turtle) properly formatted to make them readable. A subset of the [`editorconfig`](https://spec.editorconfig.org) facilities are also taken into account. Namely, if an `.editorconfig` file is found, the following supported pairs are used (with the default values in parenthesis):
+
+- `indent_style` (`space`)
+- `insert_final_newline` (`false`)
+- `indent_size` (4)
+- `max_line_length` (0)
+- `end_of_line` (`lf`)
+
+See the [`.editorconfig`](https://spec.editorconfig.org/#supported-pairs) for further details.
 
 ## Installation and use
 
 The script is in TypeScript (version 5.0.2 and beyond) running on top of [`node.js`](https://nodejs.org) (version 21 and beyond). It can also run with [`deno`](http://deno.land) (version 2.1 and beyond).
 
-Beyond the YAML file itself, the script relies on an HTML template file, i.e., a skeleton file in HTML that is completed by the vocabulary entries. The
-[example template file on GitHub](https://github.com/w3c/yml2vocab/tree/main/example/template.html) provides a good starting point for a template that also makes use of [respec](https://respec.org). The script relies on the existing `id` values and section structures to be modified/extended by the script. Unused subsections (e.g., when there are no deprecated classes) are removed from the final HTML file.
+Beyond the YAML file itself, the script relies on an HTML template file, i.e., a skeleton file in HTML that is completed by the vocabulary entries. The [example template file on GitHub](https://github.com/w3c/yml2vocab/tree/main/example/template.html) provides a good starting point for a template that also makes use of [respec](https://respec.org). The script relies on the existing `id` values and section structures to be modified/extended by the script. Unused subsections (e.g., when there are no deprecated classes) are removed from the final HTML file.
 
 ### Installation from npm
 
@@ -79,9 +90,9 @@ The script can be used as a standard npm module via:
 npm install yml2vocab
 ```
 
-#### Running on a command line
+### Running on a command line
 
-##### NPM/Node.js
+#### NPM/Node.js
 
 The npm installation installs the `node_modules/.bin/yml2vocab` script. The script can be used as:
 
@@ -89,7 +100,7 @@ The npm installation installs the `node_modules/.bin/yml2vocab` script. The scri
 yml2vocab [-v vocab_file_name] [-t template_file_name] [-c]
 ```
 
-##### Deno
+#### Deno
 
 If `deno` is installed globally, one can also run the script directly (without any further installation) by
 
@@ -109,7 +120,7 @@ The program can also be run without installing the package locally. Just do a:
 
 ```
 deno run -A jsr:@iherman/yml2vocab/cli [-v vocab_file_name] [-t template_file_name] [-c]
-``` 
+```
 
 #### Command line argument
 
@@ -117,7 +128,9 @@ The script generates the `vocab_file_name.ttl`, `vocab_file_name.jsonld`, and `v
 
 If the `-c` flag is also set, the additional `vocab_file_name.context.jsonld` is also generated, containing a JSON-LD file that can be used as a separate `@context` reference in a JSON-LD file. Note that this JSON-LD file does not necessarily use all the sophistication that JSON-LD [defines](https://www.w3.org/TR/json-ld11/#the-context) for `@context`; these may have to be added manually.
 
-#### Running from a Javascript/TypeScript program
+### Running from a Javascript/TypeScript program
+
+#### Usage by node.js
 
 The simplest way of using the module from Javascript is:
 
@@ -142,7 +155,7 @@ const html: string    = vocabGeneration.getHTML(template_file_content); // retur
 const context: string = vocabGeneration.getContext();                   // returns the minimal @context file for the vocabulary
 ```
 
-If TypeScript is used instead of Javascript the same works, except that the `require` must be replaced by:
+Running TypeScript is used instead of Javascript is similar, except that the `require` must be replaced by:
 
 ```
 import yml2vocab from 'yml2vocab';
@@ -150,10 +163,25 @@ import yml2vocab from 'yml2vocab';
 
 There is no need to install any extra typing, it is included in the package. The interfaces are simply using strings, no extra TypeScript type definitions have been defined.
 
+#### Usage by deno
+
+The package is also available on JSR `@iherman/yml2vocab`. All previous examples are valid for deno, except for the import statements which should be:
+
+```
+import yml2vocab from 'jsr:@iherman/yml2vocab'
+```
+
+Note that deno can also import npm packages if explicitly named, so the following import statement is also valid:
+
+```
+import yml2vocab from 'npm:yml2vocab'
+```
+
+No prior installation step is necessary.
 
 ### Cloning the repository
 
-The [repository](https://github.com/yml2vocab) may also be cloned. 
+The [repository](https://github.com/yml2vocab) may also be cloned.
 
 #### Content of the directory
 
