@@ -490,7 +490,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
                                 }
                             }
                             if (isList || isSet) {
-                                document.addChild(dd, 'p', 'In a JSON-LD representation, values to this property are supposed to be represented in the form of a JSON array, even if there just a single value.')
+                                document.addChild(dd, 'p', 'In a JSON-LD representation, values to this property are supposed to be represented in the form of a JSON array, even if there is just a single value.')
                             }
                         }
 
