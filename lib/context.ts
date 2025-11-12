@@ -83,7 +83,7 @@ export function toContext(vocab: Vocab): string {
             }
         }
         if (property.dataset) {
-            if (property.container && property.container === Container.set) {
+            if (property.container === Container.set) {
                 output["@container"] = ["@set", "@graph"];
             } else {
                 output["@container"] = "@graph";

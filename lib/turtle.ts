@@ -129,7 +129,7 @@ export function toTurtle(vocab: Vocab): string {
                     turtle += `${spaces}rdfs:domain ${multiDomain(prop.domain)} ;\n`;
                 }
 
-                if (prop.container && prop.container === Container.list) {
+                if (prop.container === Container.list) {
                     turtle += `${spaces}rdfs:range rdf:List ;\n`
                 } else if (prop.range) {
                     const range = multiRange(prop.range);

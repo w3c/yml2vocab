@@ -464,10 +464,9 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
                         dl.className = 'terms';
 
                         if (item.range && item.range.length > 0) {
-                            const isList = (item.container && item.container === Container.list);
-                            const isSet  = (item.container && item.container === Container.set);
+                            const isList = (item.container === Container.list);
+                            const isSet  = (item.container === Container.set);
 
-                            if (item.container && item.container)
                             document.addChild(dl, 'dt', 'Range:');
                             const dd = document.addChild(dl, 'dd');
                             if (item.range.length === 1) {

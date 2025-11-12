@@ -171,7 +171,7 @@ export function toJSONLD(vocab: Vocab): string {
                 if (prop.domain) {
                     pr_object["rdfs:domain"] = multiDomain(prop.domain);
                 }
-                if (prop.container && prop.container === Container.list) {
+                if (prop.container === Container.list) {
                     pr_object["rdfs:range"] = "rdf:List";
                 } else if (prop.range) {
                     pr_object["rdfs:range"] = multiRange(prop.range);
