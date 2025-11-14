@@ -4,8 +4,8 @@
  *
  * @packageDocumentation
  */
-import { type Vocab, global, type RDFTerm, type Link, Status } from './common';
-import { getEditorConfigOptions }                              from './beautify';
+import { type Vocab, global, type RDFTerm, type Link, Status, Container } from './common';
+import { getEditorConfigOptions }                                         from './beautify';
 
 const spaces: string = ((suffix: string): string => {
     const options = getEditorConfigOptions(suffix);
@@ -128,7 +128,10 @@ export function toTurtle(vocab: Vocab): string {
                 if (prop.domain) {
                     turtle += `${spaces}rdfs:domain ${multiDomain(prop.domain)} ;\n`;
                 }
-                if (prop.range) {
+
+                if (prop.container === Container.list) {
+                    turtle += `${spaces}rdfs:range rdf:List ;\n`
+                } else if (prop.range) {
                     const range = multiRange(prop.range);
                     if (!(range === '' || range === '[]')) {
                         turtle += `${spaces}rdfs:range ${multiRange(prop.range)} ;\n`;

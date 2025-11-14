@@ -142,6 +142,10 @@ const vocabSchema = `{
                             },
                             "dataset": {
                                 "type": "boolean"
+                            },
+                            "container": {
+                                "type" : "string",
+                                "enum" : ["set", "list", "graph"]
                             }
                         }
                     }

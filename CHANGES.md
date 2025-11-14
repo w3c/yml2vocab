@@ -8,6 +8,8 @@ This list does not include all the tiny changes, bug handling, etc, only the cha
 
 - All the generated files (HTML, Turtle, JSON-LD) are formatted by, partially, taking into account a possible [`.editorconfig`](https://spec.editorconfig.org) file regarding indentation size and some more, minor control statements.
 
+- Added the `container` key for properties, with a possible value of `set` or `list`. These values appear, for the specific property, in the generated JSON-LD `@context` file. In the `list` case it will also affect the range of the property (which is set to `rdf:List`).
+
 ## Version 1.6.0
 
 - A systematic re-write of the internals, triggered by the introduction of external terms. Previously, all cross-references (e.g., range, superclass, etc.) were done using the identifier of the terms. That led to lots of ugly code differentiating between terms defined in the vocab and curies appearing as, say, ranges. This situation was made worse by external terms.
