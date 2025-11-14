@@ -19,7 +19,7 @@
         "local_test": "(cd local/tests;  deno run --quiet --allow-all ../../main.ts -v test.yml -t test_template.html -c)",
         "local_ident": "(cd local/tests/identification;  deno run --quiet --allow-all ../../../main.ts -c)",
         "local_did": "(cd local/tests/did;  deno run --quiet --allow-all ../../../main.ts -c)",
-        "compile": "deno compile --allow-all main.ts"
+        "compile": "deno compile --allow-all --quiet main.ts"
     },
     "exports": {
         ".": "./index.ts",
