@@ -146,6 +146,17 @@ export interface Example {
 }
 
 /**
+ * Enumeration for possible container values
+ */
+
+export enum Container {
+    list  = "list",
+    set   = "set",
+    graph = "graph",
+}
+
+
+/**
  * Superset of all YAML entries, expressed in TS. Look at the Readme.md file for what they are meant for.
  *
  * Instances of the classes are converted into the internal classes (e.g., {@link RDFClass},
@@ -169,6 +180,7 @@ export interface RawVocabEntry {
     known_as    ?: string;
     example     ?: Example[];
     dataset     ?: boolean;
+    container   ?: Container;
     context     ?: string[];
 }
 
@@ -320,6 +332,7 @@ export interface RDFProperty extends RDFTerm {
     domain        : RDFClass[];
     range         : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
     dataset       : boolean;
+    container     : Container | undefined;
     strongURL     : boolean;    // Whether the property object should be required to be a real URL
 }
 

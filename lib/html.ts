@@ -5,7 +5,7 @@
  * @packageDocumentation
  */
 import type { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, Vocab, RDFTerm } from './common';
-import { global, Status, TermType }                                               from './common';
+import { global, Status, TermType, Container }                                    from './common';
 import { MiniDOM }                                                                from './minidom';
 import { RDFTermFactory }                                                         from './factory';
 import { beautify }                                                               from './beautify';
@@ -464,18 +464,32 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
                         dl.className = 'terms';
 
                         if (item.range && item.range.length > 0) {
+                            const isList = (item.container === Container.list);
+                            const isSet  = (item.container === Container.set);
+
                             document.addChild(dl, 'dt', 'Range:');
                             const dd = document.addChild(dl, 'dd');
                             if (item.range.length === 1) {
-                                dd.innerHTML = termHTMLReference(item.range[0]);
+                                if (isList) {
+                                    dd.innerHTML = `List containing ${termHTMLReference(item.range[0])}`;
+                                } else {
+                                    dd.innerHTML = termHTMLReference(item.range[0]);
+                                }
                             } else {
-                                document.addText('Intersection of:', dd)
+                                if (isList) {
+                                    document.addText('List containing intersections of:', dd);
+                                } else {
+                                    document.addText('Intersection of:', dd)
+                                }
                                 document.addChild(dd, 'br')
                                 for (const entry of item.range) {
                                     const r_span = document.addChild(dd, 'span')
                                     r_span.innerHTML = termHTMLReference(entry);
                                     document.addChild(dd, 'br')
                                 }
+                            }
+                            if (isList || isSet) {
+                                document.addChild(dd, 'p', 'In a JSON-LD representation, values to this property are supposed to be represented in the form of a JSON array, even if there is just a single value.')
                             }
                         }
 
@@ -494,6 +508,12 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
                             }
                         }
                     }
+
+                    if (item.dataset) {
+                        const p = document.addChild(pr_section, 'p');
+                        p.innerHTML = 'The object(s) of this property represent <a href="https://www.w3.org/TR/rdf11-concepts/#section-rdf-graph">RDF Graphs</a>.';
+                    }
+
                     contextReferences(pr_section, item);
                     setExample(pr_section, item);
                 }
