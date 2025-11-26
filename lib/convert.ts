@@ -269,7 +269,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         known_as    : raw.known_as,
         dataset     : raw.dataset ?? false,
         container   : raw.container,
-        context     : toArrayContexts(raw.context)
+        context     : toArrayContexts(raw.context),
     }
 }
 
@@ -308,6 +308,7 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
         property   : properties,
         individual : individuals,
         datatype   : datatypes,
+        json_ld    : raw.json_ld,
     }
 }
 
@@ -337,6 +338,7 @@ export function getData(vocab_source: string): Vocab {
     }
     // Clean up the raw vocab representation.
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
+
     /************************************** local utility methods *****************************************************/
     //
     // Reminder: there is an initially empty global structure, initialized in common.ts
@@ -753,6 +755,12 @@ export function getData(vocab_source: string): Vocab {
                 }
             }
         }
+    }
+
+    /********************************************************************************************/
+    // The alias settings are not relevant for the individual terms, are to be set in the global space
+    if (vocab.json_ld?.alias) {
+        global.aliases = { ...global.aliases, ...vocab.json_ld.alias };
     }
 
     /********************************************************************************************/

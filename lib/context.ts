@@ -19,8 +19,6 @@ interface Context {
 // embedded contexts, as well as the top level one.
 const preamble: Context = {
     "@protected" : true,
-    "id"         : "@id",
-    "type"       : "@type",
 };
 
 // Minor utility: return the full URL for a prefix
@@ -44,6 +42,7 @@ function prefix_url(prefix: string | undefined, vocab: Vocab): string {
  * @returns - the full context in string (ready to be written to a file)
  */
 export function toContext(vocab: Vocab): string {
+
     // Generation of a unit for properties
     const propertyContext = (property: RDFProperty, forClass = true): Context|string => {
         // the real id of the property...
@@ -99,7 +98,7 @@ export function toContext(vocab: Vocab): string {
     }
 
     // This is the top level context that will be returned to the caller
-    const top_level: Context = {...preamble};
+    const top_level: Context = { ...preamble, ...global.aliases };
 
     // Set of properties that are "handled" as parts of embedded contexts of classes.
     // This is used to avoid repeating the properties at the top level

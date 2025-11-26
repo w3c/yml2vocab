@@ -68,6 +68,21 @@ const vocabSchema = `{
     "type": "object",
     "additionalProperties": false,
     "properties": {
+        "json_ld" : {
+            "title": "JSON-LD specific settings",
+            "type" : "object",
+            "properties" : {
+                "alias" : {
+                    "type": "object",
+                    "additionalProperties" : {
+                        "type": "string",
+                        "enum" : ["@direction", "@graph", "@id", "@included", "@index", "@json", "@language", "@list", "@nest", "@none", "@reverse", "@set", "@type", "@value"]
+                    }
+                },
+                "unevaluatedProperties": false
+            }
+        },
+
         "vocab": {
             "title": "Vocabulary setting",
             "anyOf": [
