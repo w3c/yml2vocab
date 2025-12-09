@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getData = getData;
 const common_1 = require("./common");
 const common_2 = require("./common");
-const common_3 = require("./common");
 const schema_1 = require("./schema");
 const factory_1 = require("./factory");
 /******************************************** Helper functions and constants **********************************/
@@ -264,7 +263,8 @@ function finalizeRawEntry(raw) {
         example: toExample(raw.example),
         known_as: raw.known_as,
         dataset: raw.dataset ?? false,
-        context: toArrayContexts(raw.context)
+        container: raw.container,
+        context: toArrayContexts(raw.context),
     };
 }
 /**
@@ -299,6 +299,7 @@ function finalizeRawVocab(raw) {
         property: properties,
         individual: individuals,
         datatype: datatypes,
+        json_ld: raw.json_ld,
     };
 }
 /******************************************* External entry point **********************************/
@@ -344,7 +345,7 @@ function getData(vocab_source) {
                 // The global context may not have been set per TypeScript... although this
                 // function is invoked once that has been set already. Price to pay for
                 // Typescript checking...
-                return common_2.global.vocab_context !== undefined ? common_2.global.vocab_context : "none";
+                return common_1.global.vocab_context !== undefined ? common_1.global.vocab_context : "none";
             }
             else {
                 return val;
@@ -354,10 +355,10 @@ function getData(vocab_source) {
         const ctx_s = [...new Set(contexts)];
         // 'Inverse' info: add the term reference to the global data
         for (const ctx of ctx_s) {
-            if (!(ctx in common_2.global.context_mentions)) {
-                common_2.global.context_mentions[ctx] = [];
+            if (!(ctx in common_1.global.context_mentions)) {
+                common_1.global.context_mentions[ctx] = [];
             }
-            common_2.global.context_mentions[ctx].push(term);
+            common_1.global.context_mentions[ctx].push(term);
         }
         return ctx_s;
     };
@@ -378,7 +379,7 @@ function getData(vocab_source) {
             }
             else {
                 for (const rg of raw.range) {
-                    if (rg.startsWith("xsd") === true || common_3.EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
+                    if (rg.startsWith("xsd") === true || common_2.EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
                         // The datatype is a simple one, not a class; a term nevertheless, to make it uniform
                         extra_types.push("owl:DatatypeProperty");
                         range.push(factory.term(rg));
@@ -423,7 +424,7 @@ function getData(vocab_source) {
     // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
     // This function raises an error if this is not the case
     const set_and_check_external = (raw, output) => {
-        if (output.prefix !== common_2.global.vocab_prefix) {
+        if (output.prefix !== common_1.global.vocab_prefix) {
             // We have a term that is not part of the vocabulary but, nevertheless
             // defined in the YAML file. This is an external term.
             output.external = true;
@@ -465,11 +466,11 @@ function getData(vocab_source) {
             if (raw.value === undefined) {
                 throw (new Error("The vocabulary has no identifier"));
             }
-            common_2.global.vocab_prefix = raw.id;
-            common_2.global.vocab_url = raw.value;
-            common_2.global.vocab_context = raw.context === undefined ? undefined : raw.context[0];
-            if (common_2.global.vocab_context) {
-                common_2.global.context_mentions[common_2.global.vocab_context] = [];
+            common_1.global.vocab_prefix = raw.id;
+            common_1.global.vocab_url = raw.value;
+            common_1.global.vocab_context = raw.context === undefined ? undefined : raw.context[0];
+            if (common_1.global.vocab_context) {
+                common_1.global.context_mentions[common_1.global.vocab_context] = [];
             }
             return {
                 prefix: raw.id,
@@ -506,7 +507,7 @@ function getData(vocab_source) {
     // as needed, with cross references.
     factory_1.factory.initialize(prefixes);
     /********************************************************************************************/
-    // Get the datatypes. 
+    // Get the datatypes.
     const datatypes = (vocab.datatype !== undefined) ?
         vocab.datatype.map((raw) => {
             const output = factory_1.factory.datatype(raw.id);
@@ -522,7 +523,7 @@ function getData(vocab_source) {
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
-            common_2.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
+            common_1.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
             Object.assign(output, {
                 label: raw.label,
                 comment: raw.comment,
@@ -555,7 +556,7 @@ function getData(vocab_source) {
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
-            common_2.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
+            common_1.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
             Object.assign(output, {
                 type: types.map(t => factory_1.factory.term(t)),
                 user_type: user_type.map(t => factory_1.factory.term(t)),
@@ -569,7 +570,7 @@ function getData(vocab_source) {
                 known_as: raw.known_as,
                 example: raw.example,
                 context: final_contexts(raw, output),
-                range_of: [], // these are set later, when all classes and properties are defined 
+                range_of: [], // these are set later, when all classes and properties are defined
                 domain_of: [], // these are set later, when all classes and properties are defined
                 included_in_domain_of: [], // these are set later, when all classes and properties are defined
                 includes_range_of: [], // these are set later, when all classes and properties are defined
@@ -577,7 +578,7 @@ function getData(vocab_source) {
             return output;
         }) : [];
     /********************************************************************************************/
-    // Get the properties. Note the special treatment for deprecated properties, as well as 
+    // Get the properties. Note the special treatment for deprecated properties, as well as
     // the extra owl types added depending on the range.
     //
     // Note that the function sets the object property or datatype property types in the obvious cases.
@@ -590,15 +591,51 @@ function getData(vocab_source) {
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
-            common_2.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
+            common_1.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
             const { extra_types, range, strongURL } = get_ranges(factory_1.factory, raw, output.id);
+            // A little hack to ensure backward compatibility: if the range includes rdf:List,
+            // it should be removed and the information put aside because that should now
+            // go to the separate "container" information.
+            const finalRange = range.filter((r) => r.curie !== "rdf:List");
+            const containerSet = (finalRange.length !== range.length);
             const user_type = (raw.type === undefined) ? [] : raw.type;
             const types = [
                 ...(raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],
                 ...extra_types,
                 ...user_type
             ];
+            const dataset = (() => {
+                if (raw.dataset) {
+                    return true;
+                }
+                else if (raw.container !== undefined && raw.container === common_2.Container.graph) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            })();
+            const container = (() => {
+                if (raw.container !== undefined) {
+                    if (raw.container !== common_2.Container.graph) {
+                        return raw.container;
+                    }
+                    else {
+                        return undefined;
+                    }
+                }
+                else if (containerSet) {
+                    return common_2.Container.list;
+                }
+                else {
+                    return undefined;
+                }
+            })();
+            // Checking one combination: it is disallowed in JSON-LD to define a container to be a list and a graph
+            if (container === common_2.Container.list && dataset) {
+                throw (new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`));
+            }
             Object.assign(output, {
                 type: types.map(t => factory_1.factory.term(t)),
                 user_type: user_type.map(t => factory_1.factory.term(t)),
@@ -609,11 +646,12 @@ function getData(vocab_source) {
                 status: raw.status,
                 subPropertyOf: raw.upper_value?.map((val) => factory_1.factory.property(val)),
                 see_also: raw.see_also,
-                range: range,
+                range: finalRange,
                 domain: raw.domain?.map(val => factory_1.factory.class(val)),
                 example: raw.example,
                 known_as: raw.known_as,
-                dataset: raw.dataset,
+                dataset: dataset,
+                container: container,
                 strongURL: strongURL,
                 context: final_contexts(raw, output),
             });
@@ -671,6 +709,11 @@ function getData(vocab_source) {
                 }
             }
         }
+    }
+    /********************************************************************************************/
+    // The alias settings are not relevant for the individual terms, are to be set in the global space
+    if (vocab.json_ld?.alias) {
+        common_1.global.aliases = { ...common_1.global.aliases, ...vocab.json_ld.alias };
     }
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary

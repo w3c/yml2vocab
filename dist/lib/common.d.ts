@@ -1,5 +1,5 @@
 /**
- * Common types and variables.
+ * Common types, variables, and utilities.
  *
  * @packageDocumentation
  */
@@ -36,6 +36,9 @@ export declare class StatusCounter {
      * @param status
      */
     counter(status: Status): number;
+}
+export interface JSON_LD {
+    alias?: Record<string, string>;
 }
 /**
  * Context references. Lists, for a context, the terms that are listed in them.
@@ -74,6 +77,10 @@ export interface GlobalData {
      * Used to set the right 'id' values for cross-references in the generated HTML file
      */
     real_curies: string[];
+    /**
+     * JSON-LD keyword aliases, to be added to the JSON-LD context file on the user's request
+     */
+    aliases: Record<string, string>;
 }
 /**
  * As it name says: some global data that are needed by most of the media type specific modules.
@@ -92,6 +99,14 @@ export interface Link {
 export interface Example {
     label?: string;
     json: string;
+}
+/**
+ * Enumeration for possible container values
+ */
+export declare enum Container {
+    list = "list",
+    set = "set",
+    graph = "graph"
 }
 /**
  * Superset of all YAML entries, expressed in TS. Look at the Readme.md file for what they are meant for.
@@ -117,6 +132,7 @@ export interface RawVocabEntry {
     known_as?: string;
     example?: Example[];
     dataset?: boolean;
+    container?: Container;
     context?: string[];
 }
 /**
@@ -130,6 +146,7 @@ export interface RawVocab {
     property?: RawVocabEntry[];
     individual?: RawVocabEntry[];
     datatype?: RawVocabEntry[];
+    json_ld?: JSON_LD;
 }
 /**
  * Type needed for the JSON Schema validation interface.
@@ -243,6 +260,7 @@ export interface RDFProperty extends RDFTerm {
     domain: RDFClass[];
     range: RDFTerm[];
     dataset: boolean;
+    container: Container | undefined;
     strongURL: boolean;
 }
 /**

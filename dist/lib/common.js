@@ -1,12 +1,12 @@
 "use strict";
 // deno-lint-ignore-file no-explicit-any
 /**
- * Common types and variables.
+ * Common types, variables, and utilities.
  *
  * @packageDocumentation
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TermType = exports.bona_fide_prefixes = exports.bona_fide_urls = exports.global = exports.StatusCounter = exports.Status = exports.EXTRA_DATATYPES = void 0;
+exports.TermType = exports.bona_fide_prefixes = exports.bona_fide_urls = exports.Container = exports.global = exports.StatusCounter = exports.Status = exports.EXTRA_DATATYPES = void 0;
 /**
  * List of datatypes that are formally defined in the RDF World beyond the
  * list of XSD datatypes.
@@ -18,6 +18,10 @@ exports.EXTRA_DATATYPES = [
     "rdf:PlainLiteral",
     "rdf:langString",
 ];
+const DEFAULT_ALIASES = {
+// "id": "@id",
+// "type": "@type"
+};
 /**
  * Characterization of a class/property/individual on whether it is stable or not.
  */
@@ -81,7 +85,17 @@ exports.global = {
     status_counter: new StatusCounter(),
     context_mentions: {},
     real_curies: [],
+    aliases: DEFAULT_ALIASES,
 };
+/**
+ * Enumeration for possible container values
+ */
+var Container;
+(function (Container) {
+    Container["list"] = "list";
+    Container["set"] = "set";
+    Container["graph"] = "graph";
+})(Container || (exports.Container = Container = {}));
 /* ************************************* Internal representation ***********************************/
 /**
  * URL schemes; curies may be false when using these prefixes; they are, in fact, full URLs.

@@ -9,12 +9,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.toContext = toContext;
 const common_1 = require("./common");
 const factory_1 = require("./factory");
-// These are the context statements appearing in all 
+const beautify_1 = require("./beautify");
+// These are the context statements appearing in all
 // embedded contexts, as well as the top level one.
 const preamble = {
     "@protected": true,
-    "id": "@id",
-    "type": "@type",
 };
 // Minor utility: return the full URL for a prefix
 function prefix_url(prefix, vocab) {
@@ -64,10 +63,6 @@ function toContext(vocab) {
                     output["@type"] = rangeTerm.url;
                     break;
                 }
-                else if (curie === "rdf:List") {
-                    output["@container"] = "@list";
-                    break;
-                }
                 else if (factory_1.RDFTermFactory.includesCurie(property.type, "owl:DatatypeProperty")) {
                     // This is the case when the property refers to an explicitly defined, non-standard datatype
                     output["@type"] = rangeTerm.url;
@@ -83,15 +78,23 @@ function toContext(vocab) {
             }
         }
         if (property.dataset) {
-            output["@container"] = "@graph";
+            if (property.container === common_1.Container.set) {
+                output["@container"] = ["@set", "@graph"];
+            }
+            else {
+                output["@container"] = "@graph";
+            }
             output["@type"] = "@id";
+        }
+        else if (property.container !== undefined) {
+            output["@container"] = `@${property.container}`;
         }
         // if only the URL is set, it makes the context simpler to use its direct value,
         // no need for an indirection
         return (Object.keys(output).length === 1) ? url : output;
     };
     // This is the top level context that will be returned to the caller
-    const top_level = { ...preamble };
+    const top_level = { ...preamble, ...common_1.global.aliases };
     // Set of properties that are "handled" as parts of embedded contexts of classes.
     // This is used to avoid repeating the properties at the top level
     const class_properties = new Set();
@@ -120,7 +123,7 @@ function toContext(vocab) {
             ? url
             : { "@id": url, "@context": embedded };
     }
-    // Add the properties that have not been handled in the 
+    // Add the properties that have not been handled in the
     // previous step
     for (const prop of vocab.properties) {
         if (!class_properties.has(prop.id)) {
@@ -135,6 +138,8 @@ function toContext(vocab) {
     for (const datatype of vocab.datatypes) {
         top_level[datatype.known_as ?? datatype.id] = `${datatype.url}`;
     }
-    // That is it... return the nicely formatted JSON text 
-    return JSON.stringify({ "@context": top_level }, null, 4);
+    // Done... just turn the result into bona fide (and readable) json
+    const final_jsonld = JSON.stringify({ "@context": top_level });
+    const nice_jsonld = (0, beautify_1.beautify)(final_jsonld, 'jsonld');
+    return nice_jsonld;
 }

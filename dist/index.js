@@ -74,8 +74,8 @@ class VocabGeneration {
      * @param template - Textual version of the vocabulary template
      * @returns
      */
-    getHTML(template) {
-        return (0, html_1.toHTML)(this.vocab, template);
+    getHTML(template, basename) {
+        return (0, html_1.toHTML)(this.vocab, template, basename);
     }
     /* Deprecated; these are just to avoid problems for users of earlier versions */
     /** @internal */
@@ -83,7 +83,7 @@ class VocabGeneration {
     /** @internal */
     get_jsonld() { return this.getJSONLD(); }
     /** @internal */
-    get_html(template) { return this.getHTML(template); }
+    get_html(template, basename = '') { return this.getHTML(template, basename); }
     /** @internal */
     get_context() { return this.getContext(); }
 }
@@ -133,7 +133,7 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
         const fs_writes = [
             node_fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
             node_fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-            node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template)),
+            node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template, basename)),
         ];
         if (context) {
             fs_writes.push(node_fs_1.promises.writeFile(`${basename}.context.jsonld`, conversion.getContext()));

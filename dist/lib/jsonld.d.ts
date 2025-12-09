@@ -4,7 +4,7 @@
  *
  * @packageDocumentation
  */
-import { Vocab } from './common';
+import { type Vocab } from './common';
 /**
  * Generate the JSON-LD representation of the vocabulary.
  *
@@ -18,7 +18,6 @@ import { Vocab } from './common';
  * the vocabulary itself on the top, linked to the individual terms via a
  * (reversed) rdfs:isDefinedBy. (See the definition of the 'rdfs_classes',
  * 'rdfs_properties', and 'rdfs_instances'). Thanks to Gregg Kellogg for that trick...
- *
  *
  * @param vocab - The internal representation of the vocabulary
  * @returns

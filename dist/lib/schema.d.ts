@@ -3,7 +3,7 @@
  *
  * @packageDocumentation
  */
-import { ValidationResults } from './common';
+import type { ValidationResults } from './common';
 /**
  * Perform a JSON Schema validation on the YAML content. Done by converting the YAML content into
  * a Javascript object (using the YAML parser) and checking the object against a schema.

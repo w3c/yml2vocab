@@ -4,7 +4,7 @@
  *
  * @packageDocumentation
  */
-import { Vocab } from './common';
+import { type Vocab } from './common';
 /**
  * Generate the Turtle representation of the vocabulary.
  * Nothing complex, just a straightforward conversion of the information into the turtle syntax.

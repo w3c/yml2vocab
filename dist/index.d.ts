@@ -55,13 +55,13 @@ export declare class VocabGeneration {
      * @param template - Textual version of the vocabulary template
      * @returns
      */
-    getHTML(template: string): string;
+    getHTML(template: string, basename: string): string;
     /** @internal */
     get_turtle(): string;
     /** @internal */
     get_jsonld(): string;
     /** @internal */
-    get_html(template: string): string;
+    get_html(template: string, basename?: string): string;
     /** @internal */
     get_context(): string;
 }

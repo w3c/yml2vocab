@@ -3,7 +3,7 @@
  * A factory object for the creation of RDF Terms.
  *
  * The main reason for using this factory is that fact that some terms may be used before they are formally defined.
- * The factory will create a term with the minimal information needed, and then promote it to a class, property, etc.,
+ * The factory will create a term with the minimal information needed, and then promotes it to a class, property, etc.,
  * when defined.
  *
  * Also: some terms refer to internal terms, i.e., defined by the input yml file, and some refer to external terms,
@@ -15,7 +15,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.factory = exports.RDFTermFactory = void 0;
 const common_1 = require("./common");
-const common_2 = require("./common");
 const node_crypto_1 = require("node:crypto");
 // Calculate the SHA hash of a string. Used to encode the id of external terms
 function computeHash(input, sh_func = "sha256") {
@@ -23,16 +22,15 @@ function computeHash(input, sh_func = "sha256") {
 }
 // Create a curie, if needed, from a core term
 function createCurie(str) {
-    return str.includes(":") ? str : `${common_2.global.vocab_prefix}:${str}`;
+    return str.includes(":") ? str : `${common_1.global.vocab_prefix}:${str}`;
 }
-// Split a curie into prefix and reference (the reference may cotain colons)
+// Split a curie into prefix and reference (the reference may contain colons)
 function splitCurie(str) {
     const firstColonIndex = str.indexOf(":");
     if (firstColonIndex !== -1) {
         const firstPart = str.substring(0, firstColonIndex);
         const secondPart = str.substring(firstColonIndex + 1);
         return [firstPart, secondPart];
-        ;
     }
     else {
         throw new Error(`Invalid curie (${str})`);
@@ -77,7 +75,8 @@ class RDFTermFactory {
         if (this.terms.has(curie)) {
             return this.terms.get(curie);
         }
-        else if (common_2.bona_fide_urls.some((url) => curie.startsWith(url))) {
+        else if (common_1.bona_fide_urls.some((url) => curie.startsWith(url))) {
+            // This is definitely an external term using a "usual" url, ie, http, https, doi, etc
             const output = {
                 id: curie,
                 prefix: "",
@@ -99,15 +98,15 @@ class RDFTermFactory {
         else {
             const [prefix, reference, baseUrl, outsider, term_type] = (() => {
                 const [prefix, reference] = splitCurie(curie);
-                if (prefix === common_2.global.vocab_prefix) {
-                    return [prefix, reference, common_2.global.vocab_url, false, common_1.TermType.unknown];
+                if (prefix === common_1.global.vocab_prefix) {
+                    return [prefix, reference, common_1.global.vocab_url, false, common_1.TermType.unknown];
                 }
                 else {
                     const baseUrl = this.prefixes.find((p) => p.prefix === prefix)?.url;
                     if (!baseUrl) {
                         throw new Error(`URL for prefix "${prefix}" not found`);
                     }
-                    if (common_2.bona_fide_prefixes.includes(prefix)) {
+                    if (common_1.bona_fide_prefixes.includes(prefix)) {
                         return [prefix, reference, baseUrl, false, common_1.TermType.core];
                     }
                     else {
@@ -159,7 +158,7 @@ class RDFTermFactory {
                 Object.assign(output, extras);
                 // A hack. A datatype may appear as a class (which is semantically true)
                 // but should not be treated as a class
-                if (common_2.bona_fide_prefixes.includes(output.prefix)) {
+                if (common_1.bona_fide_prefixes.includes(output.prefix)) {
                     output.term_type = common_1.TermType.unknown;
                 }
                 return output;
@@ -266,7 +265,7 @@ class RDFTermFactory {
     /**
      * Promote an unknown term to a class. This is necessary when a term is used, e.g., in a range or domain, before it is defined.
      *
-     * (Currently unused in the pacakage.)
+     * (Currently unused in the package.)
      */
     promoteToClass(term) {
         if (term.term_type === common_1.TermType.unknown) {

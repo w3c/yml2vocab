@@ -4,7 +4,7 @@
 *
 * @packageDocumentation
 */
-import { Vocab } from './common';
+import { type Vocab } from './common';
 /**
  * Generate the minimal JSON-LD context for the vocabulary.
  *

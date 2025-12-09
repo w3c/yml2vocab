@@ -1,4 +1,4 @@
-import { Vocab } from './common';
+import type { Vocab } from './common';
 /******************************************* External entry point **********************************/
 /**
  * Parse and interpret the YAML file's raw content. This is, essentially, a translation of the

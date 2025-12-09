@@ -8,6 +8,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toJSONLD = toJSONLD;
 const common_1 = require("./common");
+const beautify_1 = require("./beautify");
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
 const generic_context = {
@@ -46,14 +47,13 @@ const generic_context = {
  * (reversed) rdfs:isDefinedBy. (See the definition of the 'rdfs_classes',
  * 'rdfs_properties', and 'rdfs_instances'). Thanks to Gregg Kellogg for that trick...
  *
- *
  * @param vocab - The internal representation of the vocabulary
  * @returns
  */
 function toJSONLD(vocab) {
     const termToStringCallback = (t) => `${t}`;
     // Handling of the domain is a bit complicated due to the usage
-    // of the owl:unionOf construct; factored it here to make the 
+    // of the owl:unionOf construct; factored it here to make the
     // code more readable.
     const multiDomain = (term) => {
         const value = term.map(termToStringCallback);
@@ -166,7 +166,10 @@ function toJSONLD(vocab) {
                 if (prop.domain) {
                     pr_object["rdfs:domain"] = multiDomain(prop.domain);
                 }
-                if (prop.range) {
+                if (prop.container === common_1.Container.list) {
+                    pr_object["rdfs:range"] = "rdf:List";
+                }
+                else if (prop.range) {
                     pr_object["rdfs:range"] = multiRange(prop.range);
                 }
                 commonFields(pr_object, prop);
@@ -248,5 +251,7 @@ function toJSONLD(vocab) {
             jsonld.rdfs_datatypes = datatypes;
     }
     // Done... just turn the result into bona fide (and readable) json
-    return JSON.stringify(jsonld, null, 4);
+    const final_jsonld = JSON.stringify(jsonld);
+    const nice_jsonld = (0, beautify_1.beautify)(final_jsonld, 'jsonld');
+    return nice_jsonld;
 }

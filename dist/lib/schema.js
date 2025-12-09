@@ -17,7 +17,7 @@ const yaml = require("yaml");
  */
 function validateWithSchema(yaml_raw_content) {
     try {
-        // Get the JSON schema from the separate file
+        // Get the JSON schema; see below
         const schema = JSON.parse(vocabSchema);
         // deno-lint-ignore no-explicit-any
         const yaml_content = yaml.parse(yaml_raw_content);
@@ -36,7 +36,7 @@ function validateWithSchema(yaml_raw_content) {
             });
             return {
                 vocab: null,
-                error: errors ?? [], //errors ? errors : [],
+                error: errors ?? [],
             };
         }
         else {
@@ -66,6 +66,21 @@ const vocabSchema = `{
     "type": "object",
     "additionalProperties": false,
     "properties": {
+        "json_ld" : {
+            "title": "JSON-LD specific settings",
+            "type" : "object",
+            "properties" : {
+                "alias" : {
+                    "type": "object",
+                    "additionalProperties" : {
+                        "type": "string",
+                        "enum" : ["@direction", "@graph", "@id", "@included", "@index", "@json", "@language", "@list", "@nest", "@none", "@reverse", "@set", "@type", "@value"]
+                    }
+                },
+                "unevaluatedProperties": false
+            }
+        },
+
         "vocab": {
             "title": "Vocabulary setting",
             "anyOf": [
@@ -140,6 +155,10 @@ const vocabSchema = `{
                             },
                             "dataset": {
                                 "type": "boolean"
+                            },
+                            "container": {
+                                "type" : "string",
+                                "enum" : ["set", "list", "graph"]
                             }
                         }
                     }

@@ -2,7 +2,7 @@
  * A factory object for the creation of RDF Terms.
  *
  * The main reason for using this factory is that fact that some terms may be used before they are formally defined.
- * The factory will create a term with the minimal information needed, and then promote it to a class, property, etc.,
+ * The factory will create a term with the minimal information needed, and then promotes it to a class, property, etc.,
  * when defined.
  *
  * Also: some terms refer to internal terms, i.e., defined by the input yml file, and some refer to external terms,
@@ -11,8 +11,7 @@
  *
  * @packageDocumentation
  */
-import { RDFTerm, RDFProperty, RDFClass, RDFDatatype, RDFIndividual } from "./common";
-import { RDFPrefix } from "./common";
+import type { RDFTerm, RDFProperty, RDFClass, RDFDatatype, RDFIndividual, RDFPrefix } from './common';
 /**
  * A factory object for the creation of RDF Terms.
  *
@@ -62,7 +61,7 @@ export declare class RDFTermFactory {
     /**
      * Promote an unknown term to a class. This is necessary when a term is used, e.g., in a range or domain, before it is defined.
      *
-     * (Currently unused in the pacakage.)
+     * (Currently unused in the package.)
      */
     promoteToClass(term: RDFTerm): RDFClass;
     /**
