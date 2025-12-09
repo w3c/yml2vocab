@@ -17,6 +17,11 @@ export const EXTRA_DATATYPES: string[] = [
     "rdf:langString",
 ]
 
+const DEFAULT_ALIASES: Record<string, string> = {
+    // "id": "@id",
+    // "type": "@type"
+}
+
 /**
  * Characterization of a class/property/individual on whether it is stable or not.
  */
@@ -72,6 +77,10 @@ export class StatusCounter {
     }
 }
 
+export interface JSON_LD {
+    alias ?: Record<string,string>
+}
+
 /**
  * Context references. Lists, for a context, the terms that are listed in them.
  * Used when generating the list of terms used by a context in, e.g., the HTML output.
@@ -115,6 +124,11 @@ export interface GlobalData {
      * Used to set the right 'id' values for cross-references in the generated HTML file
      */
     real_curies      : string[];
+
+    /**
+     * JSON-LD keyword aliases, to be added to the JSON-LD context file on the user's request
+     */
+    aliases          : Record<string,string>;
 }
 
 /**
@@ -127,6 +141,7 @@ export const global: GlobalData = {
     status_counter   : new StatusCounter(),
     context_mentions : {} as Contexts,
     real_curies      : [],
+    aliases          : DEFAULT_ALIASES,
 }
 
 /**
@@ -195,6 +210,7 @@ export interface RawVocab {
     property   ?: RawVocabEntry[];
     individual ?: RawVocabEntry[];
     datatype   ?: RawVocabEntry[];
+    json_ld    ?: JSON_LD;
 }
 
 /**
