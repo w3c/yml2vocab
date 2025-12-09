@@ -79,9 +79,9 @@ json_ld:
     "type": "@type"
 ```
 
-In line with the JSON-LD specification, the following keywords can be aliased:   `@direction`, `@graph`, `@id`, `@included`, `@index`, `@json`, `@language`, `@list`, `@nest`, `@none`, `@reverse`, `@set`, `@type`, and `@value`. The snippet above represents the default setting.
+In line with the JSON-LD specification, the following keywords can be aliased:   `@direction`, `@graph`, `@id`, `@included`, `@index`, `@json`, `@language`, `@list`, `@nest`, `@none`, `@reverse`, `@set`, `@type`, and `@value`.
 
-(Note that, as specified in the JSON-LD recommendation, these aliases are ***not*** used within the generated context file itself. They are only relevant for the "consumer" of the context.)
+(Note that, as specified in the JSON-LD recommendation, these aliases are ***not*** used within the context file itself. They are only relevant for the "consumers" of the context.)
 
 ## Formatting the output
 

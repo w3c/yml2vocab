@@ -17,6 +17,11 @@ export const EXTRA_DATATYPES: string[] = [
     "rdf:langString",
 ]
 
+const DEFAULT_ALIASES: Record<string, string> = {
+    // "id": "@id",
+    // "type": "@type"
+}
+
 /**
  * Characterization of a class/property/individual on whether it is stable or not.
  */
@@ -136,7 +141,7 @@ export const global: GlobalData = {
     status_counter   : new StatusCounter(),
     context_mentions : {} as Contexts,
     real_curies      : [],
-    aliases          : { "id" : "@id", "type" : "@type" },
+    aliases          : DEFAULT_ALIASES,
 }
 
 /**
