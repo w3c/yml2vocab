@@ -379,11 +379,13 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
                         dl.className = 'terms'
                         document.addChild(dl, 'dt', 'Subclass of:')
                         const dd = document.addChild(dl, 'dd');
-                        for (const superclass of item.subClassOf) {
-                            const span = document.addChild(dd,'span');
-                            span.innerHTML = termHTMLReference(superclass);
+
+                        const class_names = (t: RDFTerm[]): string => {
+                            const names = t.map(termHTMLReference);
+                            return names.join(', ');
                         }
-                    }
+                        dd.innerHTML = class_names(item.subClassOf);
+                     }
                     // Again an extra list for range/domain references, if applicable
                     if (item.range_of.length > 0 ||
                         item.domain_of.length > 0 ||
