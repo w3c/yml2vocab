@@ -79,6 +79,9 @@ const vocabSchema = `{
                         "enum" : ["@direction", "@graph", "@id", "@included", "@index", "@json", "@language", "@list", "@nest", "@none", "@reverse", "@set", "@type", "@value"]
                     }
                 },
+                "import" : {
+                    "$ref" : "#/$defs/URIOrArrayOfURIs"
+                },
                 "unevaluatedProperties": false
             }
         },

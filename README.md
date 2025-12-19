@@ -70,7 +70,9 @@ The prefix part of the curie _must_ be defined through the `prefix` top level bl
 
 The YAML file may also include an additional top level block, using the key `json_ld`. This blocks affects the generated JSON-LD `@context` file.
 
-At present, the block may contain the single `alias` block, defining key/value pairs for [keyword aliases](https://www.w3.org/TR/json-ld11/#aliasing-keywords). These aliases are copied into the generated JSON-LD `@context` file. For example, the following top level block defines aliases for `@type` and `@id`:
+#### Keyword aliases
+
+The top level block may contain the `alias` block, defining key/value pairs for [keyword aliases](https://www.w3.org/TR/json-ld11/#aliasing-keywords). These aliases are copied into the generated JSON-LD `@context` file. For example, the following top level block defines aliases for `@type` and `@id`:
 
 ```yml
 json_ld:
@@ -79,9 +81,14 @@ json_ld:
     "type": "@type"
 ```
 
-In line with the JSON-LD specification, the following keywords can be aliased:   `@direction`, `@graph`, `@id`, `@included`, `@index`, `@json`, `@language`, `@list`, `@nest`, `@none`, `@reverse`, `@set`, `@type`, and `@value`.
+In line with the JSON-LD specification, the following keywords can be aliased: `@direction`, `@graph`, `@id`, `@included`, `@index`, `@json`, `@language`, `@list`, `@nest`, `@none`, `@reverse`, `@set`, `@type`, and `@value`.
 
 (Note that, as specified in the JSON-LD recommendation, these aliases are ***not*** used within the context file itself. They are only relevant for the "consumers" of the context.)
+
+#### Importing context files
+
+The top level block may also contain the `import` statement, whose value is either a single URL, or an array of URLs. These URLs will be added as a `@import` JSON-LD statement to the top of the generated context file.
+
 
 ## Formatting the output
 

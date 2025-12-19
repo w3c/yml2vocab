@@ -758,9 +758,13 @@ export function getData(vocab_source: string): Vocab {
     }
 
     /********************************************************************************************/
-    // The alias settings are not relevant for the individual terms, are to be set in the global space
+    // The alias and import settings are not relevant for the individual terms, are to be set in the global space
     if (vocab.json_ld?.alias) {
         global.aliases = { ...global.aliases, ...vocab.json_ld.alias };
+    }
+
+    if (vocab.json_ld?.import) {
+        global.import = global.import.concat(vocab.json_ld.import);
     }
 
     /********************************************************************************************/

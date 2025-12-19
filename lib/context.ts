@@ -98,7 +98,20 @@ export function toContext(vocab: Vocab): string {
     }
 
     // This is the top level context that will be returned to the caller
-    const top_level: Context = { ...preamble, ...global.aliases };
+    const import_context = ((): Context => {
+        if (global.import.length === 0) {
+            return {};
+        } else if( global.import.length === 1) {
+            return {
+                "@import" : global.import[0]
+            }
+        } else {
+            return {
+                "@import" : global.import
+            }
+        }
+    })();
+    const top_level: Context = { ...import_context, ...preamble, ...global.aliases };
 
     // Set of properties that are "handled" as parts of embedded contexts of classes.
     // This is used to avoid repeating the properties at the top level

@@ -78,7 +78,8 @@ export class StatusCounter {
 }
 
 export interface JSON_LD {
-    alias ?: Record<string,string>
+    alias  ?: Record<string,string>;
+    import ?: string | string[];
 }
 
 /**
@@ -129,10 +130,15 @@ export interface GlobalData {
      * JSON-LD keyword aliases, to be added to the JSON-LD context file on the user's request
      */
     aliases          : Record<string,string>;
+
+    /**
+     * Imported context files, to be added to the JSON-LD context file on the user's request
+     */
+    import            : string[];
 }
 
 /**
- * As it name says: some global data that are needed by most of the media type specific modules.
+ * As it name says: some global data that are needed by some of the media type specific modules.
  */
 export const global: GlobalData = {
     vocab_prefix     : "",
@@ -142,6 +148,7 @@ export const global: GlobalData = {
     context_mentions : {} as Contexts,
     real_curies      : [],
     aliases          : DEFAULT_ALIASES,
+    import           : [],
 }
 
 /**
