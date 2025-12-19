@@ -29,9 +29,10 @@ const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction'
  *
  * @param vocab - The internal representation of the vocabulary
  * @param template_text - The textual content of the template file
+ * @param context - Whether a context file is also generated (if yes, some extra notes may appear in the output)
  * @returns
  */
-export function toHTML(vocab: Vocab, template_text: string, basename: string): string {
+export function toHTML(vocab: Vocab, template_text: string, basename: string, context: boolean): string {
     // Get the DOM of the template
     const document: MiniDOM = new MiniDOM(template_text);
 
@@ -157,6 +158,11 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
             warning.setAttribute('class', 'note')
         }
 
+        if (context && item.known_as) {
+            const known_as_text = `In the generated JSON-LD context file this term appears as <code>${item.known_as}</code>.`;
+            document.addChild(section, 'p', known_as_text);
+        }
+
         if (item.see_also && item.see_also.length > 0) {
             const dl = document.addChild(section, 'dl');
             dl.className = 'terms';
@@ -219,6 +225,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string): s
             }).join(",<br> ");
         }
     }
+
 
     /************ Functions to add specific content to the final HTML, based also on the template ********************/
 
