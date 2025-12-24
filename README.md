@@ -5,7 +5,7 @@ This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-c
 When running, the script relies on two files:
 
 1. The `vocabulary.yml` file, containing the definition for the vocabulary entries. (It is also possible to use a different name for the YAML file, see below.)
-2. The `template.html` file, used to create the HTML file version of the vocabulary. (It is also possible to use a different name for the template file, see below.)
+2. The `template.html` file, used to create the HTML file version of the vocabulary. (It is also possible to use a different name for the template file, see below.) The template may also be an HTML fragment (ie, without the `<html>`, `<head>`, etc.), which comes handy if the generated fragment is to be included into the full specification as, say, an Appendix. Note that if a fragment is used, the `defined_by` entries use only the fragment of the URL in the generated code (the URL is supposed to refer to the specification file itself).
 
 ## Definition of the vocabulary in the YAML file
 
@@ -17,7 +17,7 @@ Each block sequence consists of blocks with a number of keys, depending on the s
   - `label` refers to a short header label to the term. If missing, the capitalized value of `id` is used.
   - `comment` refers to a longer description of the term, and can be used for blocks in the `class`, `property` and `individual` top-level blocks. It may include [HTML Flow content elements](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories). The comment will be encapsulated into an HTML `<div>` element and will then be displayed verbatim in the HTML version of the vocabulary, and as a literal of type `rdf:HTML` in the JSON-LD and Turtle versions.
   - `type` refers to RDF types. Note that the tool automatically adds types like `rdf:Property`, `rdfs:Class`, etc.; this key is to be used for the vocabulary specific types only.
-  - `defined_by` should be a URL, or a list thereof, referring to the formal definition(s) of the term.
+  - `defined_by` should be a URL, or a list thereof, referring to the formal definition(s) of the term. This should always be a full URL, because it is also used in the generated turtle or JSON-LD version of the vocabulary.
   - `see_also` refers to one or more blocks with `label` and `url` keys, providing a human-readable title and a URL, respectively, to an external document that can be referred to by the description of the term. (These are translated into an `rdfs:seeAlso` term in the vocabulary.)
   - The `status` key refers to a string that can be `stable`, `reserved`, or `deprecated`. The terms are divided, in the HTML output, into these three sections. `stable` is the default.
   - The `deprecated` key refers to a boolean, signaling whether term is deprecated or not. Default is `false`. This property is a leftover from earlier version and is overwritten, if applicable, by the value of `status`.

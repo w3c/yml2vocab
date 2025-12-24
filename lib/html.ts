@@ -36,10 +36,14 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
     // Get the DOM of the template
     const document: MiniDOM = new MiniDOM(template_text);
 
-    // The prefix and the URL for the vocabulary itself
     // I am just lazy to type things that are too long... :-)
     const vocab_prefix = global.vocab_prefix;
-    // const vocab_url = global.vocab_url;
+    // const vocab_url    = global.vocab_url;
+
+    // Is the template a fragment? If so, then the definedBy fields
+    // must only include the fragment id for HTML (and some elements that are
+    // in the header should not be generated)
+    const is_fragment  = document.isFragment;
 
     /*********************************** Utility functions ******************************************/
 
@@ -114,17 +118,33 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
             }
 
             if (item.defined_by) {
+                // this returns the fragment of the URI if the
+                // template is not a stand-alone HTML. That makes it
+                // possible to include the vocab documentation into
+                // the original document as, e.g., an appendix
+                const relativize = (term: string): string => {
+                    if (is_fragment) {
+                        const parts = term.split('#');
+                        if (parts.length === 2) {
+                            return `#${parts[1]}`;
+                        } else {
+                            return term;
+                        }
+                     } else {
+                        return term;
+                    }
+                };
                 // By the logic of the program, at this point defined_by is always defined
                 // but picky compilers, like deno, push me to put this extra condition
                 switch (item.defined_by.length) {
                     case 0:
                         break;
                     case 1: {
-                        document.addChild(section, 'p', `See the <a href="${item.defined_by[0]}">formal definition of the term</a>.`);
+                        document.addChild(section, 'p', `See the <a href="${relativize(item.defined_by[0])}">formal definition of the term</a>.`);
                         break;
                     }
                     default: {
-                        const refs: string[] = item.defined_by.map((def: string): string => `<a href="${def}">here</a>`);
+                        const refs: string[] = item.defined_by.map((def: string): string => `<a href="${relativize(def)}">here</a>`);
                         document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
                     }
                 }
@@ -268,7 +288,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
             document.addText(title, document.getElementsByTagName('title')[0]);
             document.addText(title, document.getElementById('title'));
          } catch(e) {
-            console.warn(`Vocabulary warning: ontology title is not provided. (${e})`);
+            if (!is_fragment) console.warn(`Vocabulary warning: ontology title is not provided. (${e})`);
          }
 
         const date = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:date')[0].value;
@@ -280,10 +300,10 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
             if (descriptionElement !== null) {
                 document.addHTMLText(description, descriptionElement);
             } else {
-                console.warn("Vocabulary warning: ontology description is not provided.");
+                if (!is_fragment) console.warn("Vocabulary warning: ontology description is not provided.");
             }
         } catch(e) {
-            console.warn(`Vocabulary warning: ontology description is not provided. (${e})`);
+            if (!is_fragment) console.warn(`Vocabulary warning: ontology description is not provided. (${e})`);
         }
 
         try {
@@ -295,10 +315,10 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                     a.setAttribute('href', see_also[0].value);
                 }
             } else {
-                console.warn(`Vocabulary warning: no reference to the ontology specification provided.`)
+                if (!is_fragment) console.warn(`Vocabulary warning: no reference to the ontology specification provided.`)
             }
         } catch(e) {
-            console.warn(`Vocabulary warning: no reference to the ontology specification provided. (${e})`)
+            if (!is_fragment) console.warn(`Vocabulary warning: no reference to the ontology specification provided. (${e})`)
         }
     }
 
@@ -359,7 +379,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         }
     }
 
-    // Note that the functions for classes, properties, etc., have a second argument for "statusFilter", ie, for reserved,
+    // Note that the functions below for classes, properties, etc., have a second argument for "statusFilter", ie, for reserved,
     // deprecate, or stable. These values are used to find the right section in the template, and can also
     // affect the real function. These functions are called several time, each with different status values
     // and different list of terms; see at the end of the function
@@ -627,7 +647,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
 
 
     // 1. Set the reference to the json-ld and turtle versions into the header
-    alternateLinks();
+    if (!is_fragment) alternateLinks();
 
     // 2. Set the general properties on the ontology itself
     ontologyProperties();
@@ -673,7 +693,20 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
     }
 
     // 10. Beautify the text before it is returned
-    const final_html = `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
-    const nice_html = beautify(final_html, 'html', { max_preserve_newlines: 2 })
-    return nice_html;
+    // The beautifier adds some extras even for html fragments, that should be taken out.
+    const final_html = ((): string => {
+        const html_text = is_fragment ? `${document.innerHTML()}` : `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`
+        const nice_html_text = beautify(html_text, 'html', { max_preserve_newlines: 2 });
+        if (is_fragment) {
+            // we have to filter out the head and body put there by JSDOM for fragments
+            const lines = nice_html_text.split('\n');
+            const final_lines = lines.filter((line: string): boolean => {
+                return !(line.includes('<head>') || line.includes('</head>') || line.includes('<body>') || line.includes('</body>'));
+            });
+            return final_lines.join('\n')
+        } else {
+            return nice_html_text;
+        }
+    })();
+    return final_html;
 }

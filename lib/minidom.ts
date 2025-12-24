@@ -16,8 +16,10 @@ import { JSDOM } from 'jsdom';
  */
 export class MiniDOM {
     private readonly _localDocument: Document;
+    private readonly _isFragment: boolean;
 
     constructor(html_text: string) {
+        this._isFragment = !html_text.trim().startsWith('<html');
         const doc = (new JSDOM(html_text)).window.document;
         if (doc) {
             this._localDocument = doc;
@@ -29,6 +31,10 @@ export class MiniDOM {
     // noinspection JSUnusedGlobalSymbols
     get document(): Document {
         return this._localDocument;
+    }
+
+    get isFragment(): boolean {
+        return this._isFragment;
     }
 
     /**
