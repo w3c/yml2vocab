@@ -692,21 +692,10 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         if (section !== null && section.parentElement) section.parentElement.removeChild(section);
     }
 
-    // 10. Beautify the text before it is returned
-    // The beautifier adds some extras even for html fragments, that should be taken out.
-    const final_html = ((): string => {
-        const html_text = is_fragment ? `${document.innerHTML()}` : `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`
-        const nice_html_text = beautify(html_text, 'html', { max_preserve_newlines: 2 });
-        if (is_fragment) {
-            // we have to filter out the head and body put there by JSDOM for fragments
-            const lines = nice_html_text.split('\n');
-            const final_lines = lines.filter((line: string): boolean => {
-                return !(line.includes('<head>') || line.includes('</head>') || line.includes('<body>') || line.includes('</body>'));
-            });
-            return final_lines.join('\n')
-        } else {
-            return nice_html_text;
-        }
-    })();
-    return final_html;
+    // 10. Generate the final HTML fragment or full HTML
+    const html_text = is_fragment ? `${document.innerHTML()}` : `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
+
+    // 11. Beautify the text before it is returned
+    return beautify(html_text, 'html', { max_preserve_newlines: 2 });
+
 }

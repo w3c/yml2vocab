@@ -5,7 +5,7 @@ This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-c
 When running, the script relies on two files:
 
 1. The `vocabulary.yml` file, containing the definition for the vocabulary entries. (It is also possible to use a different name for the YAML file, see below.)
-2. The `template.html` file, used to create the HTML file version of the vocabulary. (It is also possible to use a different name for the template file, see below.) The template may also be an HTML fragment (ie, without the `<html>`, `<head>`, etc.), which comes handy if the generated fragment is to be included into the full specification as, say, an Appendix. Note that if a fragment is used, the `defined_by` entries use only the fragment of the URL in the generated code (the URL is supposed to refer to the specification file itself).
+2. The `template.html` file, used to create the HTML file version of the vocabulary. (It is also possible to use a different name for the template file, see below.) The template may also be an HTML fragment (ie, without the `<html>`, `<head>`, etc.), which comes handy if the generated fragment is to be included into the full specification as, say, an Appendix. Note that if a fragment is used, the `defined_by` entries use only the fragment part of the URL in the generated code (the URL is supposed to refer to the specification file itself).
 
 ## Definition of the vocabulary in the YAML file
 

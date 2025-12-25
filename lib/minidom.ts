@@ -26,6 +26,21 @@ export class MiniDOM {
         } else {
             throw new Error("Problem with parsing the template text");
         }
+        if (this._isFragment) {
+            // Remove the extra, HTML specific elements from the DOM
+            // they were added by JSDOM but should not be there
+            // for our application
+            const head = doc.getElementsByTagName('head')[0] || null;
+            if (head) {
+                head.remove();
+            }
+
+            const body = doc.getElementsByTagName('body')[0] || null;
+            if (body) {
+                doc.documentElement.append(...body.childNodes);
+                body.remove();
+            }
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
