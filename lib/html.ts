@@ -407,12 +407,12 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                         document.addChild(dl, 'dt', 'Subclass of:')
                         const dd = document.addChild(dl, 'dd');
 
-                        const class_names = (t: RDFTerm[]): string => {
+                        dd.innerHTML = ((t: RDFTerm[]): string => {
+                            const join_logic = item.upper_union ? ' ⊔ ' : ' ⊓ ';
                             const names = t.map(termHTMLReference);
-                            return names.join(', ');
-                        }
-                        dd.innerHTML = class_names(item.subClassOf);
-                     }
+                            return names.join(join_logic);
+                        })(item.subClassOf);
+                    }
                     // Again an extra list for range/domain references, if applicable
                     if (item.range_of.length > 0 ||
                         item.domain_of.length > 0 ||
@@ -505,18 +505,18 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                                     dd.innerHTML = termHTMLReference(item.range[0]);
                                 }
                             } else {
+                                const innerHTML_classes: string = ((t: RDFTerm[]): string => {
+                                    const join_logic = item.range_union ? ' ⊔ ' : ' ⊓ ';
+                                    const names = t.map(termHTMLReference);
+                                    return names.join(join_logic);
+                                })(item.range);
+
                                 if (isList) {
-                                    document.addText('List containing intersections of:', dd);
+                                    document.addHTMLText(`List containing instances of ${innerHTML_classes}`, dd);
                                 } else {
-                                    document.addText('Intersection of:', dd)
+                                    document.addHTMLText(`${innerHTML_classes}`, dd)
                                 }
-                                document.addChild(dd, 'br')
-                                for (const entry of item.range) {
-                                    const r_span = document.addChild(dd, 'span')
-                                    r_span.innerHTML = termHTMLReference(entry);
-                                    document.addChild(dd, 'br')
-                                }
-                            }
+                           }
                             if (isList || isSet) {
                                 document.addChild(dd, 'p', 'In a JSON-LD representation, values to this property are supposed to be represented in the form of a JSON array, even if there is just a single value.')
                             }
@@ -528,12 +528,10 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                             if (item.domain.length === 1) {
                                 dd.innerHTML = termHTMLReference(item.domain[0]);
                             } else {
-                                document.addText('Union of: ', dd);
-                                document.addChild(dd, 'br')
-                                for (const entry of item.domain) {
-                                    dd.innerHTML = termHTMLReference(entry);
-                                    document.addChild(dd, 'br')
-                                }
+                                dd.innerHTML = ((t: RDFTerm[]): string => {
+                                    const names = t.map(termHTMLReference);
+                                    return names.join(' ⊔ ');
+                                })(item.domain);
                             }
                         }
                     }

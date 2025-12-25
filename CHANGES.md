@@ -7,6 +7,7 @@ This list does not include all the tiny changes, bug handling, etc, only the cha
 - Added the `import` block to the `json_ld` top level block, to allow adding a `@import` statement with one or more URI-s at the top of the generated context file.
 - When generating a context file with an aliased term (see the `known_as` property) an extra warning is added to the generated HTML file.
 - Added the capability to handle HTML templates containing HTML fragments only. The result can be imported into a specification instead of keeping it as a separate file.
+- Introduced the `upper_union` and `range_union` boolean flags for classes, respectively, properties. If set to `true`, the superclass, respectively range, settings with several class references mean the _disjunction_ of the classes, as opposed to the (default) _conjunction_. This formally affects the turtle and json-ld versions of the vocabulary (which use the `owl:unionOf` construct); the HTML description uses now the ⊓ and ⊔ characters for these.
 
 ## Version 1.7.0
 

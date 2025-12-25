@@ -133,6 +133,17 @@ const vocabSchema = `{
                 "allOf": [
                     {
                         "$ref": "#/$defs/CommonTerm"
+                    },
+                    {
+                        "type": "object",
+                        "properties" : {
+                            "upper_union" : {
+                                "type" : "boolean"
+                            },
+                            "enum" : {
+                                "$ref": "#/$defs/StringOrArrayOfStrings"
+                            }
+                        }
                     }
                 ],
                 "unevaluatedProperties": false
@@ -157,6 +168,9 @@ const vocabSchema = `{
                             },
                             "range": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
+                            },
+                            "range_union" : {
+                                "type" : "boolean"
                             },
                             "dataset": {
                                 "type": "boolean"

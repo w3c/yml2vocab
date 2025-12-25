@@ -191,8 +191,10 @@ export interface RawVocabEntry {
     label        : string;
     type        ?: string[];
     upper_value ?: string[];
+    upper_union ?: boolean;
     domain      ?: string[];
     range       ?: string[];
+    range_union ?: boolean;
     deprecated  ?: boolean;
     status      ?: Status;
     external    ?: boolean;
@@ -340,6 +342,7 @@ export interface RDFTerm {
  */
 export interface RDFClass extends RDFTerm {
     subClassOf            : RDFClass[];
+    upper_union           : boolean;
     range_of              : RDFProperty[];
     domain_of             : RDFProperty[];
     included_in_domain_of : RDFProperty[];
@@ -354,6 +357,7 @@ export interface RDFProperty extends RDFTerm {
     subPropertyOf : RDFProperty[];
     domain        : RDFClass[];
     range         : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
+    range_union   : boolean;
     dataset       : boolean;
     container     : Container | undefined;
     strongURL     : boolean;    // Whether the property object should be required to be a real URL

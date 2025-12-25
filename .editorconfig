@@ -22,7 +22,7 @@ indent_size = 4
 indent_size = 4
 
 [*.jsonld]
-indent_size = 2
+indent_size = 4
 
 [*.{xml,svg}]
 indent_size = 4

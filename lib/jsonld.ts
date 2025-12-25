@@ -64,16 +64,26 @@ export function toJSONLD(vocab: Vocab): string {
             return value[0];
         } else {
             return {
-                "owl:unionOf": value
+                "@type" : "owl:Class",
+                "owl:unionOf": {
+                    "@list" : value
+                }
             };
         }
     }
 
-    // This is just for symmetry v.a.v. the domain...
-    const multiRange = (term: RDFTerm[]): unknown => {
+    // Like domain, but the creation of a union structure is conditional.
+    const multiRange = (term: RDFTerm[], union: boolean): unknown => {
         const value: string[] = term.map(termToStringCallback);
         if (value.length === 1) {
             return value[0];
+        } else if(union) {
+            return {
+                "@type": "ows:Class",
+                "owl:unionOf" : {
+                    "@list": value
+                }
+            }
         } else {
             return value;
         }
@@ -168,13 +178,13 @@ export function toJSONLD(vocab: Vocab): string {
                 if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
                     pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf.map(termToStringCallback);
                 }
-                if (prop.domain) {
+                if (prop.domain && prop.domain.length > 0) {
                     pr_object["rdfs:domain"] = multiDomain(prop.domain);
                 }
                 if (prop.container === Container.list) {
                     pr_object["rdfs:range"] = "rdf:List";
-                } else if (prop.range) {
-                    pr_object["rdfs:range"] = multiRange(prop.range);
+                } else if (prop.range && prop.range.length > 0) {
+                    pr_object["rdfs:range"] = multiRange(prop.range, prop.range_union);
                 }
                 commonFields(pr_object, prop);
                 contexts(pr_object, prop);
@@ -200,7 +210,16 @@ export function toJSONLD(vocab: Vocab): string {
                     cl_object["owl:deprecated"] = true
                 }
                 if (cl.subClassOf && cl.subClassOf.length > 0) {
-                    cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
+                    if (cl.subClassOf.length > 1 && cl.upper_union) {
+                        cl_object["rdfs:subClassOf"] = {
+                            "@type": "owl:Class",
+                            "owl:unionOf" : {
+                                "@list" : cl.subClassOf.map(termToStringCallback)
+                            }
+                        };
+                    } else {
+                        cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
+                    }
                 }
                 commonFields(cl_object, cl);
                 contexts(cl_object, cl);

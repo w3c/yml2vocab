@@ -42,15 +42,17 @@ export function toTurtle(vocab: Vocab): string {
         if (value.length === 1) {
             return value[0];
         } else {
-            return `[ owl:unionOf (${value.join(" ")}) ]`;
+            return `[ a owl:Class; owl:unionOf (${value.join(" ")}) ]`;
         }
     }
 
-    // This is just for symmetry v.a.v. the domain...
-    const multiRange = (term: RDFTerm[]): string => {
+    // Like the domain, but the union possibly appears for the range
+    const multiRange = (term: RDFTerm[], union: boolean): string => {
         const value: string[] = term.map(termToStringCallback);
         if (value.length === 1) {
             return value[0];
+        } else if (union) {
+            return `[ a owl:Class; owl:unionOf (${value.join(' ')}) ]`
         } else {
             return value.join(", ")
         }
@@ -132,9 +134,9 @@ export function toTurtle(vocab: Vocab): string {
                 if (prop.container === Container.list) {
                     turtle += `${spaces}rdfs:range rdf:List ;\n`
                 } else if (prop.range) {
-                    const range = multiRange(prop.range);
+                    const range = multiRange(prop.range, prop.range_union);
                     if (!(range === '' || range === '[]')) {
-                        turtle += `${spaces}rdfs:range ${multiRange(prop.range)} ;\n`;
+                        turtle += `${spaces}rdfs:range ${range} ;\n`;
                     }
                 }
                 commonFields(prop);
@@ -151,8 +153,12 @@ export function toTurtle(vocab: Vocab): string {
                     turtle += `${spaces}owl:deprecated true ;\n`;
                 }
                 if (cl.subClassOf && cl.subClassOf.length > 0) {
-                    // See the comment on magic in the property section...
-                    turtle += `${spaces}rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
+                    if (cl.subClassOf.length > 1 && cl.upper_union) {
+                        turtle += `${spaces}rdfs:subClassOf [ a owl:Class; owl:unionOf (${cl.subClassOf.join(' ')}) ] ;\n`;
+                    } else {
+                        // See the comment on magic in the property section...
+                        turtle += `${spaces}rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
+                    }
                 }
                 commonFields(cl);
             }
