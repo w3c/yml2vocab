@@ -6,6 +6,7 @@ This list does not include all the tiny changes, bug handling, etc, only the cha
 
 - Added the `import` block to the `json_ld` top level block, to allow adding a `@import` statement with one or more URI-s at the top of the generated context file.
 - When generating a context file with an aliased term (see the `known_as` property) an extra warning is added to the generated HTML file.
+- Added the capability to handle HTML templates containing HTML fragments only. The result can be imported into a specification instead of keeping it as a separate file.
 
 ## Version 1.7.0
 
