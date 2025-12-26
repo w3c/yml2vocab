@@ -69,6 +69,7 @@ The block is a list of property/value pairs; each entry is as follows:
 | ---------- | --------------- | ------------------------------------------ | --------- |
 | `property` | CURIE           | The property being used in a CURIE format. | Yes       |
 | `value`    | URL or string   | The value of the property.                 | Yes       |
+
 Example:
 
 ```yaml
@@ -77,7 +78,7 @@ ontology:
       value: EPUB Annotations vocabulary
 
     - property: dc:description
-      value: Example vocabulary, see also <a href="http://example.org/explanation">further details</a.
+      value: See also <a href="http://example.org/explanation">further details</a.
 
     - property: rdfs:seeAlso
       value: https://exampl.org/description
@@ -95,7 +96,7 @@ The script automatically adds a `dc:date` key with the generation time as a valu
 | -------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- |
 | `alias`  | Object with key/value pairs; the values must be URLs. | Defines [keyword aliases](https://www.w3.org/TR/json-ld11/#aliasing-keywords). Possible values for keywords are: `@direction`, `@graph`, `@id`, `@included`, `@index`, `@json`, `@language`, `@list`, `@nest`, `@none`, `@reverse`, `@set`, `@type`, and `@value`. | No        |
 | `import` | Either a single URL or an array thereof.              | Defines references to external `@contex` files that must be imported (via the JSON-LD `@import`) at the beginning of the generated context file.                                                                                                                   | No        |
-|          |                                                       |                                                                                                                                                                                                                                                                    |           |
+
 Example:
 
 ```yaml
@@ -133,6 +134,7 @@ These keys are common to all term definitions, although their exact interpretati
 | ------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
 | `upper_union` | boolean                     | If several superclasses are specified then, by default, this means the _intersection_ (or logical _conjunction_) of the classes. If the value is `true`, the statement refers to the _union_ (or logical _disjunction_) of the classes. | No        |
 | `upper_value` | One or more terms or CURIEs | Superclasses.                                                                                                                                                                                                                           | No        |
+
 Example:
 
 ```yaml
@@ -164,6 +166,8 @@ class:
 | `range_union` | boolean                                               | If several range classes are specified then, by default, this means the _intersection_ (or logical _conjunction_) of the classes. If the value is `true`, the statement refers to the _union_ (or logical _disjunction_) of the classes.                                                                                                                                                                                                                                                                                                                                                                     | No        |
 | `upper_value` | One or more terms or CURIEs                           | Superproperties.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | No        |
 
+Example:
+
 ```yaml
 property:
     - id: pr1
@@ -189,7 +193,7 @@ property:
 
 No extra keys are defined for this block. The `type` key is used to define the class which contains this individual
 
-Example
+Example:
 
 ```yaml
 individual:
@@ -215,6 +219,7 @@ datatype:
         url:  https://example.org/further-description.html
 
 ```
+
 ## 2	Formatting the output
 
 Some efforts are made to make the output files (HTML, JSON-LD, and Turtle) properly formatted to make them readable. A subset of the [`editorconfig`](https://spec.editorconfig.org) facilities are also taken into account. Namely, if an `.editorconfig` file is found, the following supported pairs are used (with the default values in parenthesis):
@@ -233,9 +238,9 @@ The script has been written in TypeScript (version 5.0.2 and beyond) running on 
 
 Beyond the YAML file itself, the script relies on an HTML template file, i.e., a skeleton file in HTML that is completed by the vocabulary entries. The [example template file on GitHub](https://github.com/w3c/yml2vocab/tree/main/example/template.html) provides a good starting point for a template that also makes use of [respec](https://respec.org). The script relies on the existing `id` values and section structures to be modified/extended by the script. Unused subsections (e.g., when there are no deprecated classes) are removed from the final HTML file.
 
-### 3.2	Running the script on a command line
+### 3.1	Running the script on a command line
 
-#### 3.2.1	NPM + Node.js
+#### 3.1.1	NPM + Node.js
 
 The script can be used as a standard npm module via:
 
@@ -250,12 +255,12 @@ The npm installation installs the `node_modules/.bin/yml2vocab` script. The scri
 yml2vocab [-v vocab_file_name] [-t template_file_name] [-c]
 ```
 
-#### 3.2.2	Deno
+#### 3.1.2	Deno
 
 If `deno` is installed globally, one can also run the script directly (without any further installation) from the code by
 
 ```sh
-deno run --allow-read --allow-write --allow-env [-v vocab_fname] [-t template_fname] [-c]
+deno run --allow-read --allow-write --allow-env /a/b/c/main.ts [-v vocab_fname] [-t template_fname] [-c]
 ```
 
 on the top level. To make it simpler, a binary, compiled version of the program can be generated by
@@ -272,15 +277,15 @@ The program can also be run without installing the package locally from JSR. Jus
 deno run -A jsr:@iherman/yml2vocab/cli [-v vocab_file_name] [-t template_file_name] [-c]
 ```
 
-#### 3.2.3	Command line argument
+#### 3.1.3	Command line argument
 
 The script generates the `vocab_file_name.ttl`, `vocab_file_name.jsonld`, and `vocab_file_name.html` files for the Turtle, JSON-LD, and HTML versions, respectively. The script relies on the `vocab_file_name.yml` file for the vocabulary specification in YAML and a `template_file_name` file for a template file. The defaults are `vocabulary` and `template.html`, respectively.
 
 If the `-c` flag is also set, the additional `vocab_file_name.context.jsonld` is also generated, containing a JSON-LD file that can be used as a separate `@context` reference in a JSON-LD file. Note that this JSON-LD file does not necessarily use all the sophistication that JSON-LD [defines](https://www.w3.org/TR/json-ld11/#the-context) for `@context`; these may have to be added manually.
 
-### 3.3	Running from a Javascript/TypeScript program
+### 3.2	Running from a Javascript/TypeScript program
 
-#### 3.3.1	Usage with node.js
+#### 3.2.1	Usage with node.js
 
 The simplest way of using the module from Javascript is:
 
@@ -318,7 +323,7 @@ import yml2vocab from 'yml2vocab';
 
 There is no need to install any extra typing, it is included in the package. The interfaces are simply using strings, no extra TypeScript type definitions have been defined.
 
-#### 3.3.2	Usage with deno
+#### 3.2.2	Usage with deno
 
 The package is also available on JSR `@iherman/yml2vocab`. All previous examples are valid for deno, except for the import statements which should be:
 
@@ -334,11 +339,11 @@ import yml2vocab from 'npm:yml2vocab'
 
 No prior installation step is necessary.
 
-### 3.4	Cloning the repository
+### 3.3	Cloning the repository
 
 The [repository](https://github.com/yml2vocab) may also be cloned.
 
-#### 3.4.1	Content of the directory
+#### 3.3.1	Content of the directory
 
 - `Readme.md`: this file.
 - `package.json`: configuration file for `npm`.
