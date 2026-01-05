@@ -160,6 +160,9 @@ export function toTurtle(vocab: Vocab): string {
                         turtle += `${spaces}rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
                     }
                 }
+                if (cl.one_of && cl.one_of.length > 0) {
+                    turtle += `${spaces}owl:oneOf (${cl.one_of.join(' ')}) ;\n`
+                }
                 commonFields(cl);
             }
         }
@@ -171,7 +174,11 @@ export function toTurtle(vocab: Vocab): string {
         for (const ind of vocab.individuals) {
             if (!ind.external) {
                 // See the comment on magic in the property section...
-                turtle += `${ind} a ${ind.type.join(", ")} ;\n`;
+                if (ind.type.length > 0) {
+                    turtle += `${ind} a ${ind.type.join(", ")} ;\n`;
+                } else {
+                    turtle += `${ind} a rdfs:Resource ;\n`;
+                }
                 if (ind.status === Status.deprecated) {
                     turtle += `${spaces}owl:deprecated true ;\n`;
                 }

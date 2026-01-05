@@ -401,17 +401,30 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                     cl_section.id = item.html_id;
                     commonFields(cl_section, item);
                     // Extra list of superclasses, if applicable
-                    if (!item.external && item.subClassOf && item.subClassOf.length > 0) {
-                        const dl = document.addChild(cl_section, 'dl');
-                        dl.className = 'terms'
-                        document.addChild(dl, 'dt', 'Subclass of:')
-                        const dd = document.addChild(dl, 'dd');
+                    if (!item.external) {
+                        if (item.subClassOf && item.subClassOf.length > 0) {
+                            const dl = document.addChild(cl_section, 'dl');
+                            dl.className = 'terms'
+                            document.addChild(dl, 'dt', 'Subclass of:')
+                            const dd = document.addChild(dl, 'dd');
 
-                        dd.innerHTML = ((t: RDFTerm[]): string => {
-                            const join_logic = item.upper_union ? ' ⊔ ' : ' ⊓ ';
-                            const names = t.map(termHTMLReference);
-                            return names.join(join_logic);
-                        })(item.subClassOf);
+                            dd.innerHTML = ((t: RDFTerm[]): string => {
+                                const join_logic = item.upper_union ? ' ⊔ ' : ' ⊓ ';
+                                const names = t.map(termHTMLReference);
+                                return names.join(join_logic);
+                            })(item.subClassOf);
+                        }
+                        if (item.one_of && item.one_of.length > 0) {
+                            const dl = document.addChild(cl_section, 'dl');
+                            dl.className = 'terms';
+                            document.addChild(dl, 'dt', 'Consists of:');
+                            const dd = document.addChild(dl, 'dd');
+                            dd.innerHTML = ((t: RDFTerm[]): string => {
+                                const join_logic = ', ';
+                                const names = t.map(termHTMLReference);
+                                return `{ ${names.join(join_logic)} }`;
+                            })(item.one_of);
+                        }
                     }
                     // Again an extra list for range/domain references, if applicable
                     if (item.range_of.length > 0 ||

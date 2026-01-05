@@ -221,6 +221,11 @@ export function toJSONLD(vocab: Vocab): string {
                         cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
                     }
                 }
+                if (cl.one_of && cl.one_of.length > 0) {
+                    cl_object["owl:oneOf"] = {
+                        "@list" : cl.one_of.map(termToStringCallback)
+                    }
+                }
                 commonFields(cl_object, cl);
                 contexts(cl_object, cl);
                 classes.push(cl_object);
@@ -236,7 +241,9 @@ export function toJSONLD(vocab: Vocab): string {
             if (!ind.external) {
                 const ind_object: JSON = {};
                 ind_object["@id"] = `${ind}`;
-                if (ind.type.length === 1) {
+                if (ind.type.length === 0) {
+                    ind_object["@type"] = "rdfs:Resource";
+                } else if (ind.type.length === 1) {
                     ind_object["@type"] = `${ind.type[0]}`;
                 } else {
                     ind_object["@type"] = ind.type.map(termToStringCallback);

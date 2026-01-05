@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 import type { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, RDFDatatype, RDFTerm } from './common';
-import { Status, global }                                                             from './common';
+import { Status, global, RDFIndividual } from './common';
 import type { RawVocabEntry, RawVocab, ValidationResults  }                           from './common';
 import type { OntologyProperty, Vocab, Link, Example }                                from './common';
 import { EXTRA_DATATYPES, Container }                                                 from "./common";
@@ -617,13 +617,14 @@ export function getData(vocab_source: string): Vocab {
             // but the deno typescript checker complains...
             global.status_counter.add(raw.status ? raw.status : Status.stable);
 
-            /* @@@@ */
             if (raw.one_of && raw.one_of.length > 0) {
-                console.log(`===> One_of for class ${raw.id}: ${raw.one_of}`);
+                // The owl:Class has to be added to types because the
+                // expression for one_of applies on an owl class only...
+                types.push("owl:Class")
             }
 
             Object.assign(output, {
-                type                  : types.map(t => factory.term(t)),
+                type                  : [...new Set(types)].map(t => factory.term(t)),
                 user_type             : user_type.map(t => factory.term(t)),
                 label                 : raw.label,
                 comment               : raw.comment,
@@ -632,7 +633,7 @@ export function getData(vocab_source: string): Vocab {
                 status                : raw.status,
                 subClassOf            : raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
                 upper_union           : raw.upper_union,
-                one_of                : raw.one_of,
+                one_of                : raw.one_of?.map((val: string): RDFIndividual => factory.individual(val)),
                 see_also              : raw.see_also,
                 known_as              : raw.known_as,
                 example               : raw.example,
