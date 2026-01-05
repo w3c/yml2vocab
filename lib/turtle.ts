@@ -6,6 +6,8 @@
  */
 import { type Vocab, global, type RDFTerm, type Link, Status, Container } from './common';
 import { getEditorConfigOptions }                                         from './beautify';
+import { factory }                                                        from './factory';
+
 
 const spaces: string = ((suffix: string): string => {
     const options = getEditorConfigOptions(suffix);
@@ -85,7 +87,7 @@ export function toTurtle(vocab: Vocab): string {
     {
         // Copy-paste (sort of...) the prefix definitions
         for (const prefix of vocab.prefixes) {
-            turtle += `@prefix ${prefix.prefix}: <${prefix.url}> .\n`;
+            if (factory.usesPrefix(prefix.prefix)) turtle += `@prefix ${prefix.prefix}: <${prefix.url}> .\n`;
         }
         turtle += "\n";
     }

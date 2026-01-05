@@ -7,6 +7,8 @@
 
 import { type Vocab, global, type RDFTerm, type Link, Status, Container } from './common';
 import { beautify }                                                       from './beautify';
+import { factory }                                                        from './factory';
+
 
 type JSON = Record<string,unknown>;
 
@@ -20,12 +22,12 @@ const generic_context = {
     "rdfs:subClassOf":          { "@type": "@id" },
     "rdfs:subPropertyOf":       { "@type": "@id" },
     "rdfs:isDefinedBy":         { "@type": "@id" },
-    "owl:equivalentClass":      { "@type": "@vocab" },
-    "owl:equivalentProperty":   { "@type": "@vocab" },
+    // "owl:equivalentClass":      { "@type": "@vocab" },
+    // "owl:equivalentProperty":   { "@type": "@vocab" },
     "owl:oneOf":                { "@container": "@list", "@type": "@vocab" },
     "owl:deprecated":           { "@type": "xsd:boolean" },
-    "owl:imports":              { "@type": "@id" },
-    "owl:versionInfo":          { "@type": "@id" },
+    // "owl:imports":              { "@type": "@id" },
+    // "owl:versionInfo":          { "@type": "@id" },
     "owl:inverseOf":            { "@type": "@vocab" },
     "owl:unionOf":              { "@container": "@list", "@type": "@vocab" },
     "rdfs_classes":             { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
@@ -65,9 +67,7 @@ export function toJSONLD(vocab: Vocab): string {
         } else {
             return {
                 "@type" : "owl:Class",
-                "owl:unionOf": {
-                    "@list" : value
-                }
+                "owl:unionOf": value
             };
         }
     }
@@ -80,9 +80,7 @@ export function toJSONLD(vocab: Vocab): string {
         } else if(union) {
             return {
                 "@type": "ows:Class",
-                "owl:unionOf" : {
-                    "@list": value
-                }
+                "owl:unionOf" : value
             }
         } else {
             return value;
@@ -110,7 +108,7 @@ export function toJSONLD(vocab: Vocab): string {
         }
         target["vs:term_status"] = `${entry.status}`;
         if (entry.see_also && entry.see_also.length > 0) {
-            target["rdfs:seeAlso"] = entry.see_also.map( (link: Link): string => link.url);
+            target["rdfs:seeAlso"] = entry.see_also.map((link: Link): string => link.url);
         }
     }
 
@@ -130,7 +128,7 @@ export function toJSONLD(vocab: Vocab): string {
     {
         let context: JSON = {};
         for (const prefix of vocab.prefixes) {
-            context[prefix.prefix] = prefix.url
+            if (factory.usesPrefix(prefix.prefix)) context[prefix.prefix] = prefix.url
         }
         context = {...context, ...generic_context};
         jsonld["@context"] = context;
@@ -213,18 +211,14 @@ export function toJSONLD(vocab: Vocab): string {
                     if (cl.subClassOf.length > 1 && cl.upper_union) {
                         cl_object["rdfs:subClassOf"] = {
                             "@type": "owl:Class",
-                            "owl:unionOf" : {
-                                "@list" : cl.subClassOf.map(termToStringCallback)
-                            }
+                            "owl:unionOf" : cl.subClassOf.map(termToStringCallback),
                         };
                     } else {
                         cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
                     }
                 }
                 if (cl.one_of && cl.one_of.length > 0) {
-                    cl_object["owl:oneOf"] = {
-                        "@list" : cl.one_of.map(termToStringCallback)
-                    }
+                    cl_object["owl:oneOf"] =  cl.one_of.map(termToStringCallback)
                 }
                 commonFields(cl_object, cl);
                 contexts(cl_object, cl);

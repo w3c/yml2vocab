@@ -58,7 +58,7 @@ function splitCurie(str: string): [string, string] {
 export class RDFTermFactory {
     private terms = new Map<string, RDFTerm>();
     private prefixes: RDFPrefix[] = [];
-    private used_prefixes: Set<string> = new Set()
+    private used_prefixes: Set<string> = new Set(['dc'])
 
     /**
      * Initialize the factory with a set of prefixes.
@@ -380,6 +380,15 @@ export class RDFTermFactory {
         const curie = createCurie(index)
         return terms.some((t) => t.curie === curie);
     }
+
+    /**
+     * List the prefixes used by the vocabulary
+     *
+     */
+    listPrefixes(): string[] {
+        return [...this.used_prefixes]
+    }
+
 
     /**
      * Does the system really use a predefined prefix?

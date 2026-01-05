@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 import type { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, RDFDatatype, RDFTerm } from './common';
-import { Status, global, RDFIndividual } from './common';
+import { Status, global }                                                             from './common';
 import type { RawVocabEntry, RawVocab, ValidationResults  }                           from './common';
 import type { OntologyProperty, Vocab, Link, Example }                                from './common';
 import { EXTRA_DATATYPES, Container }                                                 from "./common";
@@ -480,7 +480,7 @@ export function getData(vocab_source: string): Vocab {
     // The YAML file does not necessarily store the "vocab" as an array, but may; so the
     // vocab entry is always stored as an array. This makes the first entry of this
     // concatenation a bit strange...
-    const prefixes: RDFPrefix[] = [
+    const allPrefixes: RDFPrefix[] = [
         ...vocab.vocab.map((raw: RawVocabEntry): RDFPrefix => {
             if (raw.id === undefined) {
                 throw(new Error("The vocabulary has no prefix"));
@@ -510,6 +510,9 @@ export function getData(vocab_source: string): Vocab {
         ),
         ...defaultPrefixes
     ];
+
+    // Remove duplicates; trick is that, using a map, the second setting of a prefix would overwrite the previous
+    const prefixes: RDFPrefix[] = Array.from(new Map(allPrefixes.map(p => [p.prefix, p])).values());
 
     /********************************************************************************************/
     // Get the ontology properties. Note that there are also default ontology properties

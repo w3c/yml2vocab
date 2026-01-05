@@ -7,7 +7,7 @@
 import type { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, Vocab, RDFTerm } from './common';
 import { global, Status, TermType, Container }                                    from './common';
 import { MiniDOM }                                                                from './minidom';
-import { RDFTermFactory }                                                         from './factory';
+import { RDFTermFactory, factory }                                                from './factory';
 import { beautify }                                                               from './beautify';
 
 // This object is need for a proper formatting of some text
@@ -328,10 +328,12 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         const ns_dl = document.getElementById('namespaces');
         if (ns_dl) {
             for (const ns of vocab.prefixes) {
-                const dt = document.addChild(ns_dl, 'dt');
-                document.addChild(dt, 'code', ns.prefix);
-                const dd = document.addChild(ns_dl, 'dd');
-                document.addChild(dd, 'code', ns.url);
+                if (factory.usesPrefix(ns.prefix)) {
+                    const dt = document.addChild(ns_dl, 'dt');
+                    document.addChild(dt, 'code', ns.prefix);
+                    const dd = document.addChild(ns_dl, 'dd');
+                    document.addChild(dd, 'code', ns.url);
+                }
             }
         }
     }
