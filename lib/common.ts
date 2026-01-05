@@ -206,6 +206,8 @@ export interface RawVocabEntry {
     dataset     ?: boolean;
     container   ?: Container;
     context     ?: string[];
+    one_of      ?: string[];
+    pattern     ?: string;
 }
 
 /**
@@ -343,6 +345,7 @@ export interface RDFTerm {
 export interface RDFClass extends RDFTerm {
     subClassOf            : RDFClass[];
     upper_union           : boolean;
+    one_of                : string[];
     range_of              : RDFProperty[];
     domain_of             : RDFProperty[];
     included_in_domain_of : RDFProperty[];
@@ -375,7 +378,9 @@ export interface RDFIndividual extends RDFTerm {}
  * The cross-references for domains and ranges are calculated.
  */
 export interface RDFDatatype extends RDFTerm {
-    subClassOf        : RDFDatatype[],
+    subClassOf        : RDFDatatype[];
+    one_of            : string[];
+    pattern           : string;
     range_of          : RDFProperty[];
     includes_range_of : RDFProperty[];
 }

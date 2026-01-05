@@ -58,6 +58,7 @@ function splitCurie(str: string): [string, string] {
 export class RDFTermFactory {
     private terms = new Map<string, RDFTerm>();
     private prefixes: RDFPrefix[] = [];
+    private used_prefixes: Set<string> = new Set()
 
     /**
      * Initialize the factory with a set of prefixes.
@@ -116,6 +117,9 @@ export class RDFTermFactory {
                     }
                 }
             })();
+
+            // Store the prefix as being really in use
+            this.used_prefixes.add(prefix);
 
             const output: RDFTerm = {
                 id:         reference,
@@ -375,6 +379,14 @@ export class RDFTermFactory {
     static includesCurie(terms: RDFTerm[], index: string): boolean {
         const curie = createCurie(index)
         return terms.some((t) => t.curie === curie);
+    }
+
+    /**
+     * Does the system really use a predefined prefix?
+     *
+     */
+    usesPrefix(prefix: string): boolean {
+        return this.used_prefixes.has(prefix);
     }
 }
 

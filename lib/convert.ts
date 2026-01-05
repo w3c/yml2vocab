@@ -272,6 +272,8 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         dataset     : raw.dataset ?? false,
         container   : raw.container,
         context     : toArrayContexts(raw.context),
+        pattern     : raw.pattern,
+        one_of      : toArray(raw.one_of) as undefined | string[],
     }
 }
 
@@ -552,6 +554,21 @@ export function getData(vocab_source: string): Vocab {
             // but the deno typescript checker complains...
             global.status_counter.add(raw.status ? raw.status : Status.stable);
 
+            // Setting the right pattern and enum values: if there is no pattern but there is an enum,
+            // create a pattern artificially.
+            const [pattern, one_of] = ((): [string, string[]] => {
+                if (raw.one_of && raw.one_of.length > 0) {
+                    const pattern = raw.one_of.join('|');
+                    return [pattern, raw.one_of];
+                } else if (raw.pattern !== undefined) {
+                    return [raw.pattern, []]
+                } else {
+                    return ["", []]
+                }
+            })();
+
+            /* @@@@ */ console.log(`===> For ${raw.label}: one_of: ${one_of}, pattern: ${pattern}`);
+
             Object. assign(output, {
                 label             : raw.label,
                 comment           : raw.comment,
@@ -564,7 +581,9 @@ export function getData(vocab_source: string): Vocab {
                 known_as          : raw.known_as,
                 example           : raw.example,
                 context           : final_contexts(raw, output),
-                range_of          : [],            // these are set later, when all classes and properties are defined
+                one_of            : one_of,
+                pattern           : pattern,
+                range_of          : [],   // these are set later, when all classes and properties are defined
                 includes_range_of : [],   // these are set later, when all classes and properties are defined
             });
             return output;
@@ -591,6 +610,11 @@ export function getData(vocab_source: string): Vocab {
             // but the deno typescript checker complains...
             global.status_counter.add(raw.status ? raw.status : Status.stable);
 
+            /* @@@@ */
+            if (raw.one_of && raw.one_of.length > 0) {
+                console.log(`===> One_of for class ${raw.id}: ${raw.one_of}`);
+            }
+
             Object.assign(output, {
                 type                  : types.map(t => factory.term(t)),
                 user_type             : user_type.map(t => factory.term(t)),
@@ -601,6 +625,7 @@ export function getData(vocab_source: string): Vocab {
                 status                : raw.status,
                 subClassOf            : raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
                 upper_union           : raw.upper_union,
+                one_of                : raw.one_of,
                 see_also              : raw.see_also,
                 known_as              : raw.known_as,
                 example               : raw.example,
