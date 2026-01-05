@@ -13,7 +13,7 @@ The vocabulary is defined in a YAML file, which contains several block sequences
 Each block sequence consists of blocks with a number of keys, depending on the specific block. The interpretation of these key/value pairs may depend on the top level block where they reside, but some have a common interpretation. The detailed specification of the keys and values are as follows.
 
 ### 1.1	General Vocabulary blocks
-#### 1.1.1	1.1.1 Vocabulary Constants —`vocab` Block
+#### 1.1.1	Vocabulary Constants —`vocab` Block
 
 Constants for the vocabulary being defined. ***This block is required***.
 
@@ -132,6 +132,7 @@ These keys are common to all term definitions, although their exact interpretati
 
 | Key           | Possible values             | Description                                                                                                                                                                                                                             | Required? |
 | ------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| `one_of`      | One or more terms or CURIEs | The class consists of exactly the individuals listed in the values.                                                                                                                                                                     | No        |
 | `upper_union` | boolean                     | If several superclasses are specified then, by default, this means the _intersection_ (or logical _conjunction_) of the classes. If the value is `true`, the statement refers to the _union_ (or logical _disjunction_) of the classes. | No        |
 | `upper_value` | One or more terms or CURIEs | Superclasses.                                                                                                                                                                                                                           | No        |
 
@@ -151,6 +152,11 @@ class:
       defined_by: https://example.org/vocabulary-definition#class2
       comment: Referring to the union of <code>Class3</code> and <code>Class4</code>
       upper_union: true
+
+    - id: Class5
+      label: An example Class5
+      one_of: [ex:Individual1, ex:Individual2, …,ex:Individualn]
+      comment: The class consists of the listed individuals.
 
 ```
 
@@ -184,7 +190,7 @@ property:
       domain: Class2
       range: [Class3, Class10]
       defined_by: https://example.org/vocabulary-definition#pr2
-      comment: Something anbout pr2; the range is the union of Class3 and Class10
+      comment: Something about pr2; the range is the union of Class3 and Class10
       range_union: true
 
 ```
@@ -204,7 +210,12 @@ individual:
 ```
 #### 1.2.5 Datatype definitions —	`datatype` Block
 
-No extra keys are defined for this block. The `type` or `upper_value`keys are used to define the possible datatype this term is derived from.
+| Key       | Possible values  | Description                                                                                                                                                                                                                                                       | Required? |
+| --------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| `one_of`  | array of strings | This is a shorthand for a pattern property with the value of `"val1\|val2\|…\|valn`, i.e., it restricts the value to a predefined set of strings (without spaces).                                                                                                | No        |
+| `pattern` | string           | An [XML Schema regular expression](https://www.w3.org/TR/xmlschema-2/#regexs), used to restrict an `xsd:string` type literal. Note that, while this restriction become part of the generated vocabulary, not all  RDF/OWL reasoners are capable of processing it. | No        |
+
+The `type` or `upper_value`keys are used to define the possible datatype this term is derived from.
 
 Example:
 
@@ -213,6 +224,7 @@ datatype:
   - id: dt1
     label: Datatype some usage
     upper_value: xsd:string
+    one_of: [One, Two, Three]
     defined_by: https://example.org/vocabulary-definition#dt1
     see_also:
       - label: Goal of the datatype
@@ -365,14 +377,9 @@ The following files and directories are generated/modified by either the script 
 
 I got inspired by the structure and Ruby script  that was created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript, and developed further since by adding new features based on usage.
 
-Many features are the result of further discussions with Many Sporny and Benjamin Young.
+Many features are the result of further discussions with Many Sporny, Benjamin Young, and Pierre-Antoine Champin.
 
 I dedicate this script to the memory of Gregg. R.I.P.
-
-
-
-
-
 
 
 
