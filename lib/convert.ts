@@ -542,12 +542,13 @@ export function getData(vocab_source: string): Vocab {
             set_and_check_external(raw, output);
 
             // In the former version of the package the user's type was done via the upper_value property, which was not clean
-            // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
+            // the current version has a separate type attribute, but the upper_value could also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
-            const type = [
+            const type_entries = [
                 ...(raw.type !== undefined) ? raw.type : [],
                 ...(raw.upper_value !== undefined) ? raw.upper_value : []
             ];
+            const type = [...new Set(type_entries)].map(t => factory.term(t));
 
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
@@ -556,7 +557,15 @@ export function getData(vocab_source: string): Vocab {
 
             // Setting the right pattern and enum values: if there is no pattern but there is an enum,
             // create a pattern artificially.
+            // Both are restricted to string values, though.
+            const subClassOf = raw.upper_value?.map((val: string): RDFClass => factory.class(val));
             const [pattern, one_of] = ((): [string, string[]] => {
+                if (raw.one_of || raw.pattern) {
+                    // The supertype must include an xsd:string
+                    if (!(type && type.map((term: RDFTerm): string => `${term}`).includes('xsd:string'))) {
+                        throw(new Error(`${output.id} must be an xsd:string for template or enumeration`));
+                    }
+                }
                 if (raw.one_of && raw.one_of.length > 0) {
                     const pattern = raw.one_of.join('|');
                     return [pattern, raw.one_of];
@@ -567,16 +576,14 @@ export function getData(vocab_source: string): Vocab {
                 }
             })();
 
-            /* @@@@ */ console.log(`===> For ${raw.label}: one_of: ${one_of}, pattern: ${pattern}`);
-
             Object. assign(output, {
                 label             : raw.label,
                 comment           : raw.comment,
                 deprecated        : raw.deprecated,
                 defined_by        : raw.defined_by,
                 status            : raw.status,
-                type              : [...new Set(type)].map(t => factory.term(t)),
-                subClassOf        : raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
+                type              : type,
+                subClassOf        : subClassOf,
                 see_also          : raw.see_also,
                 known_as          : raw.known_as,
                 example           : raw.example,

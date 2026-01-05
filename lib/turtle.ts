@@ -188,9 +188,13 @@ export function toTurtle(vocab: Vocab): string {
                 if (dt.status === Status.deprecated) {
                     turtle += `${spaces}owl:deprecated true ;\n`;
                 }
-                if (dt.subClassOf && dt.subClassOf.length > 0) {
+                if (dt.type && dt.type.length > 0) {
                     // See the comment on magic in the property section...
-                    turtle += `${spaces}rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
+                    turtle += `${spaces}rdfs:subClassOf ${dt.type.join(", ")} ;\n`;
+                }
+                if (dt.pattern) {
+                    turtle += `${spaces}owl:onDatatype xsd:string ;\n`
+                    turtle += `${spaces}owl:withRestrictions ([xsd:pattern "${dt.pattern}"]) ;\n`;
                 }
                 commonFields(dt);
             }

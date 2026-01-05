@@ -260,8 +260,18 @@ export function toJSONLD(vocab: Vocab): string {
                 const dt_object: JSON = {};
                 dt_object["@id"] = `${dt}`;
                 dt_object["@type"] = "rdfs:Datatype";
-                if (dt.subClassOf && dt.subClassOf.length > 0) {
-                    dt_object["rdfs:subClassOf"] = dt.subClassOf.map(termToStringCallback);
+                if (dt.type && dt.type.length > 0) {
+                    dt_object["rdfs:subClassOf"] = dt.type.map(termToStringCallback);
+                }
+                if (dt.pattern) {
+                    dt_object["owl:onDatatype"] = "xsd:string";
+                    dt_object["owl:withRestrictions"] = {
+                        "@list" : [
+                            {
+                                "xsd:pattern": `${dt.pattern}`
+                            }
+                        ]
+                    }
                 }
                 commonFields(dt_object, dt);
                 contexts(dt_object, dt);

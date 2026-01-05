@@ -608,6 +608,18 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                             dd.innerHTML = termHTMLReference(superclass);
                         }
                     }
+                    if (item.pattern && item.pattern.length > 0) {
+                        const dl = document.addChild(dt_section, 'dl');
+                        dl.className = 'terms';
+                        if (item.one_of && item.one_of.length > 0) {
+                            document.addChild(dl, 'dt', 'Restricted to: ');
+                            const items = item.one_of.map((input: string): string => `"${input}"`).join(', ');
+                            document.addChild(dl, 'dd', items);
+                        } else {
+                            document.addChild(dl, 'dt', 'Restriction pattern: ');
+                            document.addChild(dl, 'dd', `"${item.pattern}"`);
+                        }
+                   }
                     if (item.range_of.length > 0 || item.includes_range_of.length > 0) {
                         // This for the creation of a list of property references, each
                         // a hyperlink to the property's definition.
