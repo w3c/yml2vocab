@@ -5,13 +5,13 @@
  * @packageDocumentation
  */
 import { type Vocab, global, type RDFTerm, type Link, Status, Container } from './common';
+import { requiredTurtlePrefixes }                                         from './common';
 import { getEditorConfigOptions }                                         from './beautify';
 import { factory }                                                        from './factory';
 
 
 const spaces: string = ((suffix: string): string => {
     const options = getEditorConfigOptions(suffix);
-    // console.log(JSON.stringify(options,null,4))
     if (options.indent_with_tabs) {
         return "\t";
     } else {
@@ -24,7 +24,6 @@ const spaces: string = ((suffix: string): string => {
         return output;
     }
 })('ttl');
-
 
 /**
  * Generate the Turtle representation of the vocabulary.
@@ -87,7 +86,9 @@ export function toTurtle(vocab: Vocab): string {
     {
         // Copy-paste (sort of...) the prefix definitions
         for (const prefix of vocab.prefixes) {
-            if (factory.usesPrefix(prefix.prefix)) turtle += `@prefix ${prefix.prefix}: <${prefix.url}> .\n`;
+            if (requiredTurtlePrefixes.includes(prefix.prefix) || factory.usesPrefix(prefix.prefix)) {
+                turtle += `@prefix ${prefix.prefix}: <${prefix.url}> .\n`;
+            }
         }
         turtle += "\n";
     }

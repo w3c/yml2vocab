@@ -7,7 +7,7 @@ import type { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, RDFDatatype, RDFT
 import { Status, global }                                                             from './common';
 import type { RawVocabEntry, RawVocab, ValidationResults  }                           from './common';
 import type { OntologyProperty, Vocab, Link, Example }                                from './common';
-import { EXTRA_DATATYPES, Container }                                                 from "./common";
+import { EXTRA_DATATYPES, Container, defaultPrefixes }                                from "./common";
 import { validateWithSchema }                                                         from './schema';
 import { RDFTermFactory, factory }                                                    from './factory';
 
@@ -30,7 +30,7 @@ function isURL(value:string): boolean {
 }
 
 /**
- * Turn the label text into a non-camel case.
+ * Turn the id text into a non-camel case for a label.
  *
  * @param str
  * @param separator
@@ -41,13 +41,18 @@ function localeUnCamelise(str: string, separator = ' '): string {
         return char[0] === char.toLocaleUpperCase();
     };
     if (str.length === 0) {
+        console.log(str);
         return str;
     } else {
         // First character is ignored; it can be upper or lower case
         const output: string[] = [str.charAt(0)];
         for (let i = 1; i < str.length; i++) {
             const char = str.charAt(i);
-            if (isLocaleUpperCase(char)) {
+            if (char === ':') {
+                // This is prefix separator, should be left without change
+                // This is CURIE, it should be used without change
+                return str;
+            } else if (isLocaleUpperCase(char)) {
                 // Got to the camel's hump
                 output.push(separator);
                 output.push(char.toLocaleLowerCase());
@@ -60,52 +65,6 @@ function localeUnCamelise(str: string, separator = ' '): string {
         return output.join('');
     }
 }
-
-
-/**
- * These prefixes are added no matter what; they are not vocabulary specific,
- * but likely to be used in the vocabulary.
- *
- * @internal
- */
-const defaultPrefixes: RDFPrefix[] = [
-    {
-        prefix : "dc",
-        url    : "http://purl.org/dc/terms/",
-    },
-    {
-        prefix : "dcterms",
-        url    : "http://purl.org/dc/terms/",
-    },
-    {
-        prefix : "owl",
-        url    : "http://www.w3.org/2002/07/owl#",
-    },
-    {
-        prefix : "rdf",
-        url    : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    },
-    {
-        prefix : "rdfs",
-        url    : "http://www.w3.org/2000/01/rdf-schema#"
-    },
-    {
-        prefix : "xsd",
-        url    : "http://www.w3.org/2001/XMLSchema#"
-    },
-    {
-        prefix : "vs",
-        url    : "http://www.w3.org/2003/06/sw-vocab-status/ns#"
-    },
-    {
-        prefix : "schema",
-        url    : "http://schema.org/"
-    },
-    {
-        prefix : "jsonld",
-        url    : "http://www.w3.org/ns/json-ld#"
-    }
-];
 
 
 /**
@@ -236,7 +195,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         }
     })();
 
-    // The official label should all ba lower case.
+    // The official label should all be lower case.
     const label = ((str: string|undefined): string => {
         if (str) {
             return str;

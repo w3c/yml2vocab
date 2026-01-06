@@ -6,6 +6,7 @@
  */
 
 import { type Vocab, global, type RDFTerm, type Link, Status, Container } from './common';
+import { requiredJsonPrefixes }                                           from './common';
 import { beautify }                                                       from './beautify';
 import { factory }                                                        from './factory';
 
@@ -128,7 +129,9 @@ export function toJSONLD(vocab: Vocab): string {
     {
         let context: JSON = {};
         for (const prefix of vocab.prefixes) {
-            if (factory.usesPrefix(prefix.prefix)) context[prefix.prefix] = prefix.url
+            if (requiredJsonPrefixes.includes(prefix.prefix) || factory.usesPrefix(prefix.prefix)) {
+                context[prefix.prefix] = prefix.url
+            }
         }
         context = {...context, ...generic_context};
         jsonld["@context"] = context;

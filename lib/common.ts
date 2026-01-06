@@ -418,3 +418,59 @@ export interface Vocab {
     datatypes           : RDFDatatype[];
 }
 
+/**
+ * These prefixes are added no matter what; they are not vocabulary specific,
+ * but likely to be used in the vocabulary. Excesses are filtered out at the end...
+ *
+ * @internal
+ */
+export const defaultPrefixes: RDFPrefix[] = [
+    {
+        prefix: "dc",
+        url: "http://purl.org/dc/terms/",
+    },
+    {
+        prefix: "dcterms",
+        url: "http://purl.org/dc/terms/",
+    },
+    {
+        prefix: "owl",
+        url: "http://www.w3.org/2002/07/owl#",
+    },
+    {
+        prefix: "rdf",
+        url: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    },
+    {
+        prefix: "rdfs",
+        url: "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    {
+        prefix: "xsd",
+        url: "http://www.w3.org/2001/XMLSchema#"
+    },
+    {
+        prefix: "vs",
+        url: "http://www.w3.org/2003/06/sw-vocab-status/ns#"
+    },
+    {
+        prefix: "schema",
+        url: "http://schema.org/"
+    },
+    {
+        prefix: "jsonld",
+        url: "http://www.w3.org/ns/json-ld#"
+    },
+    {
+        prefix: "foaf",
+        url: "http://xmlns.com/foaf/0.1/"
+    }
+];
+
+/**
+ * Some prefixes are not dependent on the users' vocabulary but, rather, on the
+ * specificities of a particular serialization. These should not be filtered out
+ * when optimizing the prefixes...
+ */
+export const requiredTurtlePrefixes: string[] = ["vs"];
+export const requiredJsonPrefixes: string[] = ["vs", "jsonld"];

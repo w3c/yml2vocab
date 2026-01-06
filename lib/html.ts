@@ -179,7 +179,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         }
 
         if (context && item.known_as) {
-            const known_as_text = `In the generated JSON-LD context file this term appears as <code>${item.known_as}</code>.`;
+            const known_as_text = `In the generated JSON-LD context file this term appears as "<code>${item.known_as}</code>".`;
             document.addChild(section, 'p', known_as_text);
         }
 
