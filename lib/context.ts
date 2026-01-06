@@ -103,10 +103,12 @@ export function toContext(vocab: Vocab): string {
             return {};
         } else if( global.import.length === 1) {
             return {
+                "@version" : "1.1",
                 "@import" : global.import[0]
             }
         } else {
             return {
+                "@version": "1.1",
                 "@import" : global.import
             }
         }
