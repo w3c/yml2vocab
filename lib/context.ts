@@ -56,7 +56,7 @@ export function toContext(vocab: Vocab): string {
         }
         // Try to catch the datatype settings; these can be used
         // to set these in the context as well
-        if (property.range || property.one_of) {
+        if (property.range) {
             for (const rangeTerm of property.range) {
                 const curie = rangeTerm.curie;
                 if (curie.startsWith("xsd:")) {
@@ -72,21 +72,24 @@ export function toContext(vocab: Vocab): string {
                     // This is the case when the property refers to an explicitly defined, non-standard datatype
                     output["@type"] = rangeTerm.url;
                     break;
-                 } else if (property.one_of?.length > 0) {
-                    // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
-                    const mappings = property.one_of.map((term) => [term.id, term.url]);
-                    mappings.push(["@vocab",`${global.vocab_prefix}:INVALID_VALUE:`]);
-                    output["@type"] = "@vocab";
-                    output["@context"] = Object.fromEntries(mappings);
                  } else {
-                    // if range is a class, then it is a reference
-                    if (RDFTermFactory.isClass(rangeTerm)) {
+                     if (RDFTermFactory.isClass(rangeTerm)) {
                         output["@type"] = "@id";
                         break;
                     }
                 }
             }
         }
+
+        if (property.one_of?.length > 0 && !property.dataset) {
+            // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
+            const mappings = property.one_of.map((term) => [term.id, term.url]);
+            mappings.push(["@vocab", `${global.vocab_prefix}:INVALID_VALUE:`]);
+            // Note that this may overwrite earlier values...
+            output["@type"] = "@vocab";
+            output["@context"] = Object.fromEntries(mappings);
+        }
+
         if (property.dataset) {
             if (property.container === Container.set) {
                 output["@container"] = ["@set", "@graph"];
