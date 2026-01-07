@@ -507,6 +507,19 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                         const dl = document.addChild(pr_section, 'dl');
                         dl.className = 'terms';
 
+                        if (item.domain && item.domain.length > 0) {
+                            document.addChild(dl, 'dt', 'Domain:');
+                            const dd = document.addChild(dl, 'dd');
+                            if (item.domain.length === 1) {
+                                dd.innerHTML = termHTMLReference(item.domain[0]);
+                            } else {
+                                dd.innerHTML = ((t: RDFTerm[]): string => {
+                                    const names = t.map(termHTMLReference);
+                                    return names.join(' ⊔ ');
+                                })(item.domain);
+                            }
+                        }
+
                         if (item.range && item.range.length > 0) {
                             const isList = (item.container === Container.list);
                             const isSet  = (item.container === Container.set);
@@ -525,30 +538,30 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                                     const names = t.map(termHTMLReference);
                                     return names.join(join_logic);
                                 })(item.range);
-
                                 if (isList) {
                                     document.addHTMLText(`List containing instances of ${innerHTML_classes}`, dd);
                                 } else {
                                     document.addHTMLText(`${innerHTML_classes}`, dd)
                                 }
-                           }
+                            }
+
+                            if (item.one_of && item.one_of.length > 0) {
+                                const dl = document.addChild(pr_section, 'dl');
+                                dl.className = 'terms';
+                                document.addChild(dl, 'dt', 'Value may be one of:');
+                                const dd = document.addChild(dl, 'dd');
+                                dd.innerHTML = ((t: RDFTerm[]): string => {
+                                    const join_logic = ', ';
+                                    const names = t.map(termHTMLReference);
+                                    return `${names.join(join_logic)}`;
+                                })(item.one_of);
+                            }
                             if (isList || isSet) {
                                 document.addChild(dd, 'p', 'In a JSON-LD representation, values to this property are supposed to be represented in the form of a JSON array, even if there is just a single value.')
                             }
+
                         }
 
-                        if (item.domain && item.domain.length > 0) {
-                            document.addChild(dl, 'dt', 'Domain:');
-                            const dd = document.addChild(dl, 'dd');
-                            if (item.domain.length === 1) {
-                                dd.innerHTML = termHTMLReference(item.domain[0]);
-                            } else {
-                                dd.innerHTML = ((t: RDFTerm[]): string => {
-                                    const names = t.map(termHTMLReference);
-                                    return names.join(' ⊔ ');
-                                })(item.domain);
-                            }
-                        }
                     }
 
                     if (item.dataset) {

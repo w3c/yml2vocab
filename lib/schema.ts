@@ -172,6 +172,9 @@ const vocabSchema = `{
                             "range_union" : {
                                 "type" : "boolean"
                             },
+                            "one_of" : {
+                                "$ref": "#/$defs/StringOrArrayOfStrings"
+                            },
                             "dataset": {
                                 "type": "boolean"
                             },

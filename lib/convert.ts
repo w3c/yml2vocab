@@ -685,6 +685,7 @@ export function getData(vocab_source: string): Vocab {
                 see_also      : raw.see_also,
                 range         : finalRange,
                 range_union   : raw.range_union,
+                one_of        : raw.one_of?.map((val: string): RDFIndividual => factory.individual(val)),
                 domain        : raw.domain?.map(val => factory.class(val)),
                 example       : raw.example,
                 known_as      : raw.known_as,

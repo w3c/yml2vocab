@@ -361,6 +361,7 @@ export interface RDFProperty extends RDFTerm {
     domain        : RDFClass[];
     range         : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
     range_union   : boolean;
+    one_of        : RDFIndividual[];
     dataset       : boolean;
     container     : Container | undefined;
     strongURL     : boolean;    // Whether the property object should be required to be a real URL

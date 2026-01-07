@@ -4,7 +4,7 @@
  *
  * @packageDocumentation
  */
-import { type Vocab, global, type RDFTerm, type Link, Status, Container } from './common';
+import { type Vocab, global, type RDFTerm, type Link, Status, Container, RDFProperty } from './common';
 import { requiredTurtlePrefixes }                                         from './common';
 import { getEditorConfigOptions }                                         from './beautify';
 import { factory }                                                        from './factory';
@@ -48,15 +48,42 @@ export function toTurtle(vocab: Vocab): string {
     }
 
     // Like the domain, but the union possibly appears for the range
-    const multiRange = (term: RDFTerm[], union: boolean): string => {
-        const value: string[] = term.map(termToStringCallback);
-        if (value.length === 1) {
-            return value[0];
-        } else if (union) {
-            return `[ a owl:Class; owl:unionOf (${value.join(' ')}) ]`
-        } else {
-            return value.join(", ")
-        }
+    const multiRange = (term: RDFTerm[], union: boolean, one_of: undefined | RDFTerm[]): string => {
+        const basicRange: string[] = ((): string[] => {
+            const value: string[] = term.map(termToStringCallback);
+            if ((value.length) === 1) {
+                return [value[0]]
+            } else if (union) {
+                return [`[ a owl:Class; owl:unionOf (${value.join(' ')}) ]`];
+            } else {
+                return value;
+            }
+        })();
+
+        const extra: string[] = ((): string[] => {
+            if (one_of && one_of.length > 0) {
+                const value: string[] = one_of.map(termToStringCallback)
+                return [`[ a owl:Class; owl:oneOf (${value.join(' ')}) ]`];
+            } else {
+                return [];
+            }
+        })();
+
+        return [...basicRange,...extra].join(', ');
+
+
+
+            //    if (prop.one_of && prop.one_of.length > 0) {
+            //     turtle += `${spaces}rdfs:range [owl:oneOf (${prop.one_of.join(' ')})] ;\n`;
+            // }
+
+        // if (value.length === 1) {
+        //     return value[0];
+        // } else if (union) {
+        //     return `[ a owl:Class; owl:unionOf (${value.join(' ')}) ]`
+        // } else {
+        //     return value.join(", ")
+        // }
     }
 
     // This will be the output...
@@ -135,9 +162,9 @@ export function toTurtle(vocab: Vocab): string {
                 }
 
                 if (prop.container === Container.list) {
-                    turtle += `${spaces}rdfs:range rdf:List ;\n`
-                } else if (prop.range) {
-                    const range = multiRange(prop.range, prop.range_union);
+                    turtle += `${spaces}rdfs:range rdf:List ;\n` ;
+                } else if (prop.range?.length > 0 || prop.one_of?.length > 0) {
+                    const range = multiRange(prop.range, prop.range_union, prop.one_of);
                     if (!(range === '' || range === '[]')) {
                         turtle += `${spaces}rdfs:range ${range} ;\n`;
                     }

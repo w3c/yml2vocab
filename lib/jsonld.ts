@@ -4,6 +4,7 @@
  *
  * @packageDocumentation
  */
+// deno-lint-ignore-file no-explicit-any
 
 import { type Vocab, global, type RDFTerm, type Link, Status, Container } from './common';
 import { requiredJsonPrefixes }                                           from './common';
@@ -74,18 +75,35 @@ export function toJSONLD(vocab: Vocab): string {
     }
 
     // Like domain, but the creation of a union structure is conditional.
-    const multiRange = (term: RDFTerm[], union: boolean): unknown => {
-        const value: string[] = term.map(termToStringCallback);
-        if (value.length === 1) {
-            return value[0];
-        } else if(union) {
-            return {
-                "@type": "ows:Class",
-                "owl:unionOf" : value
+    const multiRange = (term: RDFTerm[], union: boolean, one_of: undefined | RDFTerm[]): any[] => {
+
+        const basicRange: any[] = ((): any[] => {
+            const value: string[] = term.map(termToStringCallback);
+            if ((value.length) === 1) {
+                return value;
+            } else if (union) {
+                return [{
+                    "@type": "ows:Class",
+                    "owl:unionOf" : value,
+                }]
+            } else {
+                return value;
             }
-        } else {
-            return value;
-        }
+        })();
+
+        const extra: any[] = ((): any[] => {
+            if (one_of && one_of.length > 0) {
+                const value: string[] = one_of.map(termToStringCallback);
+                return [{
+                    "@type": "owl:class",
+                    "owl:oneOf": value,
+                }]
+            } else {
+                return [];
+            }
+        })();
+
+        return [...basicRange, ...extra];
     }
 
     // This is the target object
@@ -184,8 +202,9 @@ export function toJSONLD(vocab: Vocab): string {
                 }
                 if (prop.container === Container.list) {
                     pr_object["rdfs:range"] = "rdf:List";
-                } else if (prop.range && prop.range.length > 0) {
-                    pr_object["rdfs:range"] = multiRange(prop.range, prop.range_union);
+                } else if (prop.range?.length > 0 || prop.one_of?.length > 0 ) {
+                    const range = multiRange(prop.range, prop.range_union, prop.one_of);
+                    pr_object["rdfs:range"] = range.length > 1 ? range : range[0];
                 }
                 commonFields(pr_object, prop);
                 contexts(pr_object, prop);
