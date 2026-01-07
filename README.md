@@ -168,6 +168,7 @@ class:
 | `container`   | `set` or `list`                                       | If set to one of these values, the entry for the property in the generated JSON-LD `@context` includes the `@container` keyword, set to `@set` or `@list`, respectively. In both cases a warning message is also included in the generated HTML text whereby, when using JSON-LD data with this vocabulary, the value for the property is expected to be an array even if there is only one.<br/> Furthermore, for the particular case of a `list` value, the range of the property is set to be an `rdf:List`.<br/> The value `graph` is also accepted for the key, as an alternative to the `dataset` key. | No        |
 | `dataset`     | boolean                                               | This key only influences the generated JSON-LD `@context`: if the value is `true`, the JSON-LD `@container` is set to the `@graph` value for the property, signalling that the value refers to a _dataset_ (or _graph_). See the [JSON-LD Specification](https://www.w3.org/TR/json-ld/#graph-containers) for further details.                                                                                                                                                                                                                                                                               | No        |
 | `domain`      | One or more terms or CURIEs                           | The RDF domain statements of the propery. If several classes are specified, the statement refers to the _union_ (or logical _disjunction_) of the classes.                                                                                                                                                                                                                                                                                                                                                                                                                                                   | No        |
+| `one_of`      | One or more terms or CURIEs                           | The range includes an (anonymous) class consists of exactly the individuals listed in the values. It effectively lists the (CURIE) values that the property is supposed to have. Note that the generated context file creates strings as values, mapping to the entries in the list. The entries are supposed to refer to individuals.                                                                                                                                                                                                                                                                       | No        |
 | `range`       | One or more terms or CURIES, or the single `URL` term | The RDF domain statements of the property. If the `URL` (alternatively: `IRI`) term is used, the block defines a property that has no explicit range, but whose objects are expected to be IRI references. The generated vocabularies annotate these properties as belonging to the `owl:ObjectProperty` class, which is the term reserved for properties whose objects are not supposed to be literals. A comment is also generated into the HTML description of the term.                                                                                                                                  | No        |
 | `range_union` | boolean                                               | If several range classes are specified then, by default, this means the _intersection_ (or logical _conjunction_) of the classes. If the value is `true`, the statement refers to the _union_ (or logical _disjunction_) of the classes.                                                                                                                                                                                                                                                                                                                                                                     | No        |
 | `upper_value` | One or more terms or CURIEs                           | Superproperties.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | No        |
@@ -192,6 +193,11 @@ property:
       defined_by: https://example.org/vocabulary-definition#pr2
       comment: Something about pr2; the range is the union of Class3 and Class10
       range_union: true
+
+    - id: pr3
+      label: this is an example pr3
+      one_of: [ex:val1, ex:val2, ex:val3]
+      comment: Restricting the values to ex:val1, ex:val2, or ex:val3; in JSON-LD with the generated context "val1", "val2", "val3" can be used.
 
 ```
 
@@ -380,6 +386,11 @@ I got inspired by the structure and Ruby script  that was created by my late col
 Many features are the result of further discussions with Many Sporny, Benjamin Young, and Pierre-Antoine Champin.
 
 I dedicate this script to the memory of Gregg. R.I.P.
+
+
+
+
+
 
 
 
