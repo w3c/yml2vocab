@@ -4,7 +4,7 @@
   - [1.2. Definition of the vocabulary in the YAML file](#12-definition-of-the-vocabulary-in-the-yaml-file)
     - [1.2.1. General Vocabulary blocks](#121-general-vocabulary-blocks)
       - [1.2.1.1. Vocabulary Constants —`vocab` Block](#1211-vocabulary-constants-vocab-block)
-      - [1.2.1.2. 1.1.2 CURIE Prefixes — `prefix` Block](#1212-112-curie-prefixes--prefix-block)
+      - [1.2.1.2. CURIE Prefixes — `prefix` Block](#1212-curie-prefixes--prefix-block)
       - [1.2.1.3. Vocabulary Metadata —`ontology` Block](#1213-vocabulary-metadata-ontology-block)
       - [1.2.1.4. Generated JSON-LD context data — `json_ld` block](#1214-generated-json-ld-context-data--json_ld-block)
     - [1.2.2. Ontology term blocks](#122-ontology-term-blocks)
@@ -14,6 +14,7 @@
       - [1.2.2.4. Individual definitions —`individual` Block](#1224-individual-definitions-individual-block)
       - [1.2.2.5. Datatype definitions — `datatype` Block](#1225-datatype-definitions--datatype-block)
   - [1.3. Formatting the output](#13-formatting-the-output)
+    - [1.3.1. HTML Templating](#131-html-templating)
 - [2. Installation and use](#2-installation-and-use)
   - [2.1. Running the script on a command line](#21-running-the-script-on-a-command-line)
     - [2.1.1. NPM + Node.js](#211-npm--nodejs)
@@ -25,6 +26,7 @@
 - [3. Cloning the repository](#3-cloning-the-repository)
   - [3.1. Content of the directory](#31-content-of-the-directory)
 - [4. Acknowledgement](#4-acknowledgement)
+
 
 
 # 1. Generate RDFS vocabulary files from YAML
@@ -98,7 +100,7 @@ vocab:
     context: https://example.org/context.jsonld
 ```
 
-#### 1.2.1.2. 1.1.2 CURIE Prefixes — `prefix` Block
+#### 1.2.1.2. CURIE Prefixes — `prefix` Block
 
 List of CURIE prefix definitions for each external vocabulary being used. Each entry is as follows:
 
@@ -137,10 +139,10 @@ Definition of “ontology properties”, that is, statements made about the voca
 
 The block is a list of property/value pairs; each entry is as follows:
 
-| Key        | Possible values | Description                                | Required? |
-| ---------- | --------------- | ------------------------------------------ | --------- |
-| `property` | CURIE           | The property being used in a CURIE format. | Yes       |
-| `value`    | URL or string   | The value of the property.                 | Yes       |
+| Key        | Possible values | Description                                                       | Required? |
+| ---------- | --------------- | ----------------------------------------------------------------- | --------- |
+| `property` | CURIE           | Possible values: `dc:title`, `dc:description`, and `rdfs:seeAlso` | Yes       |
+| `value`    | URL or string   | The value of the property.                                        | Yes       |
 
 Example:
 
@@ -579,6 +581,44 @@ Some efforts are made to make the output files (HTML, JSON-LD, and Turtle) prope
 - `end_of_line` (`lf`)
 
 See the [`.editorconfig`](https://spec.editorconfig.org/#supported-pairs) for further details.
+
+### 1.3.1. HTML Templating
+
+The generation of the HTML output requires an HTML Template file. This can either be a complete HTML file or an HTML fragment (within a `<section>` or  `<div>`). The template should contain some specific HTML elements with predefined identifier values (i.e., `id` attribute values); the yml2vocab fills the respective content within those HTML elements. Each term is put into its own section, with the term's `id` value serving both as the section header and its element identifiers. The content of the section is an HTML definition list with a human readable version of the vocabulary term data.
+
+The required `id` values, and the containing elements, are as follows:
+
+| `id` value                          | Corresponding element | Generated content                                                                      |
+| :---------------------------------- | --------------------- | :------------------------------------------------------------------------------------- |
+| `title` or `ontology_title`         | any textual           | The title/name of the vocabulary (see the `ontology` block)                            |
+| `description`                       | any textual           | The description of the vocabulary (see the `ontology` block)                           |
+| `see_also`                          | any textual           | External reference for the vocabulary (see the `ontology` block)                       |
+| `alt-turtle`                        | `<a>`                 | Add a reference to the Turtle version of the vocabulary as an `href` attribute value   |
+| `alt-jsonld`                        | `<a>`                 | Add a reference to the JSON-LD version of the vocabulary  as an `href` attribute value |
+| `time`                              | any textual           | Date of the vocabulary generation                                                      |
+| `namespaces`                        | `<dl>`                | List of namespaces used by the vocabulary                                              |
+| `contexts`                          | `<ul>`                | List of context files where the vocabulary terms appear                                |
+| `term_definitions`                  | `<section>`           | Section for the fully defined vocabulary terms                                         |
+| `class_definitions`                 | `<section>`           | Subsection for the fully defined classes                                               |
+| `property_definitions`              | `<section>`           | Subsection for the fully defined properties                                            |
+| `datatype_definitions`              | `<section>`           | Subsection for the fully defined datatypes                                             |
+| `individual_definitions`            | `<section>`           | Subsection for the fully defined individuals                                           |
+| `reserved_term_definitions`         | `<section>`           | Section for the reserved vocabulary terms                                              |
+| `reserved_class_definitions`        | `<section>`           | Subsection for the reserved classes                                                    |
+| `reserved_property_definitions`     | `<section>`           | Subsection for the reserved properties                                                 |
+| `reserved_datatype_definitions`     | `<section>`           | Subsection for the reserved datatypes                                                  |
+| `reserved_individual_definitions`   | `<section>`           | Subsection for the reserved individuals                                                |
+| `deprecated_term_definitions`       | `<section>`           | Section for the deprecated vocabulary terms                                            |
+| `deprecated_class_definitions`      | `<section>`           | Subsection for the deprecated classes                                                  |
+| `deprecated_property_definitions`   | `<section>`           | Subsection for the deprecated properties                                               |
+| `deprecated_datatype_definitions`   | `<section>`           | Subsection for the deprecated datatypes                                                |
+| `deprecated_individual_definitions` | `<section>`           | Subsection for the deprecated individuals                                              |
+
+If an element is missing, the content is ignored by the script.
+
+The `reserved` and `deprecated` section are filled terms that have been labelled as `reserved`, resp. `deprecated`, using the `status` key in the term's defining block. If no `reserved` or `deprecated` entries are defined, the respective sections will be removed from the resulting HTML. Similarly, if no alternate context files are specified, the `<ul id=contexts>` entry is removed.
+
+The template may contain CSS to provide a proper presentation in HTML; please look at the example template for a suitable CSS for the classes generated by the script.
 
 # 2. Installation and use
 
