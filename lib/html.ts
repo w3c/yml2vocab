@@ -291,7 +291,8 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
          try {
             const title = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:title')[0].value;
             document.addText(title, document.getElementsByTagName('title')[0]);
-            document.addText(title, document.getElementById('title'));
+            const titleElement = document.getElementById('title') || document.getElementById('ontology_title');
+             document.addText(title, titleElement);
          } catch(e) {
             if (!is_fragment) console.warn(`Vocabulary warning: ontology title is not provided. (${e})`);
          }
