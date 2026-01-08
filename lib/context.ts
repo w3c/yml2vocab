@@ -81,8 +81,10 @@ export function toContext(vocab: Vocab): string {
             }
         }
 
+        // There is a special treatment to generate additional statements
+        // when the values of the range are restricted.
+        // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
         if (property.one_of?.length > 0 && !property.dataset) {
-            // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
             const mappings = property.one_of.map((term) => [term.id, term.url]);
             mappings.push(["@vocab", `${global.vocab_prefix}:INVALID_VALUE:`]);
             // Note that this may overwrite earlier values...

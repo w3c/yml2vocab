@@ -13,6 +13,11 @@ import { beautify }                                                             
 // This object is need for a proper formatting of some text
 const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
 
+// String representing the logical conjunction/disjunction of terms for classes and ranges
+const AND = ' ⊓ ';
+const OR  = ' ⊔ ';
+
+
 
 /**
  * Generate the HTML representation of the vocabulary, based on an HTML template file. The
@@ -411,7 +416,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                             const dd = document.addChild(dl, 'dd');
 
                             dd.innerHTML = ((t: RDFTerm[]): string => {
-                                const join_logic = item.upper_union ? ' ⊔ ' : ' ⊓ ';
+                                const join_logic = item.upper_union ? OR : AND ;
                                 const names = t.map(termHTMLReference);
                                 return names.join(join_logic);
                             })(item.subClassOf);
@@ -534,7 +539,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                                 }
                             } else {
                                 const innerHTML_classes: string = ((t: RDFTerm[]): string => {
-                                    const join_logic = item.range_union ? ' ⊔ ' : ' ⊓ ';
+                                    const join_logic = item.range_union ? OR : AND ;
                                     const names = t.map(termHTMLReference);
                                     return names.join(join_logic);
                                 })(item.range);
