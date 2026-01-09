@@ -206,6 +206,8 @@ export interface RawVocabEntry {
     dataset     ?: boolean;
     container   ?: Container;
     context     ?: string[];
+    one_of      ?: string[];
+    pattern     ?: string;
 }
 
 /**
@@ -343,6 +345,7 @@ export interface RDFTerm {
 export interface RDFClass extends RDFTerm {
     subClassOf            : RDFClass[];
     upper_union           : boolean;
+    one_of                : RDFIndividual[];
     range_of              : RDFProperty[];
     domain_of             : RDFProperty[];
     included_in_domain_of : RDFProperty[];
@@ -358,6 +361,7 @@ export interface RDFProperty extends RDFTerm {
     domain        : RDFClass[];
     range         : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
     range_union   : boolean;
+    one_of        : RDFIndividual[];
     dataset       : boolean;
     container     : Container | undefined;
     strongURL     : boolean;    // Whether the property object should be required to be a real URL
@@ -375,7 +379,9 @@ export interface RDFIndividual extends RDFTerm {}
  * The cross-references for domains and ranges are calculated.
  */
 export interface RDFDatatype extends RDFTerm {
-    subClassOf        : RDFDatatype[],
+    subClassOf        : RDFDatatype[];
+    one_of            : string[];
+    pattern           : string;
     range_of          : RDFProperty[];
     includes_range_of : RDFProperty[];
 }
@@ -413,3 +419,59 @@ export interface Vocab {
     datatypes           : RDFDatatype[];
 }
 
+/**
+ * These prefixes are added no matter what; they are not vocabulary specific,
+ * but likely to be used in the vocabulary. Excesses are filtered out at the end...
+ *
+ * @internal
+ */
+export const defaultPrefixes: RDFPrefix[] = [
+    {
+        prefix: "dc",
+        url: "http://purl.org/dc/terms/",
+    },
+    {
+        prefix: "dcterms",
+        url: "http://purl.org/dc/terms/",
+    },
+    {
+        prefix: "owl",
+        url: "http://www.w3.org/2002/07/owl#",
+    },
+    {
+        prefix: "rdf",
+        url: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    },
+    {
+        prefix: "rdfs",
+        url: "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    {
+        prefix: "xsd",
+        url: "http://www.w3.org/2001/XMLSchema#"
+    },
+    {
+        prefix: "vs",
+        url: "http://www.w3.org/2003/06/sw-vocab-status/ns#"
+    },
+    {
+        prefix: "schema",
+        url: "http://schema.org/"
+    },
+    {
+        prefix: "jsonld",
+        url: "http://www.w3.org/ns/json-ld#"
+    },
+    {
+        prefix: "foaf",
+        url: "http://xmlns.com/foaf/0.1/"
+    }
+];
+
+/**
+ * Some prefixes are not dependent on the users' vocabulary but, rather, on the
+ * specificities of a particular serialization. These should not be filtered out
+ * when optimizing the prefixes...
+ */
+export const requiredTurtlePrefixes: string[] = ["vs"];
+export const requiredJsonPrefixes: string[] = ["vs", "jsonld"];

@@ -7,11 +7,16 @@
 import type { RDFClass, RDFProperty, RDFIndividual, RDFDatatype, Vocab, RDFTerm } from './common';
 import { global, Status, TermType, Container }                                    from './common';
 import { MiniDOM }                                                                from './minidom';
-import { RDFTermFactory }                                                         from './factory';
+import { RDFTermFactory, factory }                                                from './factory';
 import { beautify }                                                               from './beautify';
 
 // This object is need for a proper formatting of some text
 const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
+
+// String representing the logical conjunction/disjunction of terms for classes and ranges
+const AND = ' ⊓ ';
+const OR  = ' ⊔ ';
+
 
 
 /**
@@ -179,7 +184,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         }
 
         if (context && item.known_as) {
-            const known_as_text = `In the generated JSON-LD context file this term appears as <code>${item.known_as}</code>.`;
+            const known_as_text = `In the generated JSON-LD context file this term appears as "<code>${item.known_as}</code>".`;
             document.addChild(section, 'p', known_as_text);
         }
 
@@ -286,7 +291,8 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
          try {
             const title = vocab.ontology_properties.filter((property): boolean => property.property === 'dc:title')[0].value;
             document.addText(title, document.getElementsByTagName('title')[0]);
-            document.addText(title, document.getElementById('title'));
+            const titleElement = document.getElementById('title') || document.getElementById('ontology_title');
+             document.addText(title, titleElement);
          } catch(e) {
             if (!is_fragment) console.warn(`Vocabulary warning: ontology title is not provided. (${e})`);
          }
@@ -328,10 +334,12 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         const ns_dl = document.getElementById('namespaces');
         if (ns_dl) {
             for (const ns of vocab.prefixes) {
-                const dt = document.addChild(ns_dl, 'dt');
-                document.addChild(dt, 'code', ns.prefix);
-                const dd = document.addChild(ns_dl, 'dd');
-                document.addChild(dd, 'code', ns.url);
+                if (factory.usesPrefix(ns.prefix)) {
+                    const dt = document.addChild(ns_dl, 'dt');
+                    document.addChild(dt, 'code', ns.prefix);
+                    const dd = document.addChild(ns_dl, 'dd');
+                    document.addChild(dd, 'code', ns.url);
+                }
             }
         }
     }
@@ -401,17 +409,30 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                     cl_section.id = item.html_id;
                     commonFields(cl_section, item);
                     // Extra list of superclasses, if applicable
-                    if (!item.external && item.subClassOf && item.subClassOf.length > 0) {
-                        const dl = document.addChild(cl_section, 'dl');
-                        dl.className = 'terms'
-                        document.addChild(dl, 'dt', 'Subclass of:')
-                        const dd = document.addChild(dl, 'dd');
+                    if (!item.external) {
+                        if (item.subClassOf && item.subClassOf.length > 0) {
+                            const dl = document.addChild(cl_section, 'dl');
+                            dl.className = 'terms'
+                            document.addChild(dl, 'dt', 'Subclass of:')
+                            const dd = document.addChild(dl, 'dd');
 
-                        dd.innerHTML = ((t: RDFTerm[]): string => {
-                            const join_logic = item.upper_union ? ' ⊔ ' : ' ⊓ ';
-                            const names = t.map(termHTMLReference);
-                            return names.join(join_logic);
-                        })(item.subClassOf);
+                            dd.innerHTML = ((t: RDFTerm[]): string => {
+                                const join_logic = item.upper_union ? OR : AND ;
+                                const names = t.map(termHTMLReference);
+                                return names.join(join_logic);
+                            })(item.subClassOf);
+                        }
+                        if (item.one_of && item.one_of.length > 0) {
+                            const dl = document.addChild(cl_section, 'dl');
+                            dl.className = 'terms';
+                            document.addChild(dl, 'dt', 'Consists of:');
+                            const dd = document.addChild(dl, 'dd');
+                            dd.innerHTML = ((t: RDFTerm[]): string => {
+                                const join_logic = ', ';
+                                const names = t.map(termHTMLReference);
+                                return `{ ${names.join(join_logic)} }`;
+                            })(item.one_of);
+                        }
                     }
                     // Again an extra list for range/domain references, if applicable
                     if (item.range_of.length > 0 ||
@@ -492,6 +513,19 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                         const dl = document.addChild(pr_section, 'dl');
                         dl.className = 'terms';
 
+                        if (item.domain && item.domain.length > 0) {
+                            document.addChild(dl, 'dt', 'Domain:');
+                            const dd = document.addChild(dl, 'dd');
+                            if (item.domain.length === 1) {
+                                dd.innerHTML = termHTMLReference(item.domain[0]);
+                            } else {
+                                dd.innerHTML = ((t: RDFTerm[]): string => {
+                                    const names = t.map(termHTMLReference);
+                                    return names.join(' ⊔ ');
+                                })(item.domain);
+                            }
+                        }
+
                         if (item.range && item.range.length > 0) {
                             const isList = (item.container === Container.list);
                             const isSet  = (item.container === Container.set);
@@ -506,34 +540,34 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                                 }
                             } else {
                                 const innerHTML_classes: string = ((t: RDFTerm[]): string => {
-                                    const join_logic = item.range_union ? ' ⊔ ' : ' ⊓ ';
+                                    const join_logic = item.range_union ? OR : AND ;
                                     const names = t.map(termHTMLReference);
                                     return names.join(join_logic);
                                 })(item.range);
-
                                 if (isList) {
                                     document.addHTMLText(`List containing instances of ${innerHTML_classes}`, dd);
                                 } else {
                                     document.addHTMLText(`${innerHTML_classes}`, dd)
                                 }
-                           }
+                            }
+
+                            if (item.one_of && item.one_of.length > 0) {
+                                const dl = document.addChild(pr_section, 'dl');
+                                dl.className = 'terms';
+                                document.addChild(dl, 'dt', 'Value may be one of:');
+                                const dd = document.addChild(dl, 'dd');
+                                dd.innerHTML = ((t: RDFTerm[]): string => {
+                                    const join_logic = ', ';
+                                    const names = t.map(termHTMLReference);
+                                    return `${names.join(join_logic)}`;
+                                })(item.one_of);
+                            }
                             if (isList || isSet) {
                                 document.addChild(dd, 'p', 'In a JSON-LD representation, values to this property are supposed to be represented in the form of a JSON array, even if there is just a single value.')
                             }
+
                         }
 
-                        if (item.domain && item.domain.length > 0) {
-                            document.addChild(dl, 'dt', 'Domain:');
-                            const dd = document.addChild(dl, 'dd');
-                            if (item.domain.length === 1) {
-                                dd.innerHTML = termHTMLReference(item.domain[0]);
-                            } else {
-                                dd.innerHTML = ((t: RDFTerm[]): string => {
-                                    const names = t.map(termHTMLReference);
-                                    return names.join(' ⊔ ');
-                                })(item.domain);
-                            }
-                        }
                     }
 
                     if (item.dataset) {
@@ -608,6 +642,18 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                             dd.innerHTML = termHTMLReference(superclass);
                         }
                     }
+                    if (item.pattern && item.pattern.length > 0) {
+                        const dl = document.addChild(dt_section, 'dl');
+                        dl.className = 'terms';
+                        if (item.one_of && item.one_of.length > 0) {
+                            document.addChild(dl, 'dt', 'Restricted to: ');
+                            const items = item.one_of.map((input: string): string => `"${input}"`).join(', ');
+                            document.addChild(dl, 'dd', items);
+                        } else {
+                            document.addChild(dl, 'dt', 'Restriction pattern: ');
+                            document.addChild(dl, 'dd', `"${item.pattern}"`);
+                        }
+                   }
                     if (item.range_of.length > 0 || item.includes_range_of.length > 0) {
                         // This for the creation of a list of property references, each
                         // a hyperlink to the property's definition.

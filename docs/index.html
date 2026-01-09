@@ -1,74 +1,526 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="."><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa - v1.7.0</title><meta name="description" content="Documentation for Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search"><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa - v1.7.0</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa - v1.7.0</h1></div><div class="tsd-panel tsd-typography"><a id="generate-rdfs-vocabulary-files-from-yaml" class="tsd-anchor"></a><h1 class="tsd-anchor-link">Generate RDFS vocabulary files from YAML<a href="#generate-rdfs-vocabulary-files-from-yaml" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p>This script in this module converts a simple <a href="https://www.w3.org/TR/rdf11-concepts/">RDF</a> vocabulary, described in <a href="https://yaml.org/spec/1.2.2/">YAML</a>, into a formal <a href="https://www.w3.org/TR/rdf-schema/">RDFS</a> in <a href="https://www.w3.org/TR/json-ld11/">JSON-LD</a>, <a href="https://www.w3.org/TR/turtle/">Turtle</a>, and HTML. Optionally, a simple <a href="https://www.w3.org/TR/json-ld11/#the-context">JSON-LD <code>@context</code></a> is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements.</p>
+<!DOCTYPE html><html class="default" lang="en" data-base="."><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa - v1.7.1</title><meta name="description" content="Documentation for Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search"><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa - v1.7.1</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa - v1.7.1</h1></div><div class="tsd-panel tsd-typography"><ul>
+<li><a href="#1-generate-rdfs-vocabulary-files-from-yaml">1. Generate RDFS vocabulary files from YAML</a>
+<ul>
+<li><a href="#11-introduction">1.1. Introduction</a></li>
+<li><a href="#12-definition-of-the-vocabulary-in-the-yaml-file">1.2. Definition of the vocabulary in the YAML file</a>
+<ul>
+<li><a href="#121-general-vocabulary-blocks">1.2.1. General Vocabulary blocks</a>
+<ul>
+<li><a href="#1211-vocabulary-constants-vocab-block">1.2.1.1. Vocabulary Constants —<code>vocab</code> Block</a></li>
+<li><a href="#1212-curie-prefixes--prefix-block">1.2.1.2. CURIE Prefixes — <code>prefix</code> Block</a></li>
+<li><a href="#1213-vocabulary-metadata-ontology-block">1.2.1.3. Vocabulary Metadata —<code>ontology</code> Block</a></li>
+<li><a href="#1214-generated-json-ld-context-data--json_ld-block">1.2.1.4. Generated JSON-LD context data — <code>json_ld</code> block</a></li>
+</ul>
+</li>
+<li><a href="#122-ontology-term-blocks">1.2.2. Ontology term blocks</a>
+<ul>
+<li><a href="#1221-common-term-entries">1.2.2.1. Common Term Entries</a></li>
+<li><a href="#1222-class-definitions-class-block">1.2.2.2. Class definitions —<code>class</code> Block</a></li>
+<li><a href="#1223-property-definitions--property-block">1.2.2.3. Property definitions — <code>property</code> Block</a></li>
+<li><a href="#1224-individual-definitions-individual-block">1.2.2.4. Individual definitions —<code>individual</code> Block</a></li>
+<li><a href="#1225-datatype-definitions--datatype-block">1.2.2.5. Datatype definitions — <code>datatype</code> Block</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#13-formatting-the-output">1.3. Formatting the output</a>
+<ul>
+<li><a href="#131-html-templating">1.3.1. HTML Templating</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-installation-and-use">2. Installation and use</a>
+<ul>
+<li><a href="#21-running-the-script-on-a-command-line">2.1. Running the script on a command line</a>
+<ul>
+<li><a href="#211-npm--nodejs">2.1.1. NPM + Node.js</a></li>
+<li><a href="#212-deno">2.1.2. Deno</a></li>
+<li><a href="#213-command-line-argument">2.1.3. Command line argument</a></li>
+</ul>
+</li>
+<li><a href="#22-running-from-a-javascripttypescript-program">2.2. Running from a Javascript/TypeScript program</a>
+<ul>
+<li><a href="#221-usage-with-nodejs">2.2.1. Usage with node.js</a>
+<ul>
+<li><a href="#2211-usage-with-deno">2.2.1.1. Usage with deno</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-cloning-the-repository">3. Cloning the repository</a>
+<ul>
+<li><a href="#31-content-of-the-directory">3.1. Content of the directory</a></li>
+</ul>
+</li>
+<li><a href="#4-acknowledgement">4. Acknowledgement</a></li>
+</ul>
+<a id="1-generate-rdfs-vocabulary-files-from-yaml" class="tsd-anchor"></a><h1 class="tsd-anchor-link">1. Generate RDFS vocabulary files from YAML<a href="#1-generate-rdfs-vocabulary-files-from-yaml" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><a id="11-introduction" class="tsd-anchor"></a><h2 class="tsd-anchor-link">1.1. Introduction<a href="#11-introduction" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>This script in this module converts a simple <a href="https://www.w3.org/TR/rdf11-concepts/">RDF</a> vocabulary, described in <a href="https://yaml.org/spec/1.2.2/">YAML</a>, into a formal <a href="https://www.w3.org/TR/rdf-schema/">RDFS</a> in <a href="https://www.w3.org/TR/json-ld11/">JSON-LD</a>, <a href="https://www.w3.org/TR/turtle/">Turtle</a>, and HTML. Optionally, a simple <a href="https://www.w3.org/TR/json-ld11/#the-context">JSON-LD <code>@context</code></a> is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements.</p>
 <p>When running, the script relies on two files:</p>
 <ol>
 <li>The <code>vocabulary.yml</code> file, containing the definition for the vocabulary entries. (It is also possible to use a different name for the YAML file, see below.)</li>
-<li>The <code>template.html</code> file, used to create the HTML file version of the vocabulary. (It is also possible to use a different name for the template file, see below.)</li>
+<li>The <code>template.html</code> file, used to create the HTML file version of the vocabulary. (It is also possible to use a different name for the template file, see below.) The template may also be an HTML fragment (ie, without the <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, etc.), which comes handy if the generated fragment is to be included into the full specification as, say, an Appendix. Note that if a fragment is used, the <code>defined_by</code> entries use only the fragment part of the URL in the generated code (the URL is supposed to refer to the specification file itself).</li>
 </ol>
-<a id="definition-of-the-vocabulary-in-the-yaml-file" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Definition of the vocabulary in the YAML file<a href="#definition-of-the-vocabulary-in-the-yaml-file" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The vocabulary is defined in a YAML file, which contains several block sequences with the following keys: <code>vocab</code>, <code>prefix</code>, <code>ontology</code>, <code>class</code>, <code>property</code>, <code>individual</code>, and <code>datatype</code>. Only the <code>vocab</code> and <code>ontology</code> blocks are <em>required</em>, all the others are optional.</p>
+<a id="12-definition-of-the-vocabulary-in-the-yaml-file" class="tsd-anchor"></a><h2 class="tsd-anchor-link">1.2. Definition of the vocabulary in the YAML file<a href="#12-definition-of-the-vocabulary-in-the-yaml-file" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The vocabulary is defined in a YAML file, which contains several block sequences with the following keys:  <code>vocab</code>, <code>prefix</code>, <code>ontology</code>, <code>class</code>, <code>property</code>, <code>individual</code>,<code>datatype</code>, and <code>json_ld</code>. Only the <code>vocab</code> and <code>ontology</code> blocks are <em>required</em>, all others are optional.</p>
 <p>Each block sequence consists of blocks with a number of keys, depending on the specific block. The interpretation of these key/value pairs may depend on the top level block where they reside, but some have a common interpretation. The detailed specification of the keys and values are as follows.</p>
-<ul>
-<li>
-<p>Common key/value pairs for the <code>class</code>, <code>property</code>, <code>datatype</code>, and <code>individual</code> blocks:</p>
-<ul>
-<li><code>label</code> refers to a short header label to the term. If missing, the capitalized value of <code>id</code> is used.</li>
-<li><code>comment</code> refers to a longer description of the term, and can be used for blocks in the <code>class</code>, <code>property</code> and <code>individual</code> top-level blocks. It may include <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories">HTML Flow content elements</a>. The comment will be encapsulated into an HTML <code>&lt;div&gt;</code> element and will then be displayed verbatim in the HTML version of the vocabulary, and as a literal of type <code>rdf:HTML</code> in the JSON-LD and Turtle versions. Note that the Markdown syntax for simple formatting, like the use of backtick for <code>&lt;code.../&gt;</code>, may also be used.</li>
-<li><code>type</code> refers to RDF types. Note that the tool automatically adds types like <code>rdf:Property</code>, <code>rdfs:Class</code>, etc.; this key is to be used for the vocabulary specific types only.</li>
-<li><code>defined_by</code> should be a URL, or a list thereof, referring to the formal definition(s) of the term.</li>
-<li><code>see_also</code> refers to one or more blocks with <code>label</code> and <code>url</code> keys, providing a human-readable title and a URL, respectively, to an external document that can be referred to by the description of the term. (These are translated into an <code>rdfs:seeAlso</code> term in the vocabulary.)</li>
-<li>The <code>status</code> key refers to a string that can be <code>stable</code>, <code>reserved</code>, or <code>deprecated</code>. The terms are divided, in the HTML output, into these three sections. <code>stable</code> is the default.</li>
-<li>The <code>deprecated</code> key refers to a boolean, signaling whether term is deprecated or not. Default is <code>false</code>. This property is a leftover from earlier version and is overwritten, if applicable, by the value of <code>status</code>.</li>
-<li>The <code>context</code> key refers to list of URLs or two special keywords. It is used to add information on JSON-LD <code>@context</code> file(s) that &quot;mention&quot; the term; the list of URLs refer to the relevant <code>@context</code> file. If the value is <code>vocab</code>, and a global <code>@context</code> file is defined in the <code>vocab</code> block, that &quot;default&quot; <code>@context</code> is used. Finally, if the value of the property is <code>none</code>, there is no context file reference for the term. The default setting is <code>vocab</code> (i.e., unless it is otherwise specified, the default value is used for the term).</li>
-<li>The <code>example</code> key refers to on or more blocks with <code>label</code> and <code>json</code> keys, providing a (JSON) example with a title. These examples are placed, in the HTML version, to the end of the section referring to a term (the examples are ignored in the Turtle and the JSON-LD versions). Care should be taken to use the <code>&quot;|&quot;</code> <a href="https://yaml-multiline.info">block style indicator</a> in the YAML file for the examples.</li>
-<li>The <code>known_as</code> key refers to a string, that can be used, in rare occasions, as an alias to the term's label. It currently used when generating a JSON-LD context file, as the name of the property in the context file instead of the official label. This means that JSON-LD users, using that context file, must refer to this alternative name in their code (this may come in handy when the official name changes but the old name is kept for JSON users for backward compatibility reasons).</li>
-</ul>
-</li>
-<li>
-<p>Top level blocks:</p>
-<ul>
-<li>
-<p><code>vocab</code>: a block with the <code>id</code> and the <code>value</code> keys defining the prefix and the URL of the vocabulary, respectively. The <code>id</code> provides a prefix that can be used in the vocabulary descriptions, e.g., for cross-references. The additional, optional <code>context</code> key may provide a default context file reference (as a URI), used by all terms unless locally overwritten (see above). Note that the <code>context</code> key is required if the HTML template includes a context section.</p>
-</li>
-<li>
-<p><code>prefix</code>: definition of a prefixes, and corresponding URLs, for each external vocabulary in use, defined by the <code>id</code> and <code>value</code> keys, respectively.</p>
-<p>Some id/value pairs are defined by default, and it is not necessary to define them here. These are: <code>dc</code> (for <code>http://purl.org/dc/terms/</code>), <code>owl</code> (for <code>http://www.w3.org/2002/07/owl#</code>), <code>rdf</code> (for <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code>), <code>rdfs</code> (for <code>http://www.w3.org/2000/01/rdf-schema#</code>), <code>xsd</code> (for <code>http://www.w3.org/2001/XMLSchema#</code>), and <code>schema</code> (for <code>http://schema.org/</code>).</p>
-</li>
-<li>
-<p><code>ontology</code>: definition of &quot;ontology properties&quot;, that is, statements made about the vocabulary itself. The (prefixed) property term is defined by the <code>property</code> key, and the value by the <code>value</code> key. If the value can be parsed as a URL, it is considered to be the URL of an external resource; otherwise, the value is considered to be (English) text.</p>
-<p>It is good practice to provide, at least, <code>dc:description</code> as an ontology property with a short description of the vocabulary.</p>
-<p>The script automatically adds a <code>dc:date</code> key with the generation time as a value.</p>
-</li>
-<li>
-<p><code>class</code>: blocks of a class definitions. For each class he <code>id</code> key defines the class name (no prefix should be used here). Possible superclasses are defined by the <code>upper_value</code> key as a single term, or a sequence of terms.</p>
-</li>
-<li>
-<p><code>property</code>: blocks of a property definitions. For each property the <code>id</code> key defines the property name (no prefix should be used here); possible superproperties are defined in the by the <code>upper_value</code> as a single term, or as a sequence of terms. The domain and range classes can also be provided as a single term, or as a sequence of terms, through the <code>domain</code> and <code>range</code> keys, respectively.</p>
-<p>Note that both the <code>domain</code> and the <code>range</code> keys can take an array of class references as values. For the former this means the resulting domain is the <em>union</em> of the referred classes, whereas for the latter it is the <em>intersection</em>.</p>
-<p>The <code>range</code> key may also use the (single) <code>IRI</code> (or <code>URL</code>) term instead of class references. This keyword denotes a property that has no explicit range, but whose objects are expected to be IRI references. The generated vocabulary annotates these properties as belonging to the <code>owl:ObjectProperty</code> class, which is the term reserved for properties whose objects are not supposed to be literals. A comment is also generated into the HTML description of the term.</p>
-<p>The <code>dataset</code> key can be set to a boolean value. This key only influences the generated JSON-LD <code>@context</code>: if the value is <code>true</code>, the JSON-LD <code>@container</code> is set to the <code>@graph</code> value for the property, signalling that the value refers to a <em>dataset</em> (or <em>graph</em>). See the <a href="https://www.w3.org/TR/json-ld/#graph-containers">JSON-LD Specification</a> for further details.</p>
-<p>The <code>container</code> key can be set to the single values <code>set</code> or <code>list</code>. If set to one of these values, the entry for the property in the generated JSON-LD <code>@context</code> includes the <code>@container</code> set to <code>@set</code> or <code>@list</code>, respectively. In both cases a warning message is also included in the generated HTML text, whereby, when defining JSON-LD data with this vocabulary, the value for the property is expected to be an array even if there is only one. Furthermore, for the particular case of a <code>list</code> value, the range of the property is set to be an <code>rdf:List</code>. (The value <code>graph</code> is also accepted for the key, as an alternative to the <code>dataset</code> key.)</p>
-</li>
-<li>
-<p><code>individual</code>: blocks of definitions of individuals, i.e., a single resources defined in the vocabulary. For each individual the <code>id</code> key defines the property name (no prefix should be used here); the possible types are defined in the block for <code>type</code> as a single term, or a sequence of terms. (Earlier versions of this tool used <code>upper_value</code> for the same purpose, but that usage, though still understood for backward compatibility reasons, is deprecated.)</p>
-</li>
-<li>
-<p><code>datatype</code>: blocks of datatype definitions. For each datatype the <code>id</code> key defines the datatype name (no prefix should be used here). The possible types are defined in the block for <code>upper_value</code> or for <code>type</code>, as a single term for possible datatype this is derived from.</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>For classes, properties, individuals, and datatypes, the <code>id</code> key, and either the <code>comment</code> or the <code>defined_by</code> keys, are <em>required</em>. All the others are optional.</p>
-<p>There are some examples in the <a href="https://github.com/w3c/yml2vocab/tree/main/example">example directory on GitHub</a> that illustrate all of these terms.</p>
-<a id="external-terms" class="tsd-anchor"></a><h3 class="tsd-anchor-link">External terms<a href="#external-terms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The value of the <code>id</code> key is, usually, simple reference identifying the class, property, etc., as part of the vocabulary. It is also possible to use a <a href="https://www.w3.org/TR/curie/">curie</a> instead of a simple reference. Such terms are considered to be <em>external</em> terms: terms that are formally defined in another vocabulary, and are listed only to increase the readability of the vocabulary specification. (Typical cases are <a href="http://schema.org">schema.org</a> or Dublin Core terms, that are frequently used in combination with other vocabularies.)</p>
-<p>External terms, while they appear in the HTML document generated by the tool, do not result in formal RDF statements in Turtle or JSON-LD; they only appear as information only items in the generated document.</p>
-<p>The prefix part of the curie <em>must</em> be defined through the <code>prefix</code> top level block.</p>
-<a id="json-ld-specific-settings" class="tsd-anchor"></a><h3 class="tsd-anchor-link">JSON-LD specific settings<a href="#json-ld-specific-settings" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The YAML file may also include an additional top level block, using the key <code>json_ld</code>. This blocks affects the generated JSON-LD <code>@context</code> file.</p>
-<p>At present, the block may contain the single <code>alias</code> block, defining key/value pairs for <a href="https://www.w3.org/TR/json-ld11/#aliasing-keywords">keyword aliases</a>. These aliases are copied into the generated JSON-LD <code>@context</code> file. For example, the following top level block defines aliases for <code>@type</code> and <code>@id</code>:</p>
-<pre><code class="yml"><span class="hl-0">json_ld</span><span class="hl-1">:</span><br/><span class="hl-1">  </span><span class="hl-0">alias</span><span class="hl-1">:</span><br/><span class="hl-1">    </span><span class="hl-2">&quot;id&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;@id&quot;</span><br/><span class="hl-1">    </span><span class="hl-2">&quot;type&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;@type&quot;</span>
+<a id="121-general-vocabulary-blocks" class="tsd-anchor"></a><h3 class="tsd-anchor-link">1.2.1. General Vocabulary blocks<a href="#121-general-vocabulary-blocks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><a id="1211-vocabulary-constants-vocab-block" class="tsd-anchor"></a><h4 class="tsd-anchor-link">1.2.1.1. Vocabulary Constants —<code>vocab</code> Block<a href="#1211-vocabulary-constants-vocab-block" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Constants for the vocabulary being defined. <em><strong>This block is required</strong></em>.</p>
+<table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>prefix string</td>
+            <td>
+                Provides a prefix that can be used in the vocabulary
+                description and in the generated RDF serializations, e.g., for
+                cross-references.
+            </td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td><code>value</code></td>
+            <td>URL</td>
+            <td>The official URL for the vocabulary.</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td><code>context</code></td>
+            <td>URL</td>
+            <td>
+                Provides a default <code>@context</code> file reference, used by all terms unless locally overwritten.
+            </td>
+            <td>Yes if the template file contains a context section, otherwise no.</td>
+        </tr>
+    </tbody>
+</table>
+<p>Example:</p>
+<pre><code class="yaml"><span class="hl-0">vocab</span><span class="hl-1">:</span><br/><span class="hl-1">    </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">ex</span><br/><span class="hl-1">    </span><span class="hl-0">value</span><span class="hl-1">: </span><span class="hl-2">https://example.org/vocabulary#</span><br/><span class="hl-1">    </span><span class="hl-0">context</span><span class="hl-1">: </span><span class="hl-2">https://example.org/context.jsonld</span>
 </code><button type="button">Copy</button></pre>
 
-<p>In line with the JSON-LD specification, the following keywords can be aliased:   <code>@direction</code>, <code>@graph</code>, <code>@id</code>, <code>@included</code>, <code>@index</code>, <code>@json</code>, <code>@language</code>, <code>@list</code>, <code>@nest</code>, <code>@none</code>, <code>@reverse</code>, <code>@set</code>, <code>@type</code>, and <code>@value</code>.</p>
-<p>(Note that, as specified in the JSON-LD recommendation, these aliases are <em><strong>not</strong></em> used within the context file itself. They are only relevant for the &quot;consumers&quot; of the context.)</p>
-<a id="formatting-the-output" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Formatting the output<a href="#formatting-the-output" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Some efforts are made to make the output files (HTML, JSON-LD, and Turtle) properly formatted to make them readable. A subset of the <a href="https://spec.editorconfig.org"><code>editorconfig</code></a> facilities are also taken into account. Namely, if an <code>.editorconfig</code> file is found, the following supported pairs are used (with the default values in parenthesis):</p>
+<a id="1212-curie-prefixes--prefix-block" class="tsd-anchor"></a><h4 class="tsd-anchor-link">1.2.1.2. CURIE Prefixes — <code>prefix</code> Block<a href="#1212-curie-prefixes--prefix-block" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>List of CURIE prefix definitions for each external vocabulary being used. Each entry is as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Possible values</th>
+<th>Description</th>
+<th>Required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>prefix string</td>
+<td>Provides a CURIE prefix that can be used in the vocabulary description and in the generated RDF serializations.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>value</td>
+<td>URL</td>
+<td>The URL for the external vocabulary</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="yaml"><span class="hl-0">prefix</span><span class="hl-1">:</span><br/><span class="hl-1">    - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">oa</span><br/><span class="hl-1">      </span><span class="hl-0">value</span><span class="hl-1">: </span><span class="hl-2">http://www.w3.org/ns/oa#</span><br/><br/><span class="hl-1">    - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">as</span><br/><span class="hl-1">      </span><span class="hl-0">value</span><span class="hl-1">: </span><span class="hl-2">http://www.w3.org/ns/activitystreams#</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Some id/value pairs are defined by default, and it is not necessary to define them here. These are:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Prefix</th>
+<th style="text-align:left">URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>dc</code></td>
+<td style="text-align:left"><code>http://purl.org/dc/terms/</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>owl</code></td>
+<td style="text-align:left"><code>http://www.w3.org/2002/07/owl#</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdf</code></td>
+<td style="text-align:left"><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rdfs</code></td>
+<td style="text-align:left"><code>http://www.w3.org/2000/01/rdf-schema#</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>xsd</code></td>
+<td style="text-align:left"><code>http://www.w3.org/2001/XMLSchema#</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>schema</code></td>
+<td style="text-align:left"><code>http://schema.org/</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>foaf</code></td>
+<td style="text-align:left"><code>http://xmlns.com/foaf/0.1/</code></td>
+</tr>
+</tbody>
+</table>
+<a id="1213-vocabulary-metadata-ontology-block" class="tsd-anchor"></a><h4 class="tsd-anchor-link">1.2.1.3. Vocabulary Metadata —<code>ontology</code> Block<a href="#1213-vocabulary-metadata-ontology-block" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Definition of “ontology properties”, that is, statements made about the vocabulary itself. These are added to the top level definition of the ontology in the generated files. <em><strong>This block is required</strong></em>.</p>
+<p>The block is a list of property/value pairs; each entry is as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Possible values</th>
+<th>Description</th>
+<th>Required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>property</code></td>
+<td>CURIE</td>
+<td>Possible values: <code>dc:title</code>, <code>dc:description</code>, and <code>rdfs:seeAlso</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>URL or string</td>
+<td>The value of the property.</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="yaml"><span class="hl-0">ontology</span><span class="hl-1">:</span><br/><span class="hl-1">    - </span><span class="hl-0">property</span><span class="hl-1">: </span><span class="hl-2">dc:title</span><br/><span class="hl-1">      </span><span class="hl-0">value</span><span class="hl-1">: </span><span class="hl-2">EPUB Annotations vocabulary</span><br/><br/><span class="hl-1">    - </span><span class="hl-0">property</span><span class="hl-1">: </span><span class="hl-2">dc:description</span><br/><span class="hl-1">      </span><span class="hl-0">value</span><span class="hl-1">: </span><span class="hl-2">See also &lt;a href=&quot;http://example.org/explanation&quot;&gt;further details&lt;/a.</span><br/><br/><span class="hl-1">    - </span><span class="hl-0">property</span><span class="hl-1">: </span><span class="hl-2">rdfs:seeAlso</span><br/><span class="hl-1">      </span><span class="hl-0">value</span><span class="hl-1">: </span><span class="hl-2">https://exampl.org/description</span>
+</code><button type="button">Copy</button></pre>
+
+<p>It is good practice to provide, at least, <code>dc:description</code> as an ontology property with a short description of the vocabulary and <code>dc:title</code> with a short name of the vocabulary.</p>
+<p>The script automatically adds a <code>dc:date</code> key with the generation time as a value.</p>
+<a id="1214-generated-json-ld-context-data--json_ld-block" class="tsd-anchor"></a><h4 class="tsd-anchor-link">1.2.1.4. Generated JSON-LD context data — <code>json_ld</code> block<a href="#1214-generated-json-ld-context-data--json_ld-block" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>A block affecting the generated JSON-LD context file, if generated.</p>
+<table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>alias</code></td>
+            <td>Object with key/value pairs; the values must be URLs.</td>
+            <td>
+                Defines <a href="https://www.w3.org/TR/json-ld11/#aliasing-keywords">keyword aliases</a>. Possible values for keywords
+                are: <code>@direction</code>, <code>@graph</code>, <code>@id</code>, <code>@included</code>, <code>@index</code>, <code>@json</code>,
+                <code>@language</code>, <code>@list</code>, <code>@nest</code>, <code>@none</code>, <code>@reverse</code>, <code>@set</code>,
+                <code>@type</code>, and <code>@value</code>.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>import</code></td>
+            <td>Either a single URL or an array thereof.</td>
+            <td>
+                Defines references to external <code>@context</code> files that must be
+                imported (via the JSON-LD <code>@import</code>) at the beginning of the
+                generated context file.
+            </td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+<p>Example:</p>
+<pre><code class="yaml"><span class="hl-0">json_ld</span><span class="hl-1">:</span><br/><span class="hl-1">    </span><span class="hl-0">alias</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-3">&quot;language&quot;</span><span class="hl-1">  : </span><span class="hl-3">&quot;@language&quot;</span><br/><span class="hl-1">        </span><span class="hl-3">&quot;direction&quot;</span><span class="hl-1"> : </span><span class="hl-3">&quot;@direction&quot;</span><br/><span class="hl-1">        </span><span class="hl-3">&quot;id&quot;</span><span class="hl-1">        : </span><span class="hl-3">&quot;@id&quot;</span><br/><span class="hl-1">    </span><span class="hl-0">import</span><span class="hl-1">: </span><span class="hl-3">&quot;http://example.org/othervoc.jsonld&quot;</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="122-ontology-term-blocks" class="tsd-anchor"></a><h3 class="tsd-anchor-link">1.2.2. Ontology term blocks<a href="#122-ontology-term-blocks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><a id="1221-common-term-entries" class="tsd-anchor"></a><h4 class="tsd-anchor-link">1.2.2.1. Common Term Entries<a href="#1221-common-term-entries" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>These keys are common to all term definitions, although their exact interpretation may be dependent on the terms themselves.</p>
+<table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>comment</code></td>
+            <td>string</td>
+            <td>
+                Refers to a longer description of the term. It may include <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories">HTML Flow content elements</a>. The comment will be
+                encapsulated into an HTML <code>&lt;div&gt;</code> element and will then
+                be displayed verbatim in the HTML version of the vocabulary, and as a
+                literal of type <code>rdf:HTML</code> in the
+                JSON-LD and Turtle versions.
+            </td>
+            <td>Either <code>comment</code> or <code>defined_by</code> is required.</td>
+        </tr>
+        <tr>
+            <td><code>context</code></td>
+            <td>URLs or the constant <code>vocab</code> or <code>none</code>, or an array thereof</td>
+            <td>
+                Used to add information on JSON-LD <code >@context</code> file(s) that “mention” the term; the list of URLs refer to the relevant
+                <code >@context</code> file. If the value is <code>vocab</code>, and a global <code >@context</code> file is defined in the
+                <code>vocab</code> block, that “default” <code>@context</code> is used. If the value of the property is <code>none</code>,
+                there is no context file reference for the term. The default setting is <code >vocab</code> (i.e., unless it is otherwise
+                specified, the default value is used for the term).
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>defined_by</code></td>
+            <td>One or more URLs</td>
+            <td>
+                Refers to the formal definition(s) of the term. This should always be a full URL, because it is also used in the generated turtle or JSON-LD
+                version of the vocabulary.
+            </td>
+            <td>Either <code>comment</code> or
+                <code>defined_by</code> is required.</td>
+        </tr>
+        <tr>
+            <td><code>deprecated</code></td>
+            <td>Boolean</td>
+            <td>
+                The key signals whether term is deprecated or not. Default is <code>false</code>. This property is a leftover from earlier
+                version and is overwritten, if present, by the value of <code>status</code>.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>example</code></td>
+            <td>One or more blocks</td>
+            <td>
+                Blocks with <code>label</code> and <code>json</code> keys providing a (JSON-LD) example with a title. These examples are placed, in the HTML version, to
+                the end of the section referring to a term; the examples are ignored in the Turtle and the JSON-LD versions. Care should be taken to use the
+                <code>"|"</code> <a href="https://yaml-multiline.info">block style indicator</a> in the YAML file for the examples.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>id</code></td>
+            <td>term string or CURIE</td>
+            <td>
+                The identifier of the term. If a term string is used, it is considered to be in the namespace of the vocabulary. If a CURIE is used, the term
+                is considered to be <em>external</em>: terms that are formally defined in another vocabulary, and are listed only to increase the readability
+                of the vocabulary specification.
+                <br>External terms, while they appear in the HTML document generated by the tool, do not result in formal RDF statements
+                in Turtle or JSON-LD; they only appear as information only items in the generated document.<br> The CURIE prefix must be defined
+                in the <code>prefix</code> top level block.
+            </td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td><code>known_as</code></td>
+            <td>term string</td>
+            <td>
+                A term can be used as an alias to the term's label in JSON-LD. It is used when generating a JSON-LD context file, as the name of
+                the property in the context file instead of the official label. This means that JSON-LD users, using that context file, must
+                refer to this alternative name in their code.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>label</code></td>
+            <td>string</td>
+            <td>
+                Short header label to the term. If missing, the capitalized value of <code>id</code> is used.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>see_also</code></td>
+            <td>One or more blocks</td>
+            <td>
+                Blocks with <code>label</code> and <code>url</code> keys, providing a human-readable title and a URL, respectively,
+                to an external document that can be referred to by the description of the term.
+                (These are translated into an <code>rdfs:seeAlso</code> statement in the vocabulary.)
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>status</code></td>
+            <td>
+                <code>stable</code>, <code >reserved</code>, or <code >deprecated</code>
+            </td>
+            <td>
+                The terms are divided, in the HTML output, into these three sections. <code>stable</code> is the default.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>type</code></td>
+            <td>One or more CURIEs</td>
+            <td>
+                Refers to RDF types. Note that the tool automatically adds types like <code>rdf:Property</code>, <code >rdfs:Class</code>, etc.;
+                this key is to be used for the vocabulary specific types only.
+            </td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+<a id="1222-class-definitions-class-block" class="tsd-anchor"></a><h4 class="tsd-anchor-link">1.2.2.2. Class definitions —<code>class</code> Block<a href="#1222-class-definitions-class-block" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>upper_union</code></td>
+            <td>boolean</td>
+            <td>
+                If several superclasses are specified then, by default, this means the <em>intersection</em> (or logical <em>conjunction</em>) of the classes.
+                If the value is <code>true</code>, the statement refers to the <em>union</em> (or logical <em>disjunction</em>) of the classes.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>upper_value</code></td>
+            <td>One or more terms or CURIEs</td>
+            <td>Superclasses.</td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+<p>Example:</p>
+<pre><code class="yaml"><span class="hl-0">class</span><span class="hl-1">:</span><br/><span class="hl-1">    - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">Class1</span><br/><span class="hl-1">      </span><span class="hl-0">label</span><span class="hl-1">: </span><span class="hl-2">An example Class1</span><br/><span class="hl-1">      </span><span class="hl-0">upper_value</span><span class="hl-1">: [</span><span class="hl-2">schema:Resource</span><span class="hl-1">, </span><span class="hl-2">Class2</span><span class="hl-1">]</span><br/><span class="hl-1">      </span><span class="hl-0">defined_by</span><span class="hl-1">: </span><span class="hl-2">https://example.org/vocabulary-definition#class1</span><br/><span class="hl-1">      </span><span class="hl-0">comment</span><span class="hl-1">: </span><span class="hl-2">Something about class1</span><br/><br/><span class="hl-1">    - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">Class2</span><br/><span class="hl-1">      </span><span class="hl-0">label</span><span class="hl-1">: </span><span class="hl-2">An example Class2</span><br/><span class="hl-1">      </span><span class="hl-0">upper_value</span><span class="hl-1">: [</span><span class="hl-2">Class3</span><span class="hl-1">, </span><span class="hl-2">Class4</span><span class="hl-1">]</span><br/><span class="hl-1">      </span><span class="hl-0">defined_by</span><span class="hl-1">: </span><span class="hl-2">https://example.org/vocabulary-definition#class2</span><br/><span class="hl-1">      </span><span class="hl-0">comment</span><span class="hl-1">: </span><span class="hl-2">Referring to the union of &lt;code&gt;Class3&lt;/code&gt; and &lt;code&gt;Class4&lt;/code&gt;</span><br/><span class="hl-1">      </span><span class="hl-0">upper_union</span><span class="hl-1">: </span><span class="hl-4">true</span><br/><br/><span class="hl-1">    - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">Class5</span><br/><span class="hl-1">      </span><span class="hl-0">label</span><span class="hl-1">: </span><span class="hl-2">An example Class5</span><br/><span class="hl-1">      </span><span class="hl-0">one_of</span><span class="hl-1">: [</span><span class="hl-2">ex:Individual_1</span><span class="hl-1">, </span><span class="hl-2">ex:Individual_2</span><span class="hl-1">, </span><span class="hl-2">…</span><span class="hl-1">,</span><span class="hl-2">ex:Individual_n</span><span class="hl-1">]</span><br/><span class="hl-1">      </span><span class="hl-0">comment</span><span class="hl-1">: </span><span class="hl-2">The class consists of the listed individuals.</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="1223-property-definitions--property-block" class="tsd-anchor"></a><h4 class="tsd-anchor-link">1.2.2.3. Property definitions — <code>property</code> Block<a href="#1223-property-definitions--property-block" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>container</code></td>
+            <td><code>set</code> or <code>list</code></td>
+            <td>
+                If set to one of these values, the entry for the property in the generated JSON-LD <code>@context</code> includes the <code>@container</code>
+                keyword, set to <code>@set</code> or <code >@list</code>, respectively. In both cases a warning message is also included in the generated HTML
+                text whereby, when using JSON-LD data with this vocabulary, the value for the property is expected to be an array even if there is only one.
+                <br>For the particular case of a <code >list</code> value, the range of the property is set to be an <code>rdf:List</code>.
+                <br>The value <code >graph</code> is also accepted for the key, as an alternative to the <code>dataset</code> key.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>dataset</code></td>
+            <td>boolean</td>
+            <td>
+                This key only influences the generated JSON-LD <code >@context</code>: if the value is <code >true</code>, the JSON-LD <code >@container</code>
+                is set to the <code >@graph</code> value for the property, signalling that the value refers to a
+                <em>dataset</em> (or <em>graph</em>). See the <a href="https://www.w3.org/TR/json-ld/#graph-containers">JSON-LD Specification</a>
+                for further details.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>domain</code></td>
+            <td>One or more terms or CURIEs</td>
+            <td>
+                The RDF domain statements of the property. If several classes are specified, the statement refers to the <em>union</em> (or logical <em>disjunction</em>) of the classes.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>range</code></td>
+            <td>One or more terms or CURIES, or the single <code>URL</code> term</td>
+            <td>
+                The RDF domain statements of the property. If the <code >URL</code> (alternatively: <code >IRI</code>) term is used, the block
+                defines a property that has no explicit range type, but whose objects are expected to be IRI references. The generated vocabularies
+                annotate these properties as belonging to the <code >owl:ObjectProperty</code> class, which is the reserved term for properties
+                whose objects are not supposed to be literals. A corresponding comment is also generated into the HTML description of the term.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>one_of</code>
+            <td>One or more terms or CURIEs</td>
+            <td>
+                The final range includes an (anonymous) class exclusively consisting of the individuals listed in the value.
+                It effectively lists the (CURIE) references that the property is supposed to have.
+                Note that the generated context file creates strings as values, mapping to the entries
+                in the list.
+                <br>The entries are required to refer to individuals.
+            </td>
+        </tr>
+        <tr>
+            <td><code>range_union</code></td>
+            <td>boolean</td>
+            <td>
+                If several range classes are specified then, by default, this means the <em>intersection</em> (or logical <em>conjunction</em>) of the classes.
+                If the value is <code>true</code>, the statement refers to the <em>union</em> (or logical <em>disjunction</em>) of the classes.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>upper_value</code></td>
+            <td>One or more terms or CURIEs</td>
+            <td>Superproperties.</td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+<p>Example:</p>
+<pre><code class="yaml"><span class="hl-0">property</span><span class="hl-1">:</span><br/><span class="hl-1">    - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">pr1</span><br/><span class="hl-1">      </span><span class="hl-0">label</span><span class="hl-1">: </span><span class="hl-2">this is example pr1</span><br/><span class="hl-1">      </span><span class="hl-0">upper_value</span><span class="hl-1">: </span><span class="hl-2">oa:hasTarget</span><br/><span class="hl-1">      </span><span class="hl-0">domain</span><span class="hl-1">: </span><span class="hl-2">Class1</span><br/><span class="hl-1">      </span><span class="hl-0">range</span><span class="hl-1">: </span><span class="hl-2">Class4</span><br/><span class="hl-1">      </span><span class="hl-0">defined_by</span><span class="hl-1">: </span><span class="hl-2">https://example.org/vocabulary-definition#pr11</span><br/><span class="hl-1">      </span><span class="hl-0">comment</span><span class="hl-1">: </span><span class="hl-2">Something about pr1.</span><br/><br/><span class="hl-1">    - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">pr2</span><br/><span class="hl-1">      </span><span class="hl-0">label</span><span class="hl-1">: </span><span class="hl-2">this is example pr2</span><br/><span class="hl-1">      </span><span class="hl-0">upper_value</span><span class="hl-1">: [</span><span class="hl-2">pr1</span><span class="hl-1">, </span><span class="hl-2">pr3</span><span class="hl-1">]</span><br/><span class="hl-1">      </span><span class="hl-0">domain</span><span class="hl-1">: </span><span class="hl-2">Class2</span><br/><span class="hl-1">      </span><span class="hl-0">range</span><span class="hl-1">: [</span><span class="hl-2">Class3</span><span class="hl-1">, </span><span class="hl-2">Class10</span><span class="hl-1">]</span><br/><span class="hl-1">      </span><span class="hl-0">defined_by</span><span class="hl-1">: </span><span class="hl-2">https://example.org/vocabulary-definition#pr2</span><br/><span class="hl-1">      </span><span class="hl-0">comment</span><span class="hl-1">: </span><span class="hl-2">Something about pr2; the range is the union of Class3 and Class10</span><br/><span class="hl-1">      </span><span class="hl-0">range_union</span><span class="hl-1">: </span><span class="hl-4">true</span><br/><br/><span class="hl-1">    - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">pr3</span><br/><span class="hl-1">      </span><span class="hl-0">label</span><span class="hl-1">: </span><span class="hl-2">this is an example pr3</span><br/><span class="hl-1">      </span><span class="hl-0">one_of</span><span class="hl-1">: [</span><span class="hl-2">ex:val1</span><span class="hl-1">, </span><span class="hl-2">ex:val2</span><span class="hl-1">, </span><span class="hl-2">ex:val3</span><span class="hl-1">]</span><br/><span class="hl-1">      </span><span class="hl-0">comment</span><span class="hl-1">: </span><span class="hl-2">Restricting the values to ex:val1, ex:val2, or ex:val3; in JSON-LD using the generated context &quot;val1&quot;, &quot;val2&quot;, &quot;val3&quot; should be used.</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="1224-individual-definitions-individual-block" class="tsd-anchor"></a><h4 class="tsd-anchor-link">1.2.2.4. Individual definitions —<code>individual</code> Block<a href="#1224-individual-definitions-individual-block" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>No extra keys are defined for this block. The <code>type</code> key is used to define the class which contains this individual</p>
+<p>Example:</p>
+<pre><code class="yaml"><span class="hl-0">individual</span><span class="hl-1">:</span><br/><span class="hl-1">    - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">ind1</span><br/><span class="hl-1">      </span><span class="hl-0">label</span><span class="hl-1">: </span><span class="hl-2">this is an individual belonging to Class1</span><br/><span class="hl-1">      </span><span class="hl-0">type</span><span class="hl-1">: </span><span class="hl-2">Class1</span><br/><span class="hl-1">      </span><span class="hl-0">defined_by</span><span class="hl-1">: </span><span class="hl-2">https://example.org/vocabulary-definition#ind1</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="1225-datatype-definitions--datatype-block" class="tsd-anchor"></a><h4 class="tsd-anchor-link">1.2.2.5. Datatype definitions — <code>datatype</code> Block<a href="#1225-datatype-definitions--datatype-block" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>one_of</code></td>
+            <td>array of strings</td>
+            <td>This is a shorthand for a pattern property with the value of <code>"val1\|val2\|…\|valn"</code>, i.e., it restricts the value to a predefined set of strings (without spaces).</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>pattern</code></td>
+            <td>string</td>
+            <td>An <a href="https://www.w3.org/TR/xmlschema-2/#regexs">XML Schema regular expression</a>, used to restrict an <code>xsd:string</code> type literal. Note that, while this restriction
+            become part of the generated vocabulary, not all  RDF/OWL reasoners are capable of processing it.</td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+<p>The <code>type</code> or <code>upper_value</code>keys are used to define the possible datatype this term is derived from.</p>
+<p>Example:</p>
+<pre><code class="yaml"><span class="hl-0">datatype</span><span class="hl-1">:</span><br/><span class="hl-1">  - </span><span class="hl-0">id</span><span class="hl-1">: </span><span class="hl-2">dt1</span><br/><span class="hl-1">    </span><span class="hl-0">label</span><span class="hl-1">: </span><span class="hl-2">Datatype some usage</span><br/><span class="hl-1">    </span><span class="hl-0">upper_value</span><span class="hl-1">: </span><span class="hl-2">xsd:string</span><br/><span class="hl-1">    </span><span class="hl-0">one_of</span><span class="hl-1">: [</span><span class="hl-2">One</span><span class="hl-1">, </span><span class="hl-2">Two</span><span class="hl-1">, </span><span class="hl-2">Three</span><span class="hl-1">]</span><br/><span class="hl-1">    </span><span class="hl-0">defined_by</span><span class="hl-1">: </span><span class="hl-2">https://example.org/vocabulary-definition#dt1</span><br/><span class="hl-1">    </span><span class="hl-0">see_also</span><span class="hl-1">:</span><br/><span class="hl-1">      - </span><span class="hl-0">label</span><span class="hl-1">: </span><span class="hl-2">Goal of the datatype</span><br/><span class="hl-1">        </span><span class="hl-0">url</span><span class="hl-1">:  </span><span class="hl-2">https://example.org/further-description.html</span><br/>
+</code><button type="button">Copy</button></pre>
+
+<a id="13-formatting-the-output" class="tsd-anchor"></a><h2 class="tsd-anchor-link">1.3. Formatting the output<a href="#13-formatting-the-output" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Some efforts are made to make the output files (HTML, JSON-LD, and Turtle) properly formatted to make them readable. A subset of the <a href="https://spec.editorconfig.org"><code>editorconfig</code></a> facilities are also taken into account. Namely, if an <code>.editorconfig</code> file is found, the following supported pairs are used (with the default values in parenthesis):</p>
 <ul>
 <li><code>indent_style</code> (<code>space</code>)</li>
 <li><code>insert_final_newline</code> (<code>false</code>)</li>
@@ -77,56 +529,187 @@
 <li><code>end_of_line</code> (<code>lf</code>)</li>
 </ul>
 <p>See the <a href="https://spec.editorconfig.org/#supported-pairs"><code>.editorconfig</code></a> for further details.</p>
-<a id="installation-and-use" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Installation and use<a href="#installation-and-use" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The script is in TypeScript (version 5.0.2 and beyond) running on top of <a href="https://nodejs.org"><code>node.js</code></a> (version 21 and beyond). It can also run with <a href="http://deno.land"><code>deno</code></a> (version 2.1 and beyond).</p>
+<a id="131-html-templating" class="tsd-anchor"></a><h3 class="tsd-anchor-link">1.3.1. HTML Templating<a href="#131-html-templating" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The generation of the HTML output requires an HTML Template file. This can either be a complete HTML file or an HTML fragment (within a <code>&lt;section&gt;</code> or  <code>&lt;div&gt;</code>). The template should contain some specific HTML elements with predefined identifier values (i.e., <code>id</code> attribute values); the yml2vocab fills the respective content within those HTML elements. Each term is put into its own section, with the term's <code>id</code> value serving both as the section header and its element identifiers. The content of the section is an HTML definition list with a human readable version of the vocabulary term data.</p>
+<p>The required <code>id</code> values, and the containing elements, are as follows:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><code>id</code> value</th>
+<th>Corresponding element</th>
+<th style="text-align:left">Generated content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>title</code> or <code>ontology_title</code></td>
+<td>any textual</td>
+<td style="text-align:left">The title/name of the vocabulary (see the <code>ontology</code> block)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>description</code></td>
+<td>any textual</td>
+<td style="text-align:left">The description of the vocabulary (see the <code>ontology</code> block)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>see_also</code></td>
+<td>any textual</td>
+<td style="text-align:left">External reference for the vocabulary (see the <code>ontology</code> block)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>alt-turtle</code></td>
+<td><code>&lt;a&gt;</code></td>
+<td style="text-align:left">Add a reference to the Turtle version of the vocabulary as an <code>href</code> attribute value</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>alt-jsonld</code></td>
+<td><code>&lt;a&gt;</code></td>
+<td style="text-align:left">Add a reference to the JSON-LD version of the vocabulary  as an <code>href</code> attribute value</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>time</code></td>
+<td>any textual</td>
+<td style="text-align:left">Date of the vocabulary generation</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>namespaces</code></td>
+<td><code>&lt;dl&gt;</code></td>
+<td style="text-align:left">List of namespaces used by the vocabulary</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>contexts</code></td>
+<td><code>&lt;ul&gt;</code></td>
+<td style="text-align:left">List of context files where the vocabulary terms appear</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>term_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Section for the fully defined vocabulary terms</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>class_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the fully defined classes</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>property_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the fully defined properties</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>datatype_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the fully defined datatypes</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>individual_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the fully defined individuals</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>reserved_term_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Section for the reserved vocabulary terms</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>reserved_class_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the reserved classes</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>reserved_property_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the reserved properties</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>reserved_datatype_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the reserved datatypes</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>reserved_individual_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the reserved individuals</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>deprecated_term_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Section for the deprecated vocabulary terms</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>deprecated_class_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the deprecated classes</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>deprecated_property_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the deprecated properties</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>deprecated_datatype_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the deprecated datatypes</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>deprecated_individual_definitions</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td style="text-align:left">Subsection for the deprecated individuals</td>
+</tr>
+</tbody>
+</table>
+<p>If an element is missing, the content is ignored by the script.</p>
+<p>The <code>reserved</code> and <code>deprecated</code> section are filled terms that have been labelled as <code>reserved</code>, resp. <code>deprecated</code>, using the <code>status</code> key in the term's defining block. If no <code>reserved</code> or <code>deprecated</code> entries are defined, the respective sections will be removed from the resulting HTML. Similarly, if no alternate context files are specified, the <code>&lt;ul id=contexts&gt;</code> entry is removed.</p>
+<p>The template may contain CSS to provide a proper presentation in HTML; please look at the example template for a suitable CSS for the classes generated by the script.</p>
+<a id="2-installation-and-use" class="tsd-anchor"></a><h1 class="tsd-anchor-link">2. Installation and use<a href="#2-installation-and-use" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p>The script has been written in TypeScript (version 5.0.2 and beyond) running on top of <a href="https://nodejs.org"><code>node.js</code></a> (version 21 and beyond) or  <a href="http://deno.land"><code>deno</code></a> (version 2.1 and beyond).</p>
 <p>Beyond the YAML file itself, the script relies on an HTML template file, i.e., a skeleton file in HTML that is completed by the vocabulary entries. The <a href="https://github.com/w3c/yml2vocab/tree/main/example/template.html">example template file on GitHub</a> provides a good starting point for a template that also makes use of <a href="https://respec.org">respec</a>. The script relies on the existing <code>id</code> values and section structures to be modified/extended by the script. Unused subsections (e.g., when there are no deprecated classes) are removed from the final HTML file.</p>
-<a id="installation-from-npm" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Installation from npm<a href="#installation-from-npm" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The script can be used as a standard npm module via:</p>
-<pre><code><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-3">install</span><span class="hl-1"> </span><span class="hl-3">yml2vocab</span>
-</code><button>Copy</button></pre>
+<a id="21-running-the-script-on-a-command-line" class="tsd-anchor"></a><h2 class="tsd-anchor-link">2.1. Running the script on a command line<a href="#21-running-the-script-on-a-command-line" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><a id="211-npm--nodejs" class="tsd-anchor"></a><h3 class="tsd-anchor-link">2.1.1. NPM + Node.js<a href="#211-npm--nodejs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The script can be used as a standard npm module via:</p>
+<pre><code class="sh"><span class="hl-5">npm</span><span class="hl-1"> </span><span class="hl-3">install</span><span class="hl-1"> </span><span class="hl-3">yml2vocab</span>
+</code><button type="button">Copy</button></pre>
 
-<a id="running-on-a-command-line" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Running on a command line<a href="#running-on-a-command-line" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><a id="npmnodejs" class="tsd-anchor"></a><h4 class="tsd-anchor-link">NPM/Node.js<a href="#npmnodejs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>The npm installation installs the <code>node_modules/.bin/yml2vocab</code> script. The script can be used as:</p>
-<pre><code><span class="hl-3">yml2vocab</span><span class="hl-1"> [-</span><span class="hl-3">v</span><span class="hl-1"> </span><span class="hl-3">vocab_file_name</span><span class="hl-1">] [-</span><span class="hl-3">t</span><span class="hl-1"> </span><span class="hl-3">template_file_name</span><span class="hl-1">] [-</span><span class="hl-3">c</span><span class="hl-1">]</span>
-</code><button>Copy</button></pre>
+<p>The npm installation installs the <code>node_modules/.bin/yml2vocab</code> script. The script can be used as:</p>
+<pre><code class="sh"><span class="hl-5">yml2vocab</span><span class="hl-1"> [-v </span><span class="hl-3">vocab_file_name]</span><span class="hl-1"> [-t </span><span class="hl-3">template_file_name]</span><span class="hl-1"> [-c]</span>
+</code><button type="button">Copy</button></pre>
 
-<a id="deno" class="tsd-anchor"></a><h4 class="tsd-anchor-link">Deno<a href="#deno" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>If <code>deno</code> is installed globally, one can also run the script directly (without any further installation) by</p>
-<pre><code><span class="hl-3">deno</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> --</span><span class="hl-3">allow</span><span class="hl-1">-</span><span class="hl-3">read</span><span class="hl-1"> --</span><span class="hl-3">allow</span><span class="hl-1">-</span><span class="hl-3">write</span><span class="hl-1"> --</span><span class="hl-3">allow</span><span class="hl-1">-</span><span class="hl-3">env</span><span class="hl-1"> /</span><span class="hl-3">a</span><span class="hl-1">/</span><span class="hl-3">b</span><span class="hl-1">/</span><span class="hl-3">c</span><span class="hl-1">/</span><span class="hl-3">main</span><span class="hl-1">.</span><span class="hl-3">ts</span><span class="hl-1"> [-</span><span class="hl-3">v</span><span class="hl-1"> </span><span class="hl-3">vocab_file_name</span><span class="hl-1">] [-</span><span class="hl-3">t</span><span class="hl-1"> </span><span class="hl-3">template_file_name</span><span class="hl-1">] [-</span><span class="hl-3">c</span><span class="hl-1">]</span>
-</code><button>Copy</button></pre>
+<a id="212-deno" class="tsd-anchor"></a><h3 class="tsd-anchor-link">2.1.2. Deno<a href="#212-deno" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>If <code>deno</code> is installed globally, one can also run the script directly (without any further installation) from the code by</p>
+<pre><code class="sh"><span class="hl-5">deno</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-4">-A</span><span class="hl-1"> </span><span class="hl-3">/a/b/c/main.ts</span><span class="hl-1"> [-v </span><span class="hl-3">vocab_fname]</span><span class="hl-1"> [-t </span><span class="hl-3">template_fname]</span><span class="hl-1"> [-c]</span>
+</code><button type="button">Copy</button></pre>
 
-<p>in the top level. To make it simpler, a binary, compiled version of the program can be generated by</p>
-<pre><code><span class="hl-3">deno</span><span class="hl-1"> </span><span class="hl-3">compile</span><span class="hl-1"> --</span><span class="hl-3">allow</span><span class="hl-1">-</span><span class="hl-3">read</span><span class="hl-1"> --</span><span class="hl-3">allow</span><span class="hl-1">-</span><span class="hl-3">write</span><span class="hl-1"> --</span><span class="hl-3">allow</span><span class="hl-1">-</span><span class="hl-3">env</span><span class="hl-1"> </span><span class="hl-3">main</span><span class="hl-1">.</span><span class="hl-3">ts</span>
-</code><button>Copy</button></pre>
+<p>on the top level. To make it simpler, a binary, compiled version of the program can be generated by</p>
+<pre><code class="sh"><span class="hl-5">deno</span><span class="hl-1"> </span><span class="hl-3">compile</span><span class="hl-1"> </span><span class="hl-4">--allow-read</span><span class="hl-1"> </span><span class="hl-4">--allow-write</span><span class="hl-1"> </span><span class="hl-4">--allow-env</span><span class="hl-1"> </span><span class="hl-3">main.ts</span>
+</code><button type="button">Copy</button></pre>
 
 <p>which results in an executable file, called <code>yml2vocab</code>, that can be stored anywhere in the user's <code>$PATH</code>.</p>
-<p>The program can also be run without installing the package locally. Just do a:</p>
-<pre><code><span class="hl-3">deno</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> -</span><span class="hl-4">A</span><span class="hl-1"> </span><span class="hl-5">jsr</span><span class="hl-1">:@</span><span class="hl-3">iherman</span><span class="hl-1">/</span><span class="hl-3">yml2vocab</span><span class="hl-1">/</span><span class="hl-3">cli</span><span class="hl-1"> [-</span><span class="hl-3">v</span><span class="hl-1"> </span><span class="hl-3">vocab_file_name</span><span class="hl-1">] [-</span><span class="hl-3">t</span><span class="hl-1"> </span><span class="hl-3">template_file_name</span><span class="hl-1">] [-</span><span class="hl-3">c</span><span class="hl-1">]</span>
-</code><button>Copy</button></pre>
+<p>The program can also be run without installing the package locally from JSR. Just do a:</p>
+<pre><code class="sh"><span class="hl-5">deno</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-4">-A</span><span class="hl-1"> </span><span class="hl-3">jsr:@iherman/yml2vocab/cli</span><span class="hl-1"> [-v </span><span class="hl-3">vocab_file_name]</span><span class="hl-1"> [-t </span><span class="hl-3">template_file_name]</span><span class="hl-1"> [-c]</span>
+</code><button type="button">Copy</button></pre>
 
-<a id="command-line-argument" class="tsd-anchor"></a><h4 class="tsd-anchor-link">Command line argument<a href="#command-line-argument" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>The script generates the <code>vocab_file_name.ttl</code>, <code>vocab_file_name.jsonld</code>, and <code>vocab_file_name.html</code> files for the Turtle, JSON-LD, and HTML versions, respectively. The script relies on the <code>vocab_file_name.yml</code> file for the vocabulary specification in YAML and a <code>template_file_name</code> file for a template file. The defaults are <code>vocabulary</code> and <code>template.html</code>, respectively.</p>
+<a id="213-command-line-argument" class="tsd-anchor"></a><h3 class="tsd-anchor-link">2.1.3. Command line argument<a href="#213-command-line-argument" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The script generates the <code>vocab_file_name.ttl</code>, <code>vocab_file_name.jsonld</code>, and <code>vocab_file_name.html</code> files for the Turtle, JSON-LD, and HTML versions, respectively. The script relies on the <code>vocab_file_name.yml</code> file for the vocabulary specification in YAML and a <code>template_file_name</code> file for a template file. The defaults are <code>vocabulary</code> and <code>template.html</code>, respectively.</p>
 <p>If the <code>-c</code> flag is also set, the additional <code>vocab_file_name.context.jsonld</code> is also generated, containing a JSON-LD file that can be used as a separate <code>@context</code> reference in a JSON-LD file. Note that this JSON-LD file does not necessarily use all the sophistication that JSON-LD <a href="https://www.w3.org/TR/json-ld11/#the-context">defines</a> for <code>@context</code>; these may have to be added manually.</p>
-<a id="running-from-a-javascripttypescript-program" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Running from a Javascript/TypeScript program<a href="#running-from-a-javascripttypescript-program" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><a id="usage-by-nodejs" class="tsd-anchor"></a><h4 class="tsd-anchor-link">Usage by node.js<a href="#usage-by-nodejs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>The simplest way of using the module from Javascript is:</p>
-<pre><code><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-4">yml2vocab</span><span class="hl-1"> = </span><span class="hl-7">require</span><span class="hl-1">(</span><span class="hl-2">&#39;yml2vocab&#39;</span><span class="hl-1">);</span><br/><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-7">main</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-8">await</span><span class="hl-1"> </span><span class="hl-3">yml2vocab</span><span class="hl-1">.</span><span class="hl-7">generateVocabularyFiles</span><span class="hl-1">(</span><span class="hl-2">&quot;vocabulary&quot;</span><span class="hl-1">,</span><span class="hl-2">&quot;template.html&quot;</span><span class="hl-1">,</span><span class="hl-6">false</span><span class="hl-1">);</span><br/><span class="hl-1">}</span><br/><span class="hl-7">main</span><span class="hl-1">();</span>
-</code><button>Copy</button></pre>
+<a id="22-running-from-a-javascripttypescript-program" class="tsd-anchor"></a><h2 class="tsd-anchor-link">2.2. Running from a Javascript/TypeScript program<a href="#22-running-from-a-javascripttypescript-program" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><a id="221-usage-with-nodejs" class="tsd-anchor"></a><h3 class="tsd-anchor-link">2.2.1. Usage with node.js<a href="#221-usage-with-nodejs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The simplest way of using the module from Javascript is:</p>
+<pre><code class="js"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">yml2vocab</span><span class="hl-1"> = </span><span class="hl-5">require</span><span class="hl-1">(</span><span class="hl-3">&#39;yml2vocab&#39;</span><span class="hl-1">);</span><br/><span class="hl-4">async</span><span class="hl-1"> </span><span class="hl-4">function</span><span class="hl-1"> </span><span class="hl-5">main</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-7">await</span><span class="hl-1"> </span><span class="hl-8">yml2vocab</span><span class="hl-1">.</span><span class="hl-5">generateVocabularyFiles</span><span class="hl-1">(</span><span class="hl-3">&quot;vocabulary&quot;</span><span class="hl-1">,</span><span class="hl-3">&quot;template.html&quot;</span><span class="hl-1">,</span><span class="hl-4">false</span><span class="hl-1">);</span><br/><span class="hl-1">}</span><br/><span class="hl-5">main</span><span class="hl-1">();</span>
+</code><button type="button">Copy</button></pre>
 
 <p>This reads (asynchronously) the YAML and template files and stores the generated vocabulary representations (see the command line interface for details) in the directory alongside the YAML file. By setting the last argument to <code>true</code> a <code>@context</code> is also generated.</p>
 <p>The somewhat lower level  <code>yml2vocab.VocabGeneration</code> class can also be used:</p>
-<pre><code><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-4">yml2vocab</span><span class="hl-1"> = </span><span class="hl-7">require</span><span class="hl-1">(</span><span class="hl-2">&#39;yml2vocab&#39;</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-4">vocabGeneration</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-3">yml2vocab</span><span class="hl-1">.</span><span class="hl-7">VocabGeneration</span><span class="hl-1">(</span><span class="hl-3">yml_content</span><span class="hl-1">);     </span><span class="hl-9">// YAML content is text form, before parsing</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-4">turtle</span><span class="hl-1">: </span><span class="hl-10">string</span><span class="hl-1">  = </span><span class="hl-3">vocabGeneration</span><span class="hl-1">.</span><span class="hl-7">getTurtle</span><span class="hl-1">();                    </span><span class="hl-9">// returns the turtle content as a string</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-4">jsonld</span><span class="hl-1">: </span><span class="hl-10">string</span><span class="hl-1">  = </span><span class="hl-3">vocabGeneration</span><span class="hl-1">.</span><span class="hl-7">getJSONLD</span><span class="hl-1">();                    </span><span class="hl-9">// returns the JSON-LD content as a string</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-4">html</span><span class="hl-1">: </span><span class="hl-10">string</span><span class="hl-1">    = </span><span class="hl-3">vocabGeneration</span><span class="hl-1">.</span><span class="hl-7">getHTML</span><span class="hl-1">(</span><span class="hl-3">template_file_content</span><span class="hl-1">); </span><span class="hl-9">// returns the HTML content as a string</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-4">context</span><span class="hl-1">: </span><span class="hl-10">string</span><span class="hl-1"> = </span><span class="hl-3">vocabGeneration</span><span class="hl-1">.</span><span class="hl-7">getContext</span><span class="hl-1">();                   </span><span class="hl-9">// returns the minimal @context file for the vocabulary</span>
-</code><button>Copy</button></pre>
+<pre><code class="js"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">yml2vocab</span><span class="hl-1"> = </span><span class="hl-5">require</span><span class="hl-1">(</span><span class="hl-3">&#39;yml2vocab&#39;</span><span class="hl-1">);</span><br/><span class="hl-9">// YAML content is text form, before parsing</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">vocabGeneration</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-8">yml2vocab</span><span class="hl-1">.</span><span class="hl-5">VocabGeneration</span><span class="hl-1">(</span><span class="hl-8">yml_content</span><span class="hl-1">);</span><br/><span class="hl-9">// returns the turtle content as a string</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">turtle</span><span class="hl-1">: </span><span class="hl-10">string</span><span class="hl-1">  = </span><span class="hl-8">vocabGeneration</span><span class="hl-1">.</span><span class="hl-5">getTurtle</span><span class="hl-1">();</span><br/><span class="hl-9">// returns the JSON-LD content as a string</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">jsonld</span><span class="hl-1">: </span><span class="hl-10">string</span><span class="hl-1">  = </span><span class="hl-8">vocabGeneration</span><span class="hl-1">.</span><span class="hl-5">getJSONLD</span><span class="hl-1">();</span><br/><span class="hl-9">// returns the HTML content as a string</span><br/><span class="hl-9">// The third argument specifies (as a boolean) whether a context file is also generated</span><br/><span class="hl-9">// (if yes, some extra explanatory notes may appear in the HTML output)</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">html</span><span class="hl-1">: </span><span class="hl-10">string</span><span class="hl-1">    = </span><span class="hl-8">vocabGeneration</span><span class="hl-1">.</span><span class="hl-5">getHTML</span><span class="hl-1">(</span><span class="hl-8">template_file_content</span><span class="hl-1">, </span><span class="hl-8">basename_for_files</span><span class="hl-1">, </span><span class="hl-8">context_generated</span><span class="hl-1">);</span><br/><span class="hl-9">// returns the minimal @context file for the vocabulary</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-6">context</span><span class="hl-1">: </span><span class="hl-10">string</span><span class="hl-1"> = </span><span class="hl-8">vocabGeneration</span><span class="hl-1">.</span><span class="hl-5">getContext</span><span class="hl-1">();</span>
+</code><button type="button">Copy</button></pre>
 
-<p>Running TypeScript is used instead of Javascript is similar, except that the <code>require</code> must be replaced by:</p>
-<pre><code><span class="hl-8">import</span><span class="hl-1"> </span><span class="hl-3">yml2vocab</span><span class="hl-1"> </span><span class="hl-8">from</span><span class="hl-1"> </span><span class="hl-2">&#39;yml2vocab&#39;</span><span class="hl-1">;</span>
-</code><button>Copy</button></pre>
+<p>Running TypeScript instead of Javascript is similar, except that the <code>require</code> must be replaced by:</p>
+<pre><code class="js"><span class="hl-7">import</span><span class="hl-1"> </span><span class="hl-8">yml2vocab</span><span class="hl-1"> </span><span class="hl-7">from</span><span class="hl-1"> </span><span class="hl-3">&#39;yml2vocab&#39;</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
 
-<p>There is no need to install any extra typing, it is included in the package. The interfaces are simply using strings, no extra TypeScript type definitions have been defined.</p>
-<a id="usage-by-deno" class="tsd-anchor"></a><h4 class="tsd-anchor-link">Usage by deno<a href="#usage-by-deno" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>The package is also available on JSR <code>@iherman/yml2vocab</code>. All previous examples are valid for deno, except for the import statements which should be:</p>
-<pre><code><span class="hl-8">import</span><span class="hl-1"> </span><span class="hl-3">yml2vocab</span><span class="hl-1"> </span><span class="hl-8">from</span><span class="hl-1"> </span><span class="hl-2">&#39;jsr:@iherman/yml2vocab&#39;</span>
-</code><button>Copy</button></pre>
+<p>There is no need to install any extra typing, it is included in the package. The interfaces are simply using strings, no extra TypeScript type definitions have been added.</p>
+<a id="2211-usage-with-deno" class="tsd-anchor"></a><h4 class="tsd-anchor-link">2.2.1.1. Usage with deno<a href="#2211-usage-with-deno" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>The package is also available on JSR <code>@iherman/yml2vocab</code>. All previous examples are valid for deno, except for the import statements which should be:</p>
+<pre><code class="js"><span class="hl-7">import</span><span class="hl-1"> </span><span class="hl-8">yml2vocab</span><span class="hl-1"> </span><span class="hl-7">from</span><span class="hl-1"> </span><span class="hl-3">&#39;jsr:@iherman/yml2vocab&#39;</span>
+</code><button type="button">Copy</button></pre>
 
 <p>Note that deno can also import npm packages if explicitly named, so the following import statement is also valid:</p>
-<pre><code><span class="hl-8">import</span><span class="hl-1"> </span><span class="hl-3">yml2vocab</span><span class="hl-1"> </span><span class="hl-8">from</span><span class="hl-1"> </span><span class="hl-2">&#39;npm:yml2vocab&#39;</span>
-</code><button>Copy</button></pre>
+<pre><code class="js"><span class="hl-7">import</span><span class="hl-1"> </span><span class="hl-8">yml2vocab</span><span class="hl-1"> </span><span class="hl-7">from</span><span class="hl-1"> </span><span class="hl-3">&#39;npm:yml2vocab&#39;</span>
+</code><button type="button">Copy</button></pre>
 
 <p>No prior installation step is necessary.</p>
-<a id="cloning-the-repository" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Cloning the repository<a href="#cloning-the-repository" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The <a href="https://github.com/yml2vocab">repository</a> may also be cloned.</p>
-<a id="content-of-the-directory" class="tsd-anchor"></a><h4 class="tsd-anchor-link">Content of the directory<a href="#content-of-the-directory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><ul>
+<a id="3-cloning-the-repository" class="tsd-anchor"></a><h1 class="tsd-anchor-link">3. Cloning the repository<a href="#3-cloning-the-repository" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p>The <a href="https://github.com/yml2vocab">repository</a> may also be cloned.</p>
+<a id="31-content-of-the-directory" class="tsd-anchor"></a><h2 class="tsd-anchor-link">3.1. Content of the directory<a href="#31-content-of-the-directory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
 <li><code>Readme.md</code>: this file.</li>
 <li><code>package.json</code>: configuration file for <code>npm</code>.</li>
 <li><code>deno.json</code>: configuration file for <code>deno</code></li>
@@ -143,6 +726,7 @@
 <li><code>node_modules</code> directory: the various Javascript libraries used by the script. This directory should <em>not</em> be uploaded to GitHub, it is strictly for the local activation of the script.</li>
 <li><code>deno.lock</code>: used by <code>deno</code> to manage imported packages using its own mechanism (bypassing <code>node_modules</code>).</li>
 </ul>
-<a id="acknowledgement" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Acknowledgement<a href="#acknowledgement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>The original idea, structure, and script (in Ruby) was created by Gregg Kellogg for v1 of the Credentials Vocabulary and with a vocabulary definition using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript, and developed further since.</p>
-<p>Many features are the result of further discussions with Many Sporny and Benjamin Young.</p>
-</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#generate-rdfs-vocabulary-files-from-yaml"><span>Generate RDFS vocabulary files from YAML</span></a><ul><li><a href="#definition-of-the-vocabulary-in-the-yaml-file"><span>Definition of the vocabulary in the YAML file</span></a></li><li><ul><li><a href="#external-terms"><span>External terms</span></a></li><li><a href="#json-ld-specific-settings"><span>JSON-<wbr/>LD specific settings</span></a></li></ul></li><li><a href="#formatting-the-output"><span>Formatting the output</span></a></li><li><a href="#installation-and-use"><span>Installation and use</span></a></li><li><ul><li><a href="#installation-from-npm"><span>Installation from npm</span></a></li><li><a href="#running-on-a-command-line"><span>Running on a command line</span></a></li><li><ul><li><a href="#npmnodejs"><span>NPM/<wbr/>Node.js</span></a></li><li><a href="#deno"><span>Deno</span></a></li><li><a href="#command-line-argument"><span>Command line argument</span></a></li></ul></li><li><a href="#running-from-a-javascripttypescript-program"><span>Running from a <wbr/>Javascript/<wbr/>Type<wbr/>Script program</span></a></li><li><ul><li><a href="#usage-by-nodejs"><span>Usage by node.js</span></a></li><li><a href="#usage-by-deno"><span>Usage by deno</span></a></li></ul></li><li><a href="#cloning-the-repository"><span>Cloning the repository</span></a></li><li><ul><li><a href="#content-of-the-directory"><span>Content of the directory</span></a></li></ul></li></ul></li><li><a href="#acknowledgement"><span>Acknowledgement</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa - v1.7.0</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer></footer><div class="overlay"></div></body></html>
+<a id="4-acknowledgement" class="tsd-anchor"></a><h1 class="tsd-anchor-link">4. Acknowledgement<a href="#4-acknowledgement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p>I got inspired by the structure and Ruby script  that was created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript, and developed further since by adding new features based on usage.</p>
+<p>Many features are the result of further discussions with Many Sporny, Benjamin Young, and Pierre-Antoine Champin.</p>
+<p>I dedicate this script to the memory of Gregg. R.I.P.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#1-generate-rdfs-vocabulary-files-from-yaml"><span>1. <wbr/>Generate RDFS vocabulary files from YAML</span></a><ul><li><a href="#11-introduction"><span>1.1. <wbr/>Introduction</span></a></li><li><a href="#12-definition-of-the-vocabulary-in-the-yaml-file"><span>1.2. <wbr/>Definition of the vocabulary in the YAML file</span></a></li><li><ul><li><a href="#121-general-vocabulary-blocks"><span>1.2.1. <wbr/>General <wbr/>Vocabulary blocks</span></a></li><li><ul><li><a href="#1211-vocabulary-constants-vocab-block"><span>1.2.1.1. <wbr/>Vocabulary <wbr/>Constants —vocab <wbr/>Block</span></a></li><li><a href="#1212-curie-prefixes--prefix-block"><span>1.2.1.2. CURIE <wbr/>Prefixes — prefix <wbr/>Block</span></a></li><li><a href="#1213-vocabulary-metadata-ontology-block"><span>1.2.1.3. <wbr/>Vocabulary <wbr/>Metadata —ontology <wbr/>Block</span></a></li><li><a href="#1214-generated-json-ld-context-data--json_ld-block"><span>1.2.1.4. <wbr/>Generated JSON-<wbr/>LD context data — json_<wbr/>ld block</span></a></li></ul></li><li><a href="#122-ontology-term-blocks"><span>1.2.2. <wbr/>Ontology term blocks</span></a></li><li><ul><li><a href="#1221-common-term-entries"><span>1.2.2.1. <wbr/>Common <wbr/>Term <wbr/>Entries</span></a></li><li><a href="#1222-class-definitions-class-block"><span>1.2.2.2. <wbr/>Class definitions —class <wbr/>Block</span></a></li><li><a href="#1223-property-definitions--property-block"><span>1.2.2.3. <wbr/>Property definitions — property <wbr/>Block</span></a></li><li><a href="#1224-individual-definitions-individual-block"><span>1.2.2.4. <wbr/>Individual definitions —individual <wbr/>Block</span></a></li><li><a href="#1225-datatype-definitions--datatype-block"><span>1.2.2.5. <wbr/>Datatype definitions — datatype <wbr/>Block</span></a></li></ul></li></ul></li><li><a href="#13-formatting-the-output"><span>1.3. <wbr/>Formatting the output</span></a></li><li><ul><li><a href="#131-html-templating"><span>1.3.1. HTML <wbr/>Templating</span></a></li></ul></li></ul><a href="#2-installation-and-use"><span>2. <wbr/>Installation and use</span></a><ul><li><a href="#21-running-the-script-on-a-command-line"><span>2.1. <wbr/>Running the script on a command line</span></a></li><li><ul><li><a href="#211-npm--nodejs"><span>2.1.1. NPM + <wbr/>Node.js</span></a></li><li><a href="#212-deno"><span>2.1.2. <wbr/>Deno</span></a></li><li><a href="#213-command-line-argument"><span>2.1.3. <wbr/>Command line argument</span></a></li></ul></li><li><a href="#22-running-from-a-javascripttypescript-program"><span>2.2. <wbr/>Running from a <wbr/>Javascript/<wbr/>Type<wbr/>Script program</span></a></li><li><ul><li><a href="#221-usage-with-nodejs"><span>2.2.1. <wbr/>Usage with node.js</span></a></li><li><ul><li><a href="#2211-usage-with-deno"><span>2.2.1.1. <wbr/>Usage with deno</span></a></li></ul></li></ul></li></ul><a href="#3-cloning-the-repository"><span>3. <wbr/>Cloning the repository</span></a><ul><li><a href="#31-content-of-the-directory"><span>3.1. <wbr/>Content of the directory</span></a></li></ul><a href="#4-acknowledgement"><span>4. <wbr/>Acknowledgement</span></a></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">Converter of vocabulary in YAML format into Turtle/JSON-LD/HTML+RDFa - v1.7.1</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer></footer><div class="overlay"></div></body></html>

@@ -72,15 +72,26 @@ export function toContext(vocab: Vocab): string {
                     // This is the case when the property refers to an explicitly defined, non-standard datatype
                     output["@type"] = rangeTerm.url;
                     break;
-                } else {
-                    // if range is a class, then it is a reference
-                    if (RDFTermFactory.isClass(rangeTerm)) {
+                 } else {
+                     if (RDFTermFactory.isClass(rangeTerm)) {
                         output["@type"] = "@id";
                         break;
                     }
                 }
             }
         }
+
+        // There is a special treatment to generate additional statements
+        // when the values of the range are restricted.
+        // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
+        if (property.one_of?.length > 0 && !property.dataset) {
+            const mappings = property.one_of.map((term) => [term.id, term.url]);
+            mappings.push(["@vocab", `${global.vocab_prefix}:INVALID_VALUE:`]);
+            // Note that this may overwrite earlier values...
+            output["@type"] = "@vocab";
+            output["@context"] = Object.fromEntries(mappings);
+        }
+
         if (property.dataset) {
             if (property.container === Container.set) {
                 output["@container"] = ["@set", "@graph"];
@@ -103,10 +114,12 @@ export function toContext(vocab: Vocab): string {
             return {};
         } else if( global.import.length === 1) {
             return {
+                "@version" : "1.1",
                 "@import" : global.import[0]
             }
         } else {
             return {
+                "@version": "1.1",
                 "@import" : global.import
             }
         }

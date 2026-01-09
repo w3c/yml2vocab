@@ -140,7 +140,7 @@ const vocabSchema = `{
                             "upper_union" : {
                                 "type" : "boolean"
                             },
-                            "enum" : {
+                            "one_of" : {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             }
                         }
@@ -163,7 +163,7 @@ const vocabSchema = `{
                     {
                         "type": "object",
                         "properties": {
-                             "domain": {
+                            "domain": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
                             "range": {
@@ -171,6 +171,9 @@ const vocabSchema = `{
                             },
                             "range_union" : {
                                 "type" : "boolean"
+                            },
+                            "one_of" : {
+                                "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
                             "dataset": {
                                 "type": "boolean"
@@ -210,6 +213,17 @@ const vocabSchema = `{
                 "allOf": [
                     {
                         "$ref": "#/$defs/CommonTerm"
+                    },
+                    {
+                        "type" : "object",
+                        "properties" : {
+                            "pattern" : {
+                                "type" : "string"
+                            },
+                            "one_of" : {
+                                "$ref" : "#/$defs/StringOrArrayOfStrings"
+                            }
+                        }
                     }
                 ],
                 "unevaluatedProperties": false

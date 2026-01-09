@@ -4,12 +4,14 @@
  *
  * @packageDocumentation
  */
-import { type Vocab, global, type RDFTerm, type Link, Status, Container } from './common';
+import { type Vocab, global, type RDFTerm, type Link, Status, Container, RDFProperty } from './common';
+import { requiredTurtlePrefixes }                                         from './common';
 import { getEditorConfigOptions }                                         from './beautify';
+import { factory }                                                        from './factory';
+
 
 const spaces: string = ((suffix: string): string => {
     const options = getEditorConfigOptions(suffix);
-    // console.log(JSON.stringify(options,null,4))
     if (options.indent_with_tabs) {
         return "\t";
     } else {
@@ -22,7 +24,6 @@ const spaces: string = ((suffix: string): string => {
         return output;
     }
 })('ttl');
-
 
 /**
  * Generate the Turtle representation of the vocabulary.
@@ -47,15 +48,42 @@ export function toTurtle(vocab: Vocab): string {
     }
 
     // Like the domain, but the union possibly appears for the range
-    const multiRange = (term: RDFTerm[], union: boolean): string => {
-        const value: string[] = term.map(termToStringCallback);
-        if (value.length === 1) {
-            return value[0];
-        } else if (union) {
-            return `[ a owl:Class; owl:unionOf (${value.join(' ')}) ]`
-        } else {
-            return value.join(", ")
-        }
+    const multiRange = (term: RDFTerm[], union: boolean, one_of: undefined | RDFTerm[]): string => {
+        const basicRange: string[] = ((): string[] => {
+            const value: string[] = term.map(termToStringCallback);
+            if ((value.length) === 1) {
+                return [value[0]]
+            } else if (union) {
+                return [`[ a owl:Class; owl:unionOf (${value.join(' ')}) ]`];
+            } else {
+                return value;
+            }
+        })();
+
+        const extra: string[] = ((): string[] => {
+            if (one_of && one_of.length > 0) {
+                const value: string[] = one_of.map(termToStringCallback)
+                return [`[ a owl:Class; owl:oneOf (${value.join(' ')}) ]`];
+            } else {
+                return [];
+            }
+        })();
+
+        return [...basicRange,...extra].join(', ');
+
+
+
+            //    if (prop.one_of && prop.one_of.length > 0) {
+            //     turtle += `${spaces}rdfs:range [owl:oneOf (${prop.one_of.join(' ')})] ;\n`;
+            // }
+
+        // if (value.length === 1) {
+        //     return value[0];
+        // } else if (union) {
+        //     return `[ a owl:Class; owl:unionOf (${value.join(' ')}) ]`
+        // } else {
+        //     return value.join(", ")
+        // }
     }
 
     // This will be the output...
@@ -85,7 +113,9 @@ export function toTurtle(vocab: Vocab): string {
     {
         // Copy-paste (sort of...) the prefix definitions
         for (const prefix of vocab.prefixes) {
-            turtle += `@prefix ${prefix.prefix}: <${prefix.url}> .\n`;
+            if (requiredTurtlePrefixes.includes(prefix.prefix) || factory.usesPrefix(prefix.prefix)) {
+                turtle += `@prefix ${prefix.prefix}: <${prefix.url}> .\n`;
+            }
         }
         turtle += "\n";
     }
@@ -132,9 +162,9 @@ export function toTurtle(vocab: Vocab): string {
                 }
 
                 if (prop.container === Container.list) {
-                    turtle += `${spaces}rdfs:range rdf:List ;\n`
-                } else if (prop.range) {
-                    const range = multiRange(prop.range, prop.range_union);
+                    turtle += `${spaces}rdfs:range rdf:List ;\n` ;
+                } else if (prop.range?.length > 0 || prop.one_of?.length > 0) {
+                    const range = multiRange(prop.range, prop.range_union, prop.one_of);
                     if (!(range === '' || range === '[]')) {
                         turtle += `${spaces}rdfs:range ${range} ;\n`;
                     }
@@ -160,6 +190,9 @@ export function toTurtle(vocab: Vocab): string {
                         turtle += `${spaces}rdfs:subClassOf ${cl.subClassOf.join(", ")} ;\n`;
                     }
                 }
+                if (cl.one_of && cl.one_of.length > 0) {
+                    turtle += `${spaces}owl:oneOf (${cl.one_of.join(' ')}) ;\n`
+                }
                 commonFields(cl);
             }
         }
@@ -171,7 +204,11 @@ export function toTurtle(vocab: Vocab): string {
         for (const ind of vocab.individuals) {
             if (!ind.external) {
                 // See the comment on magic in the property section...
-                turtle += `${ind} a ${ind.type.join(", ")} ;\n`;
+                if (ind.type.length > 0) {
+                    turtle += `${ind} a ${ind.type.join(", ")} ;\n`;
+                } else {
+                    turtle += `${ind} a rdfs:Resource ;\n`;
+                }
                 if (ind.status === Status.deprecated) {
                     turtle += `${spaces}owl:deprecated true ;\n`;
                 }
@@ -188,9 +225,13 @@ export function toTurtle(vocab: Vocab): string {
                 if (dt.status === Status.deprecated) {
                     turtle += `${spaces}owl:deprecated true ;\n`;
                 }
-                if (dt.subClassOf && dt.subClassOf.length > 0) {
+                if (dt.type && dt.type.length > 0) {
                     // See the comment on magic in the property section...
-                    turtle += `${spaces}rdfs:subClassOf ${dt.subClassOf.join(", ")} ;\n`;
+                    turtle += `${spaces}rdfs:subClassOf ${dt.type.join(", ")} ;\n`;
+                }
+                if (dt.pattern) {
+                    turtle += `${spaces}owl:onDatatype xsd:string ;\n`
+                    turtle += `${spaces}owl:withRestrictions ([xsd:pattern "${dt.pattern}"]) ;\n`;
                 }
                 commonFields(dt);
             }
