@@ -5,10 +5,13 @@
  *
  * @packageDocumentation
  */
+// deno-lint-ignore-file no-explicit-any
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toJSONLD = toJSONLD;
 const common_1 = require("./common");
+const common_2 = require("./common");
 const beautify_1 = require("./beautify");
+const factory_1 = require("./factory");
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
 const generic_context = {
@@ -19,12 +22,12 @@ const generic_context = {
     "rdfs:subClassOf": { "@type": "@id" },
     "rdfs:subPropertyOf": { "@type": "@id" },
     "rdfs:isDefinedBy": { "@type": "@id" },
-    "owl:equivalentClass": { "@type": "@vocab" },
-    "owl:equivalentProperty": { "@type": "@vocab" },
+    // "owl:equivalentClass":      { "@type": "@vocab" },
+    // "owl:equivalentProperty":   { "@type": "@vocab" },
     "owl:oneOf": { "@container": "@list", "@type": "@vocab" },
     "owl:deprecated": { "@type": "xsd:boolean" },
-    "owl:imports": { "@type": "@id" },
-    "owl:versionInfo": { "@type": "@id" },
+    // "owl:imports":              { "@type": "@id" },
+    // "owl:versionInfo":          { "@type": "@id" },
     "owl:inverseOf": { "@type": "@vocab" },
     "owl:unionOf": { "@container": "@list", "@type": "@vocab" },
     "rdfs_classes": { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
@@ -62,19 +65,41 @@ function toJSONLD(vocab) {
         }
         else {
             return {
+                "@type": "owl:Class",
                 "owl:unionOf": value
             };
         }
     };
-    // This is just for symmetry v.a.v. the domain...
-    const multiRange = (term) => {
-        const value = term.map(termToStringCallback);
-        if (value.length === 1) {
-            return value[0];
-        }
-        else {
-            return value;
-        }
+    // Like domain, but the creation of a union structure is conditional.
+    const multiRange = (term, union, one_of) => {
+        const basicRange = (() => {
+            const value = term.map(termToStringCallback);
+            if ((value.length) === 1) {
+                return value;
+            }
+            else if (union) {
+                return [{
+                        "@type": "ows:Class",
+                        "owl:unionOf": value,
+                    }];
+            }
+            else {
+                return value;
+            }
+        })();
+        const extra = (() => {
+            if (one_of && one_of.length > 0) {
+                const value = one_of.map(termToStringCallback);
+                return [{
+                        "@type": "owl:class",
+                        "owl:oneOf": value,
+                    }];
+            }
+            else {
+                return [];
+            }
+        })();
+        return [...basicRange, ...extra];
     };
     // This is the target object
     const jsonld = {};
@@ -115,7 +140,9 @@ function toJSONLD(vocab) {
     {
         let context = {};
         for (const prefix of vocab.prefixes) {
-            context[prefix.prefix] = prefix.url;
+            if (common_2.requiredJsonPrefixes.includes(prefix.prefix) || factory_1.factory.usesPrefix(prefix.prefix)) {
+                context[prefix.prefix] = prefix.url;
+            }
         }
         context = { ...context, ...generic_context };
         jsonld["@context"] = context;
@@ -163,14 +190,15 @@ function toJSONLD(vocab) {
                 if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
                     pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf.map(termToStringCallback);
                 }
-                if (prop.domain) {
+                if (prop.domain && prop.domain.length > 0) {
                     pr_object["rdfs:domain"] = multiDomain(prop.domain);
                 }
                 if (prop.container === common_1.Container.list) {
                     pr_object["rdfs:range"] = "rdf:List";
                 }
-                else if (prop.range) {
-                    pr_object["rdfs:range"] = multiRange(prop.range);
+                else if (prop.range?.length > 0 || prop.one_of?.length > 0) {
+                    const range = multiRange(prop.range, prop.range_union, prop.one_of);
+                    pr_object["rdfs:range"] = range.length > 1 ? range : range[0];
                 }
                 commonFields(pr_object, prop);
                 contexts(pr_object, prop);
@@ -197,7 +225,18 @@ function toJSONLD(vocab) {
                     cl_object["owl:deprecated"] = true;
                 }
                 if (cl.subClassOf && cl.subClassOf.length > 0) {
-                    cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
+                    if (cl.subClassOf.length > 1 && cl.upper_union) {
+                        cl_object["rdfs:subClassOf"] = {
+                            "@type": "owl:Class",
+                            "owl:unionOf": cl.subClassOf.map(termToStringCallback),
+                        };
+                    }
+                    else {
+                        cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
+                    }
+                }
+                if (cl.one_of && cl.one_of.length > 0) {
+                    cl_object["owl:oneOf"] = cl.one_of.map(termToStringCallback);
                 }
                 commonFields(cl_object, cl);
                 contexts(cl_object, cl);
@@ -214,7 +253,10 @@ function toJSONLD(vocab) {
             if (!ind.external) {
                 const ind_object = {};
                 ind_object["@id"] = `${ind}`;
-                if (ind.type.length === 1) {
+                if (ind.type.length === 0) {
+                    ind_object["@type"] = "rdfs:Resource";
+                }
+                else if (ind.type.length === 1) {
                     ind_object["@type"] = `${ind.type[0]}`;
                 }
                 else {
@@ -239,8 +281,18 @@ function toJSONLD(vocab) {
                 const dt_object = {};
                 dt_object["@id"] = `${dt}`;
                 dt_object["@type"] = "rdfs:Datatype";
-                if (dt.subClassOf && dt.subClassOf.length > 0) {
-                    dt_object["rdfs:subClassOf"] = dt.subClassOf.map(termToStringCallback);
+                if (dt.type && dt.type.length > 0) {
+                    dt_object["rdfs:subClassOf"] = dt.type.map(termToStringCallback);
+                }
+                if (dt.pattern) {
+                    dt_object["owl:onDatatype"] = "xsd:string";
+                    dt_object["owl:withRestrictions"] = {
+                        "@list": [
+                            {
+                                "xsd:pattern": `${dt.pattern}`
+                            }
+                        ]
+                    };
                 }
                 commonFields(dt_object, dt);
                 contexts(dt_object, dt);

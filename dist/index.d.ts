@@ -51,17 +51,19 @@ export declare class VocabGeneration {
      */
     getContext(): string;
     /**
-     * Get the HTML/RDFa representation of the vocabulary based on an HTML template
+     * Get the HTML representation of the vocabulary based on an HTML template
      * @param template - Textual version of the vocabulary template
+     * @param basename - Common basename for the generation of the output files
+     * @param context - Whether a JSON-LD context file is also generated
      * @returns
      */
-    getHTML(template: string, basename: string): string;
+    getHTML(template: string, basename: string, context: boolean): string;
     /** @internal */
     get_turtle(): string;
     /** @internal */
     get_jsonld(): string;
     /** @internal */
-    get_html(template: string, basename?: string): string;
+    get_html(template: string, basename?: string, context?: boolean): string;
     /** @internal */
     get_context(): string;
 }

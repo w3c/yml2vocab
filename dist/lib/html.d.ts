@@ -20,6 +20,7 @@ import type { Vocab } from './common';
  *
  * @param vocab - The internal representation of the vocabulary
  * @param template_text - The textual content of the template file
+ * @param context - Whether a context file is also generated (if yes, some extra notes may appear in the output)
  * @returns
  */
-export declare function toHTML(vocab: Vocab, template_text: string, basename: string): string;
+export declare function toHTML(vocab: Vocab, template_text: string, basename: string, context: boolean): string;

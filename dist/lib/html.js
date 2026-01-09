@@ -7,6 +7,9 @@ const factory_1 = require("./factory");
 const beautify_1 = require("./beautify");
 // This object is need for a proper formatting of some text
 const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
+// String representing the logical conjunction/disjunction of terms for classes and ranges
+const AND = ' ⊓ ';
+const OR = ' ⊔ ';
 /**
  * Generate the HTML representation of the vocabulary, based on an HTML template file. The
  * template file is parsed to create a DOM, which is manipulated using the standard
@@ -22,15 +25,19 @@ const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction'
  *
  * @param vocab - The internal representation of the vocabulary
  * @param template_text - The textual content of the template file
+ * @param context - Whether a context file is also generated (if yes, some extra notes may appear in the output)
  * @returns
  */
-function toHTML(vocab, template_text, basename) {
+function toHTML(vocab, template_text, basename, context) {
     // Get the DOM of the template
     const document = new minidom_1.MiniDOM(template_text);
-    // The prefix and the URL for the vocabulary itself
     // I am just lazy to type things that are too long... :-)
     const vocab_prefix = common_1.global.vocab_prefix;
-    // const vocab_url = global.vocab_url;
+    // const vocab_url    = global.vocab_url;
+    // Is the template a fragment? If so, then the definedBy fields
+    // must only include the fragment id for HTML (and some elements that are
+    // in the header should not be generated)
+    const is_fragment = document.isFragment;
     /*********************************** Utility functions ******************************************/
     // Generate cross-link HTML snippets
     const termHTMLReference = (term) => {
@@ -104,17 +111,35 @@ function toHTML(vocab, template_text, basename) {
                 document.addChild(span, 'em', ` (${item.status})`);
             }
             if (item.defined_by) {
+                // this returns the fragment of the URI if the
+                // template is not a stand-alone HTML. That makes it
+                // possible to include the vocab documentation into
+                // the original document as, e.g., an appendix
+                const relativize = (term) => {
+                    if (is_fragment) {
+                        const parts = term.split('#');
+                        if (parts.length === 2) {
+                            return `#${parts[1]}`;
+                        }
+                        else {
+                            return term;
+                        }
+                    }
+                    else {
+                        return term;
+                    }
+                };
                 // By the logic of the program, at this point defined_by is always defined
                 // but picky compilers, like deno, push me to put this extra condition
                 switch (item.defined_by.length) {
                     case 0:
                         break;
                     case 1: {
-                        document.addChild(section, 'p', `See the <a href="${item.defined_by[0]}">formal definition of the term</a>.`);
+                        document.addChild(section, 'p', `See the <a href="${relativize(item.defined_by[0])}">formal definition of the term</a>.`);
                         break;
                     }
                     default: {
-                        const refs = item.defined_by.map((def) => `<a href="${def}">here</a>`);
+                        const refs = item.defined_by.map((def) => `<a href="${relativize(def)}">here</a>`);
                         document.addChild(section, 'p', `See the formal definitions ${formatter.format(refs)}.`);
                     }
                 }
@@ -145,6 +170,10 @@ function toHTML(vocab, template_text, basename) {
             `;
             const warning = document.addChild(section, 'p', external_warning_text);
             warning.setAttribute('class', 'note');
+        }
+        if (context && item.known_as) {
+            const known_as_text = `In the generated JSON-LD context file this term appears as "<code>${item.known_as}</code>".`;
+            document.addChild(section, 'p', known_as_text);
         }
         if (item.see_also && item.see_also.length > 0) {
             const dl = document.addChild(section, 'dl');
@@ -237,10 +266,12 @@ function toHTML(vocab, template_text, basename) {
         try {
             const title = vocab.ontology_properties.filter((property) => property.property === 'dc:title')[0].value;
             document.addText(title, document.getElementsByTagName('title')[0]);
-            document.addText(title, document.getElementById('title'));
+            const titleElement = document.getElementById('title') || document.getElementById('ontology_title');
+            document.addText(title, titleElement);
         }
         catch (e) {
-            console.warn(`Vocabulary warning: ontology title is not provided. (${e})`);
+            if (!is_fragment)
+                console.warn(`Vocabulary warning: ontology title is not provided. (${e})`);
         }
         const date = vocab.ontology_properties.filter((property) => property.property === 'dc:date')[0].value;
         document.addText(date, document.getElementById('time'));
@@ -251,11 +282,13 @@ function toHTML(vocab, template_text, basename) {
                 document.addHTMLText(description, descriptionElement);
             }
             else {
-                console.warn("Vocabulary warning: ontology description is not provided.");
+                if (!is_fragment)
+                    console.warn("Vocabulary warning: ontology description is not provided.");
             }
         }
         catch (e) {
-            console.warn(`Vocabulary warning: ontology description is not provided. (${e})`);
+            if (!is_fragment)
+                console.warn(`Vocabulary warning: ontology description is not provided. (${e})`);
         }
         try {
             const see_also = vocab.ontology_properties.filter((property) => property.property === 'rdfs:seeAlso');
@@ -267,11 +300,13 @@ function toHTML(vocab, template_text, basename) {
                 }
             }
             else {
-                console.warn(`Vocabulary warning: no reference to the ontology specification provided.`);
+                if (!is_fragment)
+                    console.warn(`Vocabulary warning: no reference to the ontology specification provided.`);
             }
         }
         catch (e) {
-            console.warn(`Vocabulary warning: no reference to the ontology specification provided. (${e})`);
+            if (!is_fragment)
+                console.warn(`Vocabulary warning: no reference to the ontology specification provided. (${e})`);
         }
     };
     // There is a separate list in the template for all the namespaces used by the vocabulary
@@ -280,10 +315,12 @@ function toHTML(vocab, template_text, basename) {
         const ns_dl = document.getElementById('namespaces');
         if (ns_dl) {
             for (const ns of vocab.prefixes) {
-                const dt = document.addChild(ns_dl, 'dt');
-                document.addChild(dt, 'code', ns.prefix);
-                const dd = document.addChild(ns_dl, 'dd');
-                document.addChild(dd, 'code', ns.url);
+                if (factory_1.factory.usesPrefix(ns.prefix)) {
+                    const dt = document.addChild(ns_dl, 'dt');
+                    document.addChild(dt, 'code', ns.prefix);
+                    const dd = document.addChild(ns_dl, 'dd');
+                    document.addChild(dd, 'code', ns.url);
+                }
             }
         }
     };
@@ -325,7 +362,7 @@ function toHTML(vocab, template_text, basename) {
             }
         }
     };
-    // Note that the functions for classes, properties, etc., have a second argument for "statusFilter", ie, for reserved,
+    // Note that the functions below for classes, properties, etc., have a second argument for "statusFilter", ie, for reserved,
     // deprecate, or stable. These values are used to find the right section in the template, and can also
     // affect the real function. These functions are called several time, each with different status values
     // and different list of terms; see at the end of the function
@@ -344,14 +381,28 @@ function toHTML(vocab, template_text, basename) {
                     cl_section.id = item.html_id;
                     commonFields(cl_section, item);
                     // Extra list of superclasses, if applicable
-                    if (!item.external && item.subClassOf && item.subClassOf.length > 0) {
-                        const dl = document.addChild(cl_section, 'dl');
-                        dl.className = 'terms';
-                        document.addChild(dl, 'dt', 'Subclass of:');
-                        const dd = document.addChild(dl, 'dd');
-                        for (const superclass of item.subClassOf) {
-                            const span = document.addChild(dd, 'span');
-                            span.innerHTML = termHTMLReference(superclass);
+                    if (!item.external) {
+                        if (item.subClassOf && item.subClassOf.length > 0) {
+                            const dl = document.addChild(cl_section, 'dl');
+                            dl.className = 'terms';
+                            document.addChild(dl, 'dt', 'Subclass of:');
+                            const dd = document.addChild(dl, 'dd');
+                            dd.innerHTML = ((t) => {
+                                const join_logic = item.upper_union ? OR : AND;
+                                const names = t.map(termHTMLReference);
+                                return names.join(join_logic);
+                            })(item.subClassOf);
+                        }
+                        if (item.one_of && item.one_of.length > 0) {
+                            const dl = document.addChild(cl_section, 'dl');
+                            dl.className = 'terms';
+                            document.addChild(dl, 'dt', 'Consists of:');
+                            const dd = document.addChild(dl, 'dd');
+                            dd.innerHTML = ((t) => {
+                                const join_logic = ', ';
+                                const names = t.map(termHTMLReference);
+                                return `{ ${names.join(join_logic)} }`;
+                            })(item.one_of);
                         }
                     }
                     // Again an extra list for range/domain references, if applicable
@@ -428,6 +479,19 @@ function toHTML(vocab, template_text, basename) {
                     if (!item.external && ((item.range && item.range.length > 0) || (item.domain && item.domain.length > 0))) {
                         const dl = document.addChild(pr_section, 'dl');
                         dl.className = 'terms';
+                        if (item.domain && item.domain.length > 0) {
+                            document.addChild(dl, 'dt', 'Domain:');
+                            const dd = document.addChild(dl, 'dd');
+                            if (item.domain.length === 1) {
+                                dd.innerHTML = termHTMLReference(item.domain[0]);
+                            }
+                            else {
+                                dd.innerHTML = ((t) => {
+                                    const names = t.map(termHTMLReference);
+                                    return names.join(' ⊔ ');
+                                })(item.domain);
+                            }
+                        }
                         if (item.range && item.range.length > 0) {
                             const isList = (item.container === common_1.Container.list);
                             const isSet = (item.container === common_1.Container.set);
@@ -442,36 +506,31 @@ function toHTML(vocab, template_text, basename) {
                                 }
                             }
                             else {
+                                const innerHTML_classes = ((t) => {
+                                    const join_logic = item.range_union ? OR : AND;
+                                    const names = t.map(termHTMLReference);
+                                    return names.join(join_logic);
+                                })(item.range);
                                 if (isList) {
-                                    document.addText('List containing intersections of:', dd);
+                                    document.addHTMLText(`List containing instances of ${innerHTML_classes}`, dd);
                                 }
                                 else {
-                                    document.addText('Intersection of:', dd);
+                                    document.addHTMLText(`${innerHTML_classes}`, dd);
                                 }
-                                document.addChild(dd, 'br');
-                                for (const entry of item.range) {
-                                    const r_span = document.addChild(dd, 'span');
-                                    r_span.innerHTML = termHTMLReference(entry);
-                                    document.addChild(dd, 'br');
-                                }
+                            }
+                            if (item.one_of && item.one_of.length > 0) {
+                                const dl = document.addChild(pr_section, 'dl');
+                                dl.className = 'terms';
+                                document.addChild(dl, 'dt', 'Value may be one of:');
+                                const dd = document.addChild(dl, 'dd');
+                                dd.innerHTML = ((t) => {
+                                    const join_logic = ', ';
+                                    const names = t.map(termHTMLReference);
+                                    return `${names.join(join_logic)}`;
+                                })(item.one_of);
                             }
                             if (isList || isSet) {
                                 document.addChild(dd, 'p', 'In a JSON-LD representation, values to this property are supposed to be represented in the form of a JSON array, even if there is just a single value.');
-                            }
-                        }
-                        if (item.domain && item.domain.length > 0) {
-                            document.addChild(dl, 'dt', 'Domain:');
-                            const dd = document.addChild(dl, 'dd');
-                            if (item.domain.length === 1) {
-                                dd.innerHTML = termHTMLReference(item.domain[0]);
-                            }
-                            else {
-                                document.addText('Union of: ', dd);
-                                document.addChild(dd, 'br');
-                                for (const entry of item.domain) {
-                                    dd.innerHTML = termHTMLReference(entry);
-                                    document.addChild(dd, 'br');
-                                }
                             }
                         }
                     }
@@ -545,6 +604,19 @@ function toHTML(vocab, template_text, basename) {
                             dd.innerHTML = termHTMLReference(superclass);
                         }
                     }
+                    if (item.pattern && item.pattern.length > 0) {
+                        const dl = document.addChild(dt_section, 'dl');
+                        dl.className = 'terms';
+                        if (item.one_of && item.one_of.length > 0) {
+                            document.addChild(dl, 'dt', 'Restricted to: ');
+                            const items = item.one_of.map((input) => `"${input}"`).join(', ');
+                            document.addChild(dl, 'dd', items);
+                        }
+                        else {
+                            document.addChild(dl, 'dt', 'Restriction pattern: ');
+                            document.addChild(dl, 'dd', `"${item.pattern}"`);
+                        }
+                    }
                     if (item.range_of.length > 0 || item.includes_range_of.length > 0) {
                         // This for the creation of a list of property references, each
                         // a hyperlink to the property's definition.
@@ -578,7 +650,8 @@ function toHTML(vocab, template_text, basename) {
     };
     /*********************** The real processing part, making use of all these functions ****************************/
     // 1. Set the reference to the json-ld and turtle versions into the header
-    alternateLinks();
+    if (!is_fragment)
+        alternateLinks();
     // 2. Set the general properties on the ontology itself
     ontologyProperties();
     // 3. The introductory list of prefixes used in the document
@@ -616,8 +689,8 @@ function toHTML(vocab, template_text, basename) {
         if (section !== null && section.parentElement)
             section.parentElement.removeChild(section);
     }
-    // 10. Beautify the text before it is returned
-    const final_html = `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
-    const nice_html = (0, beautify_1.beautify)(final_html, 'html', { max_preserve_newlines: 2 });
-    return nice_html;
+    // 10. Generate the final HTML fragment or full HTML
+    const html_text = is_fragment ? `${document.innerHTML()}` : `<!DOCTYPE html>\n<html lang="en">${document.innerHTML()}</html>`;
+    // 11. Beautify the text before it is returned
+    return (0, beautify_1.beautify)(html_text, 'html', { max_preserve_newlines: 2 });
 }

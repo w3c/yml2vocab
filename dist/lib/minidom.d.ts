@@ -13,8 +13,10 @@
  */
 export declare class MiniDOM {
     private readonly _localDocument;
+    private readonly _isFragment;
     constructor(html_text: string);
     get document(): Document;
+    get isFragment(): boolean;
     /**
      * Add a new HTML Element to a parent, and return the new element.
      *

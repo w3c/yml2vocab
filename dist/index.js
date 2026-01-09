@@ -70,12 +70,14 @@ class VocabGeneration {
         return (0, context_1.toContext)(this.vocab);
     }
     /**
-     * Get the HTML/RDFa representation of the vocabulary based on an HTML template
+     * Get the HTML representation of the vocabulary based on an HTML template
      * @param template - Textual version of the vocabulary template
+     * @param basename - Common basename for the generation of the output files
+     * @param context - Whether a JSON-LD context file is also generated
      * @returns
      */
-    getHTML(template, basename) {
-        return (0, html_1.toHTML)(this.vocab, template, basename);
+    getHTML(template, basename, context) {
+        return (0, html_1.toHTML)(this.vocab, template, basename, context);
     }
     /* Deprecated; these are just to avoid problems for users of earlier versions */
     /** @internal */
@@ -83,7 +85,7 @@ class VocabGeneration {
     /** @internal */
     get_jsonld() { return this.getJSONLD(); }
     /** @internal */
-    get_html(template, basename = '') { return this.getHTML(template, basename); }
+    get_html(template, basename = '', context = false) { return this.getHTML(template, basename, context); }
     /** @internal */
     get_context() { return this.getContext(); }
 }
@@ -133,7 +135,7 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
         const fs_writes = [
             node_fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
             node_fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-            node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template, basename)),
+            node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template, basename, context)),
         ];
         if (context) {
             fs_writes.push(node_fs_1.promises.writeFile(`${basename}.context.jsonld`, conversion.getContext()));

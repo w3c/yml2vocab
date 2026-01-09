@@ -77,6 +77,9 @@ const vocabSchema = `{
                         "enum" : ["@direction", "@graph", "@id", "@included", "@index", "@json", "@language", "@list", "@nest", "@none", "@reverse", "@set", "@type", "@value"]
                     }
                 },
+                "import" : {
+                    "$ref" : "#/$defs/URIOrArrayOfURIs"
+                },
                 "unevaluatedProperties": false
             }
         },
@@ -128,6 +131,17 @@ const vocabSchema = `{
                 "allOf": [
                     {
                         "$ref": "#/$defs/CommonTerm"
+                    },
+                    {
+                        "type": "object",
+                        "properties" : {
+                            "upper_union" : {
+                                "type" : "boolean"
+                            },
+                            "one_of" : {
+                                "$ref": "#/$defs/StringOrArrayOfStrings"
+                            }
+                        }
                     }
                 ],
                 "unevaluatedProperties": false
@@ -147,10 +161,16 @@ const vocabSchema = `{
                     {
                         "type": "object",
                         "properties": {
-                             "domain": {
+                            "domain": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
                             "range": {
+                                "$ref": "#/$defs/StringOrArrayOfStrings"
+                            },
+                            "range_union" : {
+                                "type" : "boolean"
+                            },
+                            "one_of" : {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
                             "dataset": {
@@ -191,6 +211,17 @@ const vocabSchema = `{
                 "allOf": [
                     {
                         "$ref": "#/$defs/CommonTerm"
+                    },
+                    {
+                        "type" : "object",
+                        "properties" : {
+                            "pattern" : {
+                                "type" : "string"
+                            },
+                            "one_of" : {
+                                "$ref" : "#/$defs/StringOrArrayOfStrings"
+                            }
+                        }
                     }
                 ],
                 "unevaluatedProperties": false

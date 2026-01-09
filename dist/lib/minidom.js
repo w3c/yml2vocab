@@ -17,7 +17,9 @@ const jsdom_1 = require("jsdom");
  */
 class MiniDOM {
     _localDocument;
+    _isFragment;
     constructor(html_text) {
+        this._isFragment = !html_text.trim().startsWith('<html');
         const doc = (new jsdom_1.JSDOM(html_text)).window.document;
         if (doc) {
             this._localDocument = doc;
@@ -25,10 +27,27 @@ class MiniDOM {
         else {
             throw new Error("Problem with parsing the template text");
         }
+        if (this._isFragment) {
+            // Remove the extra, HTML specific elements from the DOM
+            // they were added by JSDOM but should not be there
+            // for our application
+            const head = doc.getElementsByTagName('head')[0] || null;
+            if (head) {
+                head.remove();
+            }
+            const body = doc.getElementsByTagName('body')[0] || null;
+            if (body) {
+                doc.documentElement.append(...body.childNodes);
+                body.remove();
+            }
+        }
     }
     // noinspection JSUnusedGlobalSymbols
     get document() {
         return this._localDocument;
+    }
+    get isFragment() {
+        return this._isFragment;
     }
     /**
      * Add a new HTML Element to a parent, and return the new element.

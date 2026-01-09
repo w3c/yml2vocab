@@ -69,13 +69,22 @@ function toContext(vocab) {
                     break;
                 }
                 else {
-                    // if range is a class, then it is a reference
                     if (factory_1.RDFTermFactory.isClass(rangeTerm)) {
                         output["@type"] = "@id";
                         break;
                     }
                 }
             }
+        }
+        // There is a special treatment to generate additional statements
+        // when the values of the range are restricted.
+        // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
+        if (property.one_of?.length > 0 && !property.dataset) {
+            const mappings = property.one_of.map((term) => [term.id, term.url]);
+            mappings.push(["@vocab", `${common_1.global.vocab_prefix}:INVALID_VALUE:`]);
+            // Note that this may overwrite earlier values...
+            output["@type"] = "@vocab";
+            output["@context"] = Object.fromEntries(mappings);
         }
         if (property.dataset) {
             if (property.container === common_1.Container.set) {
@@ -94,7 +103,24 @@ function toContext(vocab) {
         return (Object.keys(output).length === 1) ? url : output;
     };
     // This is the top level context that will be returned to the caller
-    const top_level = { ...preamble, ...common_1.global.aliases };
+    const import_context = (() => {
+        if (common_1.global.import.length === 0) {
+            return {};
+        }
+        else if (common_1.global.import.length === 1) {
+            return {
+                "@version": "1.1",
+                "@import": common_1.global.import[0]
+            };
+        }
+        else {
+            return {
+                "@version": "1.1",
+                "@import": common_1.global.import
+            };
+        }
+    })();
+    const top_level = { ...import_context, ...preamble, ...common_1.global.aliases };
     // Set of properties that are "handled" as parts of embedded contexts of classes.
     // This is used to avoid repeating the properties at the top level
     const class_properties = new Set();

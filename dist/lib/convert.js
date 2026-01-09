@@ -23,7 +23,7 @@ function isURL(value) {
     }
 }
 /**
- * Turn the label text into a non-camel case.
+ * Turn the id text into a non-camel case for a label.
  *
  * @param str
  * @param separator
@@ -34,6 +34,7 @@ function localeUnCamelise(str, separator = ' ') {
         return char[0] === char.toLocaleUpperCase();
     };
     if (str.length === 0) {
+        console.log(str);
         return str;
     }
     else {
@@ -41,7 +42,12 @@ function localeUnCamelise(str, separator = ' ') {
         const output = [str.charAt(0)];
         for (let i = 1; i < str.length; i++) {
             const char = str.charAt(i);
-            if (isLocaleUpperCase(char)) {
+            if (char === ':') {
+                // This is prefix separator, should be left without change
+                // This is CURIE, it should be used without change
+                return str;
+            }
+            else if (isLocaleUpperCase(char)) {
                 // Got to the camel's hump
                 output.push(separator);
                 output.push(char.toLocaleLowerCase());
@@ -55,50 +61,6 @@ function localeUnCamelise(str, separator = ' ') {
         return output.join('');
     }
 }
-/**
- * These prefixes are added no matter what; they are not vocabulary specific,
- * but likely to be used in the vocabulary.
- *
- * @internal
- */
-const defaultPrefixes = [
-    {
-        prefix: "dc",
-        url: "http://purl.org/dc/terms/",
-    },
-    {
-        prefix: "dcterms",
-        url: "http://purl.org/dc/terms/",
-    },
-    {
-        prefix: "owl",
-        url: "http://www.w3.org/2002/07/owl#",
-    },
-    {
-        prefix: "rdf",
-        url: "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    },
-    {
-        prefix: "rdfs",
-        url: "http://www.w3.org/2000/01/rdf-schema#"
-    },
-    {
-        prefix: "xsd",
-        url: "http://www.w3.org/2001/XMLSchema#"
-    },
-    {
-        prefix: "vs",
-        url: "http://www.w3.org/2003/06/sw-vocab-status/ns#"
-    },
-    {
-        prefix: "schema",
-        url: "http://schema.org/"
-    },
-    {
-        prefix: "jsonld",
-        url: "http://www.w3.org/ns/json-ld#"
-    }
-];
 /**
  * These ontology properties are added no matter what; they are not vocabulary specific.
  *
@@ -231,7 +193,7 @@ function finalizeRawEntry(raw) {
             };
         }
     })();
-    // The official label should all ba lower case.
+    // The official label should all be lower case.
     const label = ((str) => {
         if (str) {
             return str;
@@ -251,9 +213,11 @@ function finalizeRawEntry(raw) {
         value: raw.value,
         label: label,
         upper_value: toArray(raw.upper_value),
+        upper_union: raw.upper_union ?? false,
         type: toArray(raw.type),
         domain: toArray(raw.domain),
         range: toArray(raw.range),
+        range_union: raw.range_union ?? false,
         deprecated: deprecated,
         defined_by: toArray(raw.defined_by) ?? [],
         status: status,
@@ -265,6 +229,8 @@ function finalizeRawEntry(raw) {
         dataset: raw.dataset ?? false,
         container: raw.container,
         context: toArrayContexts(raw.context),
+        pattern: raw.pattern,
+        one_of: toArray(raw.one_of),
     };
 }
 /**
@@ -458,7 +424,7 @@ function getData(vocab_source) {
     // The YAML file does not necessarily store the "vocab" as an array, but may; so the
     // vocab entry is always stored as an array. This makes the first entry of this
     // concatenation a bit strange...
-    const prefixes = [
+    const allPrefixes = [
         ...vocab.vocab.map((raw) => {
             if (raw.id === undefined) {
                 throw (new Error("The vocabulary has no prefix"));
@@ -485,8 +451,10 @@ function getData(vocab_source) {
                 };
             })
             : []),
-        ...defaultPrefixes
+        ...common_2.defaultPrefixes
     ];
+    // Remove duplicates; trick is that, using a map, the second setting of a prefix would overwrite the previous
+    const prefixes = Array.from(new Map(allPrefixes.map(p => [p.prefix, p])).values());
     /********************************************************************************************/
     // Get the ontology properties. Note that there are also default ontology properties
     // that are added to what the YAML input provides
@@ -514,28 +482,53 @@ function getData(vocab_source) {
             // Extra check for possible error for external terms
             set_and_check_external(raw, output);
             // In the former version of the package the user's type was done via the upper_value property, which was not clean
-            // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
+            // the current version has a separate type attribute, but the upper_value could also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
-            const type = [
+            const type_entries = [
                 ...(raw.type !== undefined) ? raw.type : [],
                 ...(raw.upper_value !== undefined) ? raw.upper_value : []
             ];
+            const type = [...new Set(type_entries)].map(t => factory_1.factory.term(t));
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
             common_1.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
+            // Setting the right pattern and enum values: if there is no pattern but there is an enum,
+            // create a pattern artificially.
+            // Both are restricted to string values, though.
+            const subClassOf = raw.upper_value?.map((val) => factory_1.factory.class(val));
+            const [pattern, one_of] = (() => {
+                if (raw.one_of || raw.pattern) {
+                    // The supertype must include an xsd:string
+                    if (!(type && type.map((term) => `${term}`).includes('xsd:string'))) {
+                        throw (new Error(`${output.id} must be an xsd:string for template or enumeration`));
+                    }
+                }
+                if (raw.one_of && raw.one_of.length > 0) {
+                    const pattern = raw.one_of.join('|');
+                    return [pattern, raw.one_of];
+                }
+                else if (raw.pattern !== undefined) {
+                    return [raw.pattern, []];
+                }
+                else {
+                    return ["", []];
+                }
+            })();
             Object.assign(output, {
                 label: raw.label,
                 comment: raw.comment,
                 deprecated: raw.deprecated,
                 defined_by: raw.defined_by,
                 status: raw.status,
-                type: [...new Set(type)].map(t => factory_1.factory.term(t)),
-                subClassOf: raw.upper_value?.map((val) => factory_1.factory.class(val)),
+                type: type,
+                subClassOf: subClassOf,
                 see_also: raw.see_also,
                 known_as: raw.known_as,
                 example: raw.example,
                 context: final_contexts(raw, output),
+                one_of: one_of,
+                pattern: pattern,
                 range_of: [], // these are set later, when all classes and properties are defined
                 includes_range_of: [], // these are set later, when all classes and properties are defined
             });
@@ -557,8 +550,13 @@ function getData(vocab_source) {
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
             common_1.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
+            if (raw.one_of && raw.one_of.length > 0) {
+                // The owl:Class has to be added to types because the
+                // expression for one_of applies on an owl class only...
+                types.push("owl:Class");
+            }
             Object.assign(output, {
-                type: types.map(t => factory_1.factory.term(t)),
+                type: [...new Set(types)].map(t => factory_1.factory.term(t)),
                 user_type: user_type.map(t => factory_1.factory.term(t)),
                 label: raw.label,
                 comment: raw.comment,
@@ -566,6 +564,8 @@ function getData(vocab_source) {
                 defined_by: raw.defined_by,
                 status: raw.status,
                 subClassOf: raw.upper_value?.map((val) => factory_1.factory.class(val)),
+                upper_union: raw.upper_union,
+                one_of: raw.one_of?.map((val) => factory_1.factory.individual(val)),
                 see_also: raw.see_also,
                 known_as: raw.known_as,
                 example: raw.example,
@@ -647,6 +647,8 @@ function getData(vocab_source) {
                 subPropertyOf: raw.upper_value?.map((val) => factory_1.factory.property(val)),
                 see_also: raw.see_also,
                 range: finalRange,
+                range_union: raw.range_union,
+                one_of: raw.one_of?.map((val) => factory_1.factory.individual(val)),
                 domain: raw.domain?.map(val => factory_1.factory.class(val)),
                 example: raw.example,
                 known_as: raw.known_as,
@@ -711,9 +713,12 @@ function getData(vocab_source) {
         }
     }
     /********************************************************************************************/
-    // The alias settings are not relevant for the individual terms, are to be set in the global space
+    // The alias and import settings are not relevant for the individual terms, are to be set in the global space
     if (vocab.json_ld?.alias) {
         common_1.global.aliases = { ...common_1.global.aliases, ...vocab.json_ld.alias };
+    }
+    if (vocab.json_ld?.import) {
+        common_1.global.import = common_1.global.import.concat(vocab.json_ld.import);
     }
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary

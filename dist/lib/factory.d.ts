@@ -32,6 +32,7 @@ import type { RDFTerm, RDFProperty, RDFClass, RDFDatatype, RDFIndividual, RDFPre
 export declare class RDFTermFactory {
     private terms;
     private prefixes;
+    private used_prefixes;
     /**
      * Initialize the factory with a set of prefixes.
      *
@@ -119,6 +120,16 @@ export declare class RDFTermFactory {
       *
       */
     static includesCurie(terms: RDFTerm[], index: string): boolean;
+    /**
+     * List the prefixes used by the vocabulary
+     *
+     */
+    listPrefixes(): string[];
+    /**
+     * Does the system really use a predefined prefix?
+     *
+     */
+    usesPrefix(prefix: string): boolean;
 }
 /**
  * The (only) factory object used in the package.

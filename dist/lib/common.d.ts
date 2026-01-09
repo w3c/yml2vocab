@@ -39,6 +39,7 @@ export declare class StatusCounter {
 }
 export interface JSON_LD {
     alias?: Record<string, string>;
+    import?: string | string[];
 }
 /**
  * Context references. Lists, for a context, the terms that are listed in them.
@@ -81,9 +82,13 @@ export interface GlobalData {
      * JSON-LD keyword aliases, to be added to the JSON-LD context file on the user's request
      */
     aliases: Record<string, string>;
+    /**
+     * Imported context files, to be added to the JSON-LD context file on the user's request
+     */
+    import: string[];
 }
 /**
- * As it name says: some global data that are needed by most of the media type specific modules.
+ * As it name says: some global data that are needed by some of the media type specific modules.
  */
 export declare const global: GlobalData;
 /**
@@ -121,8 +126,10 @@ export interface RawVocabEntry {
     label: string;
     type?: string[];
     upper_value?: string[];
+    upper_union?: boolean;
     domain?: string[];
     range?: string[];
+    range_union?: boolean;
     deprecated?: boolean;
     status?: Status;
     external?: boolean;
@@ -134,6 +141,8 @@ export interface RawVocabEntry {
     dataset?: boolean;
     container?: Container;
     context?: string[];
+    one_of?: string[];
+    pattern?: string;
 }
 /**
  * This is the structure of the YAML file itself. Note that only vocab and ontology are required, everything else is optional
@@ -246,6 +255,8 @@ export interface RDFTerm {
  */
 export interface RDFClass extends RDFTerm {
     subClassOf: RDFClass[];
+    upper_union: boolean;
+    one_of: RDFIndividual[];
     range_of: RDFProperty[];
     domain_of: RDFProperty[];
     included_in_domain_of: RDFProperty[];
@@ -259,6 +270,8 @@ export interface RDFProperty extends RDFTerm {
     subPropertyOf: RDFProperty[];
     domain: RDFClass[];
     range: RDFTerm[];
+    range_union: boolean;
+    one_of: RDFIndividual[];
     dataset: boolean;
     container: Container | undefined;
     strongURL: boolean;
@@ -276,6 +289,8 @@ export interface RDFIndividual extends RDFTerm {
  */
 export interface RDFDatatype extends RDFTerm {
     subClassOf: RDFDatatype[];
+    one_of: string[];
+    pattern: string;
     range_of: RDFProperty[];
     includes_range_of: RDFProperty[];
 }
@@ -309,3 +324,17 @@ export interface Vocab {
     individuals: RDFIndividual[];
     datatypes: RDFDatatype[];
 }
+/**
+ * These prefixes are added no matter what; they are not vocabulary specific,
+ * but likely to be used in the vocabulary. Excesses are filtered out at the end...
+ *
+ * @internal
+ */
+export declare const defaultPrefixes: RDFPrefix[];
+/**
+ * Some prefixes are not dependent on the users' vocabulary but, rather, on the
+ * specificities of a particular serialization. These should not be filtered out
+ * when optimizing the prefixes...
+ */
+export declare const requiredTurtlePrefixes: string[];
+export declare const requiredJsonPrefixes: string[];
