@@ -2,7 +2,7 @@
 
 This list does not include all the tiny changes, bug handling, etc, only the changes in the main features.
 
-## Version 1.7.2
+## Version 1.8.0
 
 - Added the `upper_union` feature, introduced in 1.7.1, for datatypes, too.
 
