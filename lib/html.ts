@@ -638,9 +638,11 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                         dl.className = 'terms';
                         document.addChild(dl, 'dt', 'Derived from:');
                         const dd = document.addChild(dl, 'dd');
-                        for (const superclass of item.subClassOf) {
-                            dd.innerHTML = termHTMLReference(superclass);
-                        }
+                        dd.innerHTML = ((t: RDFTerm[]): string => {
+                            const join_logic = item.upper_union ? OR : AND;
+                            const names = t.map(termHTMLReference);
+                            return names.join(join_logic);
+                        })(item.subClassOf);
                     }
                     if (item.pattern && item.pattern.length > 0) {
                         const dl = document.addChild(dt_section, 'dl');
