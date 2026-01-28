@@ -510,7 +510,7 @@ export function getData(vocab_source: string): Vocab {
                 ...(raw.type !== undefined) ? raw.type : [],
                 ...(raw.upper_value !== undefined) ? raw.upper_value : []
             ];
-            const type = [...new Set(type_entries)].map(t => factory.term(t));
+            const type = [...new Set(type_entries)].map(t => factory.datatype(t));
 
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
@@ -520,7 +520,6 @@ export function getData(vocab_source: string): Vocab {
             // Setting the right pattern and enum values: if there is no pattern but there is an enum,
             // create a pattern artificially.
             // Both are restricted to string values, though.
-            const subClassOf = raw.upper_value?.map((val: string): RDFClass => factory.class(val));
             const [pattern, one_of] = ((): [string, string[]] => {
                 if (raw.one_of || raw.pattern) {
                     // The supertype must include an xsd:string
@@ -545,7 +544,8 @@ export function getData(vocab_source: string): Vocab {
                 defined_by        : raw.defined_by,
                 status            : raw.status,
                 type              : type,
-                subClassOf        : subClassOf,
+                subClassOf        : type,
+                upper_union       : raw.upper_union,
                 see_also          : raw.see_also,
                 known_as          : raw.known_as,
                 example           : raw.example,

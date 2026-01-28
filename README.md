@@ -549,11 +549,24 @@ individual:
             become part of the generated vocabulary, not all  RDF/OWL reasoners are capable of processing it.</td>
             <td>No</td>
         </tr>
+       <tr>
+            <td><code>upper_union</code></td>
+            <td>boolean</td>
+            <td>
+                If several "super" datatypes are specified then, by default, this means the <em>intersection</em> (or logical <em>conjunction</em>) of the datatypes.
+                If the value is <code>true</code>, the statement refers to the <em>union</em> (or logical <em>disjunction</em>) of the datatypes.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>upper_value</code></td>
+            <td>One or more terms or CURIEs</td>
+            <td>"Super" datatypes that this datatype is derived from. The term `type` can also be used, as an alias to this term</td>
+            <td>No</td>
+        </tr>
+
     </tbody>
 </table>
-
-
-The `type` or `upper_value`keys are used to define the possible datatype this term is derived from.
 
 Example:
 
@@ -568,6 +581,11 @@ datatype:
       - label: Goal of the datatype
         url:  https://example.org/further-description.html
 
+  - id: jsonld-number
+    label: JSON-LD notion of numbers
+    type: [xsd:decimal, xsd:float, xsd:double]
+    upper_union: true
+    comment: Datatype used by JSON-LD
 ```
 
 ## 1.3. Formatting the output

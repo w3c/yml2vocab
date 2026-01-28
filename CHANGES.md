@@ -2,6 +2,10 @@
 
 This list does not include all the tiny changes, bug handling, etc, only the changes in the main features.
 
+## Version 1.8.0
+
+- Added the `upper_union` feature, introduced in 1.7.1, for datatypes, too.
+
 ## Version 1.7.1
 
 - Added the `import` block to the `json_ld` top level block, to allow adding a `@import` statement with one or more URI-s at the top of the generated context file.
@@ -15,11 +19,8 @@ This list does not include all the tiny changes, bug handling, etc, only the cha
 ## Version 1.7.0
 
 - The package does not generate RDFa any more. The usage of RDFa in the HTML represented a significant burden on the code itself, and also made the generated HTML messy. All this for no real benefit: RDFa is very rarely used these days. Instead, the JSON-LD and Turtle versions of the vocabulary are linked from the HTML header as alternate representations.
-
 - All the generated files (HTML, Turtle, JSON-LD) are formatted by, partially, taking into account a possible [`.editorconfig`](https://spec.editorconfig.org) file regarding indentation size and some more, minor control statements.
-
 - Added the `container` key for properties, with a possible value of `set` or `list`. These values appear, for the specific property, in the generated JSON-LD `@context` file. In the `list` case it will also affect the range of the property (which is set to `rdf:List`).
-
 - Added the `json_ld` top level block with the `alias` block, defining keys to alias some JSON-LD keywords in the generated context file.
 
 ## Version 1.6.0
