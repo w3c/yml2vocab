@@ -221,8 +221,13 @@ function toTurtle(vocab) {
                     turtle += `${spaces}owl:deprecated true ;\n`;
                 }
                 if (dt.type && dt.type.length > 0) {
-                    // See the comment on magic in the property section...
-                    turtle += `${spaces}rdfs:subClassOf ${dt.type.join(", ")} ;\n`;
+                    if (dt.type.length > 1 && dt.upper_union) {
+                        turtle += `${spaces}rdfs:subClassOf [ a owl:Class; owl:unionOf (${dt.type.join(' ')}) ] ;\n`;
+                    }
+                    else {
+                        // See the comment on magic in the property section...
+                        turtle += `${spaces}rdfs:subClassOf ${dt.type.join(", ")} ;\n`;
+                    }
                 }
                 if (dt.pattern) {
                     turtle += `${spaces}owl:onDatatype xsd:string ;\n`;

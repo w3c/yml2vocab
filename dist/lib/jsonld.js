@@ -282,7 +282,15 @@ function toJSONLD(vocab) {
                 dt_object["@id"] = `${dt}`;
                 dt_object["@type"] = "rdfs:Datatype";
                 if (dt.type && dt.type.length > 0) {
-                    dt_object["rdfs:subClassOf"] = dt.type.map(termToStringCallback);
+                    if (dt.type.length > 1 && dt.upper_union) {
+                        dt_object["rdfs:subClassOf"] = {
+                            "@type": "owl:Class",
+                            "owl:unionOf": dt.type.map(termToStringCallback)
+                        };
+                    }
+                    else {
+                        dt_object["rdfs:subClassOf"] = dt.type.map(termToStringCallback);
+                    }
                 }
                 if (dt.pattern) {
                     dt_object["owl:onDatatype"] = "xsd:string";

@@ -289,6 +289,7 @@ export interface RDFIndividual extends RDFTerm {
  */
 export interface RDFDatatype extends RDFTerm {
     subClassOf: RDFDatatype[];
+    upper_union: boolean;
     one_of: string[];
     pattern: string;
     range_of: RDFProperty[];

@@ -488,7 +488,7 @@ function getData(vocab_source) {
                 ...(raw.type !== undefined) ? raw.type : [],
                 ...(raw.upper_value !== undefined) ? raw.upper_value : []
             ];
-            const type = [...new Set(type_entries)].map(t => factory_1.factory.term(t));
+            const type = [...new Set(type_entries)].map(t => factory_1.factory.datatype(t));
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
@@ -496,7 +496,6 @@ function getData(vocab_source) {
             // Setting the right pattern and enum values: if there is no pattern but there is an enum,
             // create a pattern artificially.
             // Both are restricted to string values, though.
-            const subClassOf = raw.upper_value?.map((val) => factory_1.factory.class(val));
             const [pattern, one_of] = (() => {
                 if (raw.one_of || raw.pattern) {
                     // The supertype must include an xsd:string
@@ -522,7 +521,8 @@ function getData(vocab_source) {
                 defined_by: raw.defined_by,
                 status: raw.status,
                 type: type,
-                subClassOf: subClassOf,
+                subClassOf: type,
+                upper_union: raw.upper_union,
                 see_also: raw.see_also,
                 known_as: raw.known_as,
                 example: raw.example,

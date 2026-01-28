@@ -215,6 +215,9 @@ const vocabSchema = `{
                     {
                         "type" : "object",
                         "properties" : {
+                            "upper_union" : {
+                                "type" : "boolean"
+                            },
                             "pattern" : {
                                 "type" : "string"
                             },
