@@ -54,7 +54,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
 
     // Generate cross-link HTML snippets
     const termHTMLReference = (term: RDFTerm): string => {
-        if (term.term_type === TermType.fullUrl) {
+        if (term.term_type === TermType.fullUrl || term.prefix === "") {
             return `<a href="${term.curie}"><code>${term.curie}</code></a>`;
         } else if (term.term_type === TermType.core) {
             // Typical case: an xsd datatype; a full curie is displayed, but
