@@ -41,7 +41,7 @@ function toHTML(vocab, template_text, basename, context) {
     /*********************************** Utility functions ******************************************/
     // Generate cross-link HTML snippets
     const termHTMLReference = (term) => {
-        if (term.term_type === common_1.TermType.fullUrl) {
+        if (term.term_type === common_1.TermType.fullUrl || term.prefix === "") {
             return `<a href="${term.curie}"><code>${term.curie}</code></a>`;
         }
         else if (term.term_type === common_1.TermType.core) {
