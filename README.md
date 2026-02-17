@@ -606,31 +606,32 @@ The generation of the HTML output requires an HTML Template file. This can eithe
 
 The required `id` values, and the containing elements, are as follows:
 
-| `id` value                          | Corresponding element | Generated content                                                                      |
-| :---------------------------------- | --------------------- | :------------------------------------------------------------------------------------- |
-| `title` or `ontology_title`         | any textual           | The title/name of the vocabulary (see the `ontology` block)                            |
-| `description`                       | any textual           | The description of the vocabulary (see the `ontology` block)                           |
-| `see_also`                          | any textual           | External reference for the vocabulary (see the `ontology` block)                       |
-| `alt-turtle`                        | `<a>`                 | Add a reference to the Turtle version of the vocabulary as an `href` attribute value   |
-| `alt-jsonld`                        | `<a>`                 | Add a reference to the JSON-LD version of the vocabulary  as an `href` attribute value |
-| `time`                              | any textual           | Date of the vocabulary generation                                                      |
-| `namespaces`                        | `<dl>`                | List of namespaces used by the vocabulary                                              |
-| `contexts`                          | `<ul>`                | List of context files where the vocabulary terms appear                                |
-| `term_definitions`                  | `<section>`           | Section for the fully defined vocabulary terms                                         |
-| `class_definitions`                 | `<section>`           | Subsection for the fully defined classes                                               |
-| `property_definitions`              | `<section>`           | Subsection for the fully defined properties                                            |
-| `datatype_definitions`              | `<section>`           | Subsection for the fully defined datatypes                                             |
-| `individual_definitions`            | `<section>`           | Subsection for the fully defined individuals                                           |
-| `reserved_term_definitions`         | `<section>`           | Section for the reserved vocabulary terms                                              |
-| `reserved_class_definitions`        | `<section>`           | Subsection for the reserved classes                                                    |
-| `reserved_property_definitions`     | `<section>`           | Subsection for the reserved properties                                                 |
-| `reserved_datatype_definitions`     | `<section>`           | Subsection for the reserved datatypes                                                  |
-| `reserved_individual_definitions`   | `<section>`           | Subsection for the reserved individuals                                                |
-| `deprecated_term_definitions`       | `<section>`           | Section for the deprecated vocabulary terms                                            |
-| `deprecated_class_definitions`      | `<section>`           | Subsection for the deprecated classes                                                  |
-| `deprecated_property_definitions`   | `<section>`           | Subsection for the deprecated properties                                               |
-| `deprecated_datatype_definitions`   | `<section>`           | Subsection for the deprecated datatypes                                                |
-| `deprecated_individual_definitions` | `<section>`           | Subsection for the deprecated individuals                                              |
+| `id` value                          | Corresponding element | Generated content                                                                           |
+| :---------------------------------- | --------------------- | :------------------------------------------------------------------------------------------ |
+| `title` or `ontology_title`         | any textual           | The title/name of the vocabulary (see the `ontology` block)                                 |
+| `description`                       | any textual           | The description of the vocabulary (see the `ontology` block)                                |
+| `see_also`                          | any textual           | External reference for the vocabulary (see the `ontology` block)                            |
+| `alt-turtle`                        | `<a>`                 | Add a reference to the Turtle version of the vocabulary as an `href` attribute value        |
+| `alt-jsonld`                        | `<a>`                 | Add a reference to the JSON-LD version of the vocabulary  as an `href` attribute value      |
+| `alt-context`                       | `<a>`                 | Add a reference to the JSON-LD Context file for the vocabulary as an `href` attribute value |
+| `time`                              | any textual           | Date of the vocabulary generation                                                           |
+| `namespaces`                        | `<dl>`                | List of namespaces used by the vocabulary                                                   |
+| `contexts`                          | `<ul>`                | List of context files where the vocabulary terms appear                                     |
+| `term_definitions`                  | `<section>`           | Section for the fully defined vocabulary terms                                              |
+| `class_definitions`                 | `<section>`           | Subsection for the fully defined classes                                                    |
+| `property_definitions`              | `<section>`           | Subsection for the fully defined properties                                                 |
+| `datatype_definitions`              | `<section>`           | Subsection for the fully defined datatypes                                                  |
+| `individual_definitions`            | `<section>`           | Subsection for the fully defined individuals                                                |
+| `reserved_term_definitions`         | `<section>`           | Section for the reserved vocabulary terms                                                   |
+| `reserved_class_definitions`        | `<section>`           | Subsection for the reserved classes                                                         |
+| `reserved_property_definitions`     | `<section>`           | Subsection for the reserved properties                                                      |
+| `reserved_datatype_definitions`     | `<section>`           | Subsection for the reserved datatypes                                                       |
+| `reserved_individual_definitions`   | `<section>`           | Subsection for the reserved individuals                                                     |
+| `deprecated_term_definitions`       | `<section>`           | Section for the deprecated vocabulary terms                                                 |
+| `deprecated_class_definitions`      | `<section>`           | Subsection for the deprecated classes                                                       |
+| `deprecated_property_definitions`   | `<section>`           | Subsection for the deprecated properties                                                    |
+| `deprecated_datatype_definitions`   | `<section>`           | Subsection for the deprecated datatypes                                                     |
+| `deprecated_individual_definitions` | `<section>`           | Subsection for the deprecated individuals                                                   |
 
 If an element is missing, the content is ignored by the script.
 

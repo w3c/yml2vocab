@@ -2,6 +2,10 @@
 
 This list does not include all the tiny changes, bug handling, etc, only the changes in the main features.
 
+## Version 1.8.2
+
+- If applicable, the reference to the generated context file is also linked from the HTML header and, if requested, added to the HTML content.
+
 ## Version 1.8.1
 
 - A term that is defined with a bona fide URL must be referred to from the HTML output with that URL (not with a local reference with a hash)

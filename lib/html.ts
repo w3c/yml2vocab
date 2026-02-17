@@ -272,12 +272,14 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         if (head && basename !== '') {
             addLink(head, 'jsonld', 'application/ld+json');
             addLink(head, 'ttl', 'text/turtle');
+            if (context) addLink(head, 'context.jsonld','application/ld+json')
         }
 
         // Handle the alternate 'a' links, if any of them are
         // present in the template
         addAref('alt-turtle', 'ttl');
         addAref('alt-jsonld', 'jsonld');
+        if (context) addAref('alt-context','context.jsonld');
 
         // Hide this code here because it is related: removes an unnecessary
         // RDFa link from the body if it is there.
