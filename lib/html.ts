@@ -272,7 +272,8 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         if (head && basename !== '') {
             addLink(head, 'jsonld', 'application/ld+json');
             addLink(head, 'ttl', 'text/turtle');
-            if (context) addLink(head, 'context.jsonld','application/ld+json')
+            // This is a possibility, but it does not sound right. The context is not an alternate
+            // if (context) addLink(head, 'context.jsonld','application/ld+json')
         }
 
         // Handle the alternate 'a' links, if any of them are
