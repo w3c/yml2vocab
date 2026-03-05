@@ -12,7 +12,7 @@ import { beautify }                                        from './beautify';
 
 // Just to get an extra help from TS if I mistype something...
 interface Context {
-    [index: string]: string | string[] | Context | boolean | null;
+    [index: string]: string | string[] | Context | boolean | null | number;
 }
 
 // These are the context statements appearing in all
@@ -114,12 +114,12 @@ export function toContext(vocab: Vocab): string {
             return {};
         } else if( global.import.length === 1) {
             return {
-                "@version" : "1.1",
+                "@version" : 1.1,
                 "@import" : global.import[0]
             }
         } else {
             return {
-                "@version": "1.1",
+                "@version": 1.1,
                 "@import" : global.import
             }
         }

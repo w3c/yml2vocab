@@ -5,6 +5,7 @@ This list does not include all the tiny changes, bug handling, etc, only the cha
 ## Version 1.8.2
 
 - If applicable, the reference to the generated context file is, if requested via an appropriate ID, added to the HTML content.
+- [Bug] The value of the JSON-LD `"@version"` must be 1.1 (as a number) and not "1.1" (as a string)
 
 ## Version 1.8.1
 
