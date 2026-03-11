@@ -43,81 +43,78 @@ function prefix_url(prefix: string | undefined, vocab: Vocab): string {
  */
 export function toContext(vocab: Vocab): string {
     // Generation of a unit for properties
-    const propertyContext = (
-        property: RDFProperty,
-        forClass = true,
-    ): Context | string => {
+    const propertyContext = (property: RDFProperty, forClass = true): Context | string => {
         // the real id of the property...
         const baseUrl = prefix_url(property.prefix, vocab);
         const url = `${baseUrl}${property.id}`;
         const output: Context = {
             "@id": url,
         };
-        if (
-            forClass &&
-            RDFTermFactory.includesCurie(property.type, "owl:ObjectProperty")
-        ) {
+        if (forClass && RDFTermFactory.includesCurie(property.type, "owl:ObjectProperty")) {
             output["@type"] = "@id";
         }
-        // Try to catch the datatype settings; these can be used
-        // to set these in the context as well
-        if (property.range) {
-            for (const rangeTerm of property.range) {
-                const curie = rangeTerm.curie;
-                if (curie.startsWith("xsd:")) {
-                    output["@type"] = rangeTerm.url;
-                    break;
-                } else if (curie === "rdf:JSON") {
-                    output["@type"] = "@json";
-                    break;
-                } else if (
-                    [
-                        "rdf:HTML",
-                        "rdf:XMLLiteral",
-                        "rdf:PlainLiteral",
-                        "rdf:langString",
-                    ].includes(curie)
-                ) {
-                    output["@type"] = rangeTerm.url;
-                    break;
-                } else if (
-                    RDFTermFactory.includesCurie(
-                        property.type,
-                        "owl:DatatypeProperty",
-                    )
-                ) {
-                    // This is the case when the property refers to an explicitly defined, non-standard datatype
-                    output["@type"] = rangeTerm.url;
-                    break;
-                } else {
-                    if (RDFTermFactory.isClass(rangeTerm)) {
-                        output["@type"] = "@id";
+
+        // If the property is explicitly set to be a natural language string,
+        // then no typing should happen, because those would invalidate the
+        // language/direction settings.
+        if (property.langString === false) {
+
+            // Try to catch the datatype settings; these can be used
+            // to set these in the context as well
+            if (property.range) {
+                for (const rangeTerm of property.range) {
+                    const curie = rangeTerm.curie;
+                    if (curie.startsWith("xsd:")) {
+                        output["@type"] = rangeTerm.url;
                         break;
+                    } else if (curie === "rdf:JSON") {
+                        output["@type"] = "@json";
+                        break;
+                    } else if (
+                        [
+                            "rdf:HTML",
+                            "rdf:XMLLiteral",
+                            "rdf:PlainLiteral",
+                            "rdf:langString",
+                            "rdf:dirLangString"
+                        ].includes(curie)
+                    ) {
+                        output["@type"] = rangeTerm.url;
+                        break;
+                    } else if (RDFTermFactory.includesCurie(property.type,"owl:DatatypeProperty")) {
+                        // This is the case when the property refers to an explicitly defined, non-standard datatype
+                        output["@type"] = rangeTerm.url;
+                        break;
+                    } else {
+                        if (RDFTermFactory.isClass(rangeTerm)) {
+                            output["@type"] = "@id";
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        // There is a special treatment to generate additional statements
-        // when the values of the range are restricted.
-        // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
-        if (property.one_of?.length > 0 && !property.dataset) {
-            const mappings = property.one_of.map((term) => [term.id, term.url]);
-            mappings.push(["@vocab", `${global.vocab_prefix}:INVALID_VALUE:`]);
-            // Note that this may overwrite earlier values...
-            output["@type"] = "@vocab";
-            output["@context"] = Object.fromEntries(mappings);
-        }
-
-        if (property.dataset) {
-            if (property.container === Container.set) {
-                output["@container"] = ["@set", "@graph"];
-            } else {
-                output["@container"] = "@graph";
+            // There is a special treatment to generate additional statements
+            // when the values of the range are restricted.
+            // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
+            if (property.one_of?.length > 0 && !property.dataset) {
+                const mappings = property.one_of.map((term) => [term.id, term.url]);
+                mappings.push(["@vocab", `${global.vocab_prefix}:INVALID_VALUE:`]);
+                // Note that this may overwrite earlier values...
+                output["@type"] = "@vocab";
+                output["@context"] = Object.fromEntries(mappings);
             }
-            output["@type"] = "@id";
-        } else if (property.container !== undefined) {
-            output["@container"] = `@${property.container}`;
+
+            if (property.dataset) {
+                if (property.container === Container.set) {
+                    output["@container"] = ["@set", "@graph"];
+                } else {
+                    output["@container"] = "@graph";
+                }
+                output["@type"] = "@id";
+            } else if (property.container !== undefined) {
+                output["@container"] = `@${property.container}`;
+            }
         }
 
         // if only the URL is set, it makes the context simpler to use its direct value,

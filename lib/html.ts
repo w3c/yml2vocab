@@ -161,14 +161,18 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
             if (RDFTermFactory.isProperty(item)) {
                 if ((item as RDFProperty).strongURL) {
                     description += "<br><br>The property's value should be a URL, i.e., not a literal."
+                } else if((item as RDFProperty).langString) {
+                    description += "<br><br>The property's value should be a natural language string."
                 }
             }
             document.addChild(section, 'div', description);
-        } else if (RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
-            if (RDFTermFactory.isProperty(item)) {
-                if ((item as RDFProperty).strongURL) {
+        } else {
+            if (RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
+                if (RDFTermFactory.isProperty(item) && (item as RDFProperty).strongURL) {
                     document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
                 }
+            } else if (RDFTermFactory.isProperty(item) && (item as RDFProperty).langString) {
+                document.addChild(section, 'p', "The property's value should be a natural language string.");
             }
         }
 

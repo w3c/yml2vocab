@@ -5,8 +5,8 @@ This list does not include all the tiny changes, bug handling, etc, only the cha
 ## Version 1.8.2
 
 - If applicable, the reference to the generated context file is, if requested via an appropriate ID, added to the HTML content.
-- [Bug] The value of the JSON-LD `"@version"` must be 1.1 (as a number) and not "1.1" (as a string)
-- [Bug, sort of] Using `@import` in the generated json-ld context turned out to be brittle. Changed the context to an array, with the generated portion preceded by the list of "imported" context files. (This also means the previous item is moot, there is no need to add a `@version`.)
+- [Bug, sort of] Using `@import` in the generated json-ld context turned out to be brittle. Changed the context to an array, with the generated portion preceded by the list of "imported" context files (if applicable).
+- Introduced the artificial range `langString` to denote a property whose values are natural language strings. The main issue is that these properties should only have an id value defined in the generated context file, otherwise type coercion will remove the effects of language and direction setting. Additionally, the range will be set to the union of `xsd:string`, `rdf:langString`, and `rdf:dirLangString` in the vocabulary specifications.
 
 ## Version 1.8.1
 

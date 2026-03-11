@@ -444,12 +444,15 @@ class:
         </tr>
         <tr>
             <td><code>range</code></td>
-            <td>One or more terms or CURIES, or the single <code>URL</code> term</td>
+            <td>One or more terms or CURIES, the single <code>URL</code> term, or the single <code>langString</code> term</td>
             <td>
                 The RDF domain statements of the property. If the <code >URL</code> (alternatively: <code >IRI</code>) term is used, the block
                 defines a property that has no explicit range type, but whose objects are expected to be IRI references. The generated vocabularies
                 annotate these properties as belonging to the <code >owl:ObjectProperty</code> class, which is the reserved term for properties
-                whose objects are not supposed to be literals. A corresponding comment is also generated into the HTML description of the term.
+                whose objects are not supposed to be literals. A corresponding comment is also generated into the HTML description of the term.<br/>
+                If the <code>langString</code> term is used, the block defines a property that has a union type of <code>rdf:langString</code> or
+                <code>rdf:dirLangString</code>; no type is added in the generated context file so that the JSON-LD handling of language and
+                direction would not be overshadowed by <a href="https://www.w3.org/TR/json-ld11/#type-coercion">type coercion</a>.
             </td>
             <td>No</td>
         </tr>
@@ -463,6 +466,7 @@ class:
                 in the list.
                 <br>The entries are required to refer to individuals.
             </td>
+            <td>No</td>
         </tr>
         <tr>
             <td><code>range_union</code></td>
@@ -564,7 +568,6 @@ individual:
             <td>"Super" datatypes that this datatype is derived from. The term `type` can also be used, as an alias to this term</td>
             <td>No</td>
         </tr>
-
     </tbody>
 </table>
 

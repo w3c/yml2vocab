@@ -365,6 +365,7 @@ export interface RDFProperty extends RDFTerm {
     dataset       : boolean;
     container     : Container | undefined;
     strongURL     : boolean;    // Whether the property object should be required to be a real URL
+    langString    : boolean;    // Whether the property gets the artificial range type langString
 }
 
 /**
