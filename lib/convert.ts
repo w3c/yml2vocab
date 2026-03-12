@@ -359,7 +359,9 @@ export function getData(vocab_source: string): Vocab {
                 strongURL = true;
             } else if (raw.range.length === 1 && raw.range[0].toUpperCase() === "LANGSTRING" ) {
                 langString = true;
-                for (const term of ["xsd:string", "rdf:langString", "rdf:dirLangString"]) {
+                // commenting this thing out. Not clear whether this makes any sense in practice; another
+                // effect is to generate an additional remark in the HTML version of the vocabulary
+                for (const term of ["rdf:langString", "rdf:dirLangString"]) {
                     range.push(factory.term(term))
                 }
             } else {
