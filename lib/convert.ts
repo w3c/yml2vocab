@@ -357,11 +357,16 @@ export function getData(vocab_source: string): Vocab {
             if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
                 extra_types.push("owl:ObjectProperty");
                 strongURL = true;
-            } else if (raw.range.length === 1 && raw.range[0].toUpperCase() === "LANGSTRING" ) {
+            } else if (raw.range.includes("rdf:langString") ) {
                 langString = true;
-                // commenting this thing out. Not clear whether this makes any sense in practice; another
-                // effect is to generate an additional remark in the HTML version of the vocabulary
-                for (const term of ["rdf:langString", "rdf:dirLangString"]) {
+                if (raw.range.length > 1 && raw.range_union === false) {
+                    throw new Error(
+                        `The range ${raw.range} of the property ${raw.id} includes rdf:langString, but the range union flag is not set`,
+                    );
+                }
+                // As a future-proof action adding rdf:dirLangString to the mix (coming up in RDF 1.1)
+                const frange = raw.range.includes("rdf:dirLangString") ? raw.range : [...raw.range, "rdf:dirLangString"];
+                for (const term of frange) {
                     range.push(factory.term(term))
                 }
             } else {

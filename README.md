@@ -449,10 +449,7 @@ class:
                 The RDF domain statements of the property. If the <code >URL</code> (alternatively: <code >IRI</code>) term is used, the block
                 defines a property that has no explicit range type, but whose objects are expected to be IRI references. The generated vocabularies
                 annotate these properties as belonging to the <code >owl:ObjectProperty</code> class, which is the reserved term for properties
-                whose objects are not supposed to be literals. A corresponding comment is also generated into the HTML description of the term.<br/>
-                If the <code>langString</code> term is used, the block defines a property that has a union type of <code>rdf:langString</code> or
-                <code>rdf:dirLangString</code>; no type is added in the generated context file so that the JSON-LD handling of language and
-                direction would not be overshadowed by <a href="https://www.w3.org/TR/json-ld11/#type-coercion">type coercion</a>.
+                whose objects are not supposed to be literals. A corresponding comment is also generated into the HTML description of the term.
             </td>
             <td>No</td>
         </tr>
@@ -486,6 +483,12 @@ class:
     </tbody>
 </table>
 
+Note that if the range includes the `rdf:langString`, then the property value is expected to be a natural language string. This has the following effects:
+
+- In the case the range also includes another datatype (typically `xsd:string`) then the `range_union` flag must be set to `true` (`xsd:langString` does not "intersect" with any other type).
+- The `rdf:dirLangString` is added to the range array (this datatype is introduced in RDF 1.2).
+- No type is added in the generated context file so that the JSON-LD handling of language and direction would not be overshadowed by [type coercion](https://www.w3.org/TR/json-ld11).
+- A comment is added to the HTML version of the vocabulary whereby the value is expected to be a natural language text.
 
 Example:
 

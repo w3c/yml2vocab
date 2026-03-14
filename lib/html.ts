@@ -162,7 +162,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                 if ((item as RDFProperty).strongURL) {
                     description += "<br><br>The property's value should be a URL, i.e., not a literal."
                 } else if((item as RDFProperty).langString) {
-                    description += "<br><br>The property's value should be a natural language string."
+                    description += "<br><br>The property's value is expected to be a natural language string.";
                 }
             }
             document.addChild(section, 'div', description);
@@ -172,7 +172,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                     document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
                 }
             } else if (RDFTermFactory.isProperty(item) && (item as RDFProperty).langString) {
-                document.addChild(section, 'p', "The property's value should be a natural language string.");
+                document.addChild(section, 'p', "The property's value is expected to be a natural language string.");
             }
         }
 
