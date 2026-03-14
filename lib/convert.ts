@@ -296,9 +296,10 @@ export function getData(vocab_source: string): Vocab {
     // generated object if everything is fine.
     const validation_results: ValidationResults = validateWithSchema(vocab_source);
     if (validation_results.vocab === null) {
-        const error = JSON.stringify(validation_results.error, null, 4);
-        throw(new TypeError(`JSON Schema validation error`, {cause: '\n' + error}));
+        const error = JSON.stringify(validation_results.error, null, 2);
+        throw(new TypeError(`${error}`, {cause: '\n' + error}));
     }
+
     // Clean up the raw vocab representation.
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
 
