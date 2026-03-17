@@ -483,11 +483,11 @@ class:
     </tbody>
 </table>
 
-Note that if the range includes the `rdf:langString`, then the property value is expected to be a natural language string. This has the following effects:
+Note that if the range includes the `rdf:langString` or `rdf:dirLangString` datatypes, then the property value is expected to be, possibly, a natural language string. This has the following effects:
 
 - In the case the range also includes another datatype (typically `xsd:string`) then the `range_union` flag must be set to `true` (`xsd:langString` does not "intersect" with any other type).
-- The `rdf:dirLangString` is added to the range array (this datatype is introduced in RDF 1.2).
-- No type is added in the generated context file so that the JSON-LD handling of language and direction would not be overshadowed by [type coercion](https://www.w3.org/TR/json-ld11).
+- Both types are added to the range array, if necessary.
+- No type is added in the generated context file so that the JSON-LD handling of language and direction would not be overshadowed by [type coercion](https://www.w3.org/TR/json-ld11#string-internationalization).
 - A comment is added to the HTML version of the vocabulary whereby the value is expected to be a natural language text.
 
 Example:

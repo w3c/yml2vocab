@@ -358,21 +358,25 @@ export function getData(vocab_source: string): Vocab {
             if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
                 extra_types.push("owl:ObjectProperty");
                 strongURL = true;
-            } else if (raw.range.includes("rdf:langString") ) {
+            } else if (raw.range.includes("rdf:langString") || raw.range.includes("rdf:dirLangString")) {
                 langString = true;
                 if (raw.range.length > 1 && raw.range_union === false) {
                     throw new Error(
-                        `The range ${raw.range} of the property ${raw.id} includes rdf:langString, but the range union flag is not set`,
+                        `The range ${raw.range} of the property ${raw.id} includes rdf:langString or rdf:dirLangString, but the range union flag is not set`,
                     );
                 }
-                // As a future-proof action adding rdf:dirLangString to the mix (coming up in RDF 1.1)
-                const frange = raw.range.includes("rdf:dirLangString") ? raw.range : [...raw.range, "rdf:dirLangString"];
+                // As a future-proof action adding both RDF lang strings to the mix, but avoiding duplications
+                const frange = new Set([...raw.range, "rdf:langString", "rdf:dirLangString"]);
                 for (const term of frange) {
-                    range.push(factory.term(term))
+                    range.push(factory.term(term));
                 }
             } else {
                 for (const rg of raw.range) {
-                    if (rg.startsWith("xsd") === true || EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
+                    if (
+                        rg.startsWith("xsd") === true ||
+                        EXTRA_DATATYPES.find((entry) => entry === rg) !==
+                            undefined
+                    ) {
                         // The datatype is a simple one, not a class; a term nevertheless, to make it uniform
                         extra_types.push("owl:DatatypeProperty");
                         range.push(factory.term(rg));
@@ -387,10 +391,14 @@ export function getData(vocab_source: string): Vocab {
                                     extra_types.push("owl:DatatypeProperty");
                                     range.push(term);
                                 } else {
-                                    throw(new Error(`The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`));
+                                    throw new Error(
+                                        `The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`,
+                                    );
                                 }
                             } else {
-                                throw(new Error(`The range ${rg} of the property ${id} is not defined in this vocabulary`));
+                                throw new Error(
+                                    `The range ${rg} of the property ${id} is not defined in this vocabulary`,
+                                );
                             }
                         } else {
                             // By now, local classes and datatypes have been accounted for; the only remaining

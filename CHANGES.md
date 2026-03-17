@@ -1,13 +1,13 @@
 # Changes
 
-This list does not include all the tiny changes, bug handling, etc, only the changes in the main features.
+This list does not include all the tiny, e.g., editorial changes, only the changes in the features.
 
 ## Version 1.8.2
 
-- If applicable, the reference to the generated context file is, if requested via an appropriate ID, added to the HTML content.
+- If applicable, the reference to the generated context file is, if requested via an appropriate ID in the template, added to the HTML content.
 - [Bug, sort of] Using `@import` in the generated json-ld context turned out to be brittle. Changed the context to an array, with the generated portion preceded by the list of "imported" context files (if applicable).
-- Special actions when the `rdf:langString` is part of the range:
-    - the `rdf:dirLangString` is added to the range as a future-proof feature eyeing towards RDF 1.2
+- Special actions when the `rdf:langString` or `rdf:dirLangString` are part of the range:
+    - both are added to the range (if necessary) as a future-proof feature eyeing towards RDF 1.2
     - if the `range_union` flag is not set to `true` an error is raised, because that is the only way this can work in practice
     - in the generated context the property should only have an `id`, even if it is combined with `xsd:string`; otherwise the language/directions tags will be ignored
 
