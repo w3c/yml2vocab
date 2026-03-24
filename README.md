@@ -444,7 +444,7 @@ class:
         </tr>
         <tr>
             <td><code>range</code></td>
-            <td>One or more terms or CURIES, the single <code>URL</code> term, or the single <code>langString</code> term</td>
+            <td>One or more terms or CURIES or the single <code>URL</code> term</td>
             <td>
                 The RDF domain statements of the property. If the <code >URL</code> (alternatively: <code >IRI</code>) term is used, the block
                 defines a property that has no explicit range type, but whose objects are expected to be IRI references. The generated vocabularies
