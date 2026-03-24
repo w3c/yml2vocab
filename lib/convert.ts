@@ -367,6 +367,7 @@ export function getData(vocab_source: string): Vocab {
                 }
                 // As a future-proof action adding both RDF lang strings to the mix, but avoiding duplications
                 const frange = new Set([...raw.range, "rdf:langString", "rdf:dirLangString"]);
+                raw.range_union = true;            // this may be necessary if the original included one setting only
                 for (const term of frange) {
                     range.push(factory.term(term));
                 }

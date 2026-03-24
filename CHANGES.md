@@ -8,8 +8,8 @@ This list does not include all the tiny, e.g., editorial changes, only the chang
 - [Bug, sort of] Using `@import` in the generated json-ld context turned out to be brittle. Changed the context to an array, with the generated portion preceded by the list of "imported" context files (if applicable).
 - Special actions when the `rdf:langString` or `rdf:dirLangString` are part of the range:
     - both are added to the range (if necessary) as a future-proof feature eyeing towards RDF 1.2
-    - if the `range_union` flag is not set to `true` an error is raised, because that is the only way this can work in practice
-    - in the generated context the property should only have an `id`, even if it is combined with `xsd:string`; otherwise the language/directions tags will be ignored
+    - if these types are part of an array of range references, and the `range_union` flag is not set to `true`, an error is raised, because that is the only way these can work in practice
+    - in the generated context the property should only have an `id` (i.e., no datatype is added, even if it is combined with `xsd:string`); otherwise the language/directions tags will be ignored
 
 ## Version 1.8.1
 
