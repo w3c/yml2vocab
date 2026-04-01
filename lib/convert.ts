@@ -296,9 +296,10 @@ export function getData(vocab_source: string): Vocab {
     // generated object if everything is fine.
     const validation_results: ValidationResults = validateWithSchema(vocab_source);
     if (validation_results.vocab === null) {
-        const error = JSON.stringify(validation_results.error, null, 4);
-        throw(new TypeError(`JSON Schema validation error`, {cause: '\n' + error}));
+        const error = JSON.stringify(validation_results.error, null, 2);
+        throw(new TypeError(`${error}`, {cause: '\n' + error}));
     }
+
     // Clean up the raw vocab representation.
     const vocab: RawVocab = finalizeRawVocab(validation_results.vocab);
 
@@ -347,18 +348,36 @@ export function getData(vocab_source: string): Vocab {
     //
     // The function also sets the possible values of a (pure) datatype or object property as extra types
     // to be added to the enclosing property
-    const get_ranges = (factory: RDFTermFactory, raw: RawVocabEntry, id: string): { extra_types: string[], range: RDFTerm[], strongURL: boolean } => {
+    const get_ranges = (factory: RDFTermFactory, raw: RawVocabEntry, id: string): { extra_types: string[], range: RDFTerm[], strongURL: boolean, langString: boolean } => {
         let extra_types: string[] = [];
         const range: RDFTerm[]    = [];
         let strongURL: boolean    = false;
+        let langString: boolean   = false;
 
         if (raw.range && raw.range.length > 0) {
             if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
                 extra_types.push("owl:ObjectProperty");
                 strongURL = true;
+            } else if (raw.range.includes("rdf:langString") || raw.range.includes("rdf:dirLangString")) {
+                langString = true;
+                if (raw.range.length > 1 && raw.range_union === false) {
+                    throw new Error(
+                        `The range ${raw.range} of the property ${raw.id} includes rdf:langString or rdf:dirLangString, but the range union flag is not set`,
+                    );
+                }
+                // As a future-proof action adding both RDF lang strings to the mix, but avoiding duplications
+                const frange = new Set([...raw.range, "rdf:langString", "rdf:dirLangString"]);
+                raw.range_union = true;            // this may be necessary if the original included one setting only
+                for (const term of frange) {
+                    range.push(factory.term(term));
+                }
             } else {
                 for (const rg of raw.range) {
-                    if (rg.startsWith("xsd") === true || EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
+                    if (
+                        rg.startsWith("xsd") === true ||
+                        EXTRA_DATATYPES.find((entry) => entry === rg) !==
+                            undefined
+                    ) {
                         // The datatype is a simple one, not a class; a term nevertheless, to make it uniform
                         extra_types.push("owl:DatatypeProperty");
                         range.push(factory.term(rg));
@@ -373,10 +392,14 @@ export function getData(vocab_source: string): Vocab {
                                     extra_types.push("owl:DatatypeProperty");
                                     range.push(term);
                                 } else {
-                                    throw(new Error(`The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`));
+                                    throw new Error(
+                                        `The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`,
+                                    );
                                 }
                             } else {
-                                throw(new Error(`The range ${rg} of the property ${id} is not defined in this vocabulary`));
+                                throw new Error(
+                                    `The range ${rg} of the property ${id} is not defined in this vocabulary`,
+                                );
                             }
                         } else {
                             // By now, local classes and datatypes have been accounted for; the only remaining
@@ -393,7 +416,7 @@ export function getData(vocab_source: string): Vocab {
         if (extra_types.length > 1) {
             extra_types = [];
         };
-        return { extra_types, range, strongURL }
+        return { extra_types, range, strongURL, langString }
     }
 
     // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
@@ -629,7 +652,7 @@ export function getData(vocab_source: string): Vocab {
             global.status_counter.add(raw.status ? raw.status : Status.stable);
 
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
-            const { extra_types, range, strongURL } = get_ranges(factory, raw, output.id);
+            const { extra_types, range, strongURL, langString } = get_ranges(factory, raw, output.id);
 
             // A little hack to ensure backward compatibility: if the range includes rdf:List,
             // it should be removed and the information put aside because that should now
@@ -684,7 +707,7 @@ export function getData(vocab_source: string): Vocab {
                 subPropertyOf : raw.upper_value?.map((val: string): RDFProperty => factory.property(val)),
                 see_also      : raw.see_also,
                 range         : finalRange,
-                range_union   : raw.range_union,
+                range_union   : (langString === true) ? true : raw.range_union,
                 one_of        : raw.one_of?.map((val: string): RDFIndividual => factory.individual(val)),
                 domain        : raw.domain?.map(val => factory.class(val)),
                 example       : raw.example,
@@ -692,6 +715,7 @@ export function getData(vocab_source: string): Vocab {
                 dataset       : dataset,
                 container     : container,
                 strongURL     : strongURL,
+                langString    : langString,
                 context       : final_contexts(raw, output),
             });
             return output;

@@ -30,6 +30,7 @@ async function main() {
         .option('-v --vocab [vocab]', 'vocabulary file name, defaults to "vocabulary.yml"')
         .option('-t --template [template]', 'template file name, defaults to "template.html"')
         .option('-c --context', 'whether a JSON-LD context file should also be generated, defaults to "false"')
+        .option('-d --debug', 'run in debug mode, full error stack is displayed if an error occurs, defaults to "false"')
         .parse(process.argv);
 
     const options = program.opts();
@@ -37,7 +38,8 @@ async function main() {
     const vocabulary: string = options.vocab ? options.vocab : 'vocabulary.yml';
     const template: string   = options.template ? options.template : 'template.html';
     const context: boolean   = !!options.context;
-    await yml2vocab.generateVocabularyFiles(vocabulary, template, context);
+    const debug: boolean     = !!options.debug;
+    await yml2vocab.generateVocabularyFiles(vocabulary, template, context, debug);
 }
 
 // At some point, node.js will allow to have async calls at the top level, and this extra function will

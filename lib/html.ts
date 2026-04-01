@@ -161,14 +161,18 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
             if (RDFTermFactory.isProperty(item)) {
                 if ((item as RDFProperty).strongURL) {
                     description += "<br><br>The property's value should be a URL, i.e., not a literal."
+                } else if((item as RDFProperty).langString) {
+                    description += "<br><br>The property's value is expected to be a natural language string.";
                 }
             }
             document.addChild(section, 'div', description);
-        } else if (RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
-            if (RDFTermFactory.isProperty(item)) {
-                if ((item as RDFProperty).strongURL) {
+        } else {
+            if (RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
+                if (RDFTermFactory.isProperty(item) && (item as RDFProperty).strongURL) {
                     document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
                 }
+            } else if (RDFTermFactory.isProperty(item) && (item as RDFProperty).langString) {
+                document.addChild(section, 'p', "The property's value is expected to be a natural language string.");
             }
         }
 
@@ -272,12 +276,15 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         if (head && basename !== '') {
             addLink(head, 'jsonld', 'application/ld+json');
             addLink(head, 'ttl', 'text/turtle');
+            // This is a possibility, but it does not sound right. The context is not an alternate
+            // if (context) addLink(head, 'context.jsonld','application/ld+json')
         }
 
         // Handle the alternate 'a' links, if any of them are
         // present in the template
         addAref('alt-turtle', 'ttl');
         addAref('alt-jsonld', 'jsonld');
+        if (context) addAref('alt-context','context.jsonld');
 
         // Hide this code here because it is related: removes an unnecessary
         // RDFa link from the body if it is there.

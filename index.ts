@@ -17,13 +17,14 @@
  * @module
  */
 
-import { Vocab }          from './lib/common';
+import type { Vocab }     from './lib/common';
 import { getData }        from "./lib/convert";
 import { toTurtle }       from "./lib/turtle";
 import { toJSONLD }       from './lib/jsonld';
 import { toHTML }         from './lib/html';
 import { toContext }      from './lib/context';
 import { promises as fs } from 'node:fs';
+import { join } from "node:path";
 
 
 /**
@@ -106,9 +107,10 @@ export class VocabGeneration {
  * @param yaml_file_name - the vocabulary file in YAML
  * @param template_file_name - the HTML template file
  * @param context - whether the JSON-LD context file should also be generated
+ * @param debug - display a full stack if an error is reported
  * @throws on error situation in reading the input files, in yml validation, or when writing the result
  */
-export async function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean): Promise<void> {
+export async function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean, debug = false): Promise<void> {
     // This trick allows the user to give the full yaml file name, or only the common base
     const basename = yaml_file_name.endsWith('.yml') ? yaml_file_name.slice(0,-4) : yaml_file_name;
 
@@ -132,14 +134,16 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
         read_errors.push(reads[1].reason);
     }
 
-    if (read_errors.length !== 0) {
-        // One of the two files could not be read, we should abort here:
-        throw(new AggregateError(read_errors.join('\n')));
-    }
 
     try {
-        const conversion: VocabGeneration = new VocabGeneration(yaml);
+        // Pushing this here, to have a unified error reporting point below.
 
+        if (read_errors.length !== 0) {
+            // One of the two files could not be read, we should abort here:
+            throw new Error(read_errors.join(" "));
+        }
+
+        const conversion: VocabGeneration = new VocabGeneration(yaml);
         const fs_writes: Promise<void>[] = [
             fs.writeFile(`${basename}.ttl`, conversion.getTurtle()),
             fs.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
@@ -154,11 +158,15 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
 
         if (write_errors.length != 0) {
             // One or more files could not be written, we should throw an exception...
-            throw(new AggregateError(write_errors.join('\n')));
+            throw(new Error(write_errors.join(" ")));
         }
     // deno-lint-ignore no-explicit-any
     } catch(e: any) {
-        console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}\nStack: ${e.stack}`);
+        if (debug) {
+            console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}\nStack: ${e.stack}\n\n`);
+        } else {
+            console.error(`Error in the YML conversion: "${e.message}"\n`);
+        }
     }
 }
 

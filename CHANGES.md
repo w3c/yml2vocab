@@ -1,6 +1,15 @@
 # Changes
 
-This list does not include all the tiny changes, bug handling, etc, only the changes in the main features.
+This list does not include all the tiny, e.g., editorial changes, only the changes in the features.
+
+## Version 1.8.2
+
+- If applicable, the reference to the generated context file is, if requested via an appropriate ID in the template, added to the HTML content.
+- [Bug, sort of] Using `@import` in the generated json-ld context turned out to be brittle. Changed the context to an array, with the generated portion preceded by the list of "imported" context files (if applicable).
+- Special actions when the `rdf:langString` or `rdf:dirLangString` are part of the range:
+    - both are added to the range (if necessary) as a future-proof feature eyeing towards RDF 1.2
+    - if these types are part of an array of range references, and the `range_union` flag is not set to `true`, an error is raised, because that is the only way these can work in practice
+    - in the generated context the property should only have an `id` (i.e., no datatype is added, even if it is combined with `xsd:string`); otherwise the language/directions tags will be ignored
 
 ## Version 1.8.1
 
@@ -13,7 +22,7 @@ This list does not include all the tiny changes, bug handling, etc, only the cha
 ## Version 1.7.1
 
 - Added the `import` block to the `json_ld` top level block, to allow adding a `@import` statement with one or more URI-s at the top of the generated context file.
-- When generating a context file with an aliased term (see the `known_as` property) an extra information is added to the generated HTML file.
+- When generating a context file with an aliased term (see the `known_as` property) extra information added to the generated HTML file.
 - Added the capability to handle HTML templates containing HTML fragments only. The result can be imported into a specification instead of keeping it as a separate file.
 - Introduced the `upper_union` and `range_union` boolean flags for classes and, respectively, properties. If set to `true`, the superclass, respectively range settings with several class references mean the _disjunction_ of the classes, as opposed to the (default) _conjunction_. This formally affects the turtle and json-ld versions of the vocabulary (which use the `owl:unionOf` construct); the HTML description uses now the ⊓ and ⊔ characters to denote these. This allows to say: "instances of this class are of type either this, this, or this".
 - Introduced the `one_of` keys for classes, datatypes, and property ranges. The values list the possible individuals for a class (including a range), and the possible string values for a datatype derived from `xsd:string`. Furthermore, the `pattern` key for a datatype can hold a regular expression restricting the acceptable string value.
@@ -22,7 +31,7 @@ This list does not include all the tiny changes, bug handling, etc, only the cha
 
 ## Version 1.7.0
 
-- The package does not generate RDFa any more. The usage of RDFa in the HTML represented a significant burden on the code itself, and also made the generated HTML messy. All this for no real benefit: RDFa is very rarely used these days. Instead, the JSON-LD and Turtle versions of the vocabulary are linked from the HTML header as alternate representations.
+- The package does not generate RDFa anymore. The usage of RDFa in the HTML represented a significant burden on the code itself, and also made the generated HTML messy. All this for no real benefit: RDFa is very rarely used these days. Instead, the JSON-LD and Turtle versions of the vocabulary are linked from the HTML header as alternate representations.
 - All the generated files (HTML, Turtle, JSON-LD) are formatted by, partially, taking into account a possible [`.editorconfig`](https://spec.editorconfig.org) file regarding indentation size and some more, minor control statements.
 - Added the `container` key for properties, with a possible value of `set` or `list`. These values appear, for the specific property, in the generated JSON-LD `@context` file. In the `list` case it will also affect the range of the property (which is set to `rdf:List`).
 - Added the `json_ld` top level block with the `alias` block, defining keys to alias some JSON-LD keywords in the generated context file.

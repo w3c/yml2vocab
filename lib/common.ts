@@ -240,8 +240,8 @@ export interface ValidationResults {
 }
 
 /**
- * This is a shortened version of the full Ajv error message (the schema is very simple,
- * the generic Ajv error message is way too complex for our use)
+ * This is a shortened version of the full exodus error message (the schema is very simple,
+ * the generic exodus error message is way too complex for our use)
  */
 export interface ValidationError {
     message ?: string;
@@ -365,6 +365,7 @@ export interface RDFProperty extends RDFTerm {
     dataset       : boolean;
     container     : Container | undefined;
     strongURL     : boolean;    // Whether the property object should be required to be a real URL
+    langString    : boolean;    // Whether the property gets the artificial range type langString
 }
 
 /**
