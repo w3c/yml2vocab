@@ -793,8 +793,6 @@ export function getData(vocab_source: string): Vocab {
 
     global.set_vocab = vocab.json_ld?.set_vocab ?? false;
 
-    console.log(global.set_vocab)
-
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary
     return {prefixes, ontology_properties, classes, properties, individuals, datatypes}
