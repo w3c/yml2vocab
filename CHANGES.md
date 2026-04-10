@@ -2,6 +2,10 @@
 
 This list does not include all the tiny, e.g., editorial changes, only the changes in the features.
 
+## Version 1.9.0
+
+- Added the flag to generate, if needed, a `@vocab` statement into the generated context files, with the value set to the official URL for the vocabulary. This makes the vocabulary easily extensible in JSON-LD, though possibly creating uncontrolled vocabulary terms on the fly, which may lead to security issues.
+
 ## Version 1.8.2
 
 - If applicable, the reference to the generated context file is, if requested via an appropriate ID in the template, added to the HTML content.

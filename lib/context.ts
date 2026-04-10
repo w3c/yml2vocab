@@ -122,7 +122,17 @@ export function toContext(vocab: Vocab): string {
         return Object.keys(output).length === 1 ? url : output;
     };
 
-    const top_level: Context = { ...preamble, ...global.aliases };
+    const set_vocab = (() : Context => {
+        if (global.set_vocab) {
+            return {
+                "@vocab" : global.vocab_url
+            }
+        } else {
+            return {};
+        }
+    })();
+
+    const top_level: Context = { ...preamble, ...global.aliases, ...set_vocab };
 
     // Set of properties that are "handled" as parts of embedded contexts of classes.
     // This is used to avoid repeating the properties at the top level

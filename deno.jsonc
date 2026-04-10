@@ -20,7 +20,7 @@
         "local_test_ident": "(cd local/tests/identification;  deno run --quiet --allow-all ../../../main.ts -c)",
         "local_test_did": "(cd local/tests/did;  deno run --quiet --allow-all ../../../main.ts -c)",
         "local_test_epub": "(cd local/tests/epub;  deno run --quiet --allow-all ../../../main.ts -c -v index)",
-        "local_epub": "(cd local/epub;  deno run --quiet --allow-all ../../../main.ts -c -v index)",
+        "local_epub": "(cd local/epub;  deno run --quiet --allow-all ../../main.ts -c -v index)",
         "compile": "deno compile --allow-all --quiet main.ts"
     },
     "exports": {

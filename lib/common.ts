@@ -78,8 +78,9 @@ export class StatusCounter {
 }
 
 export interface JSON_LD {
-    alias  ?: Record<string,string>;
-    import ?: string | string[];
+    alias     ?: Record<string,string>;
+    import    ?: string | string[];
+    set_vocab ?: boolean
 }
 
 /**
@@ -135,6 +136,12 @@ export interface GlobalData {
      * Imported context files, to be added to the JSON-LD context file on the user's request
      */
     import            : string[];
+
+    /**
+     * A flag for the context generation, whether the vocabulary's URL should be set as a fallback
+     * value in the context using "@vocab".
+     */
+    set_vocab        ?: boolean;
 }
 
 /**
