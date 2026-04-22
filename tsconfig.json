@@ -3,7 +3,6 @@
         "declaration": true,
         "allowJs": true,
         "alwaysStrict": true,
-        "baseUrl": "./",
         "esModuleInterop": false,
         "lib": ["esnext", "dom"],
         "module": "nodenext",

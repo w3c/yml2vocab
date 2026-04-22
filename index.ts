@@ -24,7 +24,6 @@ import { toJSONLD }       from './lib/jsonld';
 import { toHTML }         from './lib/html';
 import { toContext }      from './lib/context';
 import { promises as fs } from 'node:fs';
-import { join } from "node:path";
 
 
 /**
