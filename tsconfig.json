@@ -3,21 +3,16 @@
         "declaration": true,
         "allowJs": true,
         "alwaysStrict": true,
-        "baseUrl": ".",
+        "baseUrl": "./",
         "esModuleInterop": false,
         "lib": ["esnext", "dom"],
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "noEmitHelpers": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noUnusedLocals": false,
         "outDir": "dist",
-        "paths": {
-            "*": [
-                "node_modules/*"
-            ]
-        },
         "resolveJsonModule": true,
         "sourceMap": false,
         "target": "esnext"

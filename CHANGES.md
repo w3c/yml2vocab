@@ -5,6 +5,7 @@ This list does not include all the tiny, e.g., editorial changes, only the chang
 ## Version 1.9.0
 
 - Added the flag to generate, if needed, a `@vocab` statement into the generated context files, with the value set to the official URL for the vocabulary. This makes the vocabulary easily extensible in JSON-LD, though possibly creating uncontrolled vocabulary terms on the fly, which may lead to security issues.
+- Updated tsconfig.json to work with TS 7
 
 ## Version 1.8.2
 
