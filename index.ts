@@ -17,13 +17,16 @@
  * @module
  */
 
-import type { Vocab }     from './lib/common';
-import { getData }        from "./lib/convert";
-import { toTurtle }       from "./lib/turtle";
-import { toJSONLD }       from './lib/jsonld';
-import { toHTML }         from './lib/html';
-import { toContext }      from './lib/context';
-import { promises as fs } from 'node:fs';
+import { stringify as yamlStringify } from "yaml";
+import type { Vocab }                 from './lib/common';
+import { getData }                    from "./lib/convert";
+import { toTurtle }                   from "./lib/turtle";
+import { toJSONLD }                   from './lib/jsonld';
+import { toHTML }                     from './lib/html';
+import { toContext }                  from './lib/context';
+import { getEditorConfigOptions }     from './lib/beautify';
+import type { ConfigOptions }         from "./lib/beautify";
+import { promises as fs }             from 'node:fs';
 
 
 /**
@@ -65,11 +68,22 @@ export class VocabGeneration {
     }
 
     /**
+     * Get the YAML-LD representation of the vocabulary.
+     *
+     * @returns The JSON-LD content
+     */
+    getYAMLLD(): string {
+        const jsonldObj   = JSON.parse(this.getJSONLD());
+        const indent_size = getEditorConfigOptions('yamlld').indent_size as number;
+        return yamlStringify(jsonldObj, { indent: indent_size, lineWidth: 0 });   // { indent: 4, linewidth: 0});
+    }
+
+    /**
      * Get the minimal JSON-LD Context file for the vocabulary.
      *
      * @returns The JSON-LD content
      */
-     getContext(): string {
+    getContext(): string {
         return toContext(this.vocab);
     }
 
@@ -80,19 +94,27 @@ export class VocabGeneration {
      * @param context - Whether a JSON-LD context file is also generated
      * @returns
      */
-    getHTML(template: string, basename: string, context: boolean): string {
-        return toHTML(this.vocab, template, basename, context);
+    getHTML(template: string, basename: string, context: boolean, yaml = false): string {
+        return toHTML(this.vocab, template, basename, context, yaml);
     }
 
     /* Deprecated; these are just to avoid problems for users of earlier versions */
     /** @internal */
-    get_turtle(): string                                                {return this.getTurtle()}
+    get_turtle(): string {
+        return this.getTurtle();
+    }
     /** @internal */
-    get_jsonld(): string                                                {return this.getJSONLD()}
+    get_jsonld(): string {
+        return this.getJSONLD();
+    }
     /** @internal */
-    get_html(template: string, basename = '', context = false): string  {return this.getHTML(template, basename, context)}
+    get_html(template: string, basename = "", context = false): string {
+        return this.getHTML(template, basename, context);
+    }
     /** @internal */
-    get_context(): string                                               {return this.getContext()}
+    get_context(): string {
+        return this.getContext();
+    }
 }
 
 /**
@@ -106,10 +128,11 @@ export class VocabGeneration {
  * @param yaml_file_name - the vocabulary file in YAML
  * @param template_file_name - the HTML template file
  * @param context - whether the JSON-LD context file should also be generated
+ * @param yamlVocab - whether the YAML-LD version of the vocabulary should also be generated
  * @param debug - display a full stack if an error is reported
  * @throws on error situation in reading the input files, in yml validation, or when writing the result
  */
-export async function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean, debug = false): Promise<void> {
+export async function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean, yamlVocab = false, debug = false): Promise<void> {
     // This trick allows the user to give the full yaml file name, or only the common base
     const basename = yaml_file_name.endsWith('.yml') ? yaml_file_name.slice(0,-4) : yaml_file_name;
 
@@ -146,10 +169,13 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
         const fs_writes: Promise<void>[] = [
             fs.writeFile(`${basename}.ttl`, conversion.getTurtle()),
             fs.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-            fs.writeFile(`${basename}.html`, conversion.getHTML(template, basename, context)),
+            fs.writeFile(`${basename}.html`, conversion.getHTML(template, basename, context, yamlVocab)),
         ];
+        if (yamlVocab) {
+            fs_writes.push(fs.writeFile(`${basename}.yamlld`, conversion.getYAMLLD()));
+        }
         if (context) {
-            fs_writes.push(fs.writeFile(`${basename}.context.jsonld`, conversion.getContext()))
+            fs_writes.push(fs.writeFile(`${basename}.context.jsonld`, conversion.getContext()));
         }
         const write_errors = (await Promise.allSettled(fs_writes))
             .filter((result): boolean => result.status === "rejected")

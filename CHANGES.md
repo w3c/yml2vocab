@@ -4,7 +4,8 @@ This list does not include all the tiny, e.g., editorial changes, only the chang
 
 ## Version 1.9.0
 
-- Added the flag to generate, if needed, a `@vocab` statement into the generated context files, with the value set to the official URL for the vocabulary. This makes the vocabulary easily extensible in JSON-LD, though possibly creating uncontrolled vocabulary terms on the fly, which may lead to security issues.
+- Added the option to generate, if needed, a `@vocab` statement into the generated context files, with the value set to the official URL for the vocabulary. This makes the vocabulary easily extensible in JSON-LD, though possibly creating uncontrolled vocabulary terms on the fly, which may lead to security issues.
+- Added the command line flag `-y` to generate the vocabulary in YAML-LD format, too (alongside Turtle and JSON-LD).
 - Updated tsconfig.json to work with TS 7
 
 ## Version 1.8.2

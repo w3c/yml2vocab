@@ -37,7 +37,7 @@ const OR  = ' ⊔ ';
  * @param context - Whether a context file is also generated (if yes, some extra notes may appear in the output)
  * @returns
  */
-export function toHTML(vocab: Vocab, template_text: string, basename: string, context: boolean): string {
+export function toHTML(vocab: Vocab, template_text: string, basename: string, context: boolean, yaml = false): string {
     // Get the DOM of the template
     const document: MiniDOM = new MiniDOM(template_text);
 
@@ -276,6 +276,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         if (head && basename !== '') {
             addLink(head, 'jsonld', 'application/ld+json');
             addLink(head, 'ttl', 'text/turtle');
+            if (yaml) addLink(head, 'yamlld', 'application/ld+yaml');
             // This is a possibility, but it does not sound right. The context is not an alternate
             // if (context) addLink(head, 'context.jsonld','application/ld+json')
         }
@@ -284,6 +285,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         // present in the template
         addAref('alt-turtle', 'ttl');
         addAref('alt-jsonld', 'jsonld');
+        if (yaml) addAref('alt-yamlld', 'yamlld');
         if (context) addAref('alt-context','context.jsonld');
 
         // Hide this code here because it is related: removes an unnecessary

@@ -314,6 +314,6 @@ export function toJSONLD(vocab: Vocab): string {
 
     // Done... just turn the result into bona fide (and readable) json
     const final_jsonld = JSON.stringify(jsonld);
-    const nice_jsonld  = beautify(final_jsonld, 'jsonld')
+    const nice_jsonld  = beautify(final_jsonld, 'jsonld');
     return nice_jsonld;
 }

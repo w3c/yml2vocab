@@ -30,3 +30,6 @@ indent_size = 4
 [*.yml]
 indent_size = 2
 
+[*.yamlld]
+indent_size = 4
+

@@ -33,7 +33,7 @@
 
 ## 1.1. Introduction
 
-This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-concepts/) vocabulary, described in [YAML](https://yaml.org/spec/1.2.2/), into a formal [RDFS](https://www.w3.org/TR/rdf-schema/) in [JSON-LD](https://www.w3.org/TR/json-ld11/), [Turtle](https://www.w3.org/TR/turtle/), and HTML. Optionally, a simple [JSON-LD `@context`](https://www.w3.org/TR/json-ld11/#the-context) is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements.
+This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-concepts/) vocabulary, described in [YAML](https://yaml.org/spec/1.2.2/), into a formal [RDFS](https://www.w3.org/TR/rdf-schema/) in [JSON-LD](https://www.w3.org/TR/json-ld11/), [Turtle](https://www.w3.org/TR/turtle/), optionally in [YAML-LD](https://www.w3.org/TR/yaml-ld-10/), and HTML. Optionally, a simple [JSON-LD `@context`](https://www.w3.org/TR/json-ld11/#the-context) is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements.
 
 When running, the script relies on two files:
 
@@ -630,7 +630,8 @@ The required `id` values, and the containing elements, are as follows:
 | `description`                       | any textual           | The description of the vocabulary (see the `ontology` block)                                |
 | `see_also`                          | any textual           | External reference for the vocabulary (see the `ontology` block)                            |
 | `alt-turtle`                        | `<a>`                 | Add a reference to the Turtle version of the vocabulary as an `href` attribute value        |
-| `alt-jsonld`                        | `<a>`                 | Add a reference to the JSON-LD version of the vocabulary  as an `href` attribute value      |
+| `alt-jsonld`                        | `<a>`                 | Add a reference to the JSON-LD version of the vocabulary as an `href` attribute value       |
+| `alt-yamlld`                        | `<a>`                 | Add a reference to the YAML-LD version of the vocabulary as an `href` attribute value       |
 | `alt-context`                       | `<a>`                 | Add a reference to the JSON-LD Context file for the vocabulary as an `href` attribute value |
 | `time`                              | any textual           | Date of the vocabulary generation                                                           |
 | `namespaces`                        | `<dl>`                | List of namespaces used by the vocabulary                                                   |
@@ -699,12 +700,14 @@ which results in an executable file, called `yml2vocab`, that can be stored anyw
 The program can also be run without installing the package locally from JSR. Just do a:
 
 ```sh
-deno run -A jsr:@iherman/yml2vocab/cli [-v vocab_file_name] [-t template_file_name] [-c]
+deno run -A jsr:@iherman/yml2vocab/cli [-v vocab_file_name] [-t template_file_name] [-c] [-y]
 ```
 
 ### 2.1.3. Command line argument
 
 The script generates the `vocab_file_name.ttl`, `vocab_file_name.jsonld`, and `vocab_file_name.html` files for the Turtle, JSON-LD, and HTML versions, respectively. The script relies on the `vocab_file_name.yml` file for the vocabulary specification in YAML and a `template_file_name` file for a template file. The defaults are `vocabulary` and `template.html`, respectively.
+
+If the `-y` flat is set, the additional `vocab_file_name.yamlld` file for a YAML-LD version is also generated.
 
 If the `-c` flag is also set, the additional `vocab_file_name.context.jsonld` is also generated, containing a JSON-LD file that can be used as a separate `@context` reference in a JSON-LD file. Note that this JSON-LD file does not necessarily use all the sophistication that JSON-LD [defines](https://www.w3.org/TR/json-ld11/#the-context) for `@context`; these may have to be added manually.
 
