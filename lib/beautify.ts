@@ -69,6 +69,8 @@ const configOptions: Record<string, ConfigOptions> = {};
  * it may be unnecessary, but it just hurts my feeling to do it
  * otherwise😀.)
  *
+ * This method is general; at the moment, it is invoked with the following suffixes: `html`, `ttl`, `jsonld`, and `yamlld`.
+ *
  * @param suffix
  * @returns
  */
