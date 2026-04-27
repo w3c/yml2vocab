@@ -80,6 +80,9 @@ const vocabSchema = `{
                 "import" : {
                     "$ref" : "#/$defs/URIOrArrayOfURIs"
                 },
+                "set_vocab" : {
+                    "type" : "boolean"
+                },
                 "unevaluatedProperties": false
             }
         },

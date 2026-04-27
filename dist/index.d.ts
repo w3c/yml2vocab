@@ -45,6 +45,12 @@ export declare class VocabGeneration {
      */
     getJSONLD(): string;
     /**
+     * Get the YAML-LD representation of the vocabulary.
+     *
+     * @returns The JSON-LD content
+     */
+    getYAMLLD(): string;
+    /**
      * Get the minimal JSON-LD Context file for the vocabulary.
      *
      * @returns The JSON-LD content
@@ -57,7 +63,7 @@ export declare class VocabGeneration {
      * @param context - Whether a JSON-LD context file is also generated
      * @returns
      */
-    getHTML(template: string, basename: string, context: boolean): string;
+    getHTML(template: string, basename: string, context: boolean, yaml?: boolean): string;
     /** @internal */
     get_turtle(): string;
     /** @internal */
@@ -78,9 +84,11 @@ export declare class VocabGeneration {
  * @param yaml_file_name - the vocabulary file in YAML
  * @param template_file_name - the HTML template file
  * @param context - whether the JSON-LD context file should also be generated
+ * @param yamlVocab - whether the YAML-LD version of the vocabulary should also be generated
+ * @param debug - display a full stack if an error is reported
  * @throws on error situation in reading the input files, in yml validation, or when writing the result
  */
-export declare function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean): Promise<void>;
+export declare function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean, yamlVocab?: boolean, debug?: boolean): Promise<void>;
 /**
  *
  * @param yaml_file_name

@@ -26,17 +26,21 @@ async function main() {
     const program = new commander_1.Command();
     program
         .name('yml2vocab')
-        .description('Convert a simple vocabulary, defined in YAML, to formal Turtle, JSON-LD, and HTML/RDFa files.')
+        .description('Convert a simple vocabulary, defined in YAML, to formal Turtle and JSON-LD files.')
         .usage('[options]')
         .option('-v --vocab [vocab]', 'vocabulary file name, defaults to "vocabulary.yml"')
         .option('-t --template [template]', 'template file name, defaults to "template.html"')
+        .option('-y --yaml', 'whether a YAML-LD version of the vocabulary should also be generated')
         .option('-c --context', 'whether a JSON-LD context file should also be generated, defaults to "false"')
+        .option('-d --debug', 'run in debug mode, full error stack is displayed if an error occurs, defaults to "false"')
         .parse(process.argv);
     const options = program.opts();
     const vocabulary = options.vocab ? options.vocab : 'vocabulary.yml';
     const template = options.template ? options.template : 'template.html';
     const context = !!options.context;
-    await yml2vocab.generateVocabularyFiles(vocabulary, template, context);
+    const debug = !!options.debug;
+    const yaml = !!options.yaml;
+    await yml2vocab.generateVocabularyFiles(vocabulary, template, context, yaml, debug);
 }
 // At some point, node.js will allow to have async calls at the top level, and this extra function will
 // become unnecessary. Until then…

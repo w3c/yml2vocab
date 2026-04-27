@@ -40,6 +40,7 @@ export declare class StatusCounter {
 export interface JSON_LD {
     alias?: Record<string, string>;
     import?: string | string[];
+    set_vocab?: boolean;
 }
 /**
  * Context references. Lists, for a context, the terms that are listed in them.
@@ -86,6 +87,11 @@ export interface GlobalData {
      * Imported context files, to be added to the JSON-LD context file on the user's request
      */
     import: string[];
+    /**
+     * A flag for the context generation, whether the vocabulary's URL should be set as a fallback
+     * value in the context using "@vocab".
+     */
+    set_vocab?: boolean;
 }
 /**
  * As it name says: some global data that are needed by some of the media type specific modules.
@@ -172,8 +178,8 @@ export interface ValidationResults {
     error: ValidationError[];
 }
 /**
- * This is a shortened version of the full Ajv error message (the schema is very simple,
- * the generic Ajv error message is way too complex for our use)
+ * This is a shortened version of the full exodus error message (the schema is very simple,
+ * the generic exodus error message is way too complex for our use)
  */
 export interface ValidationError {
     message?: string;
@@ -275,6 +281,7 @@ export interface RDFProperty extends RDFTerm {
     dataset: boolean;
     container: Container | undefined;
     strongURL: boolean;
+    langString: boolean;
 }
 /**
  * No extra information is necessary for an individual, but it makes the code

@@ -21,11 +21,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VocabGeneration = void 0;
 exports.generateVocabularyFiles = generateVocabularyFiles;
 exports.generate_vocabulary_files = generate_vocabulary_files;
+const yaml_1 = require("yaml");
 const convert_1 = require("./lib/convert");
 const turtle_1 = require("./lib/turtle");
 const jsonld_1 = require("./lib/jsonld");
 const html_1 = require("./lib/html");
 const context_1 = require("./lib/context");
+const beautify_1 = require("./lib/beautify");
 const node_fs_1 = require("node:fs");
 /**
  * Conversion class for YAML to the various syntaxes.
@@ -62,6 +64,16 @@ class VocabGeneration {
         return (0, jsonld_1.toJSONLD)(this.vocab);
     }
     /**
+     * Get the YAML-LD representation of the vocabulary.
+     *
+     * @returns The JSON-LD content
+     */
+    getYAMLLD() {
+        const jsonldObj = JSON.parse(this.getJSONLD());
+        const indent_size = (0, beautify_1.getEditorConfigOptions)('yamlld').indent_size;
+        return (0, yaml_1.stringify)(jsonldObj, { indent: indent_size, lineWidth: 0 }); // { indent: 4, linewidth: 0});
+    }
+    /**
      * Get the minimal JSON-LD Context file for the vocabulary.
      *
      * @returns The JSON-LD content
@@ -76,18 +88,26 @@ class VocabGeneration {
      * @param context - Whether a JSON-LD context file is also generated
      * @returns
      */
-    getHTML(template, basename, context) {
-        return (0, html_1.toHTML)(this.vocab, template, basename, context);
+    getHTML(template, basename, context, yaml = false) {
+        return (0, html_1.toHTML)(this.vocab, template, basename, context, yaml);
     }
     /* Deprecated; these are just to avoid problems for users of earlier versions */
     /** @internal */
-    get_turtle() { return this.getTurtle(); }
+    get_turtle() {
+        return this.getTurtle();
+    }
     /** @internal */
-    get_jsonld() { return this.getJSONLD(); }
+    get_jsonld() {
+        return this.getJSONLD();
+    }
     /** @internal */
-    get_html(template, basename = '', context = false) { return this.getHTML(template, basename, context); }
+    get_html(template, basename = "", context = false) {
+        return this.getHTML(template, basename, context);
+    }
     /** @internal */
-    get_context() { return this.getContext(); }
+    get_context() {
+        return this.getContext();
+    }
 }
 exports.VocabGeneration = VocabGeneration;
 /**
@@ -101,9 +121,11 @@ exports.VocabGeneration = VocabGeneration;
  * @param yaml_file_name - the vocabulary file in YAML
  * @param template_file_name - the HTML template file
  * @param context - whether the JSON-LD context file should also be generated
+ * @param yamlVocab - whether the YAML-LD version of the vocabulary should also be generated
+ * @param debug - display a full stack if an error is reported
  * @throws on error situation in reading the input files, in yml validation, or when writing the result
  */
-async function generateVocabularyFiles(yaml_file_name, template_file_name, context) {
+async function generateVocabularyFiles(yaml_file_name, template_file_name, context, yamlVocab = false, debug = false) {
     // This trick allows the user to give the full yaml file name, or only the common base
     const basename = yaml_file_name.endsWith('.yml') ? yaml_file_name.slice(0, -4) : yaml_file_name;
     // Get the two files from the file system (at some point, this can be extended
@@ -126,17 +148,21 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
     else {
         read_errors.push(reads[1].reason);
     }
-    if (read_errors.length !== 0) {
-        // One of the two files could not be read, we should abort here:
-        throw (new AggregateError(read_errors.join('\n')));
-    }
     try {
+        // Pushing this here, to have a unified error reporting point below.
+        if (read_errors.length !== 0) {
+            // One of the two files could not be read, we should abort here:
+            throw new Error(read_errors.join(" "));
+        }
         const conversion = new VocabGeneration(yaml);
         const fs_writes = [
             node_fs_1.promises.writeFile(`${basename}.ttl`, conversion.getTurtle()),
             node_fs_1.promises.writeFile(`${basename}.jsonld`, conversion.getJSONLD()),
-            node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template, basename, context)),
+            node_fs_1.promises.writeFile(`${basename}.html`, conversion.getHTML(template, basename, context, yamlVocab)),
         ];
+        if (yamlVocab) {
+            fs_writes.push(node_fs_1.promises.writeFile(`${basename}.yamlld`, conversion.getYAMLLD()));
+        }
         if (context) {
             fs_writes.push(node_fs_1.promises.writeFile(`${basename}.context.jsonld`, conversion.getContext()));
         }
@@ -145,12 +171,17 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
             .map((result) => (result.status === "rejected" ? result.reason : ''));
         if (write_errors.length != 0) {
             // One or more files could not be written, we should throw an exception...
-            throw (new AggregateError(write_errors.join('\n')));
+            throw (new Error(write_errors.join(" ")));
         }
         // deno-lint-ignore no-explicit-any
     }
     catch (e) {
-        console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}\nStack: ${e.stack}`);
+        if (debug) {
+            console.error(`Error in the YML conversion:\n${e.message}\nCause: ${e.cause}\nStack: ${e.stack}\n\n`);
+        }
+        else {
+            console.error(`Error in the YML conversion: "${e.message}"\n`);
+        }
     }
 }
 //

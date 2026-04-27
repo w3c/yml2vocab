@@ -28,7 +28,7 @@ const OR = ' ⊔ ';
  * @param context - Whether a context file is also generated (if yes, some extra notes may appear in the output)
  * @returns
  */
-function toHTML(vocab, template_text, basename, context) {
+function toHTML(vocab, template_text, basename, context, yaml = false) {
     // Get the DOM of the template
     const document = new minidom_1.MiniDOM(template_text);
     // I am just lazy to type things that are too long... :-)
@@ -151,14 +151,20 @@ function toHTML(vocab, template_text, basename, context) {
                 if (item.strongURL) {
                     description += "<br><br>The property's value should be a URL, i.e., not a literal.";
                 }
+                else if (item.langString) {
+                    description += "<br><br>The property's value is expected to be a natural language string.";
+                }
             }
             document.addChild(section, 'div', description);
         }
-        else if (factory_1.RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
-            if (factory_1.RDFTermFactory.isProperty(item)) {
-                if (item.strongURL) {
+        else {
+            if (factory_1.RDFTermFactory.includesCurie(item.type, "owl:ObjectProperty")) {
+                if (factory_1.RDFTermFactory.isProperty(item) && item.strongURL) {
                     document.addChild(section, 'p', "The property's value should be a URL, i.e., not a literal.");
                 }
+            }
+            else if (factory_1.RDFTermFactory.isProperty(item) && item.langString) {
+                document.addChild(section, 'p', "The property's value is expected to be a natural language string.");
             }
         }
         // Add the external warning, if applicable
@@ -250,11 +256,19 @@ function toHTML(vocab, template_text, basename, context) {
         if (head && basename !== '') {
             addLink(head, 'jsonld', 'application/ld+json');
             addLink(head, 'ttl', 'text/turtle');
+            if (yaml)
+                addLink(head, 'yamlld', 'application/ld+yaml');
+            // This is a possibility, but it does not sound right. The context is not an alternate
+            // if (context) addLink(head, 'context.jsonld','application/ld+json')
         }
         // Handle the alternate 'a' links, if any of them are
         // present in the template
         addAref('alt-turtle', 'ttl');
         addAref('alt-jsonld', 'jsonld');
+        if (yaml)
+            addAref('alt-yamlld', 'yamlld');
+        if (context)
+            addAref('alt-context', 'context.jsonld');
         // Hide this code here because it is related: removes an unnecessary
         // RDFa link from the body if it is there.
         // This is useful for older template files...

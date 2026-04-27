@@ -288,8 +288,8 @@ function getData(vocab_source) {
     // generated object if everything is fine.
     const validation_results = (0, schema_1.validateWithSchema)(vocab_source);
     if (validation_results.vocab === null) {
-        const error = JSON.stringify(validation_results.error, null, 4);
-        throw (new TypeError(`JSON Schema validation error`, { cause: '\n' + error }));
+        const error = JSON.stringify(validation_results.error, null, 2);
+        throw (new TypeError(`${error}`, { cause: '\n' + error }));
     }
     // Clean up the raw vocab representation.
     const vocab = finalizeRawVocab(validation_results.vocab);
@@ -338,14 +338,29 @@ function getData(vocab_source) {
         let extra_types = [];
         const range = [];
         let strongURL = false;
+        let langString = false;
         if (raw.range && raw.range.length > 0) {
             if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
                 extra_types.push("owl:ObjectProperty");
                 strongURL = true;
             }
+            else if (raw.range.includes("rdf:langString") || raw.range.includes("rdf:dirLangString")) {
+                langString = true;
+                if (raw.range.length > 1 && raw.range_union === false) {
+                    throw new Error(`The range ${raw.range} of the property ${raw.id} includes rdf:langString or rdf:dirLangString, but the range union flag is not set`);
+                }
+                // As a future-proof action adding both RDF lang strings to the mix, but avoiding duplications
+                const frange = new Set([...raw.range, "rdf:langString", "rdf:dirLangString"]);
+                raw.range_union = true; // this may be necessary if the original included one setting only
+                for (const term of frange) {
+                    range.push(factory.term(term));
+                }
+            }
             else {
                 for (const rg of raw.range) {
-                    if (rg.startsWith("xsd") === true || common_2.EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
+                    if (rg.startsWith("xsd") === true ||
+                        common_2.EXTRA_DATATYPES.find((entry) => entry === rg) !==
+                            undefined) {
                         // The datatype is a simple one, not a class; a term nevertheless, to make it uniform
                         extra_types.push("owl:DatatypeProperty");
                         range.push(factory.term(rg));
@@ -363,11 +378,11 @@ function getData(vocab_source) {
                                     range.push(term);
                                 }
                                 else {
-                                    throw (new Error(`The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`));
+                                    throw new Error(`The range ${rg} of the property ${id} is neither a class nor a datatype, although defined in this vocabulary`);
                                 }
                             }
                             else {
-                                throw (new Error(`The range ${rg} of the property ${id} is not defined in this vocabulary`));
+                                throw new Error(`The range ${rg} of the property ${id} is not defined in this vocabulary`);
                             }
                         }
                         else {
@@ -385,7 +400,7 @@ function getData(vocab_source) {
             extra_types = [];
         }
         ;
-        return { extra_types, range, strongURL };
+        return { extra_types, range, strongURL, langString };
     };
     // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
     // This function raises an error if this is not the case
@@ -593,7 +608,7 @@ function getData(vocab_source) {
             // but the deno typescript checker complains...
             common_1.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
-            const { extra_types, range, strongURL } = get_ranges(factory_1.factory, raw, output.id);
+            const { extra_types, range, strongURL, langString } = get_ranges(factory_1.factory, raw, output.id);
             // A little hack to ensure backward compatibility: if the range includes rdf:List,
             // it should be removed and the information put aside because that should now
             // go to the separate "container" information.
@@ -647,7 +662,7 @@ function getData(vocab_source) {
                 subPropertyOf: raw.upper_value?.map((val) => factory_1.factory.property(val)),
                 see_also: raw.see_also,
                 range: finalRange,
-                range_union: raw.range_union,
+                range_union: (langString === true) ? true : raw.range_union,
                 one_of: raw.one_of?.map((val) => factory_1.factory.individual(val)),
                 domain: raw.domain?.map(val => factory_1.factory.class(val)),
                 example: raw.example,
@@ -655,6 +670,7 @@ function getData(vocab_source) {
                 dataset: dataset,
                 container: container,
                 strongURL: strongURL,
+                langString: langString,
                 context: final_contexts(raw, output),
             });
             return output;
@@ -720,6 +736,7 @@ function getData(vocab_source) {
     if (vocab.json_ld?.import) {
         common_1.global.import = common_1.global.import.concat(vocab.json_ld.import);
     }
+    common_1.global.set_vocab = vocab.json_ld?.set_vocab ?? false;
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary
     return { prefixes, ontology_properties, classes, properties, individuals, datatypes };
