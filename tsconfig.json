@@ -3,6 +3,7 @@
         "declaration": true,
         "allowJs": true,
         "alwaysStrict": true,
+        // Explicitly set to false to support namespace imports (import * as name)
         "esModuleInterop": false,
         "lib": ["esnext", "dom"],
         "module": "nodenext",
