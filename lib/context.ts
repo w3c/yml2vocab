@@ -83,7 +83,7 @@ export function toContext(vocab: Vocab): string {
                         break;
                     } else if (RDFTermFactory.includesCurie(property.type,"owl:DatatypeProperty")) {
                         // This is the case when the property refers to an explicitly defined, non-standard datatype
-                        if(property.range.length==1){
+                        if (property.range.length === 1) {
                             output["@type"] = rangeTerm.url;
                         }
                         break;
