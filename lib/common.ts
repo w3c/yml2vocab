@@ -482,5 +482,5 @@ export const defaultPrefixes: RDFPrefix[] = [
  * specificities of a particular serialization. These should not be filtered out
  * when optimizing the prefixes...
  */
-export const requiredTurtlePrefixes: string[] = ["vs"];
-export const requiredJsonPrefixes: string[] = ["vs", "jsonld"];
+export const requiredTurtlePrefixes: string[] = ["vs", "owl", "rdf"];
+export const requiredJsonPrefixes: string[] = ["vs", "jsonld", "owl"];
