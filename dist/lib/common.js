@@ -194,5 +194,5 @@ exports.defaultPrefixes = [
  * specificities of a particular serialization. These should not be filtered out
  * when optimizing the prefixes...
  */
-exports.requiredTurtlePrefixes = ["vs"];
-exports.requiredJsonPrefixes = ["vs", "jsonld"];
+exports.requiredTurtlePrefixes = ["vs", "owl", "rdf", "xsd", "jsonld", "schema"];
+exports.requiredJsonPrefixes = ["vs", "jsonld", "owl", "xsd", "schema"];
