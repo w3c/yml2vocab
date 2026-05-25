@@ -798,6 +798,10 @@ Many features are the result of further discussions with Many Sporny, Benjamin Y
 
 I dedicate this script to the memory of Gregg. R.I.P.
 
+---
+
+- @iherman. Comments can also be sent to ivan@w3.org.
+
 
 
 
