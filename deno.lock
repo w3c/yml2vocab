@@ -5,8 +5,8 @@
     "npm:@exodus/schemasafe@^1.3.0": "1.3.0",
     "npm:@types/js-beautify@^1.14.3": "1.14.3",
     "npm:@types/jsdom@^21.1.7": "21.1.7",
-    "npm:@types/node@*": "24.2.0",
-    "npm:@types/node@^22.10.10": "22.18.12",
+    "npm:@types/node@*": "22.19.20",
+    "npm:@types/node@^22.19.19": "22.19.20",
     "npm:@typescript-eslint/eslint-plugin@^8.21.0": "8.33.0_@typescript-eslint+parser@8.33.0__eslint@9.27.0__typescript@5.9.3_eslint@9.27.0_typescript@5.9.3",
     "npm:@typescript-eslint/parser@^8.21.0": "8.33.0_eslint@9.27.0_typescript@5.9.3",
     "npm:commander@^13.1.0": "13.1.0",
@@ -14,7 +14,7 @@
     "npm:eslint@^9.19.0": "9.27.0",
     "npm:js-beautify@^1.15.4": "1.15.4",
     "npm:jsdom@26": "26.1.0",
-    "npm:ts-node@^10.9.2": "10.9.2_@types+node@22.18.12_typescript@5.9.3",
+    "npm:ts-node@^10.9.2": "10.9.2_@types+node@22.19.20_typescript@5.9.3",
     "npm:typedoc@~0.27.6": "0.27.9_typescript@5.9.3",
     "npm:typescript@^5.7.3": "5.9.3",
     "npm:yaml@^2.7.0": "2.8.0"
@@ -256,7 +256,7 @@
     "@types/jsdom@21.1.7": {
       "integrity": "sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA==",
       "dependencies": [
-        "@types/node@24.2.0",
+        "@types/node",
         "@types/tough-cookie",
         "parse5"
       ]
@@ -264,16 +264,10 @@
     "@types/json-schema@7.0.15": {
       "integrity": "sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA=="
     },
-    "@types/node@22.18.12": {
-      "integrity": "sha512-BICHQ67iqxQGFSzfCFTT7MRQ5XcBjG5aeKh5Ok38UBbPe5fxTyE+aHFxwVrGyr8GNlqFMLKD1D3P2K/1ks8tog==",
+    "@types/node@22.19.20": {
+      "integrity": "sha512-6tELRwSDYWW9EdZhbeZmYGZ1/7Djkt+Ah3/ScEYT9cDord7UJzasR/4D3VONg9tQI5CDp+/CZC1AXj2pCFOvpw==",
       "dependencies": [
-        "undici-types@6.21.0"
-      ]
-    },
-    "@types/node@24.2.0": {
-      "integrity": "sha512-3xyG3pMCq3oYCNg7/ZP+E1ooTaGB4cG8JWRsqqOYQdbWNY4zbaV0Ennrd7stjiJEFZCaybcIgpTjJWHRfBSIDw==",
-      "dependencies": [
-        "undici-types@7.10.0"
+        "undici-types"
       ]
     },
     "@types/tough-cookie@4.0.5": {
@@ -733,6 +727,7 @@
         "package-json-from-dist",
         "path-scurry"
       ],
+      "deprecated": true,
       "bin": true
     },
     "globals@14.0.0": {
@@ -1162,7 +1157,7 @@
         "typescript"
       ]
     },
-    "ts-node@10.9.2_@types+node@22.18.12_typescript@5.9.3": {
+    "ts-node@10.9.2_@types+node@22.19.20_typescript@5.9.3": {
       "integrity": "sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==",
       "dependencies": [
         "@cspotcode/source-map-support",
@@ -1170,7 +1165,7 @@
         "@tsconfig/node12",
         "@tsconfig/node14",
         "@tsconfig/node16",
-        "@types/node@22.18.12",
+        "@types/node",
         "acorn",
         "acorn-walk",
         "arg",
@@ -1211,9 +1206,6 @@
     "undici-types@6.21.0": {
       "integrity": "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ=="
     },
-    "undici-types@7.10.0": {
-      "integrity": "sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag=="
-    },
     "uri-js@4.4.1": {
       "integrity": "sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==",
       "dependencies": [
@@ -1236,7 +1228,8 @@
       "integrity": "sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==",
       "dependencies": [
         "iconv-lite"
-      ]
+      ],
+      "deprecated": true
     },
     "whatwg-mimetype@4.0.0": {
       "integrity": "sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg=="
@@ -1308,7 +1301,7 @@
         "npm:@exodus/schemasafe@^1.3.0",
         "npm:@types/js-beautify@^1.14.3",
         "npm:@types/jsdom@^21.1.7",
-        "npm:@types/node@^22.10.10",
+        "npm:@types/node@^22.19.19",
         "npm:@typescript-eslint/eslint-plugin@^8.21.0",
         "npm:@typescript-eslint/parser@^8.21.0",
         "npm:commander@^13.1.0",
