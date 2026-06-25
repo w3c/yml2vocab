@@ -216,14 +216,31 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         }
     }
 
+    // Base URL of the JSON-LD Playground; the example is passed along in the
+    // URL fragment, encoded the same way the Playground itself builds its permalinks
+    // (a `URLSearchParams` serialization with a `json-ld` parameter).
+    const JSONLD_PLAYGROUND = 'https://json-ld.org/playground/next';
+
     const setExample = (section: Element, item: RDFClass | RDFIndividual | RDFProperty): void => {
         if (item.example && item.example.length > 0) {
             for (const ex of item.example) {
-                const example = document.addChild(section, 'pre', ex.json);
+                // Wrap the example so the playground button can be anchored to its upper right corner
+                const wrapper = document.addChild(section, 'div');
+                wrapper.className = 'example-with-playground';
+                const example = document.addChild(wrapper, 'pre', ex.json);
                 example.className = 'example prettyprint language-json';
                 if (ex.label) {
                     example.setAttribute('title', ex.label)
                 }
+                // Add a button that opens the example in the JSON-LD Playground
+                const params = new URLSearchParams();
+                params.set('json-ld', ex.json);
+                params.set('startTab', 'tab-expand');
+                const link = document.addChild(wrapper, 'a', 'Open in JSON-LD Playground');
+                link.setAttribute('href', `${JSONLD_PLAYGROUND}#${params.toString()}`);
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+                link.className = 'jsonld-playground-button';
             }
         }
     }
