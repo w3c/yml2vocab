@@ -290,6 +290,8 @@ These keys are common to all term definitions, although their exact interpretati
                 Blocks with <code>label</code> and <code>json</code> keys providing a (JSON-LD) example with a title. These examples are placed, in the HTML version, to
                 the end of the section referring to a term; the examples are ignored in the Turtle and the JSON-LD versions. Care should be taken to use the
                 <code>"|"</code> <a href="https://yaml-multiline.info">block style indicator</a> in the YAML file for the examples.
+                Each example is followed, in the HTML version, by an &ldquo;Open in JSON-LD Playground&rdquo; button that opens the example in the
+                <a href="https://json-ld.org/playground/next">JSON-LD Playground</a>.
             </td>
             <td>No</td>
         </tr>
