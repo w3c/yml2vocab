@@ -255,6 +255,57 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         }
     }
 
+    // A subchapter, within the individuals section, grouping all the individuals that share the
+    // exact same set of types. The `id` is used both as the anchor of the subchapter and as the
+    // target of the "Individuals" cross-reference links generated in the relevant class sections.
+    interface IndividualTypeGroup {
+        id    : string;
+        types : RDFTerm[];
+        items : RDFIndividual[];
+    }
+
+    // The individual subchapters, computed once per status (the individuals section is split into a
+    // stable, a reserved, and a deprecated part). Keyed by status.
+    const individualGroupsByStatus = new Map<Status, IndividualTypeGroup[]>();
+
+    // Cross-reference index: for a class (identified by its curie) the list of individuals that
+    // have that class as a type. Used to list the "Individuals" links into the class sections.
+    const individualsByClass = new Map<string, RDFIndividual[]>();
+
+    // Group the individuals by their type(s), preserving the order in which the types first appear,
+    // and register the cross-reference anchors for the relevant classes. This must run before the
+    // class sections are generated, because those link to the subchapters created here.
+    const buildIndividualGroups = (): void => {
+        for (const filter of Object.values(Status)) {
+            const { id_prefix } = statusSignals(filter);
+            const list = vocab.individuals.filter((entry: RDFIndividual): boolean => entry.status === filter);
+            const groups: IndividualTypeGroup[] = [];
+            const by_key = new Map<string, IndividualTypeGroup>();
+            for (const item of list) {
+                // Individuals sharing the exact same set of types end up in the same subchapter.
+                const key = item.type.map((t: RDFTerm): string => t.curie).join(', ');
+                let group = by_key.get(key);
+                if (group === undefined) {
+                    const slug = key.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+                    group = { id: `${id_prefix}individuals_of_${slug}`, types: item.type, items: [] };
+                    by_key.set(key, group);
+                    groups.push(group);
+                }
+                group.items.push(item);
+            }
+            individualGroupsByStatus.set(filter, groups);
+
+            // Register, for each type, the individuals that have it as a type.
+            for (const group of groups) {
+                for (const type of group.types) {
+                    const members = individualsByClass.get(type.curie) ?? [];
+                    members.push(...group.items);
+                    individualsByClass.set(type.curie, members);
+                }
+            }
+        }
+    }
+
 
     /************ Functions to add specific content to the final HTML, based also on the template ********************/
 
@@ -480,6 +531,15 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                             dd.innerHTML = prop_names(item.included_in_domain_of);
                         }
                     }
+                    // List links to the individuals that have this class as a type.
+                    const ind_members = individualsByClass.get(item.curie);
+                    if (ind_members && ind_members.length > 0) {
+                        const dl = document.addChild(cl_section, 'dl');
+                        dl.className = 'terms';
+                        document.addChild(dl, 'dt', 'Individuals:');
+                        const dd = document.addChild(dl, 'dd');
+                        dd.innerHTML = ind_members.map(termHTMLReference).join(', ');
+                    }
                     contextReferences(cl_section, item);
                     setExample(cl_section, item);
                 }
@@ -593,7 +653,9 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         }
     }
 
-    // Generation of the section content for individuals: a big table, with a row per individual
+    // Generation of the section content for individuals. The individuals are grouped by their
+    // type(s): a subchapter (a nested section with its own heading) is introduced for each
+    // distinct type (or combination of types), and the matching individuals are listed inside it.
     // There is a check for a possible template error and also whether there are individual
     // definitions in the first place.
     const individuals = (ind_list: RDFIndividual[], statusFilter: Status): void => {
@@ -601,24 +663,38 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         const section = document.getElementById(`${id_prefix}individual_definitions`);
         if (section) {
             if (ind_list.length > 0) {
-                document.addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace.`);
+                document.addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace, grouped by their type.`);
 
-                for (const item of ind_list) {
-                    const ind_section = document.addChild(section, 'section');
+                // The grouping (and the subchapter anchors) have been precomputed in
+                // buildIndividualGroups(), so that the class sections could already link to them.
+                const groups = individualGroupsByStatus.get(statusFilter) ?? [];
+
+                // Render an individual into the given parent section.
+                const renderIndividual = (parent: Element, item: RDFIndividual): void => {
+                    const ind_section = document.addChild(parent, 'section');
                     ind_section.id = item.html_id;
-                    commonFields(ind_section,item);
-                    const dl = document.addChild(ind_section, 'dl');
-                    dl.className = 'terms';
-                    if (!item.external && item.type.length > 0) {
-                        document.addChild(dl, 'dt', 'Type')
-                        const dd = document.addChild(dl, 'dd');
-                        for (const item_type of item.type) {
-                            document.addChild(dd, 'span', termHTMLReference(item_type));
-                            document.addChild(dd, 'br')
-                        }
-                    }
+                    commonFields(ind_section, item);
                     contextReferences(ind_section, item);
                     setExample(ind_section, item);
+                };
+
+                for (const group of groups) {
+                    if (group.types.length > 0) {
+                        // Introduce a subchapter for this type (or combination of types).
+                        const type_section = document.addChild(section, 'section');
+                        type_section.id = group.id;
+                        const type_labels = group.types.map(termHTMLReference);
+                        document.addChild(type_section, 'h4', `${formatter.format(type_labels)}`);
+                        document.addChild(type_section, 'p', `This chapter lists the individuals of type ${formatter.format(type_labels)}.`);
+                        for (const item of group.items) {
+                            renderIndividual(type_section, item);
+                        }
+                    } else {
+                        // Individuals without a type: listed directly, without a subchapter.
+                        for (const item of group.items) {
+                            renderIndividual(section, item);
+                        }
+                    }
                 }
             } else {
                 // removing the section from the DOM
@@ -712,6 +788,10 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
 
     // 4. The introductory list of contexts used in the document
     contexts();
+
+    // 4b. Precompute how the individuals are grouped by type, so the class sections (generated
+    //     next) can link to the matching individual subchapters.
+    buildIndividualGroups();
 
     // 5. Sections on classes
     Object.values(Status).map((filter: Status): void => {
