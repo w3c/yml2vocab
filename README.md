@@ -626,7 +626,7 @@ The required `id` values, and the containing elements, are as follows:
 
 | `id` value                          | Corresponding element | Generated content                                                                           |
 | :---------------------------------- | --------------------- | :------------------------------------------------------------------------------------------ |
-| `title` or `ontology_title`         | any textual           | The title/name of the vocabulary (see the `ontology` block)                                 |
+| `ontology_title`                    | any textual           | The title/name of the vocabulary (see the `ontology` block)                                 |
 | `description`                       | any textual           | The description of the vocabulary (see the `ontology` block)                                |
 | `see_also`                          | any textual           | External reference for the vocabulary (see the `ontology` block)                            |
 | `alt-turtle`                        | `<a>`                 | Add a reference to the Turtle version of the vocabulary as an `href` attribute value        |
