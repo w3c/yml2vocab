@@ -41,7 +41,6 @@ function localeUnCamelise(str: string, separator = ' '): string {
         return char[0] === char.toLocaleUpperCase();
     };
     if (str.length === 0) {
-        console.log(str);
         return str;
     } else {
         // First character is ignored; it can be upper or lower case
@@ -316,14 +315,15 @@ export function getData(vocab_source: string): Vocab {
     const final_contexts = (raw: RawVocabEntry, term: RDFTerm ): string[] => {
         if (raw.context === undefined) return [];
 
-        // replace the value of "vocab" by the global context, then
+        // replace the value of "vocab" by the global context, if applicable then
         // get the possible "none" out of the way.
         const contexts: string[] = raw.context.map((val: string): string => {
             if (val === "vocab") {
                 // The global context may not have been set per TypeScript... although this
                 // function is invoked once that has been set already. Price to pay for
                 // Typescript checking...
-                return global.vocab_context !== undefined ? global.vocab_context : "none";
+                const returnValue = (global.vocab_context !== undefined && global.vocab_context !== 'vocab') ? global.vocab_context : "none";
+                return returnValue || "none";
             } else {
                 return val;
             }

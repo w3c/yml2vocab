@@ -1,5 +1,5 @@
 /**
- * Convert the internal representation of the vocabulary into JSON-LD
+ * Convert the internal representation of the vocabulary into JSONType-LD
  * (see the 'Vocab' interface).
  *
  * @packageDocumentation
@@ -12,7 +12,7 @@ import { beautify }                                                       from '
 import { factory }                                                        from './factory';
 
 
-type JSON = Record<string,unknown>;
+type JSONType = Record<string,unknown>;
 
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
@@ -40,9 +40,9 @@ const generic_context = {
 }
 
 /**
- * Generate the JSON-LD representation of the vocabulary.
+ * Generate the JSONType-LD representation of the vocabulary.
  *
- * The function does not generate JSON-LD directly; instead, a standard JS object
+ * The function does not generate JSONType-LD directly; instead, a standard JS object
  * is generated and the built-in JSON serializer takes care of the idiosyncrasies of
  * the JSON syntax.
  *
@@ -75,11 +75,7 @@ export function toJSONLD(vocab: Vocab): string {
     };
 
     // Like domain, but the creation of a union structure is conditional.
-    const multiRange = (
-        term: RDFTerm[],
-        union: boolean,
-        one_of: undefined | RDFTerm[],
-    ): any[] => {
+    const multiRange = (term: RDFTerm[], union: boolean, one_of: undefined | RDFTerm[]): any[] => {
         const basicRange: any[] = ((): any[] => {
             const value: string[] = term.map(termToStringCallback);
             if (value.length === 1) {
@@ -114,10 +110,10 @@ export function toJSONLD(vocab: Vocab): string {
     };
 
     // This is the target object
-    const jsonld: JSON = {};
+    const jsonld: JSONType = {};
 
     // Factoring out the common fields
-    const commonFields = (target: JSON, entry: RDFTerm): void => {
+    const commonFields = (target: JSONType, entry: RDFTerm): void => {
         target["rdfs:label"] = entry.label;
         if (entry.comment !== "") {
             target["rdfs:comment"] = {
@@ -134,21 +130,16 @@ export function toJSONLD(vocab: Vocab): string {
         }
         target["vs:term_status"] = `${entry.status}`;
         if (entry.see_also && entry.see_also.length > 0) {
-            target["rdfs:seeAlso"] = entry.see_also.map(
-                (link: Link): string => link.url,
-            );
+            target["rdfs:seeAlso"] = entry.see_also.map((link: Link): string => link.url);
         }
     };
 
     // Creation of the context: take the prefixes from the vocabulary definition
     // and add the generic context
     {
-        let context: JSON = {};
+        let context: JSONType = {};
         for (const prefix of vocab.prefixes) {
-            if (
-                requiredJsonPrefixes.includes(prefix.prefix) ||
-                factory.usesPrefix(prefix.prefix)
-            ) {
+            if (requiredJsonPrefixes.includes(prefix.prefix) || factory.usesPrefix(prefix.prefix)) {
                 context[prefix.prefix] = prefix.url;
             }
         }
@@ -157,12 +148,19 @@ export function toJSONLD(vocab: Vocab): string {
     }
 
     // Do we have to generate the reference to contexts that mention a specific term?
-    const contextsMentions: boolean = Object.keys(global.context_mentions).length > 0;
-    const target: JSON = ((): JSON => {
+    const contextsMentions: boolean = ((): boolean => {
+        for (const ctx of Object.keys(global.context_mentions)) {
+            const terms = global.context_mentions[ctx];
+            if (terms.length > 0) return true;
+        }
+        return false;
+    })();
+
+    const target: JSONType = ((): JSONType => {
         if (contextsMentions) {
             // The real values are added at the very end, to put the context
-            // mentions at the end of the JSON-LD file
-            const contents: JSON[] = [{}];
+            // mentions at the end of the JSONType-LD file
+            const contents: JSONType[] = [{}];
             jsonld["@graph"] = contents;
             return contents[0];
         } else {
@@ -196,10 +194,10 @@ export function toJSONLD(vocab: Vocab): string {
 
     {
         // Get the properties
-        const properties: JSON[] = [];
+        const properties: JSONType[] = [];
         for (const prop of vocab.properties) {
             if (!prop.external) {
-                const pr_object: JSON = {};
+                const pr_object: JSONType = {};
                 pr_object["@id"] = `${prop}`;
                 if (prop.type.length === 1) {
                     pr_object["@type"] = `${prop.type[0]}`;
@@ -210,8 +208,7 @@ export function toJSONLD(vocab: Vocab): string {
                     pr_object["owl:deprecated"] = true;
                 }
                 if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
-                    pr_object["rdfs:subPropertyOf"] =
-                        prop.subPropertyOf.map(termToStringCallback);
+                    pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf.map(termToStringCallback);
                 }
                 if (prop.domain && prop.domain.length > 0) {
                     pr_object["rdfs:domain"] = multiDomain(prop.domain);
@@ -219,13 +216,8 @@ export function toJSONLD(vocab: Vocab): string {
                 if (prop.container === Container.list) {
                     pr_object["rdfs:range"] = "rdf:List";
                 } else if (prop.range?.length > 0 || prop.one_of?.length > 0) {
-                    const range = multiRange(
-                        prop.range,
-                        prop.range_union,
-                        prop.one_of,
-                    );
-                    pr_object["rdfs:range"] =
-                        range.length > 1 ? range : range[0];
+                    const range = multiRange(prop.range, prop.range_union, prop.one_of);
+                    pr_object["rdfs:range"] = range.length > 1 ? range : range[0];
                 }
                 commonFields(pr_object, prop);
                 // contexts(pr_object, prop);
@@ -237,10 +229,10 @@ export function toJSONLD(vocab: Vocab): string {
 
     {
         // Get the classes
-        const classes: JSON[] = [];
+        const classes: JSONType[] = [];
         for (const cl of vocab.classes) {
             if (!cl.external) {
-                const cl_object: JSON = {};
+                const cl_object: JSONType = {};
                 cl_object["@id"] = `${cl}`;
                 if (cl.type.length === 1) {
                     cl_object["@type"] = `${cl.type[0]}`;
@@ -254,17 +246,14 @@ export function toJSONLD(vocab: Vocab): string {
                     if (cl.subClassOf.length > 1 && cl.upper_union) {
                         cl_object["rdfs:subClassOf"] = {
                             "@type": "owl:Class",
-                            "owl:unionOf":
-                                cl.subClassOf.map(termToStringCallback),
+                            "owl:unionOf": cl.subClassOf.map(termToStringCallback),
                         };
                     } else {
-                        cl_object["rdfs:subClassOf"] =
-                            cl.subClassOf.map(termToStringCallback);
+                        cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
                     }
                 }
                 if (cl.one_of && cl.one_of.length > 0) {
-                    cl_object["owl:oneOf"] =
-                        cl.one_of.map(termToStringCallback);
+                    cl_object["owl:oneOf"] = cl.one_of.map(termToStringCallback);
                 }
                 commonFields(cl_object, cl);
                 // contexts(cl_object, cl);
@@ -276,10 +265,10 @@ export function toJSONLD(vocab: Vocab): string {
 
     {
         // Get the individuals
-        const individuals: JSON[] = [];
+        const individuals: JSONType[] = [];
         for (const ind of vocab.individuals) {
             if (!ind.external) {
-                const ind_object: JSON = {};
+                const ind_object: JSONType = {};
                 ind_object["@id"] = `${ind}`;
                 if (ind.type.length === 0) {
                     ind_object["@type"] = "rdfs:Resource";
@@ -301,10 +290,10 @@ export function toJSONLD(vocab: Vocab): string {
 
     {
         // Get the datatypes
-        const datatypes: JSON[] = [];
+        const datatypes: JSONType[] = [];
         for (const dt of vocab.datatypes) {
             if (!dt.external) {
-                const dt_object: JSON = {};
+                const dt_object: JSONType = {};
                 dt_object["@id"] = `${dt}`;
                 dt_object["@type"] = "rdfs:Datatype";
                 if (dt.type && dt.type.length > 0) {
@@ -314,8 +303,7 @@ export function toJSONLD(vocab: Vocab): string {
                             "owl:unionOf": dt.type.map(termToStringCallback),
                         };
                     } else {
-                        dt_object["rdfs:subClassOf"] =
-                            dt.type.map(termToStringCallback);
+                        dt_object["rdfs:subClassOf"] = dt.type.map(termToStringCallback);
                     }
                 }
                 if (dt.pattern) {
@@ -340,7 +328,7 @@ export function toJSONLD(vocab: Vocab): string {
     if (contextsMentions) {
         // Take all the context mentions one by one, and add a new @graph entry...
         for (const ctx of Object.keys(global.context_mentions)) {
-            const mentions: JSON = {};
+            const mentions: JSONType = {};
             const terms = global.context_mentions[ctx];
             if (terms.length === 0) {
                 continue;
@@ -351,7 +339,7 @@ export function toJSONLD(vocab: Vocab): string {
             mentions["@id"] = `${ctx}`;
             mentions["@type"] = "jsonld:Context";
             mentions["mentions"] = terms.map((term: RDFTerm): string => `${term}`);
-            (jsonld["@graph"] as JSON[]).push(mentions);
+            (jsonld["@graph"] as JSONType[]).push(mentions);
         }
     }
 

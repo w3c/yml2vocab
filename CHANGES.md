@@ -2,6 +2,10 @@
 
 This list does not include all the tiny, e.g., editorial changes, only the changes in the features.
 
+## Version 1.9.4
+
+- Handling https://github.com/w3c/yml2vocab/issues/49: while this is a bug, its handling changed the shape of the generated JSON-LD. The structure of the generated JSON-LD has to make use of the `@graph` feature of JSON-LD, to isolate the context mention handling(s). The "core" content is in one entry of the graph, and each context mention graph are separated (much like it is done in Turtle).
+
 ## Version 1.9.0
 
 - Added the option to generate, if needed, a `@vocab` statement into the generated context files, with the value set to the official URL for the vocabulary. This makes the vocabulary easily extensible in JSON-LD, though possibly creating uncontrolled vocabulary terms on the fly, which may lead to security issues.
