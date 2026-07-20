@@ -17,46 +17,39 @@ type JSONType = Record<string,unknown>;
 // Generic context. All items may not be used in a specific vocabulary, but it
 // is not harmful to have them here.
 const generic_context = {
-    "dc:date":                  { "@type": "xsd:date" },
-    "rdfs:domain":              { "@type": "@id" },
-    "rdfs:range":               { "@type": "@id" },
-    "rdfs:seeAlso":             { "@type": "@id" },
-    "rdfs:subClassOf":          { "@type": "@id" },
-    "rdfs:subPropertyOf":       { "@type": "@id" },
-    "rdfs:isDefinedBy":         { "@type": "@id" },
+    "dc:date": { "@type": "xsd:date" },
+    "rdfs:domain": { "@type": "@id" },
+    "rdfs:range": { "@type": "@id" },
+    "rdfs:seeAlso": { "@type": "@id" },
+    "rdfs:subClassOf": { "@type": "@id" },
+    "rdfs:subPropertyOf": { "@type": "@id" },
+    "rdfs:isDefinedBy": { "@type": "@id" },
     // "owl:equivalentClass":      { "@type": "@vocab" },
     // "owl:equivalentProperty":   { "@type": "@vocab" },
-    "owl:oneOf":                { "@container": "@list", "@type": "@vocab" },
-    "owl:deprecated":           { "@type": "xsd:boolean" },
+    "owl:oneOf": { "@container": "@list", "@type": "@vocab" },
+    "owl:deprecated": { "@type": "xsd:boolean" },
     // "owl:imports":              { "@type": "@id" },
     // "owl:versionInfo":          { "@type": "@id" },
-    "owl:inverseOf":            { "@type": "@vocab" },
-    "owl:unionOf":              { "@container": "@list", "@type": "@vocab" },
-    "rdfs_classes":             { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
-    "rdfs_properties":          { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
-    "rdfs_individuals":         { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
-    "rdfs_datatypes":           { "@reverse": "rdfs:isDefinedBy", "@type": "@id" },
-    "mentions":                 { "@id": "schema:mentions",  "@type": "@id" },
-}
+    "owl:inverseOf": { "@type": "@vocab" },
+    "owl:unionOf": { "@container": "@list", "@type": "@vocab" },
+    mentions: { "@id": "schema:mentions", "@type": "@id" }
+};
 
 /**
- * Generate the JSONType-LD representation of the vocabulary.
+ * Generate the JSON-LD representation of the vocabulary.
  *
- * The function does not generate JSONType-LD directly; instead, a standard JS object
+ * The function does not generate JSON-LD directly; instead, a standard JS object
  * is generated and the built-in JSON serializer takes care of the idiosyncrasies of
  * the JSON syntax.
- *
- * There is one neat trick in the generated code: the JSON-LD code, usually,
- * becomes very complicated if the structure is not a tree. This problem is handled here
- * by the repeated usage of reverse properties that put, in the JSON sense,
- * the vocabulary itself on the top, linked to the individual terms via a
- * (reversed) rdfs:isDefinedBy. (See the definition of the 'rdfs_classes',
- * 'rdfs_properties', and 'rdfs_instances'). Thanks to Gregg Kellogg for that trick...
  *
  * @param vocab - The internal representation of the vocabulary
  * @returns
  */
 export function toJSONLD(vocab: Vocab): string {
+    // This is the target object, serialized at the end.
+    const jsonld: JSONType = {};
+
+    /* ****** All kinds of internal utility functions ****** */
     const termToStringCallback = (t: RDFTerm): string => `${t}`;
 
     // Handling of the domain is a bit complicated due to the usage
@@ -109,9 +102,6 @@ export function toJSONLD(vocab: Vocab): string {
         return [...basicRange, ...extra];
     };
 
-    // This is the target object
-    const jsonld: JSONType = {};
-
     // Factoring out the common fields
     const commonFields = (target: JSONType, entry: RDFTerm): void => {
         target["rdfs:label"] = entry.label;
@@ -121,12 +111,10 @@ export function toJSONLD(vocab: Vocab): string {
                 "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML",
             };
         }
-        if (entry.defined_by?.length !== 0) {
-            if (entry.defined_by?.length === 1) {
-                target["rdfs:isDefinedBy"] = entry.defined_by[0];
-            } else {
-                target["rdfs:isDefinedBy"] = entry.defined_by;
-            }
+        if (entry.defined_by && entry.defined_by?.length !== 0) {
+            target["rdfs:isDefinedBy"] = [...entry.defined_by, global.vocab_url];
+        } else {
+            target["rdfs:isDefinedBy"] = global.vocab_url;
         }
         target["vs:term_status"] = `${entry.status}`;
         if (entry.see_also && entry.see_also.length > 0) {
@@ -147,6 +135,155 @@ export function toJSONLD(vocab: Vocab): string {
         jsonld["@context"] = context;
     }
 
+    /* ******** Here we go, category by category... ******* */
+
+    /* ****** Set up the overall structure of the generated JSON-LD ****** */
+    // Each term, as well as the context references, are put into a separate graph
+    const graphs: JSONType[] = [];
+    jsonld["@graph"] = graphs;
+
+    // Get the ontology description itself
+    {
+        const ontology: JSONType = {};
+        graphs.push(ontology);
+        // That is the core: the ID of the ontology itself!
+        ontology["@id"] = global.vocab_url;
+        ontology["@type"] = "owl:Ontology";
+        for (const ont of vocab.ontology_properties) {
+            if (ont.property === "dc:date" || ont.url) {
+                ontology[ont.property] = ont.value;
+            } else if (ont.property === "dc:description") {
+                ontology[ont.property] = {
+                    "@value": ont.value,
+                    "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML",
+                };
+            } else {
+                ontology[ont.property] = {
+                    "@value": ont.value,
+                    "@language": "en",
+                };
+            }
+        }
+    }
+
+    // Get the properties
+    for (const prop of vocab.properties) {
+        if (!prop.external) {
+            const pr_object: JSONType = {};
+            graphs.push(pr_object);
+            pr_object["@id"] = `${prop}`;
+            if (prop.type.length === 1) {
+                pr_object["@type"] = `${prop.type[0]}`;
+            } else {
+                pr_object["@type"] = prop.type.map(termToStringCallback);
+            }
+            if (prop.status === Status.deprecated) {
+                pr_object["owl:deprecated"] = true;
+            }
+            if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
+                pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf.map(termToStringCallback);
+            }
+            if (prop.domain && prop.domain.length > 0) {
+                pr_object["rdfs:domain"] = multiDomain(prop.domain);
+            }
+            if (prop.container === Container.list) {
+                pr_object["rdfs:range"] = "rdf:List";
+            } else if (prop.range?.length > 0 || prop.one_of?.length > 0) {
+                const range = multiRange(prop.range, prop.range_union, prop.one_of);
+                pr_object["rdfs:range"] = range.length > 1 ? range : range[0];
+            }
+            commonFields(pr_object, prop);
+            // contexts(pr_object, prop);
+        }
+    }
+
+    // Get the classes
+    for (const cl of vocab.classes) {
+        if (!cl.external) {
+            const cl_object: JSONType = {};
+            graphs.push(cl_object);
+            cl_object["@id"] = `${cl}`;
+            if (cl.type.length === 1) {
+                cl_object["@type"] = `${cl.type[0]}`;
+            } else {
+                cl_object["@type"] = cl.type.map(termToStringCallback);
+            }
+            if (cl.status === Status.deprecated) {
+                cl_object["owl:deprecated"] = true;
+            }
+            if (cl.subClassOf && cl.subClassOf.length > 0) {
+                if (cl.subClassOf.length > 1 && cl.upper_union) {
+                    cl_object["rdfs:subClassOf"] = {
+                        "@type": "owl:Class",
+                        "owl:unionOf": cl.subClassOf.map(termToStringCallback),
+                    };
+                } else {
+                    cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
+                }
+            }
+            if (cl.one_of && cl.one_of.length > 0) {
+                cl_object["owl:oneOf"] = cl.one_of.map(termToStringCallback);
+            }
+            commonFields(cl_object, cl);
+            // contexts(cl_object, cl);
+        }
+    }
+
+    // Get the individuals
+    for (const ind of vocab.individuals) {
+        if (!ind.external) {
+            const ind_object: JSONType = {};
+            graphs.push(ind_object);
+            ind_object["@id"] = `${ind}`;
+            if (ind.type.length === 0) {
+                ind_object["@type"] = "rdfs:Resource";
+            } else if (ind.type.length === 1) {
+                ind_object["@type"] = `${ind.type[0]}`;
+            } else {
+                ind_object["@type"] = ind.type.map(termToStringCallback);
+            }
+            if (ind.status === Status.deprecated) {
+                ind_object["owl:deprecated"] = true;
+            }
+            commonFields(ind_object, ind);
+            // contexts(ind_object, ind);
+        }
+    }
+
+    // Get the datatypes
+    for (const dt of vocab.datatypes) {
+        if (!dt.external) {
+            const dt_object: JSONType = {};
+            graphs.push(dt_object);
+            dt_object["@id"] = `${dt}`;
+            dt_object["@type"] = "rdfs:Datatype";
+            if (dt.type && dt.type.length > 0) {
+                if (dt.type.length > 1 && dt.upper_union) {
+                    dt_object["rdfs:subClassOf"] = {
+                        "@type": "owl:Class",
+                        "owl:unionOf": dt.type.map(termToStringCallback),
+                    };
+                } else {
+                    dt_object["rdfs:subClassOf"] = dt.type.map(termToStringCallback);
+                }
+            }
+            if (dt.pattern) {
+                dt_object["owl:onDatatype"] = "xsd:string";
+                dt_object["owl:withRestrictions"] = {
+                    "@list": [
+                        {
+                            "xsd:pattern": `${dt.pattern}`,
+                        },
+                    ],
+                };
+            }
+            commonFields(dt_object, dt);
+            // contexts(dt_object, dt);
+        }
+    }
+
+    // Add, if applicable, the context mentions to the array of graphs in the output
+
     // Do we have to generate the reference to contexts that mention a specific term?
     const contextsMentions: boolean = ((): boolean => {
         for (const ctx of Object.keys(global.context_mentions)) {
@@ -155,180 +292,11 @@ export function toJSONLD(vocab: Vocab): string {
         }
         return false;
     })();
-
-    const target: JSONType = ((): JSONType => {
-        if (contextsMentions) {
-            // The real values are added at the very end, to put the context
-            // mentions at the end of the JSONType-LD file
-            const contents: JSONType[] = [{}];
-            jsonld["@graph"] = contents;
-            return contents[0];
-        } else {
-            return jsonld;
-        }
-    })();
-
-    // That is the core: the ID of the ontology itself!
-    target["@id"] = global.vocab_url;
-
-    // Here we go, category by category...
-    {
-        // The Ontology properties are all top level...
-        target["@type"] = "owl:Ontology";
-        for (const ont of vocab.ontology_properties) {
-            if (ont.property === "dc:date" || ont.url) {
-                target[ont.property] = ont.value;
-            } else if (ont.property === "dc:description") {
-                target[ont.property] = {
-                    "@value": ont.value,
-                    "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML",
-                };
-            } else {
-                target[ont.property] = {
-                    "@value": ont.value,
-                    "@language": "en",
-                };
-            }
-        }
-    }
-
-    {
-        // Get the properties
-        const properties: JSONType[] = [];
-        for (const prop of vocab.properties) {
-            if (!prop.external) {
-                const pr_object: JSONType = {};
-                pr_object["@id"] = `${prop}`;
-                if (prop.type.length === 1) {
-                    pr_object["@type"] = `${prop.type[0]}`;
-                } else {
-                    pr_object["@type"] = prop.type.map(termToStringCallback);
-                }
-                if (prop.status === Status.deprecated) {
-                    pr_object["owl:deprecated"] = true;
-                }
-                if (prop.subPropertyOf && prop.subPropertyOf.length > 0) {
-                    pr_object["rdfs:subPropertyOf"] = prop.subPropertyOf.map(termToStringCallback);
-                }
-                if (prop.domain && prop.domain.length > 0) {
-                    pr_object["rdfs:domain"] = multiDomain(prop.domain);
-                }
-                if (prop.container === Container.list) {
-                    pr_object["rdfs:range"] = "rdf:List";
-                } else if (prop.range?.length > 0 || prop.one_of?.length > 0) {
-                    const range = multiRange(prop.range, prop.range_union, prop.one_of);
-                    pr_object["rdfs:range"] = range.length > 1 ? range : range[0];
-                }
-                commonFields(pr_object, prop);
-                // contexts(pr_object, prop);
-                properties.push(pr_object);
-            }
-        }
-        if (properties.length > 0) target.rdfs_properties = properties;
-    }
-
-    {
-        // Get the classes
-        const classes: JSONType[] = [];
-        for (const cl of vocab.classes) {
-            if (!cl.external) {
-                const cl_object: JSONType = {};
-                cl_object["@id"] = `${cl}`;
-                if (cl.type.length === 1) {
-                    cl_object["@type"] = `${cl.type[0]}`;
-                } else {
-                    cl_object["@type"] = cl.type.map(termToStringCallback);
-                }
-                if (cl.status === Status.deprecated) {
-                    cl_object["owl:deprecated"] = true;
-                }
-                if (cl.subClassOf && cl.subClassOf.length > 0) {
-                    if (cl.subClassOf.length > 1 && cl.upper_union) {
-                        cl_object["rdfs:subClassOf"] = {
-                            "@type": "owl:Class",
-                            "owl:unionOf": cl.subClassOf.map(termToStringCallback),
-                        };
-                    } else {
-                        cl_object["rdfs:subClassOf"] = cl.subClassOf.map(termToStringCallback);
-                    }
-                }
-                if (cl.one_of && cl.one_of.length > 0) {
-                    cl_object["owl:oneOf"] = cl.one_of.map(termToStringCallback);
-                }
-                commonFields(cl_object, cl);
-                // contexts(cl_object, cl);
-                classes.push(cl_object);
-            }
-        }
-        if (classes.length > 0) target.rdfs_classes = classes;
-    }
-
-    {
-        // Get the individuals
-        const individuals: JSONType[] = [];
-        for (const ind of vocab.individuals) {
-            if (!ind.external) {
-                const ind_object: JSONType = {};
-                ind_object["@id"] = `${ind}`;
-                if (ind.type.length === 0) {
-                    ind_object["@type"] = "rdfs:Resource";
-                } else if (ind.type.length === 1) {
-                    ind_object["@type"] = `${ind.type[0]}`;
-                } else {
-                    ind_object["@type"] = ind.type.map(termToStringCallback);
-                }
-                if (ind.status === Status.deprecated) {
-                    ind_object["owl:deprecated"] = true;
-                }
-                commonFields(ind_object, ind);
-                // contexts(ind_object, ind);
-                individuals.push(ind_object);
-            }
-        }
-        if (individuals.length > 0) target.rdfs_individuals = individuals;
-    }
-
-    {
-        // Get the datatypes
-        const datatypes: JSONType[] = [];
-        for (const dt of vocab.datatypes) {
-            if (!dt.external) {
-                const dt_object: JSONType = {};
-                dt_object["@id"] = `${dt}`;
-                dt_object["@type"] = "rdfs:Datatype";
-                if (dt.type && dt.type.length > 0) {
-                    if (dt.type.length > 1 && dt.upper_union) {
-                        dt_object["rdfs:subClassOf"] = {
-                            "@type": "owl:Class",
-                            "owl:unionOf": dt.type.map(termToStringCallback),
-                        };
-                    } else {
-                        dt_object["rdfs:subClassOf"] = dt.type.map(termToStringCallback);
-                    }
-                }
-                if (dt.pattern) {
-                    dt_object["owl:onDatatype"] = "xsd:string";
-                    dt_object["owl:withRestrictions"] = {
-                        "@list": [
-                            {
-                                "xsd:pattern": `${dt.pattern}`,
-                            },
-                        ],
-                    };
-                }
-                commonFields(dt_object, dt);
-                // contexts(dt_object, dt);
-                datatypes.push(dt_object);
-            }
-        }
-        if (datatypes.length > 0) target.rdfs_datatypes = datatypes;
-    }
-
-    // Add, if applicable, the context mentions to the array of graphs in the output
     if (contextsMentions) {
         // Take all the context mentions one by one, and add a new @graph entry...
         for (const ctx of Object.keys(global.context_mentions)) {
             const mentions: JSONType = {};
+            graphs.push(mentions);
             const terms = global.context_mentions[ctx];
             if (terms.length === 0) {
                 continue;
@@ -339,7 +307,6 @@ export function toJSONLD(vocab: Vocab): string {
             mentions["@id"] = `${ctx}`;
             mentions["@type"] = "jsonld:Context";
             mentions["mentions"] = terms.map((term: RDFTerm): string => `${term}`);
-            (jsonld["@graph"] as JSONType[]).push(mentions);
         }
     }
 
