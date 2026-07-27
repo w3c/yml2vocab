@@ -139,8 +139,10 @@ export function toJSONLD(vocab: Vocab): string {
 
     /* ****** Set up the overall structure of the generated JSON-LD ****** */
     // Each term, as well as the context references, are put into a separate graph
+    // Based on the idea of PA, the term @included is used instead of @graph
+    // avoiding the semantic ambiguity of that term...
     const graphs: JSONType[] = [];
-    jsonld["@graph"] = graphs;
+    jsonld["@included"] = graphs;
 
     // Get the ontology description itself
     {
