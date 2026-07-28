@@ -34,7 +34,6 @@ function localeUnCamelise(str, separator = ' ') {
         return char[0] === char.toLocaleUpperCase();
     };
     if (str.length === 0) {
-        console.log(str);
         return str;
     }
     else {
@@ -304,14 +303,15 @@ function getData(vocab_source) {
     const final_contexts = (raw, term) => {
         if (raw.context === undefined)
             return [];
-        // replace the value of "vocab" by the global context, then
+        // replace the value of "vocab" by the global context, if applicable then
         // get the possible "none" out of the way.
         const contexts = raw.context.map((val) => {
             if (val === "vocab") {
                 // The global context may not have been set per TypeScript... although this
                 // function is invoked once that has been set already. Price to pay for
                 // Typescript checking...
-                return common_1.global.vocab_context !== undefined ? common_1.global.vocab_context : "none";
+                const returnValue = (common_1.global.vocab_context !== undefined && common_1.global.vocab_context !== 'vocab') ? common_1.global.vocab_context : "none";
+                return returnValue || "none";
             }
             else {
                 return val;
