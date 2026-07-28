@@ -1,10 +1,10 @@
 # Changes
 
-This list does not include all the tiny, e.g., editorial changes, only the changes in the features.
+This list does not include all the tiny, e.g., editorial changes, only the changes in the features and more important bug issues.
 
 ## Version 1.9.4
 
-- Handling https://github.com/w3c/yml2vocab/issues/49: while this is a bug, its handling changed the shape of the generated JSON-LD. The structure of the generated JSON-LD has to make use of the `@graph` feature of JSON-LD, to isolate the context mention handling(s). The "core" content is in one entry of the graph, and each context mention graph are separated (much like it is done in Turtle).
+- Handling https://github.com/w3c/yml2vocab/issues/49: while this is a bug, its handling changed the shape of the generated JSON-LD. The structure of the generated JSON-LD has to make use of the `@graph` feature of JSON-LD, to isolate the context mention handling(s). To make it complete, _all_ items have been put into a separate `@graph`, which made the generated JSON-LD cleaner: there is no need to use the hack, relying on the inverse property of `rdfs:isDefinedBy`. The generated JSON-LD (and, as a consequence, YAML-LD) is very similar to the Turtle version of the vocabulary.
 
 ## Version 1.9.0
 
