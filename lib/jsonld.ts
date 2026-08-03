@@ -191,7 +191,9 @@ export function toJSONLD(vocab: Vocab): string {
             if (prop.container === Container.list) {
                 pr_object["rdfs:range"] = "rdf:List";
             } else if (prop.range?.length > 0 || prop.one_of?.length > 0) {
-                const range = multiRange(prop.range, prop.range_union, prop.one_of);
+                // When the enumeration is open, the one_of values are not turned into an
+                // anonymous owl:oneOf class; instead, a fresh named class was added to prop.range.
+                const range = multiRange(prop.range, prop.range_union, prop.open_enumeration ? undefined : prop.one_of);
                 pr_object["rdfs:range"] = range.length > 1 ? range : range[0];
             }
             commonFields(pr_object, prop);
