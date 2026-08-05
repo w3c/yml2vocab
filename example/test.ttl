@@ -13,13 +13,21 @@
 sec: a owl:Ontology ;
     dc:title """Security Vocabulary"""@en ;
     dc:description """vocabulary used to ensure the authenticity and integrity of Verifiable Credentials and similar types of constrained digital documents using cryptography, especially through the use of digital signatures and related mathematical proofs 
-"""@en ;
+"""^^rdf:HTML ;
     rdfs:seeAlso <https://www.w3.org/TR/vc-data-integrity/> ;
-    dc:date "2025-01-16"^^xsd:date ;
+    dc:date "2026-08-03"^^xsd:date ;
 .
 
 # Property definitions
-sec:verificationMethod a rdf:Property ;
+sec:credentialStatus a rdf:Property, owl:ObjectProperty ;
+    rdfs:range sec:CredentialStatusRange ;
+    rdfs:label "Credential status" ;
+    rdfs:comment """<div>The status of the credential, restricted to a known, but extensible, set of values.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "stable" ;
+.
+
+sec:verificationMethod a rdf:Property, owl:ObjectProperty ;
     rdfs:range sec:VerificationMethod ;
     rdfs:label "Verification method" ;
     rdfs:comment """<div>A `verificationMethod` property is used to specify a URL that contains information used for proof verification.</div>"""^^rdf:HTML ;
@@ -37,13 +45,14 @@ sec:domain a rdf:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-sec:challenge a rdf:Property, owl:DatatypeProperty ;
+sec:challenge a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
+    owl:deprecated true ;
     rdfs:domain sec:Proof ;
     rdfs:range xsd:string ;
     rdfs:label "Challenge with a proof" ;
     rdfs:comment """<div>The challenge property is used to associate a challenge with a proof, for use with a `proofPurpose` such as `authentication`. This string value SHOULD be included in a proof if a `domain` is specified.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "stable" ;
+    vs:term_status "deprecated" ;
 .
 
 sec:proofPurpose a rdf:Property, owl:DatatypeProperty ;
@@ -64,7 +73,7 @@ sec:proofValue a rdf:Property, owl:DatatypeProperty ;
     vs:term_status "stable" ;
 .
 
-sec:proof a rdf:Property ;
+sec:proof a rdf:Property, owl:ObjectProperty ;
     rdfs:range sec:ProofGraph ;
     rdfs:label "Proof sets" ;
     rdfs:comment """<div>The value of the `proof` property MUST identify <a href=”#ProofGraph”>`ProofGraph` instances</a> (informally, it indirectly identifies <a href=”#Proof”>`Proof` instances</a>, each contained in a separate graph). The property is used to associate a proof with a graph of information. The proof property is typically not included in the canonicalized graphs that are then digested and digitally signed. The order of the proofs is not relevant.</div>"""^^rdf:HTML ;
@@ -80,32 +89,32 @@ sec:proofChain a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-sec:controller a rdf:Property, owl:ObjectProperty ;
-    rdfs:domain sec:VerificationMethod ;
+sec:controller a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
+    owl:deprecated true ;
     rdfs:label "Controller" ;
-    rdfs:comment """<div>A controller is an entity that claims control over a particular resource. Note that control is best validated as a two-way relationship, where the controller claims control over a particular resource, and the resource clearly identifies its controller.</div>"""^^rdf:HTML ;
+    rdfs:comment """<div>A controller is an entity that claims control over a particular resource. Note that control is best validated as a two-way relationship where the controller claims control over a particular resource, and the resource clearly identifies its controller.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3id.org/security/v1> ;
-    vs:term_status "stable" ;
+    vs:term_status "deprecated" ;
 .
 
-sec:authentication a rdf:Property ;
-    rdfs:range VerificationMethod ;
+sec:authentication a rdf:Property, owl:ObjectProperty ;
+    rdfs:range sec:VerificationMethod ;
     rdfs:label "Authentication method" ;
     rdfs:comment """<div>An `authentication` property is used to specify a URL that contains information about a `verificationMethod` used for authentication.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3id.org/security/v1> ;
     vs:term_status "stable" ;
 .
 
-sec:assertionMethod a rdf:Property ;
-    rdfs:range VerificationMethod ;
+sec:assertionMethod a rdf:Property, owl:ObjectProperty ;
+    rdfs:range sec:VerificationMethod ;
     rdfs:label "Assertion method" ;
     rdfs:comment """<div>An `assertionMethod` property is used to specify a URL that contains information about a `verificationMethod` used for assertions.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3id.org/security/v1> ;
     vs:term_status "stable" ;
 .
 
-sec:capabilityDelegation a rdf:Property ;
-    rdfs:range VerificationMethod ;
+sec:capabilityDelegation a rdf:Property, owl:ObjectProperty ;
+    rdfs:range sec:VerificationMethod ;
     rdfs:label "Capability Delegation Method" ;
     rdfs:comment """<div><p>A `capabilityDelegation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of delegating capabilities.</p>
 <p>A `verificationMethod` may be referenced by its identifier (a URL) or expressed in full.</p>
@@ -114,8 +123,8 @@ sec:capabilityDelegation a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-sec:capabilityInvocation a rdf:Property ;
-    rdfs:range VerificationMethod ;
+sec:capabilityInvocation a rdf:Property, owl:ObjectProperty ;
+    rdfs:range sec:VerificationMethod ;
     rdfs:label "Capability Invocation Method" ;
     rdfs:comment """<div><p>A `capabilityInvocation` property is used to express that one or more `verificationMethods` are authorized to verify cryptographic proofs that were created for the purpose of invoking capabilities.</p>
 <p>A `verificationMethod` MAY be referenced by its identifier (a URL) or expressed in full.</p>
@@ -124,8 +133,8 @@ sec:capabilityInvocation a rdf:Property ;
     vs:term_status "stable" ;
 .
 
-sec:keyAgreement a rdf:Property ;
-    rdfs:range VerificationMethod ;
+sec:keyAgreement a rdf:Property, owl:ObjectProperty ;
+    rdfs:range sec:VerificationMethod ;
     rdfs:label "Key agreement protocols" ;
     rdfs:comment """<div>Indicates that a proof is used for for key agreement protocols, such as Elliptic Curve Diffie Hellman key agreement used by popular encryption libraries.</div>"""^^rdf:HTML ;
     rdfs:isDefinedBy <https://w3id.org/security/v1> ;
@@ -365,7 +374,7 @@ sec:revoked a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
     vs:term_status "deprecated" ;
 .
 
-sec:jws a rdf:Property, owl:DeprecatedProperty ;
+sec:jws a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:range sec:Signature ;
     rdfs:label "Json Web Signature" ;
@@ -395,7 +404,7 @@ sec:expirationDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty 
     vs:term_status "deprecated" ;
 .
 
-sec:signature a rdf:Property, owl:DeprecatedProperty ;
+sec:signature a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:range sec:Signature ;
     rdfs:label "Signature  (was deprecated in the CCG document)" ;
@@ -441,7 +450,7 @@ sec:serviceEndpoint a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     vs:term_status "deprecated" ;
 .
 
-sec:x509CertificateChain a rdf:Property, owl:DeprecatedProperty ;
+sec:x509CertificateChain a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:domain sec:Signature ;
     rdfs:range sec:Signature ;
@@ -452,7 +461,7 @@ sec:x509CertificateChain a rdf:Property, owl:DeprecatedProperty ;
     rdfs:seeAlso <https://tools.ietf.org/html/rfc5280>, <https://tools.ietf.org/id/draft-multiformats-multibase-00.html> ;
 .
 
-sec:x509CertificateFingerprint a rdf:Property, owl:DeprecatedProperty ;
+sec:x509CertificateFingerprint a rdf:Property, owl:DeprecatedProperty, owl:ObjectProperty ;
     owl:deprecated true ;
     rdfs:domain sec:Signature ;
     rdfs:range sec:Signature ;
@@ -824,6 +833,13 @@ sec:Bls12381G2Key2020 a rdfs:Class, owl:DeprecatedClass ;
     rdfs:seeAlso <https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519> ;
 .
 
+sec:CredentialStatusRange a rdfs:Class ;
+    rdfs:label "Credential status range" ;
+    rdfs:comment """<div>The range of possible values for the <code>sec:credentialStatus</code> property. This is an open enumeration: values beyond the ones listed here may also be valid.</div>"""^^rdf:HTML ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "stable" ;
+.
+
 
 
 # Definitions of individuals
@@ -844,96 +860,16 @@ sec:DeprecatedIndividual a cred:XYXX ;
     rdfs:seeAlso <https://www.example.org/namivan/deprecated> ;
 .
 
-# Context files and their mentions
-<vocab> a jsonld:Context ;
-    schema:mentions
-        sec:verificationMethod,
-        sec:domain,
-        sec:challenge,
-        sec:proofPurpose,
-        sec:proofValue,
-        sec:proof,
-        sec:proofChain,
-        sec:controller,
-        sec:authentication,
-        sec:assertionMethod,
-        sec:capabilityDelegation,
-        sec:capabilityInvocation,
-        sec:keyAgreement,
-        sec:cryptosuite,
-        sec:publicKeyMultibase,
-        sec:publicKeyJwk,
-        sec:cipherAlgorithm,
-        sec:cipherData,
-        sec:cipherKey,
-        sec:digestAlgorithm,
-        sec:digestValue,
-        sec:blockchainAccountId,
-        sec:ethereumAddress,
-        sec:expires,
-        sec:initializationVector,
-        sec:nonce,
-        sec:canonicalizationAlgorithm,
-        sec:controller,
-        sec:owner,
-        sec:password,
-        sec:privateKeyPem,
-        sec:publicKey,
-        sec:publicKeyBase58,
-        sec:publicKeyPem,
-        sec:publicKeyHex,
-        sec:publicKeyService,
-        sec:revoked,
-        sec:jws,
-        sec:challenge,
-        sec:expirationDate,
-        sec:signature,
-        sec:signatureValue,
-        sec:signatureAlgorithm,
-        sec:service,
-        sec:serviceEndpoint,
-        sec:x509CertificateChain,
-        sec:x509CertificateFingerprint,
-        sec:allowedAction,
-        sec:capabilityChain,
-        sec:capabilityAction,
-        sec:caveat,
-        sec:delegator,
-        sec:invocationTarget,
-        sec:invoker,
-        sec:Proof,
-        sec:ProofGraph,
-        sec:VerificationMethod,
-        sec:DataIntegrityProof,
-        sec:Ed25519Signature2020,
-        sec:Key,
-        sec:Signature,
-        sec:SignatureGraph,
-        sec:EcdsaSecp256k1Signature2019,
-        sec:EcdsaSecp256k1Signature2020,
-        sec:EcdsaSecp256k1RecoverySignature2020,
-        sec:EcdsaSecp256k1VerificationKey2019,
-        sec:EcdsaSecp256k1RecoveryMethod2020,
-        sec:RsaSignature2018,
-        sec:RsaVerificationKey2018,
-        sec:SchnorrSecp256k1Signature2019,
-        sec:SchnorrSecp256k1VerificationKey2019,
-        sec:ServiceEndpointProxyService,
-        sec:Digest,
-        sec:EncryptedMessage,
-        sec:GraphSignature2012,
-        sec:LinkedDataSignature2015,
-        sec:LinkedDataSignature2016,
-        sec:MerkleProof2019,
-        sec:X25519KeyAgreementKey2019,
-        sec:Ed25519VerificationKey2018,
-        sec:Ed25519VerificationKey2020,
-        sec:JsonWebKey2020,
-        sec:JsonWebSignature2020,
-        sec:BbsBlsSignature2020,
-        sec:BbsBlsSignatureProof2020,
-        sec:Bls12381G1Key2020,
-        sec:Bls12381G2Key2020,
-        sec:SomeIndividual,
-        sec:DeprecatedIndividual ;
+sec:statusValid a sec:CredentialStatusRange ;
+    rdfs:label "Status valid" ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "stable" ;
+.
 
+sec:statusRevoked a sec:CredentialStatusRange ;
+    rdfs:label "Status revoked" ;
+    rdfs:isDefinedBy <https://w3id.org/security/v1> ;
+    vs:term_status "stable" ;
+.
+
+# Context files and their mentions

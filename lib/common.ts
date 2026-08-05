@@ -214,6 +214,7 @@ export interface RawVocabEntry {
     container   ?: Container;
     context     ?: string[];
     one_of      ?: string[];
+    open_enumeration ?: boolean;
     pattern     ?: string;
 }
 
@@ -369,6 +370,7 @@ export interface RDFProperty extends RDFTerm {
     range         : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
     range_union   : boolean;
     one_of        : RDFIndividual[];
+    open_enumeration : boolean; // Whether the one_of values are a closed or open enumeration
     dataset       : boolean;
     container     : Container | undefined;
     strongURL     : boolean;    // Whether the property object should be required to be a real URL
