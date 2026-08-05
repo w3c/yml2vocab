@@ -192,30 +192,30 @@ export enum Container {
  * {@link RDFProperty}, etc.) in the `convert` module.
  */
 export interface RawVocabEntry {
-    id           : string;
-    property    ?: string;
-    value       ?: string;
-    label        : string;
-    type        ?: string[];
-    upper_value ?: string[];
-    upper_union ?: boolean;
-    domain      ?: string[];
-    range       ?: string[];
-    range_union ?: boolean;
-    deprecated  ?: boolean;
-    status      ?: Status;
-    external    ?: boolean;
-    defined_by  ?: string[];
-    comment     ?: string;
-    see_also    ?: Link[];
-    known_as    ?: string;
-    example     ?: Example[];
-    dataset     ?: boolean;
-    container   ?: Container;
-    context     ?: string[];
-    one_of      ?: string[];
+    id                : string;
+    property         ?: string;
+    value            ?: string;
+    label             : string;
+    type             ?: string[];
+    upper_value      ?: string[];
+    upper_union      ?: boolean;
+    domain           ?: string[];
+    range            ?: string[];
+    range_union      ?: boolean;
+    deprecated       ?: boolean;
+    status           ?: Status;
+    external         ?: boolean;
+    defined_by       ?: string[];
+    comment          ?: string;
+    see_also         ?: Link[];
+    known_as         ?: string;
+    example          ?: Example[];
+    dataset          ?: boolean;
+    container        ?: Container;
+    context          ?: string[];
+    one_of           ?: string[];
     open_enumeration ?: boolean;
-    pattern     ?: string;
+    pattern          ?: string;
 }
 
 /**
@@ -365,16 +365,16 @@ export interface RDFClass extends RDFTerm {
  * None of these are required.
  */
 export interface RDFProperty extends RDFTerm {
-    subPropertyOf : RDFProperty[];
-    domain        : RDFClass[];
-    range         : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
-    range_union   : boolean;
-    one_of        : RDFIndividual[];
+    subPropertyOf    : RDFProperty[];
+    domain           : RDFClass[];
+    range            : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
+    range_union      : boolean;
+    one_of           : RDFIndividual[];
     open_enumeration : boolean; // Whether the one_of values are a closed or open enumeration
-    dataset       : boolean;
-    container     : Container | undefined;
-    strongURL     : boolean;    // Whether the property object should be required to be a real URL
-    langString    : boolean;    // Whether the property gets the artificial range type langString
+    dataset          : boolean;
+    container        : Container | undefined;
+    strongURL        : boolean;    // Whether the property object should be required to be a real URL
+    langString       : boolean;    // Whether the property gets the artificial range type langString
 }
 
 /**
