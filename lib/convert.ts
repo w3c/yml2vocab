@@ -704,7 +704,7 @@ export function getData(vocab_source: string): Vocab {
                     type                  : classTypes.map(t => factory.term(t)),
                     user_type             : [],
                     label                 : `${raw.label} range`,
-                    comment               : `The range of possible values for the <code>${output.curie}</code> property. This is an open enumeration: values beyond the ones listed here may also be valid.`,
+                    comment               : `The range of possible values for the <code>${output.curie}</code> property. This is an open enumeration: values beyond those specified in this vocabulary may also be valid.`,
                     deprecated            : raw.deprecated,
                     status                : raw.status,
                     subClassOf            : [],
