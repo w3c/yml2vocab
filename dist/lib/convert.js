@@ -23,6 +23,17 @@ function isURL(value) {
     }
 }
 /**
+ * Capitalize the first character of a string; used to derive the name of the
+ * fresh class generated for a property's `open_enumeration`.
+ *
+ * @param str
+ * @returns
+ * @internal
+ */
+function capitalize(str) {
+    return str.length === 0 ? str : str.charAt(0).toUpperCase() + str.slice(1);
+}
+/**
  * Turn the id text into a non-camel case for a label.
  *
  * @param str
@@ -230,6 +241,7 @@ function finalizeRawEntry(raw) {
         context: toArrayContexts(raw.context),
         pattern: raw.pattern,
         one_of: toArray(raw.one_of),
+        open_enumeration: raw.open_enumeration ?? false,
     };
 }
 /**
@@ -393,6 +405,9 @@ function getData(vocab_source) {
                     }
                 }
             }
+        }
+        if (raw.one_of && raw.one_of.length > 0) {
+            extra_types.push("owl:ObjectProperty");
         }
         extra_types = [...new Set(extra_types)]; // remove duplicates
         // In fact, the length of the types must be 0 or 1, otherwise, it is a general property that can have any range
@@ -593,6 +608,12 @@ function getData(vocab_source) {
             return output;
         }) : [];
     /********************************************************************************************/
+    // Bookkeeping for the `open_enumeration` flag on a property's `one_of`: the fresh, named
+    // range classes that get generated, and the (one_of value -> generated class) memberships
+    // that must be turned into `rdf:type` relationships once the individuals are all known.
+    const openEnumClasses = [];
+    const openEnumMemberships = [];
+    /********************************************************************************************/
     // Get the properties. Note the special treatment for deprecated properties, as well as
     // the extra owl types added depending on the range.
     //
@@ -609,11 +630,60 @@ function getData(vocab_source) {
             common_1.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
             const { extra_types, range, strongURL, langString } = get_ranges(factory_1.factory, raw, output.id);
+            // Handling of `open_enumeration`: instead of the `one_of` values ending up in an
+            // anonymous `owl:oneOf` class (see `multiRange` in the turtle/jsonld modules), a fresh,
+            // named class is created (and added to the vocabulary's classes) to serve as the
+            // property's range; the `one_of` values are later declared as instances of that class.
+            const openEnumRangeClass = (() => {
+                if (!raw.open_enumeration)
+                    return undefined;
+                if (!raw.one_of || raw.one_of.length === 0) {
+                    throw new Error(`${output.curie} sets "open_enumeration" but has no "one_of" values.`);
+                }
+                if (output.external) {
+                    // External properties are not given formal RDF statements anyway
+                    return undefined;
+                }
+                if (extra_types.includes("owl:DatatypeProperty")) {
+                    throw new Error(`${output.curie} is a DatatypeProperty; "open_enumeration" can only be used for ObjectProperties.`);
+                }
+                const rangeClassId = `${capitalize(output.id)}Range`;
+                if (factory_1.factory.has(rangeClassId)) {
+                    throw new Error(`Cannot create the automatic "open_enumeration" range class "${rangeClassId}" for property ${output.curie}: a term with that name is already defined.`);
+                }
+                const rangeClass = factory_1.factory.class(rangeClassId);
+                const classTypes = (raw.status === common_1.Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
+                Object.assign(rangeClass, {
+                    type: classTypes.map(t => factory_1.factory.term(t)),
+                    user_type: [],
+                    label: `${raw.label} range`,
+                    comment: `The range of possible values for the <code>${output.curie}</code> property. This is an open enumeration: values beyond those specified in this vocabulary may also be valid.`,
+                    deprecated: raw.deprecated,
+                    status: raw.status,
+                    subClassOf: [],
+                    upper_union: false,
+                    one_of: [],
+                    context: [],
+                    range_of: [],
+                    domain_of: [],
+                    included_in_domain_of: [],
+                    includes_range_of: [],
+                });
+                common_1.global.status_counter.add(raw.status ? raw.status : common_1.Status.stable);
+                openEnumClasses.push(rangeClass);
+                for (const val of raw.one_of) {
+                    openEnumMemberships.push({ id: val, cls: rangeClass });
+                }
+                return rangeClass;
+            })();
             // A little hack to ensure backward compatibility: if the range includes rdf:List,
             // it should be removed and the information put aside because that should now
             // go to the separate "container" information.
-            const finalRange = range.filter((r) => r.curie !== "rdf:List");
-            const containerSet = (finalRange.length !== range.length);
+            const range2 = range.filter((r) => r.curie !== "rdf:List");
+            const containerSet = (range2.length !== range.length);
+            // If this property accepts an open enumeration,
+            // add the generated class in its range.
+            const finalRange = openEnumRangeClass ? [...range2, openEnumRangeClass] : range2;
             const user_type = (raw.type === undefined) ? [] : raw.type;
             const types = [
                 ...(raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],
@@ -664,6 +734,7 @@ function getData(vocab_source) {
                 range: finalRange,
                 range_union: (langString === true) ? true : raw.range_union,
                 one_of: raw.one_of?.map((val) => factory_1.factory.individual(val)),
+                open_enumeration: raw.open_enumeration ?? false,
                 domain: raw.domain?.map(val => factory_1.factory.class(val)),
                 example: raw.example,
                 known_as: raw.known_as,
@@ -703,6 +774,37 @@ function getData(vocab_source) {
             });
             return output;
         }) : [];
+    /********************************************************************************************/
+    // Add the classes that were auto-generated by properties using `open_enumeration`.
+    classes.push(...openEnumClasses);
+    /********************************************************************************************/
+    // Turn the `open_enumeration` memberships into `rdf:type` relationships: each `one_of` value
+    // becomes an instance of the fresh range class generated for its property. Values that are not
+    // otherwise explicitly defined via an `individual:` block get a minimal individual entry
+    // synthesized for them (recognizable by their still-empty label at this point), so that they
+    // are actually listed, and get their `rdf:type`, in the generated vocabulary. External values
+    // (defined in another vocabulary) are left untouched, in line with the rest of the tool's
+    // handling of external terms.
+    for (const { id, cls } of openEnumMemberships) {
+        const ind = factory_1.factory.individual(id);
+        if (ind.prefix !== common_1.global.vocab_prefix)
+            continue;
+        if (!ind.type.some((t) => t.curie === cls.curie)) {
+            ind.type.push(cls);
+        }
+        if (!ind.label) {
+            Object.assign(ind, {
+                label: localeUnCamelise(ind.id),
+                comment: '',
+                deprecated: false,
+                defined_by: [],
+                status: common_1.Status.stable,
+                context: [],
+            });
+            common_1.global.status_counter.add(common_1.Status.stable);
+            individuals.push(ind);
+        }
+    }
     /********************************************************************************************/
     // Set the domain and range of the back references for ranges/domains for classes and datatypes.
     for (const current_class of classes) {

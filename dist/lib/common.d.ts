@@ -148,6 +148,7 @@ export interface RawVocabEntry {
     container?: Container;
     context?: string[];
     one_of?: string[];
+    open_enumeration?: boolean;
     pattern?: string;
 }
 /**
@@ -278,6 +279,7 @@ export interface RDFProperty extends RDFTerm {
     range: RDFTerm[];
     range_union: boolean;
     one_of: RDFIndividual[];
+    open_enumeration: boolean;
     dataset: boolean;
     container: Container | undefined;
     strongURL: boolean;
