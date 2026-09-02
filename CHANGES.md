@@ -2,9 +2,10 @@
 
 This list does not include all the tiny, e.g., editorial changes, only the changes in the features and more important bug issues.
 
-## Version 1.10.5
+## Version 1.11.0
 
 - If a term sets the `context` property to `none`, then it will not be added to the generated context (if applicable).
+- A new, optional `@protected` key is added to the `json_ld` block on whether the generated context and scoped context should include a `"@protected":true`. Default is `true`.
 
 ## Version 1.10.4
 
