@@ -2,6 +2,10 @@
 
 This list does not include all the tiny, e.g., editorial changes, only the changes in the features and more important bug issues.
 
+## Version 1.10.5
+
+- If a term sets the `context` property to `none`, then it will not be added to the generated context (if applicable).
+
 ## Version 1.10.4
 
 - Adding the `open_enumeration` feature, see https://github.com/w3c/yml2vocab/pull/54

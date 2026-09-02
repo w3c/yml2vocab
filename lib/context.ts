@@ -145,6 +145,8 @@ export function toContext(vocab: Vocab): string {
     // Add the classes; note that this will also cover the mapping of
     // all properties whose domain include a top level class
     for (const cl of vocab.classes) {
+        // this term was specifically flagged not to be added to a context
+        if (cl.context.length === 0) continue;
         const base_url = cl.prefix
             ? prefix_url(cl.prefix, vocab)
             : global.vocab_url;
@@ -158,6 +160,7 @@ export function toContext(vocab: Vocab): string {
 
         // Get all the properties that have this class in its domain
         for (const prop of vocab.properties) {
+            if (prop.context.length === 0) continue;
             if (prop.domain) {
                 if (RDFTermFactory.includesTerm(prop.domain, cl)) {
                     // bingo, this property can be added here
@@ -177,6 +180,8 @@ export function toContext(vocab: Vocab): string {
     // Add the properties that have not been handled in the
     // previous step
     for (const prop of vocab.properties) {
+        // this term was specifically flagged not to be added to a context
+        if( prop.context.length === 0) continue;
         if (!class_properties.has(prop.id)) {
             top_level[prop.known_as ?? prop.id] = propertyContext(prop, false);
         }
@@ -184,11 +189,15 @@ export function toContext(vocab: Vocab): string {
 
     // Add the individuals
     for (const individual of vocab.individuals) {
+        // this term was specifically flagged not to be added to a context
+        if (individual.context.length === 0) continue;
         top_level[individual.known_as ?? individual.id] = `${individual.url}`;
     }
 
     // Add the datatypes
     for (const datatype of vocab.datatypes) {
+        // this term was specifically flagged not to be added to a context
+        if (datatype.context.length === 0) continue;
         top_level[datatype.known_as ?? datatype.id] = `${datatype.url}`;
     }
 

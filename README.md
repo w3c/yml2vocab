@@ -259,8 +259,7 @@ These keys are common to all term definitions, although their exact interpretati
                 Used to add information on JSON-LD <code >@context</code> file(s) that “mention” the term; the list of URLs refer to the relevant
                 <code >@context</code> file. If the value is <code>vocab</code>, and a global <code >@context</code> file is defined in the
                 <code>vocab</code> block, that “default” <code>@context</code> is used. If the value of the property is <code>none</code>,
-                there is no context file reference for the term. The default setting is <code >vocab</code> (i.e., unless it is otherwise
-                specified, the default value is used for the term).
+                there is no context file reference for the term and it will not be added to the generated context, if applicable. The default setting is <code >vocab</code> (i.e., unless it is otherwise specified, the default value is used for the term).
             </td>
             <td>No</td>
         </tr>
