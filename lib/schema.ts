@@ -85,6 +85,9 @@ const vocabSchema = `{
                 "set_vocab" : {
                     "type" : "boolean"
                 },
+                "protected" : {
+                    "type" : "boolean"
+                },
                 "unevaluatedProperties": false
             }
         },

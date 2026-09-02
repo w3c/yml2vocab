@@ -77,10 +77,14 @@ export class StatusCounter {
     }
 }
 
+/**
+ * Flags/features controlling the generated JSON-LD and JSON-LD context
+ */
 export interface JSON_LD {
     alias     ?: Record<string,string>;
     import    ?: string | string[];
-    set_vocab ?: boolean
+    set_vocab ?: boolean;
+    protected ?: boolean;
 }
 
 /**
@@ -142,6 +146,11 @@ export interface GlobalData {
      * value in the context using "@vocab".
      */
     set_vocab        ?: boolean;
+
+    /**
+     * Whether the "@protected" keyword should be added to the context (and scoped contexts)
+     */
+    protected        ?: boolean,
 }
 
 /**
