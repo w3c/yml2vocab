@@ -209,6 +209,16 @@ The script automatically adds a `dc:date` key with the generation time as a valu
             </td>
             <td>No</td>
         </tr>
+        <tr>
+            <td><code>protected</code></td>
+            <td>boolean</td>
+            <td>
+                If the value is <code>true</code>, a <code>"@protected" : true</code> key is added to the context, as well as
+                all scoped contexts. This makes the context file safer when it is part of several context files referred to in a
+                JSON-LD file. Default value is <code>true</code>.
+            </td>
+            <td>No</td>
+        </tr>
     </tbody>
 </table>
 
