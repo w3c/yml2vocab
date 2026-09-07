@@ -30,6 +30,18 @@ function isURL(value:string): boolean {
 }
 
 /**
+ * Capitalize the first character of a string; used to derive the name of the
+ * fresh class generated for a property's `open_enumeration`.
+ *
+ * @param str
+ * @returns
+ * @internal
+ */
+function capitalize(str: string): string {
+    return str.length === 0 ? str : str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
  * Turn the id text into a non-camel case for a label.
  *
  * @param str
@@ -41,7 +53,6 @@ function localeUnCamelise(str: string, separator = ' '): string {
         return char[0] === char.toLocaleUpperCase();
     };
     if (str.length === 0) {
-        console.log(str);
         return str;
     } else {
         // First character is ignored; it can be upper or lower case
@@ -210,29 +221,30 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     /* ***************************** Do the real cleanup *****************************/
 
     return {
-        id          : (raw.id) ? raw.id : "",
-        property    : raw.property,
-        value       : raw.value,
-        label       : label,
-        upper_value : toArray(raw.upper_value) as undefined | string[],
-        upper_union : raw.upper_union ?? false,
-        type        : toArray(raw.type) as undefined | string[],
-        domain      : toArray(raw.domain) as undefined | string[],
-        range       : toArray(raw.range) as undefined | string[],
-        range_union : raw.range_union ?? false,
-        deprecated  : deprecated,
-        defined_by  : toArray(raw.defined_by) ?? [],
-        status      : status,
-        external    : raw.external,
-        comment     : (raw.comment) ? cleanComment(raw.comment) : "",
-        see_also    : toSeeAlso(raw.see_also),
-        example     : toExample(raw.example),
-        known_as    : raw.known_as,
-        dataset     : raw.dataset ?? false,
-        container   : raw.container,
-        context     : toArrayContexts(raw.context),
-        pattern     : raw.pattern,
-        one_of      : toArray(raw.one_of) as undefined | string[],
+        id               : (raw.id) ? raw.id : "",
+        property         : raw.property,
+        value            : raw.value,
+        label            : label,
+        upper_value      : toArray(raw.upper_value) as undefined | string[],
+        upper_union      : raw.upper_union ?? false,
+        type             : toArray(raw.type) as undefined | string[],
+        domain           : toArray(raw.domain) as undefined | string[],
+        range            : toArray(raw.range) as undefined | string[],
+        range_union      : raw.range_union ?? false,
+        deprecated       : deprecated,
+        defined_by       : toArray(raw.defined_by) ?? [],
+        status           : status,
+        external         : raw.external,
+        comment          : (raw.comment) ? cleanComment(raw.comment) : "",
+        see_also         : toSeeAlso(raw.see_also),
+        example          : toExample(raw.example),
+        known_as         : raw.known_as,
+        dataset          : raw.dataset ?? false,
+        container        : raw.container,
+        context          : toArrayContexts(raw.context),
+        pattern          : raw.pattern,
+        one_of           : toArray(raw.one_of) as undefined | string[],
+        open_enumeration : raw.open_enumeration ?? false,
     }
 }
 
@@ -316,14 +328,15 @@ export function getData(vocab_source: string): Vocab {
     const final_contexts = (raw: RawVocabEntry, term: RDFTerm ): string[] => {
         if (raw.context === undefined) return [];
 
-        // replace the value of "vocab" by the global context, then
+        // replace the value of "vocab" by the global context, if applicable then
         // get the possible "none" out of the way.
         const contexts: string[] = raw.context.map((val: string): string => {
             if (val === "vocab") {
                 // The global context may not have been set per TypeScript... although this
                 // function is invoked once that has been set already. Price to pay for
                 // Typescript checking...
-                return global.vocab_context !== undefined ? global.vocab_context : "none";
+                const returnValue = (global.vocab_context !== undefined && global.vocab_context !== 'vocab') ? global.vocab_context : "none";
+                return returnValue || "none";
             } else {
                 return val;
             }
@@ -410,6 +423,10 @@ export function getData(vocab_source: string): Vocab {
                 }
             }
         }
+        if (raw.one_of && raw.one_of.length > 0) {
+            extra_types.push("owl:ObjectProperty");
+        }
+
 
         extra_types = [ ...new Set(extra_types) ];  // remove duplicates
         // In fact, the length of the types must be 0 or 1, otherwise, it is a general property that can have any range
@@ -634,6 +651,13 @@ export function getData(vocab_source: string): Vocab {
     ) : [];
 
     /********************************************************************************************/
+    // Bookkeeping for the `open_enumeration` flag on a property's `one_of`: the fresh, named
+    // range classes that get generated, and the (one_of value -> generated class) memberships
+    // that must be turned into `rdf:type` relationships once the individuals are all known.
+    const openEnumClasses: RDFClass[] = [];
+    const openEnumMemberships: { id: string, cls: RDFClass }[] = [];
+
+    /********************************************************************************************/
     // Get the properties. Note the special treatment for deprecated properties, as well as
     // the extra owl types added depending on the range.
     //
@@ -654,11 +678,61 @@ export function getData(vocab_source: string): Vocab {
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
             const { extra_types, range, strongURL, langString } = get_ranges(factory, raw, output.id);
 
+            // Handling of `open_enumeration`: instead of the `one_of` values ending up in an
+            // anonymous `owl:oneOf` class (see `multiRange` in the turtle/jsonld modules), a fresh,
+            // named class is created (and added to the vocabulary's classes) to serve as the
+            // property's range; the `one_of` values are later declared as instances of that class.
+            const openEnumRangeClass = ((): RDFClass | undefined => {
+                if (!raw.open_enumeration) return undefined;
+                if (!raw.one_of || raw.one_of.length === 0) {
+                    throw new Error(`${output.curie} sets "open_enumeration" but has no "one_of" values.`);
+                }
+                if (output.external) {
+                    // External properties are not given formal RDF statements anyway
+                    return undefined;
+                }
+                if (extra_types.includes("owl:DatatypeProperty")) {
+                    throw new Error(`${output.curie} is a DatatypeProperty; "open_enumeration" can only be used for ObjectProperties.`);
+                }
+                const rangeClassId = `${capitalize(output.id)}Range`;
+                if (factory.has(rangeClassId)) {
+                    throw new Error(`Cannot create the automatic "open_enumeration" range class "${rangeClassId}" for property ${output.curie}: a term with that name is already defined.`);
+                }
+                const rangeClass: RDFClass = factory.class(rangeClassId);
+                const classTypes: string[] = (raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
+                Object.assign(rangeClass, {
+                    type                  : classTypes.map(t => factory.term(t)),
+                    user_type             : [],
+                    label                 : `${raw.label} range`,
+                    comment               : `The range of possible values for the <code>${output.curie}</code> property. This is an open enumeration: values beyond those specified in this vocabulary may also be valid.`,
+                    deprecated            : raw.deprecated,
+                    status                : raw.status,
+                    subClassOf            : [],
+                    upper_union           : false,
+                    one_of                : [],
+                    context               : [],
+                    range_of              : [],
+                    domain_of             : [],
+                    included_in_domain_of : [],
+                    includes_range_of     : [],
+                });
+                global.status_counter.add(raw.status ? raw.status : Status.stable);
+                openEnumClasses.push(rangeClass);
+                for (const val of raw.one_of) {
+                    openEnumMemberships.push({ id: val, cls: rangeClass });
+                }
+                return rangeClass;
+            })();
+
             // A little hack to ensure backward compatibility: if the range includes rdf:List,
             // it should be removed and the information put aside because that should now
             // go to the separate "container" information.
-            const finalRange   = range.filter ((r: RDFTerm): boolean => r.curie !== "rdf:List");
-            const containerSet = (finalRange.length !== range.length);
+            const range2 = range.filter ((r: RDFTerm): boolean => r.curie !== "rdf:List");
+            const containerSet = (range2.length !== range.length);
+
+            // If this property accepts an open enumeration,
+            // add the generated class in its range.
+            const finalRange = openEnumRangeClass ? [...range2, openEnumRangeClass] : range2;
 
             const user_type: string[] = (raw.type === undefined) ? [] : raw.type
             const types: string[] = [
@@ -697,26 +771,27 @@ export function getData(vocab_source: string): Vocab {
             }
 
             Object.assign(output, {
-                type          : types.map(t => factory.term(t)),
-                user_type     : user_type.map(t => factory.term(t)),
-                label         : raw.label,
-                comment       : raw.comment,
-                deprecated    : raw.deprecated,
-                defined_by    : raw.defined_by,
-                status        : raw.status,
-                subPropertyOf : raw.upper_value?.map((val: string): RDFProperty => factory.property(val)),
-                see_also      : raw.see_also,
-                range         : finalRange,
-                range_union   : (langString === true) ? true : raw.range_union,
-                one_of        : raw.one_of?.map((val: string): RDFIndividual => factory.individual(val)),
-                domain        : raw.domain?.map(val => factory.class(val)),
-                example       : raw.example,
-                known_as      : raw.known_as,
-                dataset       : dataset,
-                container     : container,
-                strongURL     : strongURL,
-                langString    : langString,
-                context       : final_contexts(raw, output),
+                type             : types.map(t => factory.term(t)),
+                user_type        : user_type.map(t => factory.term(t)),
+                label            : raw.label,
+                comment          : raw.comment,
+                deprecated       : raw.deprecated,
+                defined_by       : raw.defined_by,
+                status           : raw.status,
+                subPropertyOf    : raw.upper_value?.map((val: string): RDFProperty => factory.property(val)),
+                see_also         : raw.see_also,
+                range            : finalRange,
+                range_union      : (langString === true) ? true : raw.range_union,
+                one_of           : raw.one_of?.map((val: string): RDFIndividual => factory.individual(val)),
+                open_enumeration : raw.open_enumeration ?? false,
+                domain           : raw.domain?.map(val => factory.class(val)),
+                example          : raw.example,
+                known_as         : raw.known_as,
+                dataset          : dataset,
+                container        : container,
+                strongURL        : strongURL,
+                langString       : langString,
+                context          : final_contexts(raw, output),
             });
             return output;
         }
@@ -765,6 +840,40 @@ export function getData(vocab_source: string): Vocab {
                     parent.subClasses.push(current_class);
                 }
             }
+        }
+    }
+
+    /********************************************************************************************/
+    // Add the classes that were auto-generated by properties using `open_enumeration`.
+    classes.push(...openEnumClasses);
+
+    /********************************************************************************************/
+    // Turn the `open_enumeration` memberships into `rdf:type` relationships: each `one_of` value
+    // becomes an instance of the fresh range class generated for its property. Values that are not
+    // otherwise explicitly defined via an `individual:` block get a minimal individual entry
+    // synthesized for them (recognizable by their still-empty label at this point), so that they
+    // are actually listed, and get their `rdf:type`, in the generated vocabulary. External values
+    // (defined in another vocabulary) are left untouched, in line with the rest of the tool's
+    // handling of external terms.
+    for (const { id, cls } of openEnumMemberships) {
+        const ind = factory.individual(id);
+        if (ind.prefix !== global.vocab_prefix) continue;
+
+        if (!ind.type.some((t: RDFTerm): boolean => t.curie === cls.curie)) {
+            ind.type.push(cls);
+        }
+
+        if (!ind.label) {
+            Object.assign(ind, {
+                label      : localeUnCamelise(ind.id),
+                comment    : '',
+                deprecated : false,
+                defined_by : [],
+                status     : Status.stable,
+                context    : [],
+            });
+            global.status_counter.add(Status.stable);
+            individuals.push(ind);
         }
     }
 

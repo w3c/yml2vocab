@@ -259,8 +259,7 @@ These keys are common to all term definitions, although their exact interpretati
                 Used to add information on JSON-LD <code >@context</code> file(s) that “mention” the term; the list of URLs refer to the relevant
                 <code >@context</code> file. If the value is <code>vocab</code>, and a global <code >@context</code> file is defined in the
                 <code>vocab</code> block, that “default” <code>@context</code> is used. If the value of the property is <code>none</code>,
-                there is no context file reference for the term. The default setting is <code >vocab</code> (i.e., unless it is otherwise
-                specified, the default value is used for the term).
+                there is no context file reference for the term and it will not be added to the generated context, if applicable. The default setting is <code >vocab</code> (i.e., unless it is otherwise specified, the default value is used for the term).
             </td>
             <td>No</td>
         </tr>
@@ -480,6 +479,24 @@ class:
             <td>No</td>
         </tr>
         <tr>
+            <td><code>open_enumeration</code></td>
+            <td>boolean</td>
+            <td>
+                Only meaningful together with <code>one_of</code>. By default, the values listed in <code>one_of</code> are
+                turned into an anonymous class defined via <code>owl:oneOf</code>, i.e., a <em>closed</em> enumeration: the
+                property's range consists exclusively of the listed individuals. If <code>open_enumeration</code> is set to
+                <code>true</code>, the enumeration is treated as <em>open</em> instead: a fresh, named class is generated
+                (named after the property, with a <code>Range</code> suffix, e.g. <code>credentialStatus</code> gets a
+                <code>CredentialStatusRange</code> class) and used as the property's range, and the <code>one_of</code>
+                values are declared as instances of that class. Values not otherwise declared via an <code>individual</code>
+                block are automatically added as individuals of that class; external (CURIE-referenced) values are left
+                untouched, consistently with how external terms are handled elsewhere in this tool.
+                <br>This setting has no effect on the generated JSON-LD <code>@context</code>: the property is still mapped
+                the same way as for a closed enumeration.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
             <td><code>range_union</code></td>
             <td>boolean</td>
             <td>
@@ -529,6 +546,14 @@ property:
       label: this is an example pr3
       one_of: [ex:val1, ex:val2, ex:val3]
       comment: Restricting the values to ex:val1, ex:val2, or ex:val3; in JSON-LD using the generated context "val1", "val2", "val3" should be used.
+
+    - id: pr4
+      label: this is an example pr4
+      one_of: [ex:val4, ex:val5]
+      open_enumeration: true
+      comment: >
+        The range is a fresh Pr4Range class, with ex:val4 and ex:val5 declared as its instances;
+        other, unlisted, values are also acceptable.
 ```
 
 #### 1.2.2.4. Individual definitions —`individual` Block
@@ -628,7 +653,7 @@ The required `id` values, and the containing elements, are as follows:
 
 | `id` value                          | Corresponding element | Generated content                                                                           |
 | :---------------------------------- | --------------------- | :------------------------------------------------------------------------------------------ |
-| `title` or `ontology_title`         | any textual           | The title/name of the vocabulary (see the `ontology` block)                                 |
+| `ontology_title`                    | any textual           | The title/name of the vocabulary (see the `ontology` block)                                 |
 | `description`                       | any textual           | The description of the vocabulary (see the `ontology` block)                                |
 | `see_also`                          | any textual           | External reference for the vocabulary (see the `ontology` block)                            |
 | `alt-turtle`                        | `<a>`                 | Add a reference to the Turtle version of the vocabulary as an `href` attribute value        |

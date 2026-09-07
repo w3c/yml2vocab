@@ -253,6 +253,12 @@ class:
         url: https://w3c-ccg.github.io/ld-cryptosuite-registry/#ed25519
 
 property:
+  - id: credentialStatus
+    label: Credential status
+    comment: The status of the credential, restricted to a known, but extensible, set of values.
+    one_of: [sec:statusValid, sec:statusRevoked]
+    open_enumeration: true
+
   - id: verificationMethod
     label: Verification method
     range: sec:VerificationMethod

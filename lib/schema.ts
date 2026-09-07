@@ -178,6 +178,9 @@ const vocabSchema = `{
                             "one_of" : {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
+                            "open_enumeration" : {
+                                "type" : "boolean"
+                            },
                             "dataset": {
                                 "type": "boolean"
                             },

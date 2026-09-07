@@ -535,7 +535,7 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
                             if (item.one_of && item.one_of.length > 0) {
                                 const dl = document.addChild(pr_section, 'dl');
                                 dl.className = 'terms';
-                                document.addChild(dl, 'dt', 'Value may be one of:');
+                                document.addChild(dl, 'dt', item.open_enumeration ? 'Suggested values include:' : 'Value may be one of:');
                                 const dd = document.addChild(dl, 'dd');
                                 dd.innerHTML = ((t) => {
                                     const join_logic = ', ';

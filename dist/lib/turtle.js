@@ -160,7 +160,9 @@ function toTurtle(vocab) {
                     turtle += `${spaces}rdfs:range rdf:List ;\n`;
                 }
                 else if (prop.range?.length > 0 || prop.one_of?.length > 0) {
-                    const range = multiRange(prop.range, prop.range_union, prop.one_of);
+                    // When the enumeration is open, the one_of values are not turned into an
+                    // anonymous owl:oneOf class; instead, a fresh named class was added to prop.range.
+                    const range = multiRange(prop.range, prop.range_union, prop.open_enumeration ? undefined : prop.one_of);
                     if (!(range === '' || range === '[]')) {
                         turtle += `${spaces}rdfs:range ${range} ;\n`;
                     }
