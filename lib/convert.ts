@@ -755,6 +755,20 @@ export function getData(vocab_source: string): Vocab {
     ) : [];
 
     /********************************************************************************************/
+    // Set the back references for subclasses: for each class register it as a subclass of
+    // each of its (locally defined) superclasses.
+    for (const current_class of classes) {
+        if (current_class.subClassOf && current_class.subClassOf.length > 0) {
+            for (const superclass of current_class.subClassOf) {
+                const parent = classes.find((cl: RDFClass) => RDFTermFactory.equals(cl, superclass));
+                if (parent) {
+                    parent.subClasses.push(current_class);
+                }
+            }
+        }
+    }
+
+    /********************************************************************************************/
     // Set the domain and range of the back references for ranges/domains for classes and datatypes.
     for (const current_class of classes) {
         for (const prop of properties) {

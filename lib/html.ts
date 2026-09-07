@@ -511,6 +511,15 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                             })(item.one_of);
                         }
                     }
+                    // List of subclasses; shown for local and external classes alike, since an
+                    // external class can be the superclass of locally defined ones.
+                    if (item.subClasses && item.subClasses.length > 0) {
+                        const dl = document.addChild(cl_section, 'dl');
+                        dl.className = 'terms'
+                        document.addChild(dl, 'dt', 'Superclass of:')
+                        const dd = document.addChild(dl, 'dd');
+                        dd.innerHTML = item.subClasses.map(termHTMLReference).join(', ');
+                    }
                     // Again an extra list for range/domain references, if applicable
                     if (item.range_of.length > 0 ||
                         item.domain_of.length > 0 ||

@@ -351,6 +351,7 @@ export interface RDFTerm {
  */
 export interface RDFClass extends RDFTerm {
     subClassOf            : RDFClass[];
+    subClasses            : RDFClass[];
     upper_union           : boolean;
     one_of                : RDFIndividual[];
     range_of              : RDFProperty[];
