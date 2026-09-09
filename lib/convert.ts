@@ -892,6 +892,7 @@ export function getData(vocab_source: string): Vocab {
 
     /********************************************************************************************/
     // The alias and import settings are not relevant for the individual terms, are to be set in the global space
+
     if (vocab.json_ld?.alias) {
         global.aliases = { ...global.aliases, ...vocab.json_ld.alias };
     }
@@ -901,6 +902,7 @@ export function getData(vocab_source: string): Vocab {
     }
 
     global.set_vocab = vocab.json_ld?.set_vocab ?? false;
+    global.protected = vocab.json_ld?.protected ?? true;
 
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary

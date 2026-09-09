@@ -15,12 +15,6 @@ interface Context {
     [index: string]: string | string[] | Context | boolean | null  ;
 }
 
-// These are the context statements appearing in all
-// embedded contexts, as well as the top level one.
-const preamble: Context = {
-    "@protected" : true,
-};
-
 // Minor utility: return the full URL for a prefix
 function prefix_url(prefix: string | undefined, vocab: Vocab): string {
     if (!prefix) {
@@ -125,6 +119,18 @@ export function toContext(vocab: Vocab): string {
         // no need for an indirection
         return Object.keys(output).length === 1 ? url : output;
     };
+
+
+    // These are the context statements appearing in all
+    const preamble: Context = ((): Context => {
+        if (global.protected === undefined || global.protected === true) {
+            return {
+                "@protected": true,
+            };
+        } else {
+            return {};
+        }
+    })();
 
     const set_vocab = (() : Context => {
         if (global.set_vocab) {
