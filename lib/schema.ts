@@ -172,6 +172,9 @@ const vocabSchema = `{
                             "domain": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
+                            "scope": {
+                                "$ref": "#/$defs/StringOrArrayOfStrings"
+                            },
                             "range": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },

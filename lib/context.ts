@@ -52,7 +52,6 @@ export function toContext(vocab: Vocab): string {
         // then no typing should happen, because those would invalidate the
         // language/direction settings.
         if (property.langString === false) {
-
             // Try to catch the datatype settings; these can be used
             // to set these in the context as well
             if (property.range) {
@@ -164,17 +163,27 @@ export function toContext(vocab: Vocab): string {
             ...preamble,
         };
 
-        // Get all the properties that have this class in its domain
+        // Get all the properties that have this class in its domain or scope
+        const addProperty = (prop: RDFProperty): void => {
+            // bingo, this property can be added here
+            embedded[prop.known_as ?? prop.id] = propertyContext(prop);
+            // class_properties is a Set, so duplication is avoided
+            class_properties.add(prop.id);
+        };
+
         for (const prop of vocab.properties) {
             if (prop.context.length === 0) continue;
             if (prop.domain) {
                 if (RDFTermFactory.includesTerm(prop.domain, cl)) {
-                    // bingo, this property can be added here
-                    embedded[prop.known_as ?? prop.id] = propertyContext(prop);
-                    class_properties.add(prop.id);
+                    addProperty(prop);
                 }
             }
-        }
+            if (prop.scope) {
+                if (RDFTermFactory.includesTerm(prop.scope, cl)) {
+                    addProperty(prop);
+                }
+            }
+        };
 
         // If no properties are added, then the embedded context is unnecessary
         top_level[cl.known_as ?? cl.id] =
