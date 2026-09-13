@@ -459,7 +459,18 @@ class:
             <td><code>domain</code></td>
             <td>One or more terms or CURIEs</td>
             <td>
-                The RDF domain statements of the property. If several classes are specified, the statement refers to the <em>union</em> (or logical <em>disjunction</em>) of the classes.
+                The RDF domain statements of the property. If several classes are specified, the statement refers to the <em>union</em> (or logical <em>disjunction</em>) of the classes.<br/>
+                When generating a JSON-LD <code>@context</code>, the property will appear in the <a href="https://www.w3.org/TR/json-ld/#scoped-contexts">scoped context</a> of each of the classes in the list.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>scope</code></td>
+            <td>One or more terms or CURIEs</td>
+            <td>
+                When generating a JSON-LD <code>@context</code>, the property will appear in the <a href="https://www.w3.org/TR/json-ld/#scoped-contexts">scoped context</a> of each of the classes in the list.
+                This effect is identical, in this respect, to <code>domain</code> setting, but it does not affect the formal RDF vocabularies. <br/>This feature is especially important when using external property terms,
+                which should not use <code>domain</code> setting to avoid <a href="https://aidanhogan.com/docs/saor_billiontc08.pdf">ontology hijacking</a>.
             </td>
             <td>No</td>
         </tr>
