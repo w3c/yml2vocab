@@ -1,6 +1,13 @@
 <html lang="en">
   <head>
     <meta charset='utf-8'/>
+    <!-- Settings for yml2vocab; these elements are removed from the generated document.
+         The first one gives the URL of the playground or JSON-LD viewer behind the button next to
+         each example, with "{jsonld}" standing for the URL encoded example; the second one gathers
+         the individuals into a subchapter per type. Without them, no buttons are generated and the
+         individuals are listed one after the other. -->
+    <meta name="y2v:jsonld-playground" content="https://json-ld.org/playground#json-ld={jsonld}&amp;startTab=tab-expand"/>
+    <meta name="y2v:group-individuals" content="true"/>
     <title></title>
     <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c"></script>
     <script>
@@ -94,6 +101,26 @@
       
       summary {
         font-weight: normal !important;
+      }
+
+      .example-with-playground {
+        position: relative;
+      }
+      a.jsonld-playground-button {
+        position: absolute;
+        top: 0.4em;
+        right: 0.4em;
+        z-index: 1;
+        padding: 0.3em 0.7em;
+        font-size: 0.8em;
+        font-weight: bold;
+        color: #fff;
+        background-color: #005a9c;
+        border-radius: 4px;
+        text-decoration: none;
+      }
+      a.jsonld-playground-button:hover {
+        background-color: #00457a;
       }
 
     </style>
