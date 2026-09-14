@@ -216,31 +216,58 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         }
     }
 
-    // Base URL of the JSON-LD Playground; the example is passed along in the
-    // URL fragment, encoded the same way the Playground itself builds its permalinks
-    // (a `URLSearchParams` serialization with a `json-ld` parameter).
-    const JSONLD_PLAYGROUND = 'https://json-ld.org/playground/next';
+    /*********************************** Settings taken from the template ***************************/
+
+    // The template switches optional features of the generator on through `<meta name="y2v:…">`
+    // elements. Such a setting is not part of the document itself, so the element is removed from the
+    // DOM on the way out; `undefined` is returned if the template does not have the setting at all.
+    const templateSetting = (name: string): string | undefined => {
+        const meta = document.querySelector(`meta[name="${name}"]`);
+        if (meta === null) return undefined;
+        meta.remove();
+        return meta.getAttribute('content')?.trim() ?? '';
+    }
+
+    // A button opening an example in a playground or JSON-LD viewer is only generated if the template
+    // asks for one. The setting is the URL of the viewer, in which this placeholder stands for the
+    // URL encoded example.
+    const JSONLD_PLACEHOLDER = '{jsonld}';
+    const PLAYGROUND_META = 'y2v:jsonld-playground';
+    const playground_url: string = templateSetting(PLAYGROUND_META) ?? '';
+    if (playground_url && !playground_url.includes(JSONLD_PLACEHOLDER)) {
+        console.warn(`Template warning: the "${PLAYGROUND_META}" URL has no "${JSONLD_PLACEHOLDER}" placeholder; all example buttons will lead to the same URL.`);
+    }
+
+    // Whether the individuals are gathered into a subchapter per type, instead of being listed one
+    // after the other. Only an explicit "true" switches the grouping on.
+    const GROUPING_META = 'y2v:group-individuals';
+    const grouping_setting: string | undefined = templateSetting(GROUPING_META)?.toLowerCase();
+    const group_individuals: boolean = grouping_setting === 'true';
+    if (grouping_setting && grouping_setting !== 'true' && grouping_setting !== 'false') {
+        console.warn(`Template warning: the "${GROUPING_META}" value ("${grouping_setting}") is neither "true" nor "false"; the individuals are not grouped by type.`);
+    }
 
     const setExample = (section: Element, item: RDFClass | RDFIndividual | RDFProperty): void => {
         if (item.example && item.example.length > 0) {
             for (const ex of item.example) {
-                // Wrap the example so the playground button can be anchored to its upper right corner
-                const wrapper = document.addChild(section, 'div');
-                wrapper.className = 'example-with-playground';
-                const example = document.addChild(wrapper, 'pre', ex.json);
+                // Without a button there is nothing to anchor, so the wrapper is only added when needed
+                let parent = section;
+                if (playground_url) {
+                    parent = document.addChild(section, 'div');
+                    parent.className = 'example-with-playground';
+                }
+                const example = document.addChild(parent, 'pre', ex.json);
                 example.className = 'example prettyprint language-json';
                 if (ex.label) {
                     example.setAttribute('title', ex.label)
                 }
-                // Add a button that opens the example in the JSON-LD Playground
-                const params = new URLSearchParams();
-                params.set('json-ld', ex.json);
-                params.set('startTab', 'tab-expand');
-                const link = document.addChild(wrapper, 'a', 'Open in JSON-LD Playground');
-                link.setAttribute('href', `${JSONLD_PLAYGROUND}#${params.toString()}`);
-                link.setAttribute('target', '_blank');
-                link.setAttribute('rel', 'noopener noreferrer');
-                link.className = 'jsonld-playground-button';
+                if (playground_url) {
+                    const link = document.addChild(parent, 'a', 'Open in JSON-LD Playground');
+                    link.setAttribute('href', playground_url.replaceAll(JSONLD_PLACEHOLDER, encodeURIComponent(ex.json)));
+                    link.setAttribute('target', '_blank');
+                    link.setAttribute('rel', 'noopener noreferrer');
+                    link.className = 'jsonld-playground-button';
+                }
             }
         }
     }
@@ -679,21 +706,18 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         }
     }
 
-    // Generation of the section content for individuals. The individuals are grouped by their
-    // type(s): a subchapter (a nested section with its own heading) is introduced for each
-    // distinct type (or combination of types), and the matching individuals are listed inside it.
-    // There is a check for a possible template error and also whether there are individual
-    // definitions in the first place.
+    // Generation of the section content for individuals. If the template asks for it, the individuals
+    // are grouped by their type(s): a subchapter (a nested section with its own heading) is introduced
+    // for each distinct type (or combination of types), and the matching individuals are listed inside
+    // it; otherwise they simply follow one another. There is a check for a possible template error and
+    // also whether there are individual definitions in the first place.
     const individuals = (ind_list: RDFIndividual[], statusFilter: Status): void => {
         const { id_prefix, intro_prefix } = statusSignals(statusFilter);
         const section = document.getElementById(`${id_prefix}individual_definitions`);
         if (section) {
             if (ind_list.length > 0) {
-                document.addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace, grouped by their type.`);
-
-                // The grouping (and the subchapter anchors) have been precomputed in
-                // buildIndividualGroups(), so that the class sections could already link to them.
-                const groups = individualGroupsByStatus.get(statusFilter) ?? [];
+                const grouped_remark = group_individuals ? ', grouped by their type' : '';
+                document.addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace${grouped_remark}.`);
 
                 // Render an individual into the given parent section.
                 const renderIndividual = (parent: Element, item: RDFIndividual): void => {
@@ -704,21 +728,30 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                     setExample(ind_section, item);
                 };
 
-                for (const group of groups) {
-                    if (group.types.length > 0) {
-                        // Introduce a subchapter for this type (or combination of types).
-                        const type_section = document.addChild(section, 'section');
-                        type_section.id = group.id;
-                        const type_labels = group.types.map(termHTMLReference);
-                        document.addChild(type_section, 'h4', `${formatter.format(type_labels)}`);
-                        document.addChild(type_section, 'p', `This chapter lists the individuals of type ${formatter.format(type_labels)}.`);
-                        for (const item of group.items) {
-                            renderIndividual(type_section, item);
-                        }
-                    } else {
-                        // Individuals without a type: listed directly, without a subchapter.
-                        for (const item of group.items) {
-                            renderIndividual(section, item);
+                if (!group_individuals) {
+                    for (const item of ind_list) {
+                        renderIndividual(section, item);
+                    }
+                } else {
+                    // The grouping (and the subchapter anchors) have been precomputed in
+                    // buildIndividualGroups(), so that the class sections could already link to them.
+                    const groups = individualGroupsByStatus.get(statusFilter) ?? [];
+                    for (const group of groups) {
+                        if (group.types.length > 0) {
+                            // Introduce a subchapter for this type (or combination of types).
+                            const type_section = document.addChild(section, 'section');
+                            type_section.id = group.id;
+                            const type_labels = group.types.map(termHTMLReference);
+                            document.addChild(type_section, 'h4', `${formatter.format(type_labels)}`);
+                            document.addChild(type_section, 'p', `This chapter lists the individuals of type ${formatter.format(type_labels)}.`);
+                            for (const item of group.items) {
+                                renderIndividual(type_section, item);
+                            }
+                        } else {
+                            // Individuals without a type: listed directly, without a subchapter.
+                            for (const item of group.items) {
+                                renderIndividual(section, item);
+                            }
                         }
                     }
                 }
@@ -815,8 +848,9 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
     // 4. The introductory list of contexts used in the document
     contexts();
 
-    // 4b. Precompute how the individuals are grouped by type, so the class sections (generated
-    //     next) can link to the matching individual subchapters.
+    // 4b. Index the individuals by their type(s), so that the class sections (generated next) can
+    //     link to their individuals; the same pass prepares the subchapters of the individuals
+    //     section, in case the template asked for them.
     buildIndividualGroups();
 
     // 5. Sections on classes
