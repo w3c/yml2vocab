@@ -468,7 +468,7 @@ export const defaultPrefixes: RDFPrefix[] = [
     },
     {
         prefix: "schema",
-        url: "https://schema.org/"
+        url: "http://schema.org/"
     },
     {
         prefix: "jsonld",
