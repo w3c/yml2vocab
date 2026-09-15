@@ -417,6 +417,18 @@ class:
       label: An example Class5
       one_of: [ex:Individual_1, ex:Individual_2, …,ex:Individual_n]
       comment: The class consists of the listed individuals.
+
+    - id: Class6
+      label: An example Class6
+      comment: just to show how an example can be added to the definition
+      example:
+        - label: An example usage of Class6
+          json: |
+            {
+              "@context": "https://context-for-class6-example.org",
+              "id": "urn:12345",
+              "@type": "Class6"
+            }
 ```
 
 
