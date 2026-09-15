@@ -372,6 +372,12 @@ export function getData(vocab_source: string): Vocab {
             if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
                 extra_types.push("owl:ObjectProperty");
                 strongURL = true;
+            } else if (raw.range.length === 1 && raw.range[0].toUpperCase() === "LANGSTRING") {
+                langString = true;
+                raw.range_union = true;
+                for (const term of ["rdf:langString", "rdf:dirLangString", "xsd:string"]) {
+                    range.push(factory.term(term))
+                }
             } else if (raw.range.includes("rdf:langString") || raw.range.includes("rdf:dirLangString")) {
                 langString = true;
                 if (raw.range.length > 1 && raw.range_union === false) {
