@@ -724,6 +724,18 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                     const ind_section = document.addChild(parent, 'section');
                     ind_section.id = item.html_id;
                     commonFields(ind_section, item);
+                    // Ungrouped, there is no subchapter heading to carry the type, so each individual
+                    // states its own. (An external term is defined elsewhere; its type is not repeated.)
+                    if (!group_individuals && !item.external && item.type.length > 0) {
+                        const dl = document.addChild(ind_section, 'dl');
+                        dl.className = 'terms';
+                        document.addChild(dl, 'dt', 'Type');
+                        const dd = document.addChild(dl, 'dd');
+                        for (const item_type of item.type) {
+                            document.addChild(dd, 'span', termHTMLReference(item_type));
+                            document.addChild(dd, 'br');
+                        }
+                    }
                     contextReferences(ind_section, item);
                     setExample(ind_section, item);
                 };
