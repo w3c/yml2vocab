@@ -704,7 +704,7 @@ and for [SoWasm](https://perso.liris.cnrs.fr/pierre-antoine.champin/2023/sowasm/
 
 Whichever viewer is used, the button text always reads &ldquo;Open in JSON-LD Playground&rdquo;.
 
-The `y2v:group-individuals` setting introduces, within the sections on individuals, a subchapter per type (or per combination of types), listing the individuals that have it:
+The `y2v:group-individuals` setting introduces, within the sections on individuals, a subsection per type (or per combination of types), listing the individuals that have it:
 
 ```html
 <meta name="y2v:group-individuals" content="true"/>
