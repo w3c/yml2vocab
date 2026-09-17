@@ -238,7 +238,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         console.warn(`Template warning: the "${PLAYGROUND_META}" URL has no "${JSONLD_PLACEHOLDER}" placeholder; all example buttons will lead to the same URL.`);
     }
 
-    // Whether the individuals are gathered into a subchapter per type, instead of being listed one
+    // Whether the individuals are gathered into a subsection per type, instead of being listed one
     // after the other. Only an explicit "true" switches the grouping on.
     const GROUPING_META = 'y2v:group-individuals';
     const grouping_setting: string | undefined = templateSetting(GROUPING_META)?.toLowerCase();
@@ -299,8 +299,8 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         }
     }
 
-    // A subchapter, within the individuals section, grouping all the individuals that share the
-    // exact same set of types. The `id` is used both as the anchor of the subchapter and as the
+    // A subsection, within the individuals section, grouping all the individuals that share the
+    // exact same set of types (possibly none). The `id` is used both as the anchor of the subsection and as the
     // target of the "Individuals" cross-reference links generated in the relevant class sections.
     interface IndividualTypeGroup {
         id    : string;
@@ -308,7 +308,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         items : RDFIndividual[];
     }
 
-    // The individual subchapters, computed once per status (the individuals section is split into a
+    // The individual subsections, computed once per status (the individuals section is split into a
     // stable, a reserved, and a deprecated part). Keyed by status.
     const individualGroupsByStatus = new Map<Status, IndividualTypeGroup[]>();
 
@@ -318,7 +318,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
 
     // Group the individuals by their type(s), preserving the order in which the types first appear,
     // and register the cross-reference anchors for the relevant classes. This must run before the
-    // class sections are generated, because those link to the subchapters created here.
+    // class sections are generated, because those are generated before the individuals section.
     const buildIndividualGroups = (): void => {
         for (const filter of Object.values(Status)) {
             const { id_prefix } = statusSignals(filter);
@@ -326,18 +326,24 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
             const groups: IndividualTypeGroup[] = [];
             const by_key = new Map<string, IndividualTypeGroup>();
             for (const item of list) {
-                // Individuals sharing the exact same set of types end up in the same subchapter.
+                // Individuals sharing the exact same set of types end up in the same subsection; those
+                // without a type of their own are collected in a subsection of their own, too.
                 const key = item.type.map((t: RDFTerm): string => t.curie).join(', ');
                 let group = by_key.get(key);
                 if (group === undefined) {
                     const slug = key.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-                    group = { id: `${id_prefix}individuals_of_${slug}`, types: item.type, items: [] };
+                    const id = (key === '') ? `${id_prefix}individuals_without_type` : `${id_prefix}individuals_of_${slug}`;
+                    group = { id, types: item.type, items: [] };
                     by_key.set(key, group);
                     groups.push(group);
                 }
                 group.items.push(item);
             }
-            individualGroupsByStatus.set(filter, groups);
+            // The individuals without a type are the leftovers of the grouping: they come last.
+            individualGroupsByStatus.set(filter, [
+                ...groups.filter((group: IndividualTypeGroup): boolean => group.types.length > 0),
+                ...groups.filter((group: IndividualTypeGroup): boolean => group.types.length === 0),
+            ]);
 
             // Register, for each type, the individuals that have it as a type.
             for (const group of groups) {
@@ -707,7 +713,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
     }
 
     // Generation of the section content for individuals. If the template asks for it, the individuals
-    // are grouped by their type(s): a subchapter (a nested section with its own heading) is introduced
+    // are grouped by their type(s): a subsection (a nested section with its own heading) is introduced
     // for each distinct type (or combination of types), and the matching individuals are listed inside
     // it; otherwise they simply follow one another. There is a check for a possible template error and
     // also whether there are individual definitions in the first place.
@@ -724,7 +730,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                     const ind_section = document.addChild(parent, 'section');
                     ind_section.id = item.html_id;
                     commonFields(ind_section, item);
-                    // Ungrouped, there is no subchapter heading to carry the type, so each individual
+                    // Ungrouped, there is no subsection heading to carry the type, so each individual
                     // states its own. (An external term is defined elsewhere; its type is not repeated.)
                     if (!group_individuals && !item.external && item.type.length > 0) {
                         const dl = document.addChild(ind_section, 'dl');
@@ -745,25 +751,24 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                         renderIndividual(section, item);
                     }
                 } else {
-                    // The grouping (and the subchapter anchors) have been precomputed in
+                    // The grouping (and the subsection anchors) have been precomputed in
                     // buildIndividualGroups(), so that the class sections could already link to them.
                     const groups = individualGroupsByStatus.get(statusFilter) ?? [];
                     for (const group of groups) {
+                        // Every group gets its own subsection, so that the individuals all sit one
+                        // sectioning level below the section on individuals, typed or not.
+                        const type_section = document.addChild(section, 'section');
+                        type_section.id = group.id;
                         if (group.types.length > 0) {
-                            // Introduce a subchapter for this type (or combination of types).
-                            const type_section = document.addChild(section, 'section');
-                            type_section.id = group.id;
-                            const type_labels = group.types.map(termHTMLReference);
-                            document.addChild(type_section, 'h4', `${formatter.format(type_labels)}`);
-                            document.addChild(type_section, 'p', `This chapter lists the individuals of type ${formatter.format(type_labels)}.`);
-                            for (const item of group.items) {
-                                renderIndividual(type_section, item);
-                            }
+                            const type_labels = formatter.format(group.types.map(termHTMLReference));
+                            document.addChild(type_section, 'h4', `Individuals of type ${type_labels}`);
+                            document.addChild(type_section, 'p', `This section lists the individuals of type ${type_labels}.`);
                         } else {
-                            // Individuals without a type: listed directly, without a subchapter.
-                            for (const item of group.items) {
-                                renderIndividual(section, item);
-                            }
+                            document.addChild(type_section, 'h4', 'Individuals without explicit typing');
+                            document.addChild(type_section, 'p', 'This section lists the individuals that are not given a type of their own.');
+                        }
+                        for (const item of group.items) {
+                            renderIndividual(type_section, item);
                         }
                     }
                 }
@@ -861,7 +866,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
     contexts();
 
     // 4b. Index the individuals by their type(s), so that the class sections (generated next) can
-    //     link to their individuals; the same pass prepares the subchapters of the individuals
+    //     link to their individuals; the same pass prepares the subsections of the individuals
     //     section, in case the template asked for them.
     buildIndividualGroups();
 
