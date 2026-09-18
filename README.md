@@ -797,6 +797,8 @@ const vocabGeneration = new yml2vocab.VocabGeneration(yml_content);
 const turtle: string  = vocabGeneration.getTurtle();
 // returns the JSON-LD content as a string
 const jsonld: string  = vocabGeneration.getJSONLD();
+// returns the YAML-LD content as a string
+const yamlld: string  = vocabGeneration.getYAMLLD();
 // returns the HTML content as a string
 // The third argument specifies (as a boolean) whether a context file is also generated
 // (if yes, some extra explanatory notes may appear in the HTML output)
@@ -837,7 +839,7 @@ The [repository](https://github.com/yml2vocab) may also be cloned.
 
 - `Readme.md`: this file.
 - `package.json`: configuration file for `npm`.
-- `deno.json`: configuration file for `deno`
+- `deno.jsonc`: configuration file for `deno`
 - `example`: a folder with examples for vocabulary definition files and the generated RDF vocabulary files.
 - `lib` directory: the TypeScript modules for the script.
 - `dist` directory: the Javascript distribution files (compiled from the TypeScript sources using `tsc` in `node.js`)
@@ -853,9 +855,9 @@ The following files and directories are generated/modified by either the script 
 
 # 4. Acknowledgement
 
-I got inspired by the structure and Ruby script  that was created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript, and developed further since by adding new features based on usage.
+I got inspired by the structure and Ruby script created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript, and developed further since by adding new features based on practical usage.
 
-Many features are the result of further discussions with Many Sporny, Benjamin Young, and Pierre-Antoine Champin.
+Many features are the result of further discussions and submitted code with [Many Sporny](https://github.com/msporny), [Benjamin Young](https://github.com/BigBlueHat), [Pierre-Antoine Champin](https://github.com/pchampin), [Dave Longley](https://github.com/dlongley), and [Ronald Koenig](https://github.com/rkxx).
 
 I dedicate this script to the memory of Gregg. R.I.P.
 
