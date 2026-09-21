@@ -37,10 +37,14 @@ export declare class StatusCounter {
      */
     counter(status: Status): number;
 }
+/**
+ * Flags/features controlling the generated JSON-LD and JSON-LD context
+ */
 export interface JSON_LD {
     alias?: Record<string, string>;
     import?: string | string[];
     set_vocab?: boolean;
+    protected?: boolean;
 }
 /**
  * Context references. Lists, for a context, the terms that are listed in them.
@@ -92,6 +96,10 @@ export interface GlobalData {
      * value in the context using "@vocab".
      */
     set_vocab?: boolean;
+    /**
+     * Whether the "@protected" keyword should be added to the context (and scoped contexts)
+     */
+    protected?: boolean;
 }
 /**
  * As it name says: some global data that are needed by some of the media type specific modules.
@@ -134,6 +142,7 @@ export interface RawVocabEntry {
     upper_value?: string[];
     upper_union?: boolean;
     domain?: string[];
+    scope?: string[];
     range?: string[];
     range_union?: boolean;
     deprecated?: boolean;
@@ -262,6 +271,7 @@ export interface RDFTerm {
  */
 export interface RDFClass extends RDFTerm {
     subClassOf: RDFClass[];
+    subClasses: RDFClass[];
     upper_union: boolean;
     one_of: RDFIndividual[];
     range_of: RDFProperty[];
@@ -276,6 +286,7 @@ export interface RDFClass extends RDFTerm {
 export interface RDFProperty extends RDFTerm {
     subPropertyOf: RDFProperty[];
     domain: RDFClass[];
+    scope: RDFClass[];
     range: RDFTerm[];
     range_union: boolean;
     one_of: RDFIndividual[];

@@ -106,6 +106,15 @@ class MiniDOM {
         return this._localDocument.getElementById(id);
     }
     /**
+     * Just the mirroring of the official DOM call.
+     *
+     * @param selectors
+     * @returns
+     */
+    querySelector(selectors) {
+        return this._localDocument.querySelector(selectors);
+    }
+    /**
       * Just the mirroring of the official DOM call.
       *
       * @param tag

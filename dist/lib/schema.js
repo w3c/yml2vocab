@@ -83,6 +83,9 @@ const vocabSchema = `{
                 "set_vocab" : {
                     "type" : "boolean"
                 },
+                "protected" : {
+                    "type" : "boolean"
+                },
                 "unevaluatedProperties": false
             }
         },
@@ -165,6 +168,9 @@ const vocabSchema = `{
                         "type": "object",
                         "properties": {
                             "domain": {
+                                "$ref": "#/$defs/StringOrArrayOfStrings"
+                            },
+                            "scope": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
                             "range": {

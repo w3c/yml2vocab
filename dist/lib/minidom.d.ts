@@ -55,6 +55,13 @@ export declare class MiniDOM {
      */
     getElementById(id: string): Element | null;
     /**
+     * Just the mirroring of the official DOM call.
+     *
+     * @param selectors
+     * @returns
+     */
+    querySelector(selectors: string): Element | null;
+    /**
       * Just the mirroring of the official DOM call.
       *
       * @param tag

@@ -10,11 +10,6 @@ exports.toContext = toContext;
 const common_1 = require("./common");
 const factory_1 = require("./factory");
 const beautify_1 = require("./beautify");
-// These are the context statements appearing in all
-// embedded contexts, as well as the top level one.
-const preamble = {
-    "@protected": true,
-};
 // Minor utility: return the full URL for a prefix
 function prefix_url(prefix, vocab) {
     if (!prefix) {
@@ -93,7 +88,9 @@ function toContext(vocab) {
             // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
             if (property.one_of?.length > 0 && !property.dataset) {
                 const mappings = property.one_of.map((term) => [term.id, term.url]);
-                mappings.push(["@vocab", `${common_1.global.vocab_prefix}:INVALID_VALUE:`]);
+                if (!property.open_enumeration) {
+                    mappings.push(["@vocab", `${common_1.global.vocab_prefix}:INVALID_VALUE:`]);
+                }
                 // Note that this may overwrite earlier values...
                 output["@type"] = "@vocab";
                 output["@context"] = Object.fromEntries(mappings);
@@ -115,6 +112,17 @@ function toContext(vocab) {
         // no need for an indirection
         return Object.keys(output).length === 1 ? url : output;
     };
+    // These are the context statements appearing in all
+    const preamble = (() => {
+        if (common_1.global.protected === undefined || common_1.global.protected === true) {
+            return {
+                "@protected": true,
+            };
+        }
+        else {
+            return {};
+        }
+    })();
     const set_vocab = (() => {
         if (common_1.global.set_vocab) {
             return {
@@ -132,6 +140,9 @@ function toContext(vocab) {
     // Add the classes; note that this will also cover the mapping of
     // all properties whose domain include a top level class
     for (const cl of vocab.classes) {
+        // this term was specifically flagged not to be added to a context
+        if (cl.context.length === 0)
+            continue;
         const base_url = cl.prefix
             ? prefix_url(cl.prefix, vocab)
             : common_1.global.vocab_url;
@@ -141,16 +152,28 @@ function toContext(vocab) {
         const embedded = {
             ...preamble,
         };
-        // Get all the properties that have this class in its domain
+        // Get all the properties that have this class in its domain or scope
+        const addProperty = (prop) => {
+            // bingo, this property can be added here
+            embedded[prop.known_as ?? prop.id] = propertyContext(prop);
+            // class_properties is a Set, so duplication is avoided
+            class_properties.add(prop.id);
+        };
         for (const prop of vocab.properties) {
+            if (prop.context.length === 0)
+                continue;
             if (prop.domain) {
                 if (factory_1.RDFTermFactory.includesTerm(prop.domain, cl)) {
-                    // bingo, this property can be added here
-                    embedded[prop.known_as ?? prop.id] = propertyContext(prop);
-                    class_properties.add(prop.id);
+                    addProperty(prop);
+                }
+            }
+            if (prop.scope) {
+                if (factory_1.RDFTermFactory.includesTerm(prop.scope, cl)) {
+                    addProperty(prop);
                 }
             }
         }
+        ;
         // If no properties are added, then the embedded context is unnecessary
         top_level[cl.known_as ?? cl.id] =
             Object.keys(embedded).length === Object.keys(preamble).length
@@ -160,16 +183,25 @@ function toContext(vocab) {
     // Add the properties that have not been handled in the
     // previous step
     for (const prop of vocab.properties) {
+        // this term was specifically flagged not to be added to a context
+        if (prop.context.length === 0)
+            continue;
         if (!class_properties.has(prop.id)) {
             top_level[prop.known_as ?? prop.id] = propertyContext(prop, false);
         }
     }
     // Add the individuals
     for (const individual of vocab.individuals) {
+        // this term was specifically flagged not to be added to a context
+        if (individual.context.length === 0)
+            continue;
         top_level[individual.known_as ?? individual.id] = `${individual.url}`;
     }
     // Add the datatypes
     for (const datatype of vocab.datatypes) {
+        // this term was specifically flagged not to be added to a context
+        if (datatype.context.length === 0)
+            continue;
         top_level[datatype.known_as ?? datatype.id] = `${datatype.url}`;
     }
     // the final shape of the context depends on whether there are imported

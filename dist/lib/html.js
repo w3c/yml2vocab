@@ -152,7 +152,7 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
                     description += "<br><br>The property's value should be a URL, i.e., not a literal.";
                 }
                 else if (item.langString) {
-                    description += "<br><br>The property's value is expected to be a natural language string.";
+                    description += "<br><br>The property's value is expected to be a localizable string.";
                 }
             }
             document.addChild(section, 'div', description);
@@ -164,7 +164,7 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
                 }
             }
             else if (factory_1.RDFTermFactory.isProperty(item) && item.langString) {
-                document.addChild(section, 'p', "The property's value is expected to be a natural language string.");
+                document.addChild(section, 'p', "The property's value is expected to be a localizable string.");
             }
         }
         // Add the external warning, if applicable
@@ -203,13 +203,54 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
             }
         }
     };
+    /*********************************** Settings taken from the template ***************************/
+    // The template switches optional features of the generator on through `<meta name="y2v:…">`
+    // elements. Such a setting is not part of the document itself, so the element is removed from the
+    // DOM on the way out; `undefined` is returned if the template does not have the setting at all.
+    const templateSetting = (name) => {
+        const meta = document.querySelector(`meta[name="${name}"]`);
+        if (meta === null)
+            return undefined;
+        meta.remove();
+        return meta.getAttribute('content')?.trim() ?? '';
+    };
+    // A button opening an example in a playground or JSON-LD viewer is only generated if the template
+    // asks for one. The setting is the URL of the viewer, in which this placeholder stands for the
+    // URL encoded example.
+    const JSONLD_PLACEHOLDER = '{jsonld}';
+    const PLAYGROUND_META = 'y2v:jsonld-playground';
+    const playground_url = templateSetting(PLAYGROUND_META) ?? '';
+    if (playground_url && !playground_url.includes(JSONLD_PLACEHOLDER)) {
+        console.warn(`Template warning: the "${PLAYGROUND_META}" URL has no "${JSONLD_PLACEHOLDER}" placeholder; all example buttons will lead to the same URL.`);
+    }
+    // Whether the individuals are gathered into a subsection per type, instead of being listed one
+    // after the other. Only an explicit "true" switches the grouping on.
+    const GROUPING_META = 'y2v:group-individuals';
+    const grouping_setting = templateSetting(GROUPING_META)?.toLowerCase();
+    const group_individuals = grouping_setting === 'true';
+    if (grouping_setting && grouping_setting !== 'true' && grouping_setting !== 'false') {
+        console.warn(`Template warning: the "${GROUPING_META}" value ("${grouping_setting}") is neither "true" nor "false"; the individuals are not grouped by type.`);
+    }
     const setExample = (section, item) => {
         if (item.example && item.example.length > 0) {
             for (const ex of item.example) {
-                const example = document.addChild(section, 'pre', ex.json);
+                // Without a button there is nothing to anchor, so the wrapper is only added when needed
+                let parent = section;
+                if (playground_url) {
+                    parent = document.addChild(section, 'div');
+                    parent.className = 'example-with-playground';
+                }
+                const example = document.addChild(parent, 'pre', ex.json);
                 example.className = 'example prettyprint language-json';
                 if (ex.label) {
                     example.setAttribute('title', ex.label);
+                }
+                if (playground_url) {
+                    const link = document.addChild(parent, 'a', 'Open in JSON-LD Playground');
+                    link.setAttribute('href', playground_url.replaceAll(JSONLD_PLACEHOLDER, encodeURIComponent(ex.json)));
+                    link.setAttribute('target', '_blank');
+                    link.setAttribute('rel', 'noopener noreferrer');
+                    link.className = 'jsonld-playground-button';
                 }
             }
         }
@@ -237,6 +278,50 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
             dd.innerHTML = item.context.map((ctx) => {
                 return `<a href="${ctx}"><code>${ctx}</code></a>`;
             }).join(",<br> ");
+        }
+    };
+    // The individual subsections, computed once per status (the individuals section is split into a
+    // stable, a reserved, and a deprecated part). Keyed by status.
+    const individualGroupsByStatus = new Map();
+    // Cross-reference index: for a class (identified by its curie) the list of individuals that
+    // have that class as a type. Used to list the "Individuals" links into the class sections.
+    const individualsByClass = new Map();
+    // Group the individuals by their type(s), preserving the order in which the types first appear,
+    // and register the cross-reference anchors for the relevant classes. This must run before the
+    // class sections are generated, because those are generated before the individuals section.
+    const buildIndividualGroups = () => {
+        for (const filter of Object.values(common_1.Status)) {
+            const { id_prefix } = statusSignals(filter);
+            const list = vocab.individuals.filter((entry) => entry.status === filter);
+            const groups = [];
+            const by_key = new Map();
+            for (const item of list) {
+                // Individuals sharing the exact same set of types end up in the same subsection; those
+                // without a type of their own are collected in a subsection of their own, too.
+                const key = item.type.map((t) => t.curie).join(', ');
+                let group = by_key.get(key);
+                if (group === undefined) {
+                    const slug = key.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+                    const id = (key === '') ? `${id_prefix}individuals_without_type` : `${id_prefix}individuals_of_${slug}`;
+                    group = { id, types: item.type, items: [] };
+                    by_key.set(key, group);
+                    groups.push(group);
+                }
+                group.items.push(item);
+            }
+            // The individuals without a type are the leftovers of the grouping: they come last.
+            individualGroupsByStatus.set(filter, [
+                ...groups.filter((group) => group.types.length > 0),
+                ...groups.filter((group) => group.types.length === 0),
+            ]);
+            // Register, for each type, the individuals that have it as a type.
+            for (const group of groups) {
+                for (const type of group.types) {
+                    const members = individualsByClass.get(type.curie) ?? [];
+                    members.push(...group.items);
+                    individualsByClass.set(type.curie, members);
+                }
+            }
         }
     };
     /************ Functions to add specific content to the final HTML, based also on the template ********************/
@@ -419,6 +504,15 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
                             })(item.one_of);
                         }
                     }
+                    // List of subclasses; shown for local and external classes alike, since an
+                    // external class can be the superclass of locally defined ones.
+                    if (item.subClasses && item.subClasses.length > 0) {
+                        const dl = document.addChild(cl_section, 'dl');
+                        dl.className = 'terms';
+                        document.addChild(dl, 'dt', 'Superclass of:');
+                        const dd = document.addChild(dl, 'dd');
+                        dd.innerHTML = item.subClasses.map(termHTMLReference).join(', ');
+                    }
                     // Again an extra list for range/domain references, if applicable
                     if (item.range_of.length > 0 ||
                         item.domain_of.length > 0 ||
@@ -452,6 +546,15 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
                             const dd = document.addChild(dl, 'dd');
                             dd.innerHTML = prop_names(item.included_in_domain_of);
                         }
+                    }
+                    // List links to the individuals that have this class as a type.
+                    const ind_members = individualsByClass.get(item.curie);
+                    if (ind_members && ind_members.length > 0) {
+                        const dl = document.addChild(cl_section, 'dl');
+                        dl.className = 'terms';
+                        document.addChild(dl, 'dt', 'Individuals:');
+                        const dd = document.addChild(dl, 'dd');
+                        dd.innerHTML = ind_members.map(termHTMLReference).join(', ');
                     }
                     contextReferences(cl_section, item);
                     setExample(cl_section, item);
@@ -562,22 +665,28 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
             }
         }
     };
-    // Generation of the section content for individuals: a big table, with a row per individual
-    // There is a check for a possible template error and also whether there are individual
-    // definitions in the first place.
+    // Generation of the section content for individuals. If the template asks for it, the individuals
+    // are grouped by their type(s): a subsection (a nested section with its own heading) is introduced
+    // for each distinct type (or combination of types), and the matching individuals are listed inside
+    // it; otherwise they simply follow one another. There is a check for a possible template error and
+    // also whether there are individual definitions in the first place.
     const individuals = (ind_list, statusFilter) => {
         const { id_prefix, intro_prefix } = statusSignals(statusFilter);
         const section = document.getElementById(`${id_prefix}individual_definitions`);
         if (section) {
             if (ind_list.length > 0) {
-                document.addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace.`);
-                for (const item of ind_list) {
-                    const ind_section = document.addChild(section, 'section');
+                const grouped_remark = group_individuals ? ', grouped by their type' : '';
+                document.addChild(section, 'p', `The following are definitions for ${intro_prefix} individuals in the <code>${vocab_prefix}</code> namespace${grouped_remark}.`);
+                // Render an individual into the given parent section.
+                const renderIndividual = (parent, item) => {
+                    const ind_section = document.addChild(parent, 'section');
                     ind_section.id = item.html_id;
                     commonFields(ind_section, item);
-                    const dl = document.addChild(ind_section, 'dl');
-                    dl.className = 'terms';
-                    if (!item.external && item.type.length > 0) {
+                    // Ungrouped, there is no subsection heading to carry the type, so each individual
+                    // states its own. (An external term is defined elsewhere; its type is not repeated.)
+                    if (!group_individuals && !item.external && item.type.length > 0) {
+                        const dl = document.addChild(ind_section, 'dl');
+                        dl.className = 'terms';
                         document.addChild(dl, 'dt', 'Type');
                         const dd = document.addChild(dl, 'dd');
                         for (const item_type of item.type) {
@@ -587,6 +696,34 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
                     }
                     contextReferences(ind_section, item);
                     setExample(ind_section, item);
+                };
+                if (!group_individuals) {
+                    for (const item of ind_list) {
+                        renderIndividual(section, item);
+                    }
+                }
+                else {
+                    // The grouping (and the subsection anchors) have been precomputed in
+                    // buildIndividualGroups(), so that the class sections could already link to them.
+                    const groups = individualGroupsByStatus.get(statusFilter) ?? [];
+                    for (const group of groups) {
+                        // Every group gets its own subsection, so that the individuals all sit one
+                        // sectioning level below the section on individuals, typed or not.
+                        const type_section = document.addChild(section, 'section');
+                        type_section.id = group.id;
+                        if (group.types.length > 0) {
+                            const type_labels = formatter.format(group.types.map(termHTMLReference));
+                            document.addChild(type_section, 'h4', `Individuals of type ${type_labels}`);
+                            document.addChild(type_section, 'p', `This section lists the individuals of type ${type_labels}.`);
+                        }
+                        else {
+                            document.addChild(type_section, 'h4', 'Individuals without explicit typing');
+                            document.addChild(type_section, 'p', 'This section lists the individuals that are not given a type of their own.');
+                        }
+                        for (const item of group.items) {
+                            renderIndividual(type_section, item);
+                        }
+                    }
                 }
             }
             else {
@@ -674,6 +811,10 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
     prefixes();
     // 4. The introductory list of contexts used in the document
     contexts();
+    // 4b. Index the individuals by their type(s), so that the class sections (generated next) can
+    //     link to their individuals; the same pass prepares the subsections of the individuals
+    //     section, in case the template asked for them.
+    buildIndividualGroups();
     // 5. Sections on classes
     Object.values(common_1.Status).map((filter) => {
         const actual_classes = vocab.classes.filter((entry) => entry.status === filter);

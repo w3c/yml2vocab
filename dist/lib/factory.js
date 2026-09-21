@@ -146,6 +146,7 @@ class RDFTermFactory {
         const curie = createCurie(index);
         const extras = {
             subClassOf: [],
+            subClasses: [],
             range_of: [],
             domain_of: [],
             included_in_domain_of: [],
