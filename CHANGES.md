@@ -10,7 +10,7 @@ This list does not include all the tiny, e.g., editorial changes, only the chang
 - The subclasses are also displayed, to allow for a better navigation among classes. See https://github.com/w3c/yml2vocab/pull/60.
 - A `meta` has been added to the template to display a button on an example, linking to a json-ld playground with the content. See https://github.com/w3c/yml2vocab/pull/60.
 - A `meta` has been added to the template, to control whether individuals are re-grouped in subsections referring to the types of the individuals. See https://github.com/w3c/yml2vocab/pull/60.
-- The property range term `langString` has been added as a shorthand for `[xsd:string, rdf:langString, rdf:dirLangString]` with `range_union` set to `true`.
+- The property range term `localizableString` has been added as a shorthand for `[xsd:string, rdf:langString, rdf:dirLangString]` with `range_union` set to `true`.
 
 ## Version 1.10.4
 

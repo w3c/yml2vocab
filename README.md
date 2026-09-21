@@ -488,14 +488,14 @@ class:
         </tr>
         <tr>
             <td><code>range</code></td>
-            <td>One or more terms or CURIES or the single <code>URL</code> or <code>langString</code> term</td>
+            <td>One or more terms or CURIES or the single <code>URL</code> or <code>localizableString</code> term</td>
             <td>
                 The RDF range statements of the property. <br>
                 If the <code >URL</code> (alternatively: <code >IRI</code>) term is used, the block
                 defines a property that has no explicit range type, but whose objects are expected to be IRI references. The generated vocabularies
                 annotate these properties as belonging to the <code >owl:ObjectProperty</code> class, which is the reserved term for properties
                 whose objects are not supposed to be literals. A corresponding comment is also generated into the HTML description of the term.<br>
-                The single term <code>langString</code> is a shorthand for setting the range to the array <code>[xsd:string, rdf:langString, rdf:dirLangString]</code>,
+                The single term <code>localizableString</code> is a shorthand for setting the range to the array <code>[xsd:string, rdf:langString, rdf:dirLangString]</code>,
                 with the <code>range_union</code> flag set to <code>true</code>. See below for more details.
             </td>
             <td>No</td>
