@@ -5,8 +5,12 @@ This list does not include all the tiny, e.g., editorial changes, only the chang
 ## Version 1.11.0
 
 - The `scope` key is added for a property, listing classes: the property is added as part of a scoped context for the class even if it is not part of the property's domain. This is especially useful for external terms. This feature is relevant for the generated context (if applicable). See https://github.com/w3c/yml2vocab/issues/57.
-- If a term sets the `context` property to `none`, then it will not be added to the generated context (if applicable).
+- If a term sets the `context` property to `none`, then it will not be added to the generated context (if applicable). (That was a bug)
 - A new, optional `@protected` key is added to the `json_ld` block on whether the generated context and scoped context should include a `"@protected":true`. Default is `true`.
+- The subclasses are also displayed, to allow for a better navigation among classes. See https://github.com/w3c/yml2vocab/pull/60.
+- A `meta` has been added to the template to display a button on an example, linking to a json-ld playground with the content. See https://github.com/w3c/yml2vocab/pull/60.
+- A `meta` has been added to the template, to control whether individuals are re-grouped in subsections referring to the types of the individuals. See https://github.com/w3c/yml2vocab/pull/60.
+- The property range term `localizableString` has been added as a shorthand for `[xsd:string, rdf:langString, rdf:dirLangString]` with `range_union` set to `true`.
 
 ## Version 1.10.4
 

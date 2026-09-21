@@ -420,6 +420,18 @@ class:
       label: An example Class5
       one_of: [ex:Individual_1, ex:Individual_2, …,ex:Individual_n]
       comment: The class consists of the listed individuals.
+
+    - id: Class6
+      label: An example Class6
+      comment: just to show how an example can be added to the definition
+      example:
+        - label: An example usage of Class6
+          json: |
+            {
+              "@context": "https://context-for-class6-example.org",
+              "id": "urn:12345",
+              "@type": "Class6"
+            }
 ```
 
 
@@ -479,12 +491,15 @@ class:
         </tr>
         <tr>
             <td><code>range</code></td>
-            <td>One or more terms or CURIES or the single <code>URL</code> term</td>
+            <td>One or more terms or CURIES or the single <code>URL</code> or <code>localizableString</code> term</td>
             <td>
-                The RDF domain statements of the property. If the <code >URL</code> (alternatively: <code >IRI</code>) term is used, the block
+                The RDF range statements of the property. <br>
+                If the <code >URL</code> (alternatively: <code >IRI</code>) term is used, the block
                 defines a property that has no explicit range type, but whose objects are expected to be IRI references. The generated vocabularies
                 annotate these properties as belonging to the <code >owl:ObjectProperty</code> class, which is the reserved term for properties
-                whose objects are not supposed to be literals. A corresponding comment is also generated into the HTML description of the term.
+                whose objects are not supposed to be literals. A corresponding comment is also generated into the HTML description of the term.<br>
+                The single term <code>localizableString</code> is a shorthand for setting the range to the array <code>[xsd:string, rdf:langString, rdf:dirLangString]</code>,
+                with the <code>range_union</code> flag set to <code>true</code>. See below for more details.
             </td>
             <td>No</td>
         </tr>
@@ -851,6 +866,8 @@ const vocabGeneration = new yml2vocab.VocabGeneration(yml_content);
 const turtle: string  = vocabGeneration.getTurtle();
 // returns the JSON-LD content as a string
 const jsonld: string  = vocabGeneration.getJSONLD();
+// returns the YAML-LD content as a string
+const yamlld: string  = vocabGeneration.getYAMLLD();
 // returns the HTML content as a string
 // The third argument specifies (as a boolean) whether a context file is also generated
 // (if yes, some extra explanatory notes may appear in the HTML output)
@@ -891,7 +908,7 @@ The [repository](https://github.com/yml2vocab) may also be cloned.
 
 - `Readme.md`: this file.
 - `package.json`: configuration file for `npm`.
-- `deno.json`: configuration file for `deno`
+- `deno.jsonc`: configuration file for `deno`
 - `example`: a folder with examples for vocabulary definition files and the generated RDF vocabulary files.
 - `lib` directory: the TypeScript modules for the script.
 - `dist` directory: the Javascript distribution files (compiled from the TypeScript sources using `tsc` in `node.js`)
@@ -907,9 +924,9 @@ The following files and directories are generated/modified by either the script 
 
 # 4. Acknowledgement
 
-I got inspired by the structure and Ruby script  that was created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript, and developed further since by adding new features based on usage.
+I got inspired by the structure and Ruby script created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript, and developed further since by adding new features based on practical usage.
 
-Many features are the result of further discussions with Many Sporny, Benjamin Young, and Pierre-Antoine Champin.
+Many features are the result of further discussions and submitted code with [Many Sporny](https://github.com/msporny), [Benjamin Young](https://github.com/BigBlueHat), [Pierre-Antoine Champin](https://github.com/pchampin), [Dave Longley](https://github.com/dlongley), and [Ronald Koenig](https://github.com/rkxx).
 
 I dedicate this script to the memory of Gregg. R.I.P.
 
