@@ -295,6 +295,9 @@ const vocabSchema = `{
                 },
                 "context": {
                     "$ref": "#/$defs/Context"
+                },
+                "html_class": {
+                    "$ref" : "#/$defs/StringOrArrayOfStrings"
                 }
             },
             "required": [

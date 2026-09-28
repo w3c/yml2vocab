@@ -53,7 +53,6 @@ Each block sequence consists of blocks with a number of keys, depending on the s
 
 Constants for the vocabulary being defined. ***This block is required***.
 
-
 <table>
     <thead>
         <tr>
@@ -365,6 +364,16 @@ These keys are common to all term definitions, although their exact interpretati
             </td>
             <td>No</td>
         </tr>
+        <tr>
+            <td><code>html_class</code></td>
+            <td>One or more strings</td>
+            <td>
+                Refers to HTML classes. The value will be set, in the HTML version of the vocabulary, to the <code>class</code> attribute of
+                the <code>section</code> element that contains the term description. Can be used for CSS styling or manipulation by Javascript.
+            </td>
+            <td>No</td>
+        </tr>
+
     </tbody>
 </table>
 
@@ -629,7 +638,7 @@ individual:
             <td><code>pattern</code></td>
             <td>string</td>
             <td>An <a href="https://www.w3.org/TR/xmlschema-2/#regexs">XML Schema regular expression</a>, used to restrict an <code>xsd:string</code> type literal. Note that, while this restriction
-            become part of the generated vocabulary, not all  RDF/OWL reasoners are capable of processing it.</td>
+            becomes part of the generated vocabulary, not all  RDF/OWL reasoners are capable of processing it.</td>
             <td>No</td>
         </tr>
        <tr>

@@ -226,6 +226,7 @@ export interface RawVocabEntry {
     one_of           ?: string[];
     open_enumeration ?: boolean;
     pattern          ?: string;
+    html_class       ?: string[];
 }
 
 /**
@@ -327,6 +328,8 @@ export interface RDFTerm {
     prefix      : string;
     /** The ID used in the HTML listing. It is, usually, the same as the id, except for an external term */
     html_id     : string;
+    /** A class used for the subsection of a specific term in the HTML version */
+    html_class  : string[];
     /** The curie of the term. Used this way, for example, in turtle */
     curie       : string;
     /** The full URL of the term */

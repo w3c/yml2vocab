@@ -2,6 +2,10 @@
 
 This list does not include all the tiny, e.g., editorial changes, only the changes in the features and more important bug issues.
 
+## Version 1.12.0
+
+- Introduced the `html_class` feature. See readme for details.
+
 ## Version 1.11.0
 
 - The `scope` key is added for a property, listing classes: the property is added as part of a scoped context for the class even if it is not part of the property's domain. This is especially useful for external terms. This feature is relevant for the generated context (if applicable). See https://github.com/w3c/yml2vocab/issues/57.
