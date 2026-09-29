@@ -785,6 +785,17 @@ export function getData(vocab_source: string): Vocab {
                 throw (new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`));
             }
 
+            const top_scope: boolean = (():boolean => {
+                if (raw.scope === undefined) {
+                    return false;
+                } else if (raw.scope.includes("vocab")) {
+                    raw.scope = [...raw.scope].filter((item) => item !== "vocab");
+                    return true;
+                } else {
+                    return false;
+                }
+            })()
+
             Object.assign(output, {
                 type             : types.map(t => factory.term(t)),
                 html_class       : raw.html_class,
@@ -802,6 +813,7 @@ export function getData(vocab_source: string): Vocab {
                 open_enumeration : raw.open_enumeration ?? false,
                 domain           : raw.domain?.map(val => factory.class(val)),
                 scope            : raw.scope?.map(val => factory.class(val)),
+                top_scope        : top_scope,
                 example          : raw.example,
                 known_as         : raw.known_as,
                 dataset          : dataset,

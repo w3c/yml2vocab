@@ -141,7 +141,7 @@ export function toContext(vocab: Vocab): string {
         }
     })();
 
-    const top_level: Context = { ...preamble, ...global.aliases, ...set_vocab };
+    const top_level: Context = { ...preamble, ...global.aliases };
 
     // Set of properties that are "handled" as parts of embedded contexts of classes.
     // This is used to avoid repeating the properties at the top level
@@ -159,9 +159,19 @@ export function toContext(vocab: Vocab): string {
 
         // Create an embedded context for the class
         // starting with the preamble and the final URL for the class
-        const embedded: Context = {
-            ...preamble,
-        };
+        const embedded: Context = ((): Context => {
+            if(global.protected === undefined || global.protected === true) {
+                return {
+                    ...preamble,
+                    ...global.aliases
+                }
+            } else {
+                return {
+                    ...preamble
+                }
+            }
+        })();
+
 
         // Get all the properties that have this class in its domain or scope
         const addProperty = (prop: RDFProperty): void => {
@@ -197,8 +207,9 @@ export function toContext(vocab: Vocab): string {
     for (const prop of vocab.properties) {
         // this term was specifically flagged not to be added to a context
         if( prop.context.length === 0) continue;
-        if (!class_properties.has(prop.id)) {
-            top_level[prop.known_as ?? prop.id] = propertyContext(prop, false);
+
+        if (prop.top_scope === true || !class_properties.has(prop.id)) {
+            top_level[prop.known_as ?? prop.id] = propertyContext(prop/*, false*/);
         }
     }
 
@@ -220,11 +231,11 @@ export function toContext(vocab: Vocab): string {
     // contexts or not
     const final_context = ((): unknown => {
         if (global.import.length === 0) {
-            return top_level
+            return {...top_level, ...set_vocab}
         } else {
             return [
                 ...global.import,
-                top_level
+                {...top_level, ...set_vocab}
             ]
         }
     })();

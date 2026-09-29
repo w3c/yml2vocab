@@ -494,7 +494,9 @@ class:
             <td>
                 When generating a JSON-LD <code>@context</code>, the property will appear in the <a href="https://www.w3.org/TR/json-ld/#scoped-contexts">scoped context</a> of each of the classes in the list.
                 This effect is identical, in this respect, to <code>domain</code> setting, but it does not affect the formal RDF vocabularies. <br/>This feature is especially important when using external property terms,
-                which should not use <code>domain</code> setting to avoid <a href="https://aidanhogan.com/docs/saor_billiontc08.pdf">ontology hijacking</a>.
+                which should not use <code>domain</code> setting to avoid <a href="https://aidanhogan.com/docs/saor_billiontc08.pdf">ontology hijacking</a>.<br/>
+                The <code>vocab</code> term should also be used in place of a class reference; the effect is that the term will <em>also</em> appear on the top level
+                scope of the <code>@context</code>, and not only in the scoped contexts.
             </td>
             <td>No</td>
         </tr>

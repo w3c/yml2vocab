@@ -189,6 +189,8 @@ export class RDFTermFactory {
         const curie = createCurie(index);
         const extras = {
             subPropertyOf : [] as RDFProperty[],
+            scope         : [] as RDFClass[],
+            top_scope     : false,
             domain        : [] as RDFClass[],
             range         : [] as RDFTerm[],
             dataset       : false,

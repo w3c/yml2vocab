@@ -382,6 +382,7 @@ export interface RDFProperty extends RDFTerm {
     subPropertyOf    : RDFProperty[];
     domain           : RDFClass[];
     scope            : RDFClass[];
+    top_scope        : boolean;
     range            : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
     range_union      : boolean;
     one_of           : RDFIndividual[];
