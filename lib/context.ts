@@ -207,7 +207,6 @@ export function toContext(vocab: Vocab): string {
     for (const prop of vocab.properties) {
         // this term was specifically flagged not to be added to a context
         if( prop.context.length === 0) continue;
-
         if (prop.top_scope === true || !class_properties.has(prop.id)) {
             top_level[prop.known_as ?? prop.id] = propertyContext(prop/*, false*/);
         }
