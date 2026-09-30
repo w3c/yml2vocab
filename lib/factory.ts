@@ -188,14 +188,15 @@ export class RDFTermFactory {
     property(index: string): RDFProperty {
         const curie = createCurie(index);
         const extras = {
-            subPropertyOf : [] as RDFProperty[],
-            scope         : [] as RDFClass[],
-            top_scope     : false,
-            domain        : [] as RDFClass[],
-            range         : [] as RDFTerm[],
-            dataset       : false,
-            strongURL     : false,
-            term_type     : TermType.property,
+            subPropertyOf  : [] as RDFProperty[],
+            scope          : [] as RDFClass[],
+            top_scope      : false,
+            domain         : [] as RDFClass[],
+            range          : [] as RDFTerm[],
+            property_scope : undefined,
+            dataset        : false,
+            strongURL      : false,
+            term_type      : TermType.property,
         }
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);

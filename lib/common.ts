@@ -210,6 +210,7 @@ export interface RawVocabEntry {
     upper_union      ?: boolean;
     domain           ?: string[];
     scope            ?: string[];
+    property_scope   ?: string;
     range            ?: string[];
     range_union      ?: boolean;
     deprecated       ?: boolean;
@@ -382,6 +383,7 @@ export interface RDFProperty extends RDFTerm {
     subPropertyOf    : RDFProperty[];
     domain           : RDFClass[];
     scope            : RDFClass[];
+    property_scope  ?: RDFClass;
     top_scope        : boolean;
     range            : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
     range_union      : boolean;
