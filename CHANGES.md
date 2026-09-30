@@ -6,6 +6,7 @@ This list does not include all the tiny, e.g., editorial changes, only the chang
 
 - Introduced the `html_class` feature. See readme for details.
 - Allow a `vocab` value in lieu of a class name for the `scope`. This means the term is put on the top level context, too, even if it appears in scope context(s)
+- introduced the `property_scope` feature, to generate property scoped contexts.
 
 ## Version 1.11.0
 

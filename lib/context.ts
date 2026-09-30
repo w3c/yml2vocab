@@ -49,13 +49,20 @@ export function toContext(vocab: Vocab): string {
 
         let output: Context | string = {}
 
+        // There is a major branch here depending on whether the property should create its own
+        // property scope context, or whether it should simple be defined within its own
+        // class context.
+
         if (property.property_scope !== undefined && RDFTermFactory.isClass(property.property_scope)) {
             const property_scoped_context = classContext(property.property_scope);
+            // A minor hack: the classContext method adds the id of the class to the context,
+            // which is not what is needed in a property scoped context. This
+            // should be overwritten. A bit hacky but, oh well...
             if (typeof property_scoped_context === "string") {
+                // the incoming string is the class id, should be ignored
                 output = { "@id" : url }
             } else {
                 property_scoped_context["@id"] = url;
-                // The value of the id belongs to the property scoped class; this is not what we want!
                 output = property_scoped_context
             }
         } else {
@@ -245,6 +252,7 @@ export function toContext(vocab: Vocab): string {
 
     // the final shape of the context depends on whether there are imported
     // contexts or not
+    // An extra @vocab statement is added, if requested.
     const final_context = ((): unknown => {
         if (global.import.length === 0) {
             return { ...top_level, ...set_vocab };
