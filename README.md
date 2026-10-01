@@ -1,24 +1,28 @@
 
+
 - [1. Generate RDFS vocabulary files from YAML](#1-generate-rdfs-vocabulary-files-from-yaml)
   - [1.1. Introduction](#11-introduction)
   - [1.2. Definition of the vocabulary in the YAML file](#12-definition-of-the-vocabulary-in-the-yaml-file)
-    - [1.2.1. General Vocabulary blocks](#121-general-vocabulary-blocks)
-      - [1.2.1.1. Vocabulary Constants —`vocab` Block](#1211-vocabulary-constants-vocab-block)
-      - [1.2.1.2. CURIE Prefixes — `prefix` Block](#1212-curie-prefixes--prefix-block)
-      - [1.2.1.3. Vocabulary Metadata —`ontology` Block](#1213-vocabulary-metadata-ontology-block)
-      - [1.2.1.4. Generated JSON-LD context data — `json_ld` block](#1214-generated-json-ld-context-data--json_ld-block)
+    - [1.2.1. General vocabulary blocks](#121-general-vocabulary-blocks)
+      - [1.2.1.1. Vocabulary constants —`vocab` block](#1211-vocabulary-constants-vocab-block)
+      - [1.2.1.2. CURIE prefixes — `prefix` block](#1212-curie-prefixes--prefix-block)
+      - [1.2.1.3. Vocabulary metadata —`ontology` block](#1213-vocabulary-metadata-ontology-block)
     - [1.2.2. Ontology term blocks](#122-ontology-term-blocks)
-      - [1.2.2.1. Common Term Entries](#1221-common-term-entries)
-      - [1.2.2.2. Class definitions —`class` Block](#1222-class-definitions-class-block)
-      - [1.2.2.3. Property definitions — `property` Block](#1223-property-definitions--property-block)
-      - [1.2.2.4. Individual definitions —`individual` Block](#1224-individual-definitions-individual-block)
-      - [1.2.2.5. Datatype definitions — `datatype` Block](#1225-datatype-definitions--datatype-block)
-  - [1.3. Formatting the output](#13-formatting-the-output)
-    - [1.3.1. HTML Templating](#131-html-templating)
-      - [1.3.1.1. Styling the JSON-LD Playground button](#1311-styling-the-json-ld-playground-button)
+      - [1.2.2.1. Common term entries](#1221-common-term-entries)
+      - [1.2.2.2. Class definitions —`class` block](#1222-class-definitions-class-block)
+      - [1.2.2.3. Property definitions — `property` block](#1223-property-definitions--property-block)
+      - [1.2.2.4. Individual definitions —`individual` block](#1224-individual-definitions-individual-block)
+      - [1.2.2.5. Datatype definitions — `datatype` block](#1225-datatype-definitions--datatype-block)
+  - [1.3. Control for the generated `@context`](#13-control-for-the-generated-context)
+      - [1.3.1. General JSON-LD context data — `json_ld` block](#131-general-json-ld-context-data--json_ld-block)
+    - [1.3.2 Common term entries for the generated `@context`](#132-common-term-entries-for-the-generated-context)
+    - [1.3.3 Property definitions entries for the generated `@context`](#133-property-definitions-entries-for-the-generated-context)
+  - [1.4. Formatting the output](#14-formatting-the-output)
+    - [1.4.1. HTML templating](#141-html-templating)
+      - [1.4.1.1. Styling the JSON-LD playground button](#1411-styling-the-json-ld-playground-button)
 - [2. Installation and use](#2-installation-and-use)
   - [2.1. Running the script on a command line](#21-running-the-script-on-a-command-line)
-    - [2.1.1. NPM + Node.js](#211-npm--nodejs)
+    - [2.1.1. NPM + node.js](#211-npm--nodejs)
     - [2.1.2. Deno](#212-deno)
     - [2.1.3. Command line argument](#213-command-line-argument)
   - [2.2. Running from a Javascript/TypeScript program](#22-running-from-a-javascripttypescript-program)
@@ -27,7 +31,6 @@
 - [3. Cloning the repository](#3-cloning-the-repository)
   - [3.1. Content of the directory](#31-content-of-the-directory)
 - [4. Acknowledgement](#4-acknowledgement)
-
 
 
 # 1. Generate RDFS vocabulary files from YAML
@@ -235,16 +238,6 @@ These keys are common to all term definitions, although their exact interpretati
                 in the <code>prefix</code> top level block.
             </td>
             <td>Yes</td>
-        </tr>
-        <tr>
-            <td><code>known_as</code></td>
-            <td>term string</td>
-            <td>
-                A term can be used as an alias to the term's label in JSON-LD. It is used when generating a JSON-LD context file, as the name of
-                the property in the context file instead of the official label. This means that JSON-LD users, using that context file, must
-                refer to this alternative name in their code.
-            </td>
-            <td>No</td>
         </tr>
         <tr>
             <td><code>label</code></td>
@@ -605,12 +598,12 @@ The script is also able to generate a [`@context` file](https://www.w3.org/TR/js
             <td>No</td>
         </tr>
         <tr>
-            <td><code>set_vocab</code></td>
-            <td>boolean</td>
+            <td><code>known_as</code></td>
+            <td>term string</td>
             <td>
-                If the value is <code>true</code>, a <code>@vocab</code> key is added to the context, pointing at the
-                official URL for the vocabulary. This makes the vocabulary easily extensible in JSON-LD, although possibly
-                creating uncontrolled vocabulary terms on the fly, which may lead to security issues. Default value is <code>false</code>.
+                A term can be used as an alias to the term's label in JSON-LD. It is used when generating a JSON-LD context file as the name of
+                the property in the context file instead of the official label. This means that JSON-LD users, using that context file, must
+                refer to this alternative name in their data.
             </td>
             <td>No</td>
         </tr>
@@ -621,6 +614,16 @@ The script is also able to generate a [`@context` file](https://www.w3.org/TR/js
                 If the value is <code>true</code>, a <code>"@protected" : true</code> key is added to the context, as well as
                 all scoped contexts. This makes the context file safer when it is part of several context files referred to in a
                 JSON-LD file. Default value is <code>true</code>.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>set_vocab</code></td>
+            <td>boolean</td>
+            <td>
+                If the value is <code>true</code>, a <code>@vocab</code> key is added to the context, pointing at the
+                official URL for the vocabulary. This makes the vocabulary easily extensible in JSON-LD, although possibly
+                creating uncontrolled vocabulary terms on the fly, which may lead to security issues. Default value is <code>false</code>.
             </td>
             <td>No</td>
         </tr>
