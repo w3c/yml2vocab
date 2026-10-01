@@ -105,15 +105,15 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     /* *************************** Bunch of helper functions to be used in the code below */
 
     // Some entries are to be put into an array, even if there is only one item; this ensures a uniform handling.
-    const toArray = (val: undefined | string | string[]) : undefined | string[] => {
+    const toArray = (val: undefined | string | string[]): undefined | string[] => {
         if (val === undefined) {
-            return undefined
+            return undefined;
         } else if (val.length === 0) {
-            return []
-        } else if ( typeof val === "string") {
-            return [val]
+            return [];
+        } else if (typeof val === "string") {
+            return [val];
         } else {
-            return val
+            return val;
         }
     };
 
@@ -133,53 +133,57 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     };
 
     // The "toSeeAlso" structure needs some special treatment and should also be turned into an array
-    const toSeeAlso = (val: undefined | Link | Link[]) : undefined | Link[] => {
+    const toSeeAlso = (val: undefined | Link | Link[]): undefined | Link[] => {
         if (val === undefined) {
-            return undefined
+            return undefined;
         } else if (Array.isArray(val) && val.length === 0) {
-            return undefined
+            return undefined;
         } else {
             if (Array.isArray(val)) {
                 return val as Link[];
             } else {
-                return [{
-                    label : val.label,
-                    url   : val.url
-                }]
+                return [
+                    {
+                        label: val.label,
+                        url: val.url,
+                    },
+                ];
             }
         }
-    }
+    };
 
     // The "toExample" structure needs some special treatment and should also be turned into an array
-    const toExample = (val: undefined | Example | Example[]) : undefined | Example[] => {
+    const toExample = (val: undefined | Example | Example[]): undefined | Example[] => {
         if (val === undefined) {
-            return undefined
+            return undefined;
         } else if (Array.isArray(val) && val.length === 0) {
-            return undefined
+            return undefined;
         } else {
             if (Array.isArray(val)) {
                 return val as Example[];
             } else {
-                return [{
-                    label : val.label,
-                    json  : val.json
-                }]
+                return [
+                    {
+                        label: val.label,
+                        json: val.json,
+                    },
+                ];
             }
         }
-    }
+    };
 
     // In some cases the YAML parser puts an extra `\n` character at the end of the comment line;
     // this is removed
     const cleanComment = (val: string): string => {
-        let final = val.endsWith('\n') ? val.slice(0,-1) : val;
+        let final = val.endsWith("\n") ? val.slice(0, -1) : val;
         if (final.endsWith('"') && final.startsWith('"')) {
-            final = final.slice(1,-1);
+            final = final.slice(1, -1);
         }
         if (final.endsWith("'") && final.startsWith("'")) {
-            final = final.slice(1,-1)
+            final = final.slice(1, -1);
         }
         return final;
-    }
+    };
 
     /* ********************** Bunch of constant calculations to be used in the code below **********/
 
@@ -187,27 +191,27 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     // but this makes the interpretation of the value(s) in the vocabulary a bit awkward. Later version
     // may remove the deprecated flag from existing vocabularies, i.e., switch to status altogether,
     // and all this will go away.
-    const {status, deprecated} = ((): {status: Status, deprecated: boolean} => {
+    const { status, deprecated } = ((): { status: Status; deprecated: boolean } => {
         if (raw.status !== undefined) {
             return {
-                status     : raw.status,
-                deprecated : raw.status === Status.deprecated
-            }
+                status: raw.status,
+                deprecated: raw.status === Status.deprecated,
+            };
         } else if (raw.deprecated != undefined) {
             return {
-                status     : raw.deprecated ? Status.deprecated : Status.reserved,
-                deprecated : raw.deprecated
-            }
+                status: raw.deprecated ? Status.deprecated : Status.reserved,
+                deprecated: raw.deprecated,
+            };
         } else {
             return {
-                status     : Status.stable,
-                deprecated : false
-            }
+                status: Status.stable,
+                deprecated: false,
+            };
         }
     })();
 
     // The official label should all be lower case.
-    const label = ((str: string|undefined): string => {
+    const label = ((str: string | undefined): string => {
         if (str) {
             return str;
         } else if (raw.id && raw.id.length > 0) {
@@ -221,32 +225,34 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
     /* ***************************** Do the real cleanup *****************************/
 
     return {
-        id               : (raw.id) ? raw.id : "",
-        property         : raw.property,
-        value            : raw.value,
-        label            : label,
-        upper_value      : toArray(raw.upper_value) as undefined | string[],
-        upper_union      : raw.upper_union ?? false,
-        type             : toArray(raw.type) as undefined | string[],
-        domain           : toArray(raw.domain) as undefined | string[],
-        scope            : toArray(raw.scope) as undefined | string[],
-        range            : toArray(raw.range) as undefined | string[],
-        range_union      : raw.range_union ?? false,
-        deprecated       : deprecated,
-        defined_by       : toArray(raw.defined_by) ?? [],
-        status           : status,
-        external         : raw.external,
-        comment          : (raw.comment) ? cleanComment(raw.comment) : "",
-        see_also         : toSeeAlso(raw.see_also),
-        example          : toExample(raw.example),
-        known_as         : raw.known_as,
-        dataset          : raw.dataset ?? false,
-        container        : raw.container,
-        context          : toArrayContexts(raw.context),
-        pattern          : raw.pattern,
-        one_of           : toArray(raw.one_of) as undefined | string[],
-        open_enumeration : raw.open_enumeration ?? false,
-    }
+        id:                 raw.id ? raw.id : "",
+        property:           raw.property,
+        value:              raw.value,
+        label:              label,
+        upper_value:        toArray(raw.upper_value) as undefined | string[],
+        upper_union:        raw.upper_union ?? false,
+        type:               toArray(raw.type) as undefined | string[],
+        html_class:         toArray(raw.html_class) as undefined | string[],
+        domain:             toArray(raw.domain) as undefined | string[],
+        scope:              toArray(raw.scope) as undefined | string[],
+        property_scope:     raw.property_scope,
+        range:              toArray(raw.range) as undefined | string[],
+        range_union:        raw.range_union ?? false,
+        deprecated:         deprecated,
+        defined_by:         toArray(raw.defined_by) ?? [],
+        status:             status,
+        external:           raw.external,
+        comment:            raw.comment ? cleanComment(raw.comment) : "",
+        see_also:           toSeeAlso(raw.see_also),
+        example:            toExample(raw.example),
+        known_as:           raw.known_as,
+        dataset:            raw.dataset ?? false,
+        container:          raw.container,
+        context:            toArrayContexts(raw.context),
+        pattern:            raw.pattern,
+        one_of:             toArray(raw.one_of) as undefined | string[],
+        open_enumeration:   raw.open_enumeration ?? false,
+    };
 }
 
 
@@ -591,6 +597,7 @@ export function getData(vocab_source: string): Vocab {
                 defined_by        : raw.defined_by,
                 status            : raw.status,
                 type              : type,
+                html_class        : raw.html_class,
                 subClassOf        : type,
                 upper_union       : raw.upper_union,
                 see_also          : raw.see_also,
@@ -634,6 +641,7 @@ export function getData(vocab_source: string): Vocab {
 
             Object.assign(output, {
                 type                  : [...new Set(types)].map(t => factory.term(t)),
+                html_class            : raw.html_class,
                 user_type             : user_type.map(t => factory.term(t)),
                 label                 : raw.label,
                 comment               : raw.comment,
@@ -709,6 +717,7 @@ export function getData(vocab_source: string): Vocab {
                 const classTypes: string[] = (raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
                 Object.assign(rangeClass, {
                     type                  : classTypes.map(t => factory.term(t)),
+                    html_class            : raw.html_class,
                     user_type             : [],
                     label                 : `${raw.label} range`,
                     comment               : `The range of possible values for the <code>${output.curie}</code> property. This is an open enumeration: values beyond those specified in this vocabulary may also be valid.`,
@@ -777,8 +786,20 @@ export function getData(vocab_source: string): Vocab {
                 throw (new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`));
             }
 
+            const top_scope: boolean = (():boolean => {
+                if (raw.scope === undefined) {
+                    return false;
+                } else if (raw.scope.includes("vocab")) {
+                    raw.scope = [...raw.scope].filter((item) => item !== "vocab");
+                    return true;
+                } else {
+                    return false;
+                }
+            })()
+
             Object.assign(output, {
                 type             : types.map(t => factory.term(t)),
+                html_class       : raw.html_class,
                 user_type        : user_type.map(t => factory.term(t)),
                 label            : raw.label,
                 comment          : raw.comment,
@@ -793,6 +814,8 @@ export function getData(vocab_source: string): Vocab {
                 open_enumeration : raw.open_enumeration ?? false,
                 domain           : raw.domain?.map(val => factory.class(val)),
                 scope            : raw.scope?.map(val => factory.class(val)),
+                property_scope   : raw.property_scope === undefined ? undefined : factory.class(raw.property_scope),
+                top_scope        : top_scope,
                 example          : raw.example,
                 known_as         : raw.known_as,
                 dataset          : dataset,
@@ -828,6 +851,7 @@ export function getData(vocab_source: string): Vocab {
                 defined_by : raw.defined_by,
                 status     : raw.status,
                 type       : [...new Set(type)].map(t => factory.term(t)),
+                html_class : raw.html_class,
                 see_also   : raw.see_also,
                 example    : raw.example,
                 known_as   : raw.known_as,

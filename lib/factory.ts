@@ -87,6 +87,7 @@ export class RDFTermFactory {
                 id:         curie,
                 prefix:     "",
                 html_id:    computeHash(curie),
+                html_class: [],
                 curie:      curie,
                 url:        curie,
                 type:       [],
@@ -125,6 +126,7 @@ export class RDFTermFactory {
                 id:         reference,
                 prefix:     prefix,
                 html_id:    outsider ? computeHash(curie) : reference,
+                html_class: [],
                 curie:      curie,
                 // curie:   `${prefix}:${reference}`,
                 url:        `${baseUrl}${reference}`,
@@ -186,12 +188,15 @@ export class RDFTermFactory {
     property(index: string): RDFProperty {
         const curie = createCurie(index);
         const extras = {
-            subPropertyOf : [] as RDFProperty[],
-            domain        : [] as RDFClass[],
-            range         : [] as RDFTerm[],
-            dataset       : false,
-            strongURL     : false,
-            term_type     : TermType.property,
+            subPropertyOf  : [] as RDFProperty[],
+            scope          : [] as RDFClass[],
+            top_scope      : false,
+            domain         : [] as RDFClass[],
+            range          : [] as RDFTerm[],
+            property_scope : undefined,
+            dataset        : false,
+            strongURL      : false,
+            term_type      : TermType.property,
         }
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);

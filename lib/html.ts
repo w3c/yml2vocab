@@ -214,6 +214,10 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                 document.addChild(dd, 'br');
             }
         }
+
+        if (item.html_class && item.html_class.length > 0) {
+            section.setAttribute("class", item.html_class.join(" "));
+        }
     }
 
     /*********************************** Settings taken from the template ***************************/

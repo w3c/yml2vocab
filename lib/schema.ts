@@ -175,6 +175,9 @@ const vocabSchema = `{
                             "scope": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
+                            "property_scope" : {
+                                "type": "string"
+                            },
                             "range": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
@@ -295,6 +298,9 @@ const vocabSchema = `{
                 },
                 "context": {
                     "$ref": "#/$defs/Context"
+                },
+                "html_class": {
+                    "$ref" : "#/$defs/StringOrArrayOfStrings"
                 }
             },
             "required": [
