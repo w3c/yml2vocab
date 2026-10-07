@@ -52,7 +52,6 @@ export function toContext(vocab: Vocab): string {
         // There is a major branch here depending on whether the property should create its own
         // property scope context, or whether it should simple be defined within its own
         // class context.
-
         if (property.property_scope !== undefined && RDFTermFactory.isClass(property.property_scope)) {
             const property_scoped_context = classContext(property.property_scope);
             // A minor hack: the classContext method adds the id of the class to the context,
@@ -62,8 +61,11 @@ export function toContext(vocab: Vocab): string {
                 // the incoming string is the class id, should be ignored
                 output = { "@id" : url }
             } else {
+                if (property.type_vocab) {
+                    property_scoped_context["@type"] = "@vocab";
+                }
                 property_scoped_context["@id"] = url;
-                output = property_scoped_context
+                output = property_scoped_context;
             }
         } else {
             output = { "@id" : url };
@@ -90,9 +92,7 @@ export function toContext(vocab: Vocab): string {
                         } else if (curie === "rdf:JSON") {
                             output["@type"] = "@json";
                             break;
-                        } else if (
-                            ["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString", "rdf:dirLangString"].includes(curie)
-                        ) {
+                        } else if (["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString", "rdf:dirLangString"].includes(curie)) {
                             output["@type"] = rangeTerm.url;
                             break;
                         } else if (RDFTermFactory.includesCurie(property.type, "owl:DatatypeProperty")) {
@@ -108,6 +108,10 @@ export function toContext(vocab: Vocab): string {
                             }
                         }
                     }
+                }
+
+                if (property.type_vocab) {
+                    output["@type"] = "@vocab";
                 }
 
                 // There is a special treatment to generate additional statements

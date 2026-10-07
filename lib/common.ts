@@ -394,6 +394,7 @@ export interface RDFProperty extends RDFTerm {
     open_enumeration : boolean; // Whether the one_of values are a closed or open enumeration
     dataset          : boolean;
     container        : Container | undefined;
+    type_vocab       : boolean;    // Whether, in the generated context, the type of the term should be @vocab
     strongURL        : boolean;    // Whether the property object should be required to be a real URL
     langString       : boolean;    // Whether the property gets the artificial range type langString
 }

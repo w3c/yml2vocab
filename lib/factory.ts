@@ -196,6 +196,7 @@ export class RDFTermFactory {
             property_scope : undefined,
             context_null   : false,
             dataset        : false,
+            type_vocab     : false,
             strongURL      : false,
             term_type      : TermType.property,
         }

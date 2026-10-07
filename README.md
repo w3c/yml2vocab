@@ -723,6 +723,15 @@ json_ld:
             <td>No</td>
         </tr>
         <tr>
+            <td><code>range</code></td>
+            <td><code>vocab</code></td>
+            <td>
+                The general <code>range</code> array (see the [property table](#1223-property-definitions--property-block)) may also include the <code>vocab</code> value. That value is
+                ignored by the RDFS range definition; however, if a context is created, the type of the property is set via the <code>"@type":"@vocab"</code> statement.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
             <td><code>scope</code></td>
             <td>One or more terms or CURIEs</td>
             <td>

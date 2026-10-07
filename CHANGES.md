@@ -9,6 +9,7 @@ This list does not include all the tiny, e.g., editorial changes, only the chang
 - Allow a `vocab` value in lieu of a class name for the `scope`. This means the term is put on the top level context, too, even if it appears in scope context(s).
 - Introduced the `property_scope` feature, to generate property scoped contexts.
 - Introduced the `context_null` feature for properties, to clear inherited contexts.
+- A `vocab` value in the property range, while ignored for RDFS, generates `"@type":"@vocab"`.
 
 ## Version 1.11.0
 

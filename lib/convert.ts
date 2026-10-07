@@ -369,11 +369,12 @@ export function getData(vocab_source: string): Vocab {
     //
     // The function also sets the possible values of a (pure) datatype or object property as extra types
     // to be added to the enclosing property
-    const get_ranges = (factory: RDFTermFactory, raw: RawVocabEntry, id: string): { extra_types: string[], range: RDFTerm[], strongURL: boolean, langString: boolean } => {
+    const get_ranges = (factory: RDFTermFactory, raw: RawVocabEntry, id: string): { extra_types: string[], range: RDFTerm[], strongURL: boolean, langString: boolean, typeVocab: boolean } => {
         let extra_types: string[] = [];
         const range: RDFTerm[]    = [];
         let strongURL: boolean    = false;
         let langString: boolean   = false;
+        let typeVocab: boolean   = false;
 
         if (raw.range && raw.range.length > 0) {
             if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
@@ -385,6 +386,8 @@ export function getData(vocab_source: string): Vocab {
                 for (const term of ["rdf:langString", "rdf:dirLangString", "xsd:string"]) {
                     range.push(factory.term(term))
                 }
+            } else if (raw.range.length === 1 && raw.range[0] === "vocab") {
+                typeVocab = true;
             } else if (raw.range.includes("rdf:langString") || raw.range.includes("rdf:dirLangString")) {
                 langString = true;
                 if (raw.range.length > 1 && raw.range_union === false) {
@@ -400,11 +403,9 @@ export function getData(vocab_source: string): Vocab {
                 }
             } else {
                 for (const rg of raw.range) {
-                    if (
-                        rg.startsWith("xsd") === true ||
-                        EXTRA_DATATYPES.find((entry) => entry === rg) !==
-                            undefined
-                    ) {
+                    if (rg === "vocab") {
+                        typeVocab = true;
+                    } else if (rg.startsWith("xsd") === true || EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
                         // The datatype is a simple one, not a class; a term nevertheless, to make it uniform
                         extra_types.push("owl:DatatypeProperty");
                         range.push(factory.term(rg));
@@ -441,13 +442,12 @@ export function getData(vocab_source: string): Vocab {
             extra_types.push("owl:ObjectProperty");
         }
 
-
         extra_types = [ ...new Set(extra_types) ];  // remove duplicates
         // In fact, the length of the types must be 0 or 1, otherwise, it is a general property that can have any range
         if (extra_types.length > 1) {
             extra_types = [];
         };
-        return { extra_types, range, strongURL, langString }
+        return { extra_types, range, strongURL, langString, typeVocab }
     }
 
     // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
@@ -692,7 +692,7 @@ export function getData(vocab_source: string): Vocab {
             global.status_counter.add(raw.status ? raw.status : Status.stable);
 
             // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
-            const { extra_types, range, strongURL, langString } = get_ranges(factory, raw, output.id);
+            const { extra_types, range, strongURL, langString, typeVocab } = get_ranges(factory, raw, output.id);
 
             // Handling of `open_enumeration`: instead of the `one_of` values ending up in an
             // anonymous `owl:oneOf` class (see `multiRange` in the turtle/jsonld modules), a fresh,
@@ -827,6 +827,7 @@ export function getData(vocab_source: string): Vocab {
                 example          : raw.example,
                 known_as         : raw.known_as,
                 dataset          : dataset,
+                type_vocab       : typeVocab,
                 container        : container,
                 strongURL        : strongURL,
                 langString       : langString,
