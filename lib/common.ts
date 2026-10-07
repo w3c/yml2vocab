@@ -188,9 +188,10 @@ export interface Example {
  */
 
 export enum Container {
-    list  = "list",
-    set   = "set",
-    graph = "graph",
+    list     = "list",
+    set      = "set",
+    graph    = "graph",
+    language = "language"
 }
 
 

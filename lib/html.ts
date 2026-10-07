@@ -702,6 +702,11 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
 
                     }
 
+                    if (item.container === Container.language) {
+                        const p = document.addChild(pr_section, "p");
+                        p.innerHTML = 'In a JSON-LD representation, values to this property are supposed to form a <a href="https://www.w3.org/TR/json-ld11/#dfn-language-map">language map</a>.';
+                    }
+
                     if (item.dataset) {
                         const p = document.addChild(pr_section, 'p');
                         p.innerHTML = 'The object(s) of this property represent <a href="https://www.w3.org/TR/rdf11-concepts/#section-rdf-graph">RDF Graphs</a>.';

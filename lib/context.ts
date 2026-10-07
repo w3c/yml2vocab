@@ -70,10 +70,10 @@ export function toContext(vocab: Vocab): string {
             if (forClass && RDFTermFactory.includesCurie(property.type, "owl:ObjectProperty")) {
                 output["@type"] = "@id";
             }
-            // If the property is explicitly set to be a natural language string,
-            // then no typing should happen, because those would invalidate the
+            // If the property is explicitly set to be a natural language string or a
+            // language map, then no typing should happen, because those would invalidate the
             // language/direction settings.
-            if (property.langString === false) {
+            if (property.langString === false && property.container !== Container.language) {
                 // Try to catch the datatype settings; these can be used
                 // to set these in the context as well
                 if (property.range) {
@@ -127,6 +127,10 @@ export function toContext(vocab: Vocab): string {
                     output["@type"] = "@id";
                 } else if (property.container !== undefined) {
                     output["@container"] = `@${property.container}`;
+                }
+            } else {
+                if (property.container === Container.language) {
+                    output["@container"] = "@language"
                 }
             }
         }

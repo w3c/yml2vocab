@@ -682,11 +682,13 @@ json_ld:
     <tbody>
        <tr>
             <td><code>container</code></td>
-            <td><code>set</code> or <code>list</code></td>
+            <td><code>set</code>, <code>list</code>, or <code>language</code></td>
             <td>
                 If set to one of these values, the entry for the property in the generated JSON-LD <code>@context</code> includes the <code>@container</code>
-                keyword, set to <code>@set</code> or <code >@list</code>, respectively. In both cases a warning message is also included in the generated HTML
-                text whereby, when using JSON-LD data with this vocabulary, the value for the property is expected to be an array even if there is only one.
+                keyword, set to <code>@set</code>, <code >@list</code>, or <code>@language</code>, respectively. In all cases a warning message is also included in the generated HTML
+                text whereby, when using JSON-LD data with this vocabulary, the value for the property is expected to be an array even if there is only one
+                (for the <code>@set</code> and <code >@list</code> cases) or that the property values are supposed to form
+                a <a href="https://www.w3.org/TR/json-ld11/#dfn-language-map">language map</a>.
                 <br>For the particular case of a <code >list</code> value, the range of the property is set to be an <code>rdf:List</code>.
                 <br>The value <code >graph</code> is also accepted for the key, as an alternative to the <code>dataset</code> key.
             </td>

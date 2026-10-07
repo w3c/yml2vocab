@@ -195,7 +195,7 @@ const vocabSchema = `{
                             },
                             "container": {
                                 "type" : "string",
-                                "enum" : ["set", "list", "graph"]
+                                "enum" : ["set", "list", "graph", "language"]
                             }
                         }
                     }
