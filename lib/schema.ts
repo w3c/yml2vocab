@@ -175,6 +175,12 @@ const vocabSchema = `{
                             "scope": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
+                            "property_scope" : {
+                                "type": "string"
+                            },
+                            "context_null" : {
+                                "type" : "boolean"
+                            },
                             "range": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },
@@ -192,7 +198,7 @@ const vocabSchema = `{
                             },
                             "container": {
                                 "type" : "string",
-                                "enum" : ["set", "list", "graph"]
+                                "enum" : ["set", "list", "graph", "language"]
                             }
                         }
                     }
@@ -295,6 +301,9 @@ const vocabSchema = `{
                 },
                 "context": {
                     "$ref": "#/$defs/Context"
+                },
+                "html_class": {
+                    "$ref" : "#/$defs/StringOrArrayOfStrings"
                 }
             },
             "required": [

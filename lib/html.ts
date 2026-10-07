@@ -214,6 +214,10 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
                 document.addChild(dd, 'br');
             }
         }
+
+        if (item.html_class && item.html_class.length > 0) {
+            section.setAttribute("class", item.html_class.join(" "));
+        }
     }
 
     /*********************************** Settings taken from the template ***************************/
@@ -696,6 +700,11 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
 
                         }
 
+                    }
+
+                    if (item.container === Container.language) {
+                        const p = document.addChild(pr_section, "p");
+                        p.innerHTML = 'In a JSON-LD representation, values to this property are supposed to form a <a href="https://www.w3.org/TR/json-ld11/#dfn-language-map">language map</a>.';
                     }
 
                     if (item.dataset) {

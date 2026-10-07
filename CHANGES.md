@@ -2,6 +2,15 @@
 
 This list does not include all the tiny, e.g., editorial changes, only the changes in the features and more important bug issues.
 
+## Version 1.12.0
+
+- Introduced the `html_class` feature. See readme for details.
+- The value of `container` can also be `language`, to denote a [language map](https://www.w3.org/TR/json-ld11/#dfn-language-map).
+- Allow a `vocab` value in lieu of a class name for the `scope`. This means the term is put on the top level context, too, even if it appears in scope context(s).
+- Introduced the `property_scope` feature, to generate property scoped contexts.
+- Introduced the `context_null` feature for properties, to clear inherited contexts.
+- A `vocab` value in the property range, while ignored for RDFS, generates `"@type":"@vocab"`.
+
 ## Version 1.11.0
 
 - The `scope` key is added for a property, listing classes: the property is added as part of a scoped context for the class even if it is not part of the property's domain. This is especially useful for external terms. This feature is relevant for the generated context (if applicable). See https://github.com/w3c/yml2vocab/issues/57.
