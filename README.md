@@ -425,7 +425,7 @@ class:
             <td>boolean</td>
             <td>
                 If several range classes are specified then, by default, this means the <em>intersection</em> (or logical <em>conjunction</em>) of the classes.
-                If the value is <code>true</code>, the statement refers to the <em>union</em> (or logical <em>disjunction</em>) of the classes.
+                If this value is <code>true</code>, the statement refers to the <em>union</em> (or logical <em>disjunction</em>) of the classes.
             </td>
             <td>No</td>
         </tr>
@@ -598,16 +598,6 @@ The script is also able to generate a [`@context` file](https://www.w3.org/TR/js
             <td>No</td>
         </tr>
         <tr>
-            <td><code>known_as</code></td>
-            <td>term string</td>
-            <td>
-                A term can be used as an alias to the term's label in JSON-LD. It is used when generating a JSON-LD context file as the name of
-                the property in the context file instead of the official label. This means that JSON-LD users, using that context file, must
-                refer to this alternative name in their data.
-            </td>
-            <td>No</td>
-        </tr>
-        <tr>
             <td><code>protected</code></td>
             <td>boolean</td>
             <td>
@@ -665,6 +655,16 @@ json_ld:
             </td>
             <td>No</td>
         </tr>
+        <tr>
+            <td><code>known_as</code></td>
+            <td>term string</td>
+            <td>
+                A term can be used as an alias to the term's label in JSON-LD. It is used when generating a JSON-LD context file as the name of
+                the property in the context file instead of the official label. This means that JSON-LD users, using that context file, must
+                refer to this alternative name in their data.
+            </td>
+            <td>No</td>
+        </tr>
     </tbody>
 </table>
 
@@ -695,13 +695,30 @@ json_ld:
             <td>No</td>
         </tr>
         <tr>
+            <td><code>context_null</code></td>
+            <td>boolean</td>
+            <td>If set to <code>true</code>, the entry for the property in the generated context includes a <code>"@context" : null</code> setting. It clears all inherited context settings.
+            <td>No</td>
+        </tr>
+        <tr>
             <td><code>dataset</code></td>
             <td>boolean</td>
             <td>
-                If the value is <code >true</code>, the JSON-LD <code >@container</code>
+                If the value is <code >true</code>, the JSON-LD <code>@container</code>
                 is set to the <code >@graph</code> value for the property, signaling that the value refers to a
                 <em>dataset</em> (or <em>graph</em>). See the <a href="https://www.w3.org/TR/json-ld/#graph-containers">JSON-LD Specification</a>
                 for further details.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>property_scope</code></td>
+            <td>A single CURIE</td>
+            <td>
+                The general pattern for a property that it appears in the <a href="https://www.w3.org/TR/json-ld/#scoped-contexts">scoped contexts</a> of classes (that either listed in the domain or the scope of the property). Alternatively, it appears at the "top level" of the <code>@context</code> if no such classes are defined.
+                <br/>If the <code>property_scope</code> is set to a Class, and other properties are defined <em>for that Class</em>,
+                these are combined as a <a href="https://www.w3.org/TR/json-ld11/#dfn-property-scoped-context">property scoped context</a>.
+                It adds a second layer of embedded contexts, as it were.
             </td>
             <td>No</td>
         </tr>
@@ -717,16 +734,6 @@ json_ld:
             </td>
             <td>No</td>
         </tr>
-        <tr>
-            <td><code>property_scope</code></td>
-            <td>A single CURIE</td>
-            <td>
-                The general pattern of the generated <code>@context</code> a property appears in the <a href="https://www.w3.org/TR/json-ld/#scoped-contexts">scoped contexts</a> of classes (that either listed in the domain or the scope of the
-                property). Alternatively, it appears at the "top level" of the <code>@context</code> if no such classes are defined. If the <code>property_scope</code> is set to a Class, and other properties are defined <em>for that Class</em>,
-                these are combined as a <a href="https://www.w3.org/TR/json-ld11/#dfn-property-scoped-context">property scoped context</a>.
-            </td>
-            <td>No</td>
-        </tr>
     </tbody>
 </table>
 
@@ -738,26 +745,29 @@ class:
     comment: Top level class
 
   - id: B
-    comment: Class for the property scoped context
+    # Because context is set to none, it never appears by itself
+    comment: Class for the property scoped context.
     context: none
 
 property:
   - id: forA
-    comment: the property appears "whithin" A
+    comment: the property appears "within" A
     range: URL
     scope: A
 
   - id: forAtoB
-    comment: the property appears "whithin" A but has a property scoped context
+    comment: the property appears "within" A but has a property scoped context
     scope: A
     property_scope: B
 
   - id: forB1
+    # it will appear in the property scoped context of forAtoB
     comment: the property is defined for B
     range: xsd:string
     scope: B
 
   - id: forB2
+    # it will appear in the property scoped context of forAtoB
     comment: the property is defined for B
     range: URL
     scope: B

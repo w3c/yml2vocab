@@ -8,6 +8,7 @@ This list does not include all the tiny, e.g., editorial changes, only the chang
 - The value of `container` can also be `language`, to denote a [language map](https://www.w3.org/TR/json-ld11/#dfn-language-map).
 - Allow a `vocab` value in lieu of a class name for the `scope`. This means the term is put on the top level context, too, even if it appears in scope context(s).
 - Introduced the `property_scope` feature, to generate property scoped contexts.
+- Introduced the `context_null` feature for properties, to clear inherited contexts.
 
 ## Version 1.11.0
 

@@ -194,6 +194,7 @@ export class RDFTermFactory {
             domain         : [] as RDFClass[],
             range          : [] as RDFTerm[],
             property_scope : undefined,
+            context_null   : false,
             dataset        : false,
             strongURL      : false,
             term_type      : TermType.property,

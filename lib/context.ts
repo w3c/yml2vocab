@@ -70,6 +70,11 @@ export function toContext(vocab: Vocab): string {
             if (forClass && RDFTermFactory.includesCurie(property.type, "owl:ObjectProperty")) {
                 output["@type"] = "@id";
             }
+
+            if (property.context_null === true) {
+                output["@context"] = null;
+            }
+
             // If the property is explicitly set to be a natural language string or a
             // language map, then no typing should happen, because those would invalidate the
             // language/direction settings.

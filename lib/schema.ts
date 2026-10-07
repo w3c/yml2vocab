@@ -178,6 +178,9 @@ const vocabSchema = `{
                             "property_scope" : {
                                 "type": "string"
                             },
+                            "context_null" : {
+                                "type" : "boolean"
+                            },
                             "range": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
                             },

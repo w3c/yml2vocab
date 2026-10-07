@@ -236,6 +236,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         domain:             toArray(raw.domain) as undefined | string[],
         scope:              toArray(raw.scope) as undefined | string[],
         property_scope:     raw.property_scope,
+        context_null:       raw.context_null ?? false,
         range:              toArray(raw.range) as undefined | string[],
         range_union:        raw.range_union ?? false,
         deprecated:         deprecated,
@@ -797,6 +798,12 @@ export function getData(vocab_source: string): Vocab {
                 }
             })()
 
+            const property_scope = raw.property_scope === undefined ? undefined : factory.class(raw.property_scope)
+            // Checking a combination: creation of a property scoped context and a null context exclude one another
+            if (raw.context_null === true && property_scope !== undefined) {
+                throw new Error(`${output.curie} is invalid: it combines a property scoped context and a null context, which is not allowed.`);
+            }
+
             Object.assign(output, {
                 type             : types.map(t => factory.term(t)),
                 html_class       : raw.html_class,
@@ -814,7 +821,8 @@ export function getData(vocab_source: string): Vocab {
                 open_enumeration : raw.open_enumeration ?? false,
                 domain           : raw.domain?.map(val => factory.class(val)),
                 scope            : raw.scope?.map(val => factory.class(val)),
-                property_scope   : raw.property_scope === undefined ? undefined : factory.class(raw.property_scope),
+                property_scope   : property_scope,
+                context_null     : raw.context_null,
                 top_scope        : top_scope,
                 example          : raw.example,
                 known_as         : raw.known_as,
