@@ -188,9 +188,10 @@ export interface Example {
  */
 
 export enum Container {
-    list  = "list",
-    set   = "set",
-    graph = "graph",
+    list     = "list",
+    set      = "set",
+    graph    = "graph",
+    language = "language"
 }
 
 
@@ -210,6 +211,8 @@ export interface RawVocabEntry {
     upper_union      ?: boolean;
     domain           ?: string[];
     scope            ?: string[];
+    property_scope   ?: string;
+    context_null     ?: boolean;
     range            ?: string[];
     range_union      ?: boolean;
     deprecated       ?: boolean;
@@ -226,6 +229,7 @@ export interface RawVocabEntry {
     one_of           ?: string[];
     open_enumeration ?: boolean;
     pattern          ?: string;
+    html_class       ?: string[];
 }
 
 /**
@@ -327,6 +331,8 @@ export interface RDFTerm {
     prefix      : string;
     /** The ID used in the HTML listing. It is, usually, the same as the id, except for an external term */
     html_id     : string;
+    /** A class used for the subsection of a specific term in the HTML version */
+    html_class  : string[];
     /** The curie of the term. Used this way, for example, in turtle */
     curie       : string;
     /** The full URL of the term */
@@ -379,12 +385,16 @@ export interface RDFProperty extends RDFTerm {
     subPropertyOf    : RDFProperty[];
     domain           : RDFClass[];
     scope            : RDFClass[];
+    property_scope  ?: RDFClass;
+    context_null     : boolean;
+    top_scope        : boolean;
     range            : RDFTerm[];  // Can be a class or a datatype and, even, an unknown term
     range_union      : boolean;
     one_of           : RDFIndividual[];
     open_enumeration : boolean; // Whether the one_of values are a closed or open enumeration
     dataset          : boolean;
     container        : Container | undefined;
+    type_vocab       : boolean;    // Whether, in the generated context, the type of the term should be @vocab
     strongURL        : boolean;    // Whether the property object should be required to be a real URL
     langString       : boolean;    // Whether the property gets the artificial range type langString
 }
