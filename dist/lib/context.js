@@ -30,88 +30,167 @@ function prefix_url(prefix, vocab) {
  * @returns - the full context in string (ready to be written to a file)
  */
 function toContext(vocab) {
-    // Generation of a unit for properties
+    // -------------------------------------------------------
+    // Preliminary functions, used in the real processing
+    // -------------------------------------------------------
+    // ----------------------------------------------------------
+    // Generation of the context statements for a single property
     const propertyContext = (property, forClass = true) => {
         // the real id of the property...
         const baseUrl = prefix_url(property.prefix, vocab);
         const url = `${baseUrl}${property.id}`;
-        const output = {
-            "@id": url,
-        };
-        if (forClass && factory_1.RDFTermFactory.includesCurie(property.type, "owl:ObjectProperty")) {
-            output["@type"] = "@id";
+        let output = {};
+        // There is a major branch here depending on whether the property should create its own
+        // property scope context, or whether it should simple be defined within its own
+        // class context.
+        if (property.property_scope !== undefined && factory_1.RDFTermFactory.isClass(property.property_scope)) {
+            const property_scoped_context = classContext(property.property_scope);
+            // A minor hack: the classContext method adds the id of the class to the context,
+            // which is not what is needed in a property scoped context. This
+            // should be overwritten. A bit hacky but, oh well...
+            if (typeof property_scoped_context === "string") {
+                // the incoming string is the class id, should be ignored
+                output = { "@id": url };
+            }
+            else {
+                if (property.type_vocab) {
+                    property_scoped_context["@type"] = "@vocab";
+                }
+                property_scoped_context["@id"] = url;
+                output = property_scoped_context;
+            }
         }
-        // If the property is explicitly set to be a natural language string,
-        // then no typing should happen, because those would invalidate the
-        // language/direction settings.
-        if (property.langString === false) {
-            // Try to catch the datatype settings; these can be used
-            // to set these in the context as well
-            if (property.range) {
-                for (const rangeTerm of property.range) {
-                    const curie = rangeTerm.curie;
-                    if (curie.startsWith("xsd:")) {
-                        output["@type"] = rangeTerm.url;
-                        break;
-                    }
-                    else if (curie === "rdf:JSON") {
-                        output["@type"] = "@json";
-                        break;
-                    }
-                    else if ([
-                        "rdf:HTML",
-                        "rdf:XMLLiteral",
-                        "rdf:PlainLiteral",
-                        "rdf:langString",
-                        "rdf:dirLangString"
-                    ].includes(curie)) {
-                        output["@type"] = rangeTerm.url;
-                        break;
-                    }
-                    else if (factory_1.RDFTermFactory.includesCurie(property.type, "owl:DatatypeProperty")) {
-                        // This is the case when the property refers to an explicitly defined, non-standard datatype
-                        if (property.range.length === 1) {
-                            output["@type"] = rangeTerm.url;
-                        }
-                        break;
-                    }
-                    else {
-                        if (factory_1.RDFTermFactory.isClass(rangeTerm)) {
-                            output["@type"] = "@id";
-                            break;
-                        }
-                    }
-                }
-            }
-            // There is a special treatment to generate additional statements
-            // when the values of the range are restricted.
-            // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
-            if (property.one_of?.length > 0 && !property.dataset) {
-                const mappings = property.one_of.map((term) => [term.id, term.url]);
-                if (!property.open_enumeration) {
-                    mappings.push(["@vocab", `${common_1.global.vocab_prefix}:INVALID_VALUE:`]);
-                }
-                // Note that this may overwrite earlier values...
-                output["@type"] = "@vocab";
-                output["@context"] = Object.fromEntries(mappings);
-            }
-            if (property.dataset) {
-                if (property.container === common_1.Container.set) {
-                    output["@container"] = ["@set", "@graph"];
-                }
-                else {
-                    output["@container"] = "@graph";
-                }
+        else {
+            output = { "@id": url };
+            if (forClass && factory_1.RDFTermFactory.includesCurie(property.type, "owl:ObjectProperty")) {
                 output["@type"] = "@id";
             }
-            else if (property.container !== undefined) {
-                output["@container"] = `@${property.container}`;
+            if (property.context_null === true) {
+                output["@context"] = null;
+            }
+            // If the property is explicitly set to be a natural language string or a
+            // language map, then no typing should happen, because those would invalidate the
+            // language/direction settings.
+            if (property.langString === false && property.container !== common_1.Container.language) {
+                // Try to catch the datatype settings; these can be used
+                // to set these in the context as well
+                if (property.range) {
+                    for (const rangeTerm of property.range) {
+                        const curie = rangeTerm.curie;
+                        if (curie.startsWith("xsd:")) {
+                            output["@type"] = rangeTerm.url;
+                            break;
+                        }
+                        else if (curie === "rdf:JSON") {
+                            output["@type"] = "@json";
+                            break;
+                        }
+                        else if (["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString", "rdf:dirLangString"].includes(curie)) {
+                            output["@type"] = rangeTerm.url;
+                            break;
+                        }
+                        else if (factory_1.RDFTermFactory.includesCurie(property.type, "owl:DatatypeProperty")) {
+                            // This is the case when the property refers to an explicitly defined, non-standard datatype
+                            if (property.range.length === 1) {
+                                output["@type"] = rangeTerm.url;
+                            }
+                            break;
+                        }
+                        else {
+                            if (factory_1.RDFTermFactory.isClass(rangeTerm)) {
+                                output["@type"] = "@id";
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (property.type_vocab) {
+                    output["@type"] = "@vocab";
+                }
+                // There is a special treatment to generate additional statements
+                // when the values of the range are restricted.
+                // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
+                if (property.one_of?.length > 0 && !property.dataset) {
+                    const mappings = property.one_of.map((term) => [term.id, term.url]);
+                    if (!property.open_enumeration) {
+                        mappings.push(["@vocab", `${common_1.global.vocab_prefix}:INVALID_VALUE:`]);
+                    }
+                    // Note that this may overwrite earlier values...
+                    output["@type"] = "@vocab";
+                    output["@context"] = Object.fromEntries(mappings);
+                }
+                if (property.dataset) {
+                    if (property.container === common_1.Container.set) {
+                        output["@container"] = ["@set", "@graph"];
+                    }
+                    else {
+                        output["@container"] = "@graph";
+                    }
+                    output["@type"] = "@id";
+                }
+                else if (property.container !== undefined) {
+                    output["@container"] = `@${property.container}`;
+                }
+            }
+            else {
+                if (property.container === common_1.Container.language) {
+                    output["@container"] = "@language";
+                }
             }
         }
         // if only the URL is set, it makes the context simpler to use its direct value,
         // no need for an indirection
-        return Object.keys(output).length === 1 ? url : output;
+        return Object.keys(output).length <= 1 ? url : output;
     };
+    // -------------------------------------------------------
+    // Generation of the context statements for a single class
+    const classContext = (cl) => {
+        const base_url = cl.prefix ? prefix_url(cl.prefix, vocab) : common_1.global.vocab_url;
+        const url = `${base_url}${cl.id}`;
+        // Create an embedded context for the class
+        // starting with the preamble and the final URL for the class
+        const embedded = (() => {
+            if (common_1.global.protected === undefined || common_1.global.protected === true) {
+                return {
+                    ...preamble,
+                    ...common_1.global.aliases,
+                };
+            }
+            else {
+                return {
+                    ...preamble,
+                };
+            }
+        })();
+        // Get all the properties that have this class in its domain or scope
+        const addProperty = (prop) => {
+            // bingo, this property can be added here
+            embedded[prop.known_as ?? prop.id] = propertyContext(prop);
+            // class_properties is a Set, so duplication is avoided
+            class_properties.add(prop.id);
+        };
+        let propertyAdded = false;
+        for (const prop of vocab.properties) {
+            if (prop.context.length === 0)
+                continue;
+            if (prop.domain) {
+                if (factory_1.RDFTermFactory.includesTerm(prop.domain, cl)) {
+                    addProperty(prop);
+                    propertyAdded = true;
+                }
+            }
+            if (prop.scope) {
+                if (factory_1.RDFTermFactory.includesTerm(prop.scope, cl)) {
+                    addProperty(prop);
+                    propertyAdded = true;
+                }
+            }
+        }
+        // If no properties are added, then the embedded context is unnecessary
+        return propertyAdded ? { "@id": url, "@context": embedded } : url;
+    };
+    // --------------------------------------------
+    // Here we go with the real processing
     // These are the context statements appearing in all
     const preamble = (() => {
         if (common_1.global.protected === undefined || common_1.global.protected === true) {
@@ -126,14 +205,14 @@ function toContext(vocab) {
     const set_vocab = (() => {
         if (common_1.global.set_vocab) {
             return {
-                "@vocab": common_1.global.vocab_url
+                "@vocab": common_1.global.vocab_url,
             };
         }
         else {
             return {};
         }
     })();
-    const top_level = { ...preamble, ...common_1.global.aliases, ...set_vocab };
+    const top_level = { ...preamble, ...common_1.global.aliases };
     // Set of properties that are "handled" as parts of embedded contexts of classes.
     // This is used to avoid repeating the properties at the top level
     const class_properties = new Set();
@@ -143,42 +222,8 @@ function toContext(vocab) {
         // this term was specifically flagged not to be added to a context
         if (cl.context.length === 0)
             continue;
-        const base_url = cl.prefix
-            ? prefix_url(cl.prefix, vocab)
-            : common_1.global.vocab_url;
-        const url = `${base_url}${cl.id}`;
-        // Create an embedded context for the class
-        // starting with the preamble and the final URL for the class
-        const embedded = {
-            ...preamble,
-        };
-        // Get all the properties that have this class in its domain or scope
-        const addProperty = (prop) => {
-            // bingo, this property can be added here
-            embedded[prop.known_as ?? prop.id] = propertyContext(prop);
-            // class_properties is a Set, so duplication is avoided
-            class_properties.add(prop.id);
-        };
-        for (const prop of vocab.properties) {
-            if (prop.context.length === 0)
-                continue;
-            if (prop.domain) {
-                if (factory_1.RDFTermFactory.includesTerm(prop.domain, cl)) {
-                    addProperty(prop);
-                }
-            }
-            if (prop.scope) {
-                if (factory_1.RDFTermFactory.includesTerm(prop.scope, cl)) {
-                    addProperty(prop);
-                }
-            }
-        }
-        ;
         // If no properties are added, then the embedded context is unnecessary
-        top_level[cl.known_as ?? cl.id] =
-            Object.keys(embedded).length === Object.keys(preamble).length
-                ? url
-                : { "@id": url, "@context": embedded };
+        top_level[cl.known_as ?? cl.id] = classContext(cl);
     }
     // Add the properties that have not been handled in the
     // previous step
@@ -186,8 +231,8 @@ function toContext(vocab) {
         // this term was specifically flagged not to be added to a context
         if (prop.context.length === 0)
             continue;
-        if (!class_properties.has(prop.id)) {
-            top_level[prop.known_as ?? prop.id] = propertyContext(prop, false);
+        if (prop.top_scope === true || !class_properties.has(prop.id)) {
+            top_level[prop.known_as ?? prop.id] = propertyContext(prop /*, false*/);
         }
     }
     // Add the individuals
@@ -206,15 +251,13 @@ function toContext(vocab) {
     }
     // the final shape of the context depends on whether there are imported
     // contexts or not
+    // An extra @vocab statement is added, if requested.
     const final_context = (() => {
         if (common_1.global.import.length === 0) {
-            return top_level;
+            return { ...top_level, ...set_vocab };
         }
         else {
-            return [
-                ...common_1.global.import,
-                top_level
-            ];
+            return [...common_1.global.import, { ...top_level, ...set_vocab }];
         }
     })();
     // Done... just turn the result into bona fide (and readable) json

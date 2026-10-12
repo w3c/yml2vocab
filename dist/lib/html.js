@@ -202,6 +202,9 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
                 document.addChild(dd, 'br');
             }
         }
+        if (item.html_class && item.html_class.length > 0) {
+            section.setAttribute("class", item.html_class.join(" "));
+        }
     };
     /*********************************** Settings taken from the template ***************************/
     // The template switches optional features of the generator on through `<meta name="y2v:…">`
@@ -650,6 +653,10 @@ function toHTML(vocab, template_text, basename, context, yaml = false) {
                                 document.addChild(dd, 'p', 'In a JSON-LD representation, values to this property are supposed to be represented in the form of a JSON array, even if there is just a single value.');
                             }
                         }
+                    }
+                    if (item.container === common_1.Container.language) {
+                        const p = document.addChild(pr_section, "p");
+                        p.innerHTML = 'In a JSON-LD representation, values to this property are supposed to form a <a href="https://www.w3.org/TR/json-ld11/#dfn-language-map">language map</a>.';
                     }
                     if (item.dataset) {
                         const p = document.addChild(pr_section, 'p');

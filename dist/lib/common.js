@@ -96,6 +96,7 @@ var Container;
     Container["list"] = "list";
     Container["set"] = "set";
     Container["graph"] = "graph";
+    Container["language"] = "language";
 })(Container || (exports.Container = Container = {}));
 /* ************************************* Internal representation ***********************************/
 /**

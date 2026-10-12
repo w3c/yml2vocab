@@ -82,6 +82,7 @@ class RDFTermFactory {
                 id: curie,
                 prefix: "",
                 html_id: computeHash(curie),
+                html_class: [],
                 curie: curie,
                 url: curie,
                 type: [],
@@ -121,6 +122,7 @@ class RDFTermFactory {
                 id: reference,
                 prefix: prefix,
                 html_id: outsider ? computeHash(curie) : reference,
+                html_class: [],
                 curie: curie,
                 // curie:   `${prefix}:${reference}`,
                 url: `${baseUrl}${reference}`,
@@ -184,9 +186,13 @@ class RDFTermFactory {
         const curie = createCurie(index);
         const extras = {
             subPropertyOf: [],
+            scope: [],
+            top_scope: false,
             domain: [],
             range: [],
+            context_null: false,
             dataset: false,
+            type_vocab: false,
             strongURL: false,
             term_type: common_1.TermType.property,
         };

@@ -125,7 +125,8 @@ export interface Example {
 export declare enum Container {
     list = "list",
     set = "set",
-    graph = "graph"
+    graph = "graph",
+    language = "language"
 }
 /**
  * Superset of all YAML entries, expressed in TS. Look at the Readme.md file for what they are meant for.
@@ -143,6 +144,8 @@ export interface RawVocabEntry {
     upper_union?: boolean;
     domain?: string[];
     scope?: string[];
+    property_scope?: string;
+    context_null?: boolean;
     range?: string[];
     range_union?: boolean;
     deprecated?: boolean;
@@ -159,6 +162,7 @@ export interface RawVocabEntry {
     one_of?: string[];
     open_enumeration?: boolean;
     pattern?: string;
+    html_class?: string[];
 }
 /**
  * This is the structure of the YAML file itself. Note that only vocab and ontology are required, everything else is optional
@@ -238,6 +242,8 @@ export interface RDFTerm {
     prefix: string;
     /** The ID used in the HTML listing. It is, usually, the same as the id, except for an external term */
     html_id: string;
+    /** A class used for the subsection of a specific term in the HTML version */
+    html_class: string[];
     /** The curie of the term. Used this way, for example, in turtle */
     curie: string;
     /** The full URL of the term */
@@ -287,12 +293,16 @@ export interface RDFProperty extends RDFTerm {
     subPropertyOf: RDFProperty[];
     domain: RDFClass[];
     scope: RDFClass[];
+    property_scope?: RDFClass;
+    context_null: boolean;
+    top_scope: boolean;
     range: RDFTerm[];
     range_union: boolean;
     one_of: RDFIndividual[];
     open_enumeration: boolean;
     dataset: boolean;
     container: Container | undefined;
+    type_vocab: boolean;
     strongURL: boolean;
     langString: boolean;
 }

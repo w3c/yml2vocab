@@ -193,7 +193,6 @@ export class RDFTermFactory {
             top_scope      : false,
             domain         : [] as RDFClass[],
             range          : [] as RDFTerm[],
-            property_scope : undefined,
             context_null   : false,
             dataset        : false,
             type_vocab     : false,
