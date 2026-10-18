@@ -1077,7 +1077,7 @@ I got inspired by the structure and Ruby script created by my late colleague and
 
 Many features are the result of further discussions and submitted code with [Many Sporny](https://github.com/msporny), [Benjamin Young](https://github.com/BigBlueHat), [Pierre-Antoine Champin](https://github.com/pchampin), [Dave Longley](https://github.com/dlongley), and [Ronald Koenig](https://github.com/rkxx).
 
-I dedicate this script to the memory of Gregg. R.I.P.
+I dedicate this script to the memory of Gregg Kellogg. R.I.P.
 
 ---
 
