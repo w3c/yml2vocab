@@ -1,15 +1,83 @@
-<h1 id="previewing-pr-s">Previewing PR-s</h1>
-<p>This is a temporary setup for the VC and DID Working Groups. Those
-WGs use this script to generate vocabularies. However, the effective
-generation of these vocabulary is done via github actions, which makes
-it difficult to preview the results when a Pull Request is created with
-changes in the vocabularies. Instead of requiring the reviewer to
-generate the vocabulary files locally, this directory is used to store a
-specific PR preview temporarily.</p>
-<ul>
-<li><a href="./vcdm/index.html">Verifiable Credentials v2.1</a></li>
-<li><a href="./re/index.html">Recognizable Entities</a></li>
-<!-- <li><a href="./di/">Security Vocabulary</a></li>
-<li><a href="./sl/">Bitstring Status List</a></li>
-<li><a href="./did/">DID</a></li> -->
-</ul>
+<!doctype html>
+<html>
+
+<head>
+    <title>Previewing Vocabulary PR-s</title>
+    <style>
+        body {
+            font-family: Helvetica, sans-serif;
+            background: #fffaf5;
+        }
+
+        [lang=zh-hans] {
+            font-family: 'MS Song';
+        }
+
+        p,
+        ul,
+        ol,
+        dl,
+        blockquote {
+            text-align: justify;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            /* color: #930; */
+            font-size: 140%;
+            padding: 0.2em 0 0.2em 0;
+            color: #930;
+            border-bottom: 1px dotted;
+            width: 75%;
+        }
+
+        h3 {
+            color: black;
+        }
+
+        strong {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        a:link {
+            color: teal;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: teal;
+            text-decoration: none;
+        }
+
+
+        a:hover {
+            color: #005a9c;
+            background: yellow;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="previewing-pr-s">Previewing PR-s</h1>
+    <p>This is a temporary setup for the VC and DID Working Groups. Those
+        WGs use this script to generate vocabularies. However, the effective
+        generation of these vocabulary is done via github actions, which makes
+        it difficult to preview the results when a Pull Request is created with
+        changes in the vocabularies. Instead of requiring the reviewer to
+        generate the vocabulary files locally, this directory is used to store a
+        specific PR preview temporarily.</p>
+    <ul>
+        <li><a href="./vcdm/index.html">Verifiable Credentials v2.1</a></li>
+        <li><a href="./re/index.html">Recognizable Entities</a></li>
+        <li><a href="./di/">Security Vocabulary</a></li>
+        <li><a href="./sl/">Bitstring Status List</a></li>
+        <li><a href="./did/">DID</a></li>
+    </ul>
+</body>
+
+</html>
