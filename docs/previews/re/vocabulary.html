@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Recognized Entities Vocabulary</title>
+    <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c"></script>
+    <script class="remove" src="https://cdn.jsdelivr.net/gh/w3c/respec-mermaid@1.3.0/dist/main.js"></script>
+    <script>
+        function remove_status_remark() {
+            const sotd = document.getElementById("sotd");
+            const p = sotd.getElementsByTagName('p')[0];
+            sotd.removeChild(p);
+        }
+
+    </script>
+    <script class="remove">
+        var respecConfig = {
+            specStatus: "base",
+            shortName: "2018/credentials/",
+            thisVersion: "https://www.w3.org/2018/credentials/",
+            doJsonLd: true,
+            editors: [{
+                name: "Ivan Herman",
+                url: "https://www.w3.org/People/Ivan/",
+                company: "W3C",
+                w3cid: 7382,
+                orcid: "0000-0003-0782-2704",
+                companyURL: "https://www.w3.org"
+            }, {
+                name: "Manu Sporny",
+                url: "http://manu.sporny.org/",
+                company: "Digital Bazaar",
+                companyURL: "http://digitalbazaar.com/",
+                w3cid: 41758
+            }, {
+                name: "Isaac Henderson Johnson Jeyakumar",
+                company: "Fraunhofer IAO, Germany",
+                w3cid: 41758
+            }],
+            alternateFormats: [{
+                    uri: "vocabulary.ttl",
+                    label: "Turtle"
+                },
+                {
+                    uri: "vocabulary.jsonld",
+                    label: "JSON-LD"
+                }
+            ],
+            postProcess: [remove_status_remark, window.respecMermaid.createFigures],
+            inlineCSS: true,
+            doRDFa: false,
+            noIDLIn: true,
+            noLegacyStyle: false
+        };
+
+    </script>
+    <style type="text/css">
+        dl.terms dt {
+            float: left;
+            clear: left;
+            width: 10vw;
+        }
+
+        dl.terms dd {
+            margin-left: 15vw;
+        }
+
+        dl.terms dd:after {
+            content: '';
+            display: block;
+            clear: both;
+            margin-bottom: 5px;
+        }
+
+        table.rdfs-definition td {
+            vertical-align: top;
+            margin-right: 2em;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        /* code {
+        color: red;
+      } */
+
+        .term_definitions section {
+            border-bottom-style: solid;
+            border-bottom-width: 1px;
+            border-bottom-color: darkgrey;
+        }
+
+        .annoy {
+            background: hsla(40, 100%, 50%, 0.95);
+            color: black;
+            padding: .75em 1em;
+            border: red;
+            border-style: solid none;
+            box-shadow: 0 2px 8px black;
+            text-align: center;
+        }
+
+        details.desc {
+            margin-top: -2.5rem !important;
+            margin-left: 3rem !important;
+        }
+
+        details.explanation,
+        details.desc {
+            background-color: rgb(245, 245, 245);
+            border-left: 0.3em solid rgb(200, 200, 200);
+            padding: 0.3em;
+        }
+
+        details.explanation>summary,
+        details.desc>summary {
+            font-size: small;
+            text-align: left;
+            font-weight: normal !important;
+            font-style: italic;
+        }
+
+        figure svg {
+            max-width: 100%;
+            margin: auto;
+            height: auto;
+        }
+
+    </style>
+    <link href="vocabulary.jsonld" rel="alternate" type="application/ld+json">
+    <link href="vocabulary.ttl" rel="alternate" type="text/turtle">
+</head>
+
+<body>
+    <section id="abstract">
+        <p>This document describes the <span property="dc:title" id="title">Recognized Entities Vocabulary</span>, i.e.,
+            the <span property="dc:description" id="description">RDFS [[rdf-schema]] defined by the [[[?vc-recognized-entities]]]&nbsp;[[?vc-recognized-entities]]
+                specification.</span>.
+        </p>
+        <p>Alternate versions of the vocabulary definition exist in
+            <a rel="alternate" id="alt-turtle" href="vocabulary.ttl">Turtle</a> and
+            <a rel="alternate" id="alt-jsonld" href="vocabulary.jsonld">JSON-LD</a>.
+        </p>
+        <dl>
+            <dt>Published:</dt>
+            <dd><time property="dc:date" id="time">2026-10-19</time></dd>
+            <dt>Version Info:</dt>
+            <dd>1.0</dd>
+            <dt id="see_also">See Also: <a href="https://www.w3.org/TR/vc-recognized-entities/">https://www.w3.org/TR/vc-recognized-entities/</a></dt>
+        </dl>
+    </section>
+    <section id="sotd">
+        <p>
+            This vocabulary has been defined by the <a href="hhttps://www.w3.org/groups/wg/vc/">W3C Verifiable
+                Credentials Working Group</a> and provides
+            the official RDFS vocabulary for <a href="https://www.w3.org/TR/vc-recognized-entities-1.0/">Recognized Entities 1.0</a> specification.
+            Comments regarding this document are welcome. Please file issues
+            directly on <a href="hhttps://github.com/w3c/vc-recognized-entities/issues/">GitHub</a>, or send them to
+            <a href="mailto:public-vc-comments@w3.org">public-vc-comments@w3.org</a>
+            (<a href="mailto:public-vc-comments-request@w3.org?subject=subscribe">subscribe</a>,
+            <a href="https://lists.w3.org/Archives/Public/public-vc-comments/">archives</a>).
+        </p>
+    </section>
+    <section>
+        <h2>Class diagram</h2>
+        <figure>
+            <pre class="diagram mermaid" style="max-width:100%">                %%{
+                init: {
+                "theme" : "neutral",
+                "class": {
+                "hideEmptyMembersBox": true
+                }
+                }
+                }%%
+                classDiagram
+                class RecognizedEntity {
+                legalName : localizable string
+                image : URL
+                url : URL
+                sameAs : URL
+                name : string
+                description : string
+                }
+
+                class RecognizedAction {
+                action : "issue" | "verify"
+                recognizedBy : URL
+                outputValidation : URL
+                }
+
+                class RecognizedIssuer {
+                legalName : localizable string
+                image : URL
+                url : URL
+                sameAs : URL
+                name : string
+                description : string
+                }
+
+                RecognizedEntityCredential --|&gt; cred.VerifiableCredential : rdfs.subClassOf
+
+                RecognizedEntity --&gt; RecognizedAction : recognizedTo
+
+                RecognizedEntityCredential --&gt; RecognizedIssuer : issuer
+                RecognizedEntityCredential --&gt; RecognizedEntity : credentialSubject
+
+                RecognizedEntity --&gt; ExternalEntityList : recognizedIn
+                RecognizedEntity --&gt; RecognizedEntityCredential : recognizedIn
+                RecognizedIssuer --&gt; ExternalEntityList : recognizedIn
+                RecognizedIssuer --&gt; RecognizedEntityCredential : recognizedIn
+                </pre>
+            <figcaption>
+                Overview diagram of the vocabulary (without the deprecated items). <br>
+                Boxes represent RDFS Classes, labeled connection lines represent RDF properties with explicit domains and ranges.
+                See the <a href="vocabulary.mmd">mermaid source of the image</a> for a textual representation of the structure of the
+                image.
+            </figcaption>
+        </figure>
+    </section>
+
+
+    <section>
+        <h2>Namespaces</h2>
+        <p>This specification makes use of the following namespaces:</p>
+        <dl class="terms" id="namespaces">
+            <dt><code>re</code></dt>
+            <dd><code>https://www.w3.org/ns/credentials/recognized-entities#</code></dd>
+            <dt><code>sch</code></dt>
+            <dd><code>https://schema.org/</code></dd>
+            <dt><code>cred</code></dt>
+            <dd><code>https://www.w3.org/2018/credentials#</code></dd>
+            <dt><code>sec</code></dt>
+            <dd><code>https://w3id.org/security#</code></dd>
+            <dt><code>dc</code></dt>
+            <dd><code>http://purl.org/dc/terms/</code></dd>
+            <dt><code>owl</code></dt>
+            <dd><code>http://www.w3.org/2002/07/owl#</code></dd>
+            <dt><code>rdf</code></dt>
+            <dd><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></dd>
+            <dt><code>rdfs</code></dt>
+            <dd><code>http://www.w3.org/2000/01/rdf-schema#</code></dd>
+            <dt><code>xsd</code></dt>
+            <dd><code>http://www.w3.org/2001/XMLSchema#</code></dd>
+        </dl>
+    </section>
+
+    <section>
+        <h2>Context files</h2>
+        <p>The following <a data-cite="json-ld11#the-context">JSON-LD context</a> files may be used for the terms defined in this specification:</p>
+
+        <dl class="terms" id="contexts">
+            <li><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a>
+                <details>
+                    <summary>term list</summary>
+                    <ul>
+                        <li><a href="#e2d5b626929c13d8aa768b72420dca4808855889e4ccefb69e0aa051ce0a06b1"><code>credentialSubject<code></code></code></a></li>
+                        <li><a href="#79a6029425e48d25277bb0f069aa517894431c11815f186f1522399373c7ea3e"><code>issuer<code></code></code></a></li>
+                        <li><a href="#b97a7ba078df5cc33a0bd09c25db536012f09984707459bf18d8b8a8606181be"><code>validFrom<code></code></code></a></li>
+                        <li><a href="#f2720bcc913f364a285a983c3a613968abd7a6482bc6630523ddbe0c8af6d8dd"><code>validUntil<code></code></code></a></li>
+                        <li><a href="#ExternalEntityList"><code>ExternalEntityList<code></code></code></a></li>
+                        <li><a href="#RecognizedAction"><code>RecognizedAction<code></code></code></a></li>
+                        <li><a href="#RecognizedEntity"><code>RecognizedEntity<code></code></code></a></li>
+                        <li><a href="#RecognizedEntityCredential"><code>RecognizedEntityCredential<code></code></code></a></li>
+                        <li><a href="#RecognizedIssuer"><code>RecognizedIssuer<code></code></code></a></li>
+                        <li><a href="#action"><code>action<code></code></code></a></li>
+                        <li><a href="#outputValidation"><code>outputValidation<code></code></code></a></li>
+                        <li><a href="#recognizedBy"><code>recognizedBy<code></code></code></a></li>
+                        <li><a href="#recognizedIn"><code>recognizedIn<code></code></code></a></li>
+                        <li><a href="#recognizedTo"><code>recognizedTo<code></code></code></a></li>
+                        <li><a href="#2b7079413f75cd55cc9e96a1d5022b16150f802784f25b95006fbfc735e79166"><code>description<code></code></code></a></li>
+                        <li><a href="#28077f08467860058d9d1ef016c58f855c67cc1bfa9ed1296dc8e88cd88e371f"><code>image<code></code></code></a></li>
+                        <li><a href="#c9e83cbb810c0d7816132f999bdfef046010c84109f18bcf7f30ea28fae17e1d"><code>legalName<code></code></code></a></li>
+                        <li><a href="#edee3caf434e4e47dba7c8e262a98ab19d50b16125bc3ac9df7cbff212e435e8"><code>name<code></code></code></a></li>
+                        <li><a href="#662ea06a54ad1467a6760e758f1ffc90ab5ab21a41c44d02aef72694b114eb71"><code>sameAs<code></code></code></a></li>
+                        <li><a href="#6ea44d161e319fb815b31b7d7fda2c80497f314b5f5e40f9445d20ba43bbfc48"><code>url<code></code></code></a></li>
+                        <li><a href="#1c2059d8a9b5c10a54ba77dae600e4c97cd023c056cdd48fab98ea2c496fc99f"><code>digestMultibase<code></code></code></a></li>
+                    </ul>
+                </details>
+            </li>
+        </dl>
+    </section>
+
+    <section id="term_definitions">
+        <h1>Term definitions</h1>
+
+        <section id="class_definitions" class="term_definitions">
+            <h2>Class definitions</h2>
+            <p>The following are class definitions in the <code>re</code> namespace.</p>
+            <section id="RecognizedEntity">
+                <h4><code>RecognizedEntity</code></h4>
+                <p><em>Recognized Entity</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-recognized-entity">formal definition of the term</a>.</p>
+                <div>An entity that is recognized in a <a href="#RecognizedEntityCredential">Recognized Entity Credential</a> to perform a specific action.</div>
+                <dl class="terms">
+                    <dt>Domain of:</dt>
+                    <dd><a href="#recognizedTo"><code>recognizedTo</code></a></dd>
+                    <dt>In the domain of:</dt>
+                    <dd><a href="#recognizedIn"><code>recognizedIn</code></a></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="RecognizedAction">
+                <h4><code>RecognizedAction</code></h4>
+                <p><em>Recognized Action</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-recognized-action">formal definition of the term</a>.</p>
+                <div>An action that a <a href="#RecognizedEntity">Recognized Entity</a> is expected to perform.</div>
+                <dl class="terms">
+                    <dt>Range of:</dt>
+                    <dd><a href="#recognizedTo"><code>recognizedTo</code></a></dd>
+                    <dt>Domain of:</dt>
+                    <dd><a href="#action"><code>action</code></a>, <a href="#recognizedBy"><code>recognizedBy</code></a>, <a
+                            href="#outputValidation"><code>outputValidation</code></a></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="RecognizedEntityCredential">
+                <h4><code>RecognizedEntityCredential</code></h4>
+                <p><em>Recognized Entity Credential</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-recognized-entity-credential">formal definition of the term</a>.</p>
+                <div>A conforming verifiable credential, as defined in [[[?vc-data-model-2.0]]], that encapsulates <a href="#RecognizedEntity">Recognized Entities</a>.</div>
+                <dl class="terms">
+                    <dt>Subclass of:</dt>
+                    <dd><a href="https://www.w3.org/2018/credentials#VerifiableCredential"><code>cred:VerifiableCredential</code></a></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Includes the range of:</dt>
+                    <dd><a href="#recognizedIn"><code>recognizedIn</code></a></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="RecognizedIssuer">
+                <h4><code>RecognizedIssuer</code></h4>
+                <p><em>Recognized Issuer</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-recognizedissuer">formal definition of the term</a>.</p>
+                <dl class="terms">
+                    <dt>In the domain of:</dt>
+                    <dd><a href="#recognizedIn"><code>recognizedIn</code></a></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="ExternalEntityList">
+                <h4><code>ExternalEntityList</code></h4>
+                <p><em>External Entity List</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-externalentitylist">formal definition of the term</a>.</p>
+                <div>A list of external entities that are usually in a different format such as an x509 Certificate Authority List or an ETSI Trust Services List.</div>
+                <dl class="terms">
+                    <dt>Includes the range of:</dt>
+                    <dd><a href="#recognizedIn"><code>recognizedIn</code></a></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+        </section>
+
+        <section id="property_definitions" class="term_definitions">
+            <h2>Property definitions</h2>
+            <p>The following are property definitions in the <code>re</code> namespace.</p>
+            <section id="c9e83cbb810c0d7816132f999bdfef046010c84109f18bcf7f30ea28fae17e1d">
+                <h4><code>legalName</code></h4>
+                <p><em>Legal name</em></p>
+                <div>Legal name of the entity</div>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://schema.org/legalName">sch:legalName</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="28077f08467860058d9d1ef016c58f855c67cc1bfa9ed1296dc8e88cd88e371f">
+                <h4><code>image</code></h4>
+                <p><em>Visual representation of the entity</em></p>
+                <p>The property's value should be a URL, i.e., not a literal.</p>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://schema.org/image">sch:image</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="6ea44d161e319fb815b31b7d7fda2c80497f314b5f5e40f9445d20ba43bbfc48">
+                <h4><code>url</code></h4>
+                <p><em>Web site of the entity</em></p>
+                <p>The property's value should be a URL, i.e., not a literal.</p>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://schema.org/url">sch:url</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="662ea06a54ad1467a6760e758f1ffc90ab5ab21a41c44d02aef72694b114eb71">
+                <h4><code>sameAs</code></h4>
+                <p><em>Same as</em></p>
+                <div>One or more URLs that refer to the same entity in other contexts or systems<br><br>The property's value should be a URL, i.e., not a literal.</div>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://schema.org/sameAs">sch:sameAs</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="2b7079413f75cd55cc9e96a1d5022b16150f802784f25b95006fbfc735e79166">
+                <h4><code>description</code></h4>
+                <p><em>description</em></p>
+                <div>Human-readable description providing details about the entity</div>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://schema.org/description">sch:description</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="1c2059d8a9b5c10a54ba77dae600e4c97cd023c056cdd48fab98ea2c496fc99f">
+                <h4><code>digestMultibase</code></h4>
+                <p><em>Digest Multibase</em></p>
+                <div>One or more cryptographic digests used to verify the integrity of resources associated with the entity.</div>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://w3id.org/security#digestMultibase">sec:digestMultibase</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="b97a7ba078df5cc33a0bd09c25db536012f09984707459bf18d8b8a8606181be">
+                <h4><code>validFrom</code></h4>
+                <p><em>Valid from</em></p>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://www.w3.org/2018/credentials#validFrom">cred:validFrom</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="f2720bcc913f364a285a983c3a613968abd7a6482bc6630523ddbe0c8af6d8dd">
+                <h4><code>validUntil</code></h4>
+                <p><em>Valid until</em></p>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://www.w3.org/2018/credentials#validUntil">cred:validUntil</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="edee3caf434e4e47dba7c8e262a98ab19d50b16125bc3ac9df7cbff212e435e8">
+                <h4><code>name</code></h4>
+                <p><em>name</em></p>
+                <div>name of an entity</div>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://schema.org/name">sch:name</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="recognizedTo">
+                <h4><code>recognizedTo</code></h4>
+                <p><em>Recognized to</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-recognizedto">formal definition of the term</a>.</p>
+                <div>Refer to the <a href="#RecognizedAction">Recognized Action</a>.</div>
+                <dl class="terms">
+                    <dt>Domain:</dt>
+                    <dd><a href="#RecognizedEntity"><code>RecognizedEntity</code></a></dd>
+                    <dt>Range:</dt>
+                    <dd><a href="#RecognizedAction"><code>RecognizedAction</code></a></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="recognizedIn">
+                <h4><code>recognizedIn</code></h4>
+                <p><em>Recognized in</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-recognizedin">formal definition of the term</a>.</p>
+                <div>Refer to the <a href="#RecognizedAction">Recognized Action</a>.</div>
+                <dl class="terms">
+                    <dt>Domain:</dt>
+                    <dd><a href="#RecognizedEntity"><code>RecognizedEntity</code></a> ⊔&nbsp;<a href="#RecognizedIssuer"><code>RecognizedIssuer</code></a></dd>
+                    <dt>Range:</dt>
+                    <dd><a href="#ExternalEntityList"><code>ExternalEntityList</code></a> ⊔&nbsp;<a href="#RecognizedEntityCredential"><code>RecognizedEntityCredential</code></a>
+                    </dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="action">
+                <h4><code>action</code></h4>
+                <p><em>Action</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-action">formal definition of the term</a>.</p>
+                <div>Name of the action to be performed by a <a href="#RecognizedEntity">Recognized Entity</a>. Possible values include "issue" or "verify".</div>
+                <dl class="terms">
+                    <dt>Domain:</dt>
+                    <dd><a href="#RecognizedAction"><code>RecognizedAction</code></a></dd>
+                    <dt>Range:</dt>
+                    <dd><code>xsd:string</code></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="recognizedBy">
+                <h4><code>recognizedBy</code></h4>
+                <p><em>Recognized by</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-recognizedby">formal definition of the term</a>.</p>
+                <div>The <a href="#RecognizedEntityCredential">Recognized Entity Credential</a> that performed the task of recognizing.<br><br>The property's value should be a URL,
+                    i.e., not a literal.</div>
+                <dl class="terms">
+                    <dt>Domain:</dt>
+                    <dd><a href="#RecognizedAction"><code>RecognizedAction</code></a></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="outputValidation">
+                <h4><code>outputValidation</code></h4>
+                <p><em>Output validation</em></p>
+                <p>See the <a href="https://www.w3.org/TR/vc-recognized-entities/#dfn-outputvalidation">formal definition of the term</a>.</p>
+                <div>Refers to a data schema that provides verifiers with enough information to determine whether the provided data conforms to the provided schema (e.g., JSON
+                    Schema).<br><br>The property's value should be a URL, i.e., not a literal.</div>
+                <dl class="terms">
+                    <dt>Domain:</dt>
+                    <dd><a href="#RecognizedAction"><code>RecognizedAction</code></a></dd>
+                </dl>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="79a6029425e48d25277bb0f069aa517894431c11815f186f1522399373c7ea3e">
+                <h4><code>issuer</code></h4>
+                <p><em>Issuer of a Recognized Entity Credential</em></p>
+                <div>When used in a recognized entity credential, the value must be restricted to recognized issuer.</div>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://www.w3.org/2018/credentials#issuer">cred:issuer</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+            <section id="e2d5b626929c13d8aa768b72420dca4808855889e4ccefb69e0aa051ce0a06b1">
+                <h4><code>credentialSubject</code></h4>
+                <p><em>Credential subject for recognized entities</em></p>
+                <div>When used in a recognized entity credential, the value must be restricted to recognized entities.</div>
+                <p class="note">
+                    <b>This term is formally defined in another vocabulary</b>
+                    (as <a href="https://www.w3.org/2018/credentials#credentialSubject">cred:credentialSubject</a>), but is frequently used with this vocabulary and has been
+                    included to aid readability of this document.
+                </p>
+                <dl class="terms">
+                    <dt>Relevant <code>@context</code>:</dt>
+                    <dd><a href="https://www.w3.org/ns/credentials/recognized-entities/v1"><code>https://www.w3.org/ns/credentials/recognized-entities/v1</code></a></dd>
+                </dl>
+            </section>
+        </section>
+
+
+    </section>
+
+
+    <!-- <section class="appendix" id="vocabulary-diagram-alt" style="visibility: hidden">
+            <h2>Image Description</h2>
+            <p>Whatever the right thing about the image is</p>
+        </section> -->
+
+
+</body>
+
+</html>

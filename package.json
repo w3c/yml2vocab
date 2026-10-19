@@ -26,7 +26,7 @@
     },
     "scripts": {
         "generate": "ts-node main.ts",
-        "docs": "typedoc index.ts main.ts lib/*",
+        "docs": "mv docs/previews /tmp; typedoc index.ts main.ts lib/* ; mv /tmp/previews docs",
         "dist": "tsc",
         "distribute": "npm run dist && npm run docs",
         "test_di": "ts-node main.ts -v example/security.yml -t example/security_template.html -c",

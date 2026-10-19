@@ -1,4 +1,9 @@
 @prefix cred: <https://www.w3.org/2018/credentials#> .
+@prefix sch: <https://schema.org/> .
+@prefix bsl: <https://www.w3.org/ns/credentials/status#> .
+@prefix sec: <https://w3id.org/security#> .
+@prefix jwt: <https://www.iana.org/assignments/jwt#> .
+@prefix jose: <https://www.iana.org/assignments/jose#> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -10,57 +15,58 @@
 
 # Ontology definition
 cred: a owl:Ontology ;
-    dc:title """Verifiable Credentials Vocabulary v2.0"""@en ;
-    dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[VC-DATA-MODEL-2.0]]"""@en ;
-    rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.0/> ;
-    dc:date "2024-08-08"^^xsd:date ;
+    dc:title """Verifiable Credentials Vocabulary v2.1"""@en ;
+    dc:description """RDFS [[RDF-SCHEMA]] vocabulary used by the Verifiable Credentials [[vc-data-model-2.1]]"""^^rdf:HTML ;
+    rdfs:seeAlso <https://www.w3.org/TR/vc-data-model-2.1/> ;
+    dc:date "2026-10-19"^^xsd:date ;
 .
 
 # Property definitions
-cred:credentialSchema a rdf:Property ;
+cred:credentialSchema a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:CredentialSchema ;
     rdfs:label "Credential schema" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSchema>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-credentialSchema>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
-cred:credentialStatus a rdf:Property ;
+cred:credentialStatus a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:CredentialStatus ;
     rdfs:label "Credential status" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialStatus>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-credentialStatus>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
-cred:confidenceMethod a rdf:Property ;
+cred:confidenceMethod a rdf:Property, owl:ObjectProperty ;
+    rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:ConfidenceMethod ;
     rdfs:label "Confidence method" ;
     rdfs:isDefinedBy <https://w3c-ccg.github.io/confidence-method-spec/>, <https://www.w3.org/2018/credentials#> ;
-    vs:term_status "reserved" ;
+    vs:term_status "stable" ;
 .
 
 cred:credentialSubject a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:label "Credential subject" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-credentialSubject>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-credentialSubject>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:digestSRI a rdf:Property, owl:DatatypeProperty ;
     rdfs:range cred:sriString ;
     rdfs:label "Subresource integrity digest" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-digestSRI>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-digestSRI>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
     rdfs:seeAlso <https://www.w3.org/TR/SRI/#the-integrity-attribute> ;
 .
 
-cred:evidence a rdf:Property ;
+cred:evidence a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:CredentialEvidence ;
     rdfs:label "Evidence" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-evidence>, <https://www.w3.org/2018/credentials#> ;
-    vs:term_status "reserved" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-evidence>, <https://www.w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
 .
 
 cred:expirationDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
@@ -75,7 +81,7 @@ cred:expirationDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty
 cred:holder a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiablePresentation ;
     rdfs:label "Holder" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-holder>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-holder>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
@@ -99,99 +105,97 @@ cred:issuanceDate a rdf:Property, owl:DeprecatedProperty, owl:DatatypeProperty ;
 cred:issuer a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:label "Issuer" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-issuer>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-issuer>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
-cred:refreshService a rdf:Property ;
+cred:refreshService a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:RefreshService ;
     rdfs:label "Refresh service" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-refreshService>, <https://www.w3.org/2018/credentials#> ;
-    vs:term_status "reserved" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-refreshService>, <https://www.w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
 .
 
-cred:renderMethod a rdf:Property ;
+cred:renderMethod a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:range cred:RenderMethod ;
     rdfs:label "Render method" ;
     rdfs:isDefinedBy <https://w3c-ccg.github.io/vc-render-method/#the-rendermethod-property>, <https://www.w3.org/2018/credentials#> ;
-    vs:term_status "reserved" ;
+    vs:term_status "stable" ;
 .
 
 cred:relatedResource a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiableCredential ;
     rdfs:label "Related resource" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-relatedResource>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-relatedResource>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
-cred:termsOfUse a rdf:Property ;
-    rdfs:domain [ owl:unionOf (cred:VerifiableCredential cred:VerifiablePresentation) ] ;
+cred:termsOfUse a rdf:Property, owl:ObjectProperty ;
+    rdfs:domain [ a owl:Class; owl:unionOf (cred:VerifiableCredential cred:VerifiablePresentation) ] ;
     rdfs:range cred:TermsOfUse ;
     rdfs:label "Terms of use" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-termsOfUse>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-termsOfUse>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:validFrom a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain [ owl:unionOf (cred:VerifiableCredential cred:VerifiablePresentation) ] ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Valid from" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-validFrom>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-validFrom>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:validUntil a rdf:Property, owl:DatatypeProperty ;
-    rdfs:domain [ owl:unionOf (cred:VerifiableCredential cred:VerifiablePresentation) ] ;
     rdfs:range xsd:dateTime ;
     rdfs:label "Valid until" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-validUntil>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-validUntil>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
-cred:verifiableCredential a rdf:Property ;
+cred:verifiableCredential a rdf:Property, owl:ObjectProperty ;
     rdfs:domain cred:VerifiablePresentation ;
     rdfs:range cred:VerifiableCredentialGraph ;
     rdfs:label "Verifiable credential graph" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-verifiableCredential>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-verifiableCredential>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 # Class definitions
 cred:CredentialEvidence a rdfs:Class ;
     rdfs:label "Credential evidence" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-evidence>, <https://www.w3.org/2018/credentials#> ;
-    vs:term_status "reserved" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#bc-credential-evidence>, <https://www.w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
 .
 
 cred:CredentialSchema a rdfs:Class ;
     rdfs:label "Credential schema" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-schema>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#bc-credential-schema>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:CredentialStatus a rdfs:Class ;
     rdfs:label "Credential status" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-credential-status>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#bc-credential-status>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:ConfidenceMethod a rdfs:Class ;
     rdfs:label "Confidence method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-confidence-method>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#bc-confidence-method>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
 .
 
 cred:EnvelopedVerifiableCredential a rdfs:Class ;
     rdfs:label "Enveloped verifiable credential" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiableCredential>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-EnvelopedVerifiableCredential>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:EnvelopedVerifiablePresentation a rdfs:Class ;
     rdfs:label "Enveloped verifiable presentation" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#defn-EnvelopedVerifiablePresentation>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#defn-EnvelopedVerifiablePresentation>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
@@ -211,38 +215,38 @@ cred:JsonSchemaCredential a rdfs:Class ;
 
 cred:RefreshService a rdfs:Class ;
     rdfs:label "Refresh service" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-refresh-service>, <https://www.w3.org/2018/credentials#> ;
-    vs:term_status "reserved" ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#bc-refresh-service>, <https://www.w3.org/2018/credentials#> ;
+    vs:term_status "stable" ;
 .
 
 cred:RenderMethod a rdfs:Class ;
     rdfs:label "Render method" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-render-method>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#bc-render-method>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "reserved" ;
 .
 
 cred:TermsOfUse a rdfs:Class ;
     rdfs:label "Terms of use" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#bc-terms-of-use>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#bc-terms-of-use>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:VerifiableCredential a rdfs:Class ;
     rdfs:label "Verifiable credential" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#credentials>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#credentials>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:VerifiableCredentialGraph a rdfs:Class ;
     rdfs:label "Verifiable credential graph" ;
     rdfs:comment """<div>Instances of this class are <a href="https://www.w3.org/TR/rdf12-concepts/#section-rdf-graph">RDF Graphs</a> [[RDF12-CONCEPTS]].</div>"""^^rdf:HTML ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiablecredentialgraph>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#dfn-verifiablecredentialgraph>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
 cred:VerifiablePresentation a rdfs:Class ;
     rdfs:label "Verifiable presentation" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#presentations>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#presentations>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
 .
 
@@ -252,36 +256,83 @@ cred:VerifiablePresentation a rdfs:Class ;
 cred:sriString a rdfs:Datatype ;
     rdfs:subClassOf xsd:string ;
     rdfs:label "Datatype for digest SRI values" ;
-    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.0/#the-sristring-datatype>, <https://www.w3.org/2018/credentials#> ;
+    rdfs:isDefinedBy <https://www.w3.org/TR/vc-data-model-2.1/#the-sristring-datatype>, <https://www.w3.org/2018/credentials#> ;
     vs:term_status "stable" ;
     rdfs:seeAlso <https://www.w3.org/TR/SRI/#the-integrity-attribute> ;
 .
 
 # Context files and their mentions
-<https://www.w3.org/ns/credentials/v2> a jsonld:Context ;
+<https://www.w3.org/ns/credentials/v2.1rc1> a jsonld:Context ;
     schema:mentions
-        cred:credentialSchema,
-        cred:credentialStatus,
-        cred:confidenceMethod,
-        cred:credentialSubject,
-        cred:digestSRI,
-        cred:evidence,
-        cred:expirationDate,
-        cred:holder,
-        cred:jsonSchema,
-        cred:issuanceDate,
-        cred:issuer,
-        cred:refreshService,
-        cred:relatedResource,
-        cred:termsOfUse,
-        cred:validFrom,
-        cred:validUntil,
-        cred:verifiableCredential,
+        bsl:BitstringStatusList,
+        bsl:BitstringStatusListCredential,
+        bsl:BitstringStatusListEntry,
+        bsl:encodedList,
+        bsl:message,
+        bsl:status,
+        bsl:statusListCredential,
+        bsl:statusListIndex,
+        bsl:statusMessage,
+        bsl:statusPurpose,
+        bsl:statusReference,
+        bsl:statusSize,
+        bsl:ttl,
         cred:EnvelopedVerifiableCredential,
         cred:EnvelopedVerifiablePresentation,
         cred:JsonSchema,
         cred:JsonSchemaCredential,
         cred:VerifiableCredential,
         cred:VerifiablePresentation,
-        cred:sriString ;
+        cred:confidenceMethod,
+        cred:credentialSchema,
+        cred:credentialStatus,
+        cred:credentialSubject,
+        cred:digestSRI,
+        cred:evidence,
+        cred:holder,
+        cred:issuer,
+        cred:jsonSchema,
+        cred:refreshService,
+        cred:relatedResource,
+        cred:renderMethod,
+        cred:termsOfUse,
+        cred:validFrom,
+        cred:validUntil,
+        cred:verifiableCredential,
+        dc:created,
+        jose:iss,
+        jose:jku,
+        jose:sub,
+        jose:x5u,
+        jwt:...,
+        jwt:_sd,
+        jwt:_sd_alg,
+        jwt:aud,
+        jwt:cnf,
+        jwt:exp,
+        jwt:iat,
+        jwt:jwk,
+        jwt:kid,
+        jwt:nbf,
+        sch:description,
+        sch:encodingFormat,
+        sch:name,
+        sec:DataIntegrityProof,
+        sec:assertionMethod,
+        sec:authentication,
+        sec:capabilityDelegation,
+        sec:capabilityInvocation,
+        sec:challenge,
+        sec:cryptosuite,
+        sec:digestMultibase,
+        sec:domain,
+        sec:expiration,
+        sec:keyAgreement,
+        sec:nonce,
+        sec:previousProof,
+        sec:proof,
+        sec:proofPurpose,
+        sec:proofValue,
+        sec:verificationMethod ;
+.
 

@@ -1,0 +1,184 @@
+{
+    "@context": {
+        "re": "https://www.w3.org/ns/credentials/recognized-entities#",
+        "sch": "https://schema.org/",
+        "cred": "https://www.w3.org/2018/credentials#",
+        "sec": "https://w3id.org/security#",
+        "dc": "http://purl.org/dc/terms/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "vs": "http://www.w3.org/2003/06/sw-vocab-status/ns#",
+        "schema": "http://schema.org/",
+        "jsonld": "http://www.w3.org/ns/json-ld#",
+        "dc:date": {
+            "@type": "xsd:date"
+        },
+        "rdfs:domain": {
+            "@type": "@id"
+        },
+        "rdfs:range": {
+            "@type": "@id"
+        },
+        "rdfs:seeAlso": {
+            "@type": "@id"
+        },
+        "rdfs:subClassOf": {
+            "@type": "@id"
+        },
+        "rdfs:subPropertyOf": {
+            "@type": "@id"
+        },
+        "rdfs:isDefinedBy": {
+            "@type": "@id"
+        },
+        "owl:oneOf": {
+            "@container": "@list",
+            "@type": "@vocab"
+        },
+        "owl:deprecated": {
+            "@type": "xsd:boolean"
+        },
+        "owl:inverseOf": {
+            "@type": "@vocab"
+        },
+        "owl:unionOf": {
+            "@container": "@list",
+            "@type": "@vocab"
+        },
+        "mentions": {
+            "@id": "schema:mentions",
+            "@type": "@id"
+        }
+    },
+    "@included": [{
+        "@id": "https://www.w3.org/ns/credentials/recognized-entities#",
+        "@type": "owl:Ontology",
+        "dc:title": {
+            "@value": "Recognized Entities Vocabulary",
+            "@language": "en"
+        },
+        "dc:description": {
+            "@value": "RDFS [[rdf-schema]] defined by the [[[?vc-recognized-entities]]] [[?vc-recognized-entities]] specification.",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:seeAlso": "https://www.w3.org/TR/vc-recognized-entities/",
+        "dc:date": "2026-10-19"
+    }, {
+        "@id": "re:recognizedTo",
+        "@type": ["rdf:Property", "owl:ObjectProperty"],
+        "rdfs:domain": "re:RecognizedEntity",
+        "rdfs:range": "re:RecognizedAction",
+        "rdfs:label": "Recognized to",
+        "rdfs:comment": {
+            "@value": "<div>Refer to the <a href=\"#RecognizedAction\">Recognized Action</a>.</div>",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-recognizedto", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "re:recognizedIn",
+        "@type": ["rdf:Property", "owl:ObjectProperty"],
+        "rdfs:domain": {
+            "@type": "owl:Class",
+            "owl:unionOf": ["re:RecognizedEntity", "re:RecognizedIssuer"]
+        },
+        "rdfs:range": {
+            "@type": "ows:Class",
+            "owl:unionOf": ["re:ExternalEntityList", "re:RecognizedEntityCredential"]
+        },
+        "rdfs:label": "Recognized in",
+        "rdfs:comment": {
+            "@value": "<div>Refer to the <a href=\"#RecognizedAction\">Recognized Action</a>.</div>",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-recognizedin", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "re:action",
+        "@type": ["rdf:Property", "owl:DatatypeProperty"],
+        "rdfs:domain": "re:RecognizedAction",
+        "rdfs:range": "xsd:string",
+        "rdfs:label": "Action",
+        "rdfs:comment": {
+            "@value": "<div>Name of the action to be performed by a <a href=\"#RecognizedEntity\">Recognized Entity</a>. Possible values include \"issue\" or \"verify\".</div>",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-action", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "re:recognizedBy",
+        "@type": ["rdf:Property", "owl:ObjectProperty"],
+        "rdfs:domain": "re:RecognizedAction",
+        "rdfs:label": "Recognized by",
+        "rdfs:comment": {
+            "@value": "<div>The <a href=\"#RecognizedEntityCredential\">Recognized Entity Credential</a> that performed the task of recognizing.</div>",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-recognizedby", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "re:outputValidation",
+        "@type": ["rdf:Property", "owl:ObjectProperty"],
+        "rdfs:domain": "re:RecognizedAction",
+        "rdfs:label": "Output validation",
+        "rdfs:comment": {
+            "@value": "<div>Refers to a data schema that provides verifiers with enough information to determine whether the provided data conforms to the provided schema (e.g., JSON Schema).</div>",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-outputvalidation", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "re:RecognizedEntity",
+        "@type": "rdfs:Class",
+        "rdfs:label": "Recognized Entity",
+        "rdfs:comment": {
+            "@value": "<div>An entity that is recognized in a <a href=\"#RecognizedEntityCredential\">Recognized Entity Credential</a> to perform a specific action.</div>",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-recognized-entity", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "re:RecognizedAction",
+        "@type": "rdfs:Class",
+        "rdfs:label": "Recognized Action",
+        "rdfs:comment": {
+            "@value": "<div>An action that a <a href=\"#RecognizedEntity\">Recognized Entity</a> is expected to perform.</div>",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-recognized-action", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "re:RecognizedEntityCredential",
+        "@type": "rdfs:Class",
+        "rdfs:subClassOf": ["cred:VerifiableCredential"],
+        "rdfs:label": "Recognized Entity Credential",
+        "rdfs:comment": {
+            "@value": "<div>A conforming verifiable credential, as defined in [[[?vc-data-model-2.0]]], that encapsulates <a href=\"#RecognizedEntity\">Recognized Entities</a>.</div>",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-recognized-entity-credential", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "re:RecognizedIssuer",
+        "@type": "rdfs:Class",
+        "rdfs:label": "Recognized Issuer",
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-recognizedissuer", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "re:ExternalEntityList",
+        "@type": "rdfs:Class",
+        "rdfs:label": "External Entity List",
+        "rdfs:comment": {
+            "@value": "<div>A list of external entities that are usually in a different format such as an x509 Certificate Authority List or an ETSI Trust Services List.</div>",
+            "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML"
+        },
+        "rdfs:isDefinedBy": ["https://www.w3.org/TR/vc-recognized-entities/#dfn-externalentitylist", "https://www.w3.org/ns/credentials/recognized-entities#"],
+        "vs:term_status": "stable"
+    }, {
+        "@id": "https://www.w3.org/ns/credentials/recognized-entities/v1",
+        "@type": "jsonld:Context",
+        "mentions": ["cred:credentialSubject", "cred:issuer", "cred:validFrom", "cred:validUntil", "re:ExternalEntityList", "re:RecognizedAction", "re:RecognizedEntity", "re:RecognizedEntityCredential", "re:RecognizedIssuer", "re:action", "re:outputValidation", "re:recognizedBy", "re:recognizedIn", "re:recognizedTo", "sch:description", "sch:image", "sch:legalName", "sch:name", "sch:sameAs", "sch:url", "sec:digestMultibase"]
+    }]
+}
