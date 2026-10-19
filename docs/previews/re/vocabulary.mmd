@@ -1,1 +1,44 @@
-/Users/ivan/W3C/github/VC/vc-recognized-entities/vocab/v1/vocabulary.mmd
+%%{
+    init: {
+        "theme" : "neutral",
+        "class": {
+            "hideEmptyMembersBox": true
+        }
+    }
+}%%
+classDiagram
+    class RecognizedEntity {
+        legalName : localizable string
+        image : URL
+        url : URL
+        sameAs : URL
+        name : string
+        description : string
+    }
+
+    class RecognizedAction {
+        action : "issue" | "verify"
+        recognizedBy : URL
+        outputValidation : URL
+    }
+
+    class RecognizedIssuer {
+        legalName : localizable string
+        image : URL
+        url : URL
+        sameAs : URL
+        name : string
+        description : string
+    }
+
+    RecognizedEntityCredential --|> cred.VerifiableCredential : rdfs.subClassOf
+
+    RecognizedEntity --> RecognizedAction : recognizedTo
+
+    RecognizedEntityCredential --> RecognizedIssuer : issuer
+    RecognizedEntityCredential --> RecognizedEntity : credentialSubject
+
+    RecognizedEntity --> ExternalEntityList : recognizedIn
+    RecognizedEntity --> RecognizedEntityCredential : recognizedIn
+    RecognizedIssuer --> ExternalEntityList : recognizedIn
+    RecognizedIssuer --> RecognizedEntityCredential : recognizedIn
