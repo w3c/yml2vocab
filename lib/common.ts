@@ -403,7 +403,8 @@ export interface RDFProperty extends RDFTerm {
  * Extra information is necessary for a property
  */
 export interface RDFIndividual extends RDFTerm {
-    scope             : RDFProperty[];
+    scope           : RDFProperty[];
+    top_scope       : boolean;
 }
 
 /**

@@ -270,7 +270,7 @@ export function toContext(vocab: Vocab): string {
     for (const individual of vocab.individuals) {
         // this term was specifically flagged not to be added to a context
         if (individual.context.length === 0) continue;
-        if (!property_individuals.has(individual.id)) {
+        if (individual.top_scope === true || !property_individuals.has(individual.id)) {
             top_level[individual.known_as ?? individual.id] = `${individual.url}`;
         }
     }

@@ -468,6 +468,18 @@ export function getData(vocab_source: string): Vocab {
         }
     }
 
+    const get_top_scope = (raw: RawVocabEntry): boolean => {
+        if (raw.scope === undefined) {
+            return false;
+        } else if (raw.scope.includes("vocab")) {
+            raw.scope = [...raw.scope].filter((item) => item !== "vocab");
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+
     /*****************************************************************************************************************/
     /************************************** Main processing part *****************************************************/
     /*****************************************************************************************************************/
@@ -787,17 +799,6 @@ export function getData(vocab_source: string): Vocab {
                 throw (new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`));
             }
 
-            const top_scope: boolean = (():boolean => {
-                if (raw.scope === undefined) {
-                    return false;
-                } else if (raw.scope.includes("vocab")) {
-                    raw.scope = [...raw.scope].filter((item) => item !== "vocab");
-                    return true;
-                } else {
-                    return false;
-                }
-            })()
-
             const property_scope = raw.property_scope === undefined ? undefined : factory.class(raw.property_scope)
             // Checking a combination: creation of a property scoped context and a null context exclude one another
             if (raw.context_null === true && property_scope !== undefined) {
@@ -823,7 +824,7 @@ export function getData(vocab_source: string): Vocab {
                 scope            : raw.scope?.map(val => factory.class(val)),
                 property_scope   : property_scope,
                 context_null     : raw.context_null,
-                top_scope        : top_scope,
+                top_scope        : get_top_scope(raw),
                 example          : raw.example,
                 known_as         : raw.known_as,
                 dataset          : dataset,
@@ -866,6 +867,7 @@ export function getData(vocab_source: string): Vocab {
                 known_as        : raw.known_as,
                 context         : final_contexts(raw, output),
                 scope           : raw.scope?.map((val) => factory.property(val)),
+                top_scope       : get_top_scope(raw),
             });
             return output;
         }
