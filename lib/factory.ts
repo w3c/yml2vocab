@@ -222,7 +222,9 @@ export class RDFTermFactory {
     individual(index: string): RDFIndividual {
         const curie = createCurie(index);
         const extras = {
-            term_type  : TermType.individual,}
+            scope      : [] as RDFProperty[],
+            term_type  : TermType.individual,
+        }
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
             if (output?.term_type === TermType.individual) {

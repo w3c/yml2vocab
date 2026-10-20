@@ -854,17 +854,18 @@ export function getData(vocab_source: string): Vocab {
                 ...(raw.upper_value !== undefined) ? raw.upper_value : []
             ];
             Object.assign(output, {
-                label      : raw.label,
-                comment    : raw.comment,
-                deprecated : raw.deprecated,
-                defined_by : raw.defined_by,
-                status     : raw.status,
-                type       : [...new Set(type)].map(t => factory.term(t)),
-                html_class : raw.html_class,
-                see_also   : raw.see_also,
-                example    : raw.example,
-                known_as   : raw.known_as,
-                context    : final_contexts(raw, output),
+                label           : raw.label,
+                comment         : raw.comment,
+                deprecated      : raw.deprecated,
+                defined_by      : raw.defined_by,
+                status          : raw.status,
+                type            : [...new Set(type)].map((t) => factory.term(t)),
+                html_class      : raw.html_class,
+                see_also        : raw.see_also,
+                example         : raw.example,
+                known_as        : raw.known_as,
+                context         : final_contexts(raw, output),
+                scope           : raw.scope?.map((val) => factory.property(val)),
             });
             return output;
         }

@@ -114,6 +114,18 @@ export function toContext(vocab: Vocab): string {
                     output["@type"] = "@vocab";
                 }
 
+                // Looking for individuals that are supposed to get here
+                for (const individual of vocab.individuals) {
+                    // this term was specifically flagged not to be added to a context
+                    if (individual.context.length === 0) continue;
+                    if (individual.scope !== undefined) {
+                        if (RDFTermFactory.includesTerm(individual.scope, property)) {
+                            output[individual.known_as ?? individual.id] = `${individual.url}`;
+                            property_individuals.add(individual.id); // This is a set, duplications are fine.
+                        }
+                    }
+                }
+
                 // There is a special treatment to generate additional statements
                 // when the values of the range are restricted.
                 // Thanks to Pierre-Antoine Champin for this tricky representation of the constraints.
@@ -229,6 +241,11 @@ export function toContext(vocab: Vocab): string {
     // This is used to avoid repeating the properties at the top level
     const class_properties: Set<string> = new Set();
 
+    // Set of individuals that are "handled" as parts of embedded contexts of properties.
+    // This is used to avoid repeating the properties at the top level
+    const property_individuals: Set<string> = new Set();
+
+
     // Add the classes; note that this will also cover the mapping of
     // all properties whose domain include a top level class
     for (const cl of vocab.classes) {
@@ -253,7 +270,9 @@ export function toContext(vocab: Vocab): string {
     for (const individual of vocab.individuals) {
         // this term was specifically flagged not to be added to a context
         if (individual.context.length === 0) continue;
-        top_level[individual.known_as ?? individual.id] = `${individual.url}`;
+        if (!property_individuals.has(individual.id)) {
+            top_level[individual.known_as ?? individual.id] = `${individual.url}`;
+        }
     }
 
     // Add the datatypes

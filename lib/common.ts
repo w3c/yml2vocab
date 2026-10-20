@@ -400,11 +400,11 @@ export interface RDFProperty extends RDFTerm {
 }
 
 /**
- * No extra information is necessary for an individual, but it makes the code
- * more readable if there is a separate interface for it. And one may never
- * know how things will evolve...
+ * Extra information is necessary for a property
  */
-export interface RDFIndividual extends RDFTerm {}
+export interface RDFIndividual extends RDFTerm {
+    scope             : RDFProperty[];
+}
 
 /**
  * Extra optional information is the superclass (ie, the datatypes that was used to derive this one).
