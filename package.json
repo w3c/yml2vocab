@@ -32,7 +32,7 @@
         "test_di": "tsx main.ts -v example/security.yml -t example/security_template.html -c",
         "test_vcdm": "tsx main.ts -v example/credentials.yml -t example/template.html -c",
         "test": "tsx main.ts -v example/test.yml -t example/test_template.html -c",
-        "local_test": "tsx main.ts -v local/tests/test.yml -t local/tests/test_template.html -c",
+        "local_test": "tsx main.ts -v local/tests/test.yml -t local/tests/test_template.html -c -y -m",
         "local_vcdm": "tsx main.ts -v local/dev/vcdm/vocabulary.yml -t local/dev/vcdm/template.html -c",
         "local_di": "tsx main.ts -v local/dev/di/vocabulary.yml -t local/dev/di/template.html -c",
         "local_sl": "tsx main.ts -v local/dev/sl/vocabulary.yml -t local/dev/sl/template.html -c",

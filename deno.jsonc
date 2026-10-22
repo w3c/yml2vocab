@@ -16,7 +16,7 @@
     },
     "tasks": {
         "local_vcdm": "(cd local/dev/vcdm;  deno run --quiet --allow-all ../../../main.ts -c)",
-        "local_test": "(cd local/tests;  deno run --quiet --allow-all ../../main.ts -v test.yml -t test_template.html -c -y)",
+        "local_test": "(cd local/tests;  deno run --quiet --allow-all ../../main.ts -v test.yml -t test_template.html -c -y -m)",
         "local_test_ident": "(cd local/tests/identification;  deno run --quiet --allow-all ../../../main.ts -c)",
         "local_test_did": "(cd local/tests/did;  deno run --quiet --allow-all ../../../main.ts -c)",
         "local_test_epub": "(cd local/tests/epub;  deno run --quiet --allow-all ../../../main.ts -c -v index)",
@@ -42,6 +42,7 @@
         "./lib/schema"       : "./lib/schema.ts",
         "./lib/turtle"       : "./lib/turtle.ts",
         "./lib/factory"      : "./lib/factory.ts",
+        "./lib/mermaid"      : "./lib/mermaid.ts",
         "./lib/minidom"      : "./lib/minidom.ts",
         "./lib/beautify"     : "./lib/beautify.ts",
         "./beautify"         : "./beautify.ts",

@@ -24,8 +24,8 @@ import { toTurtle }                   from "./lib/turtle";
 import { toJSONLD }                   from './lib/jsonld';
 import { toHTML }                     from './lib/html';
 import { toContext }                  from './lib/context';
+import { toMermaid }                  from "./lib/mermaid";
 import { getEditorConfigOptions }     from './lib/beautify';
-import type { ConfigOptions }         from "./lib/beautify";
 import { promises as fs }             from 'node:fs';
 
 
@@ -73,9 +73,18 @@ export class VocabGeneration {
      * @returns The JSON-LD content
      */
     getYAMLLD(): string {
-        const jsonldObj   = JSON.parse(this.getJSONLD());
-        const indent_size = getEditorConfigOptions('yamlld').indent_size as number;
-        return yamlStringify(jsonldObj, { indent: indent_size, lineWidth: 0 });   // { indent: 4, linewidth: 0});
+        const jsonldObj = JSON.parse(this.getJSONLD());
+        const indent_size = getEditorConfigOptions("yamlld").indent_size as number;
+        return yamlStringify(jsonldObj, { indent: indent_size, lineWidth: 0 }); // { indent: 4, linewidth: 0});
+    }
+
+    /**
+     * Get a simple mermaid diagram for the vocabulary.
+     *
+     * @returns The mermaid content
+     */
+    getMermaid(): string {
+        return toMermaid(this.vocab);
     }
 
     /**
@@ -132,7 +141,7 @@ export class VocabGeneration {
  * @param debug - display a full stack if an error is reported
  * @throws on error situation in reading the input files, in yml validation, or when writing the result
  */
-export async function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean, yamlVocab = false, debug = false): Promise<void> {
+export async function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean, yamlVocab = false, mermaid = false, debug = false): Promise<void> {
     // This trick allows the user to give the full yaml file name, or only the common base
     const basename = yaml_file_name.endsWith('.yml') ? yaml_file_name.slice(0,-4) : yaml_file_name;
 
@@ -176,6 +185,9 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
         }
         if (context) {
             fs_writes.push(fs.writeFile(`${basename}.context.jsonld`, conversion.getContext()));
+        }
+        if (mermaid) {
+            fs_writes.push(fs.writeFile(`${basename}.mmd`, conversion.getMermaid()));
         }
         const write_errors = (await Promise.allSettled(fs_writes))
             .filter((result): boolean => result.status === "rejected")
