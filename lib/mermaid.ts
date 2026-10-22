@@ -39,24 +39,59 @@ const arrows = {
     property   : "-->",
 } as const;
 
-function generateMermaid(classes: MClass[]): string {
+function generateMermaid(classesIn: MClass[]): string {
     const lines = ["classDiagram"];
+
+    // --------
+    // Hopefully, this is a temporary measure. At the moment
+    // the mermaid interpreter with respec cannot handle
+    // identifiers with a ':' in them. This means
+    // all the curies must be changed to prefix.value format.
+    const sanitizeName = (inp: string): string => {
+        return inp.replace(':','.');
+    }
+    const sanitizeProperty = (prop: Property) : Property => {
+        return {
+            name : sanitizeName(prop.name),
+            type : (prop.type === undefined) ? undefined: sanitizeName(prop.type),
+        }
+    };
+    const sanitizeRelation = (rel: Relation): Relation => {
+        return {
+            target   : sanitizeName(rel.target),
+            property : sanitizeName(rel.property),
+            kind     : rel.kind,
+        }
+    }
+    const sanitizeClass = (cl: MClass): MClass => {
+        return {
+            name : sanitizeName(cl.name),
+            superclasses : cl.superclasses.map(sanitizeName),
+            properties : cl.properties.map(sanitizeProperty),
+            externals : cl.externals.map(sanitizeProperty),
+            relations : cl.relations.map(sanitizeRelation),
+        }
+    }
+    const classes = classesIn.map(sanitizeClass);
+    //
+    //-----
+
 
     // first get the class definitions
     for (const c of classes) {
         lines.push(`    class ${c.name} {`)
         for (const p of c.properties) {
             if ( p.type) {
-                lines.push(`        ${p.name} -> ${p.type}`);
+                lines.push(`        ${p.name} ➝ ${p.type}`);
             } else {
                 lines.push(`        ${p.name}`)
             }
         }
         if (c.externals.length > 0) {
-        lines.push('— Extra properties —*')
+        lines.push('— External properties —*')
             for (const p of c.externals) {
                 if (p.type) {
-                    lines.push(`        ${p.name} -> ${p.type}`);
+                    lines.push(`        ${p.name} ➝ ${p.type}`);
                 } else {
                     lines.push(`        ${p.name}`);
                 }
@@ -89,32 +124,30 @@ function toMClass(vocab: Vocab) : MClass[] {
     const output: MClass[] = [];
 
     const addPropertyToMClass = (_cl: RDFClass, prop: RDFProperty, properties: Property[], relations: Relation[]): void => {
+        const name = prop.external ? prop.curie : prop.id;
         if (prop.range && prop.range.length > 0) {
             for (const rangeTerm of prop.range) {
                 const curie = rangeTerm.curie;
                 if (prop.langString === true) {
-                    properties.push({ name: prop.id, type: "localizable string" });
+                    properties.push({ name, type: "localizable string" });
                     break;
                 } else if (curie.startsWith("xsd:")) {
-                    properties.push({ name: prop.curie, type: curie });
+                    properties.push({ name, type: curie });
                     break;
-                } else if (curie === "rdf:JSON") {
-                    properties.push({ name: prop.id, type: "@json" });
-                    break;
-                } else if (["rdf:HTML", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString", "rdf:dirLangString"].includes(curie)) {
-                    properties.push({ name: prop.id, type: curie });
+                } else if (["rdf:HTML", "rdf:JSON", "rdf:XMLLiteral", "rdf:PlainLiteral", "rdf:langString", "rdf:dirLangString"].includes(curie)) {
+                    properties.push({ name, type: curie });
                     break;
                 } else if (RDFTermFactory.includesCurie(prop.type, "owl:DatatypeProperty")) {
                     // This is the case when the property refers to an explicitly defined, non-standard datatype
                     if (prop.range.length === 1) {
-                        properties.push({ name: prop.id, type: curie });
+                        properties.push({ name, type: curie });
                     }
                     break;
                 } else {
                     if (RDFTermFactory.isClass(rangeTerm) && !rangeTerm.external) {
                         relations.push({
                             target: rangeTerm.id,
-                            property: prop.id,
+                            property: name,
                             kind: prop.dataset ? "graph" : "property",
                         });
                     }
@@ -122,12 +155,12 @@ function toMClass(vocab: Vocab) : MClass[] {
             }
         } else {
             if (prop.langString === true) {
-                properties.push({ name: prop.id, type: "localizable string" });
+                properties.push({ name, type: "localizable string" });
             }
             if (RDFTermFactory.includesCurie(prop.type, "owl:ObjectProperty")) {
-                properties.push({ name: prop.id, type: "URL" });
+                properties.push({ name, type: "URL" });
             } else {
-                properties.push({ name: prop.id });
+                properties.push({ name });
             }
         }
     };
