@@ -80,7 +80,7 @@ export class VocabGeneration {
 
     /**
      * Get a simple mermaid diagram for the vocabulary.
-     *
+     * @param template the content of the template file. Can be the empty string to use the default.
      * @returns The mermaid content
      */
     getMermaid(template: string): string {
