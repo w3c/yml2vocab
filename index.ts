@@ -83,8 +83,8 @@ export class VocabGeneration {
      *
      * @returns The mermaid content
      */
-    getMermaid(): string {
-        return toMermaid(this.vocab);
+    getMermaid(template: string): string {
+        return toMermaid(this.vocab, template);
     }
 
     /**
@@ -187,8 +187,16 @@ export async function generateVocabularyFiles(yaml_file_name: string, template_f
             fs_writes.push(fs.writeFile(`${basename}.context.jsonld`, conversion.getContext()));
         }
         if (mermaid) {
-            fs_writes.push(fs.writeFile(`${basename}.mmd`, conversion.getMermaid()));
-        }
+            const mermaid_template: string = await (async (): Promise<string> => {
+                const mermaid_template_file = `${template_file_name.slice(0, -5)}.mmd`;
+                try {
+                    return await fs.readFile(mermaid_template_file, "utf-8");
+                } catch (_err) {
+                    return "";
+                }
+            })();
+            fs_writes.push(fs.writeFile(`${basename}.mmd`, conversion.getMermaid(mermaid_template)));
+        };
         const write_errors = (await Promise.allSettled(fs_writes))
             .filter((result): boolean => result.status === "rejected")
             .map((result): string => (result.status === "rejected" ? result.reason : ''));

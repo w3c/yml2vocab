@@ -30,12 +30,13 @@ interface Property {
 interface Relation {
     target   : string;
     property : string;
-    kind     : "graph" | "property";
+    // this seems an overkill, but is there for possible
+    // future additions of relationship kinds
+    kind     : "property";
 }
 
 const arrows = {
     subclass   : "--|>",
-    graph      : "..>",
     property   : "-->",
 } as const;
 
@@ -48,7 +49,11 @@ function generateMermaid(classesIn: MClass[]): string {
     // identifiers with a ':' in them. This means
     // all the curies must be changed to prefix.value format.
     const sanitizeName = (inp: string): string => {
-        return inp.replace(':','.');
+        // This is now a null operation, ie, no sanitization happens
+        // Kept it here, because what works and does not work
+        // in the respec plugin is a bit iffy...
+        // return inp.replace(':','.');
+        return inp;
     }
     const sanitizeProperty = (prop: Property) : Property => {
         return {
@@ -82,16 +87,16 @@ function generateMermaid(classesIn: MClass[]): string {
         lines.push(`    class ${c.name} {`)
         for (const p of c.properties) {
             if ( p.type) {
-                lines.push(`        ${p.name} ➝ ${p.type}`);
+                lines.push(`        ${p.name} : ${p.type}`);
             } else {
                 lines.push(`        ${p.name}`)
             }
         }
         if (c.externals.length > 0) {
-        lines.push('— External properties —*')
+            // lines.push('        — External properties —*')
             for (const p of c.externals) {
                 if (p.type) {
-                    lines.push(`        ${p.name} ➝ ${p.type}`);
+                    lines.push(`        ${p.name} : ${p.type}`);
                 } else {
                     lines.push(`        ${p.name}`);
                 }
@@ -105,7 +110,7 @@ function generateMermaid(classesIn: MClass[]): string {
     // Get the subclasses:
     for (const c of classes) {
         for (const sub of c.superclasses) {
-            lines.push(`    ${c.name} ${arrows["subclass"]} ${sub}`)
+            lines.push(`    ${c.name} ${arrows["subclass"]} ${sub} : rdfs.subClassOf`)
         }
     }
     lines.push("");
@@ -148,7 +153,7 @@ function toMClass(vocab: Vocab) : MClass[] {
                         relations.push({
                             target: rangeTerm.id,
                             property: name,
-                            kind: prop.dataset ? "graph" : "property",
+                            kind:  "property",
                         });
                     }
                 }
@@ -202,9 +207,10 @@ function toMClass(vocab: Vocab) : MClass[] {
     return output;
 }
 
-export function toMermaid(vocab: Vocab): string {
+export function toMermaid(vocab: Vocab, template: string = ""): string {
     const mermaid_classes = toMClass(vocab);
     const mermaid         = generateMermaid(mermaid_classes);
-    const output = mmd_template.replace("<<VOCAB>>>", mermaid);
+    const final_template = template.length === 0 ? mmd_template : template;
+    const output = final_template.replace("<<VOCAB>>>", mermaid);
     return output;
 }
