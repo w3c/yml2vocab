@@ -88,11 +88,11 @@ const arrows = {
  * @returns The mermaid text
  */
 function generateMermaid(classesIn: MClass[]): string {
-    const spaces = getRequestedSpaces('mmd');
+    const spaces = getRequestedSpaces("mmd");
 
     const lines = ["classDiagram"];
 
-    // --------
+    // ----------------------------------------
     // Hopefully, this is a temporary measure. At the moment
     // the mermaid interpreter with respec cannot handle
     // identifiers with a ':' in them. This means
@@ -103,76 +103,79 @@ function generateMermaid(classesIn: MClass[]): string {
         // in the respec plugin is a bit iffy...
         // return inp.replace(':','.');
         return inp;
-    }
-    const sanitizeProperty = (prop: Property) : Property => {
+    };
+    const sanitizeProperty = (prop: Property): Property => {
         return {
-            name : sanitizeName(prop.name),
-            type : (prop.type === undefined) ? undefined: sanitizeName(prop.type),
-        }
+            name: sanitizeName(prop.name),
+            type: prop.type === undefined ? undefined : sanitizeName(prop.type),
+        };
     };
     const sanitizeRelation = (rel: Relation): Relation => {
         return {
-            target   : sanitizeName(rel.target),
-            property : sanitizeName(rel.property),
-            kind     : rel.kind,
-        }
-    }
+            target: sanitizeName(rel.target),
+            property: sanitizeName(rel.property),
+            kind: rel.kind,
+        };
+    };
     const sanitizeClass = (cl: MClass): MClass => {
         return {
-            name : sanitizeName(cl.name),
-            superclasses : cl.superclasses.map(sanitizeName),
-            properties : cl.properties.map(sanitizeProperty),
-            externals : cl.externals.map(sanitizeProperty),
-            relations : cl.relations.map(sanitizeRelation),
-        }
-    }
+            name: sanitizeName(cl.name),
+            superclasses: cl.superclasses.map(sanitizeName),
+            properties: cl.properties.map(sanitizeProperty),
+            externals: cl.externals.map(sanitizeProperty),
+            relations: cl.relations.map(sanitizeRelation),
+        };
+    };
     const classes = classesIn.map(sanitizeClass);
     //
-    //-----
-
+    // ----------------------------------------
 
     // first get the class definitions
     for (const c of classes) {
-        lines.push(`${spaces}class ${c.name} {`);
-        for (const p of c.properties) {
-            if ( p.type) {
-                lines.push(`${spaces}${spaces}${p.name} : ${p.type}`);
-            } else {
-                lines.push(`${spaces}${spaces}${p.name}`);
-            }
-        }
-        if (c.externals.length > 0) {
-            // The respec plugin does not like this...
-            // lines.push('        — External properties —*')
-            for (const p of c.externals) {
+        if(c.externals.length + c.properties.length === 0) {
+            // worth compacting the class definition line
+            lines.push(`${spaces}class ${c.name} {}`);
+        } else {
+            lines.push(`${spaces}class ${c.name} {`);
+            for (const p of c.properties) {
                 if (p.type) {
                     lines.push(`${spaces}${spaces}${p.name} : ${p.type}`);
                 } else {
                     lines.push(`${spaces}${spaces}${p.name}`);
                 }
             }
+            if (c.externals.length > 0) {
+                // The respec plugin does not like this...
+                // lines.push('        — External properties —*')
+                for (const p of c.externals) {
+                    if (p.type) {
+                        lines.push(`${spaces}${spaces}${p.name} : ${p.type}`);
+                    } else {
+                        lines.push(`${spaces}${spaces}${p.name}`);
+                    }
+                }
+            }
+            lines.push(`${spaces}}`);
         }
-
-        lines.push(`${spaces}}\n`);
     }
     lines.push("\n");
 
     // Get the subclasses:
     for (const c of classes) {
         for (const sub of c.superclasses) {
-            lines.push(`    ${c.name} ${arrows["subclass"]} ${sub} : rdfs.subClassOf`)
+            lines.push(`${spaces}${c.name} ${arrows["subclass"]} ${sub} : rdfs.subClassOf`);
         }
     }
     lines.push("");
 
-    // Get the relationships:
+    // Get the relationships added as a separate block
     for (const c of classes) {
         for (const rel of c.relations) {
-            lines.push(`    ${c.name} ${arrows[rel.kind]} ${rel.target} : ${rel.property}`)
+            lines.push(`${spaces}${c.name} ${arrows[rel.kind]} ${rel.target} : ${rel.property}`);
         }
     }
     lines.push("");
-    return lines.join('\n');
+    return lines.join("\n");
 }
 
 /**
