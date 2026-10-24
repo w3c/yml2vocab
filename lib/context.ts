@@ -1,13 +1,14 @@
-  /**
+
+/**
  * Generate a (minimal) JSON-LD context file for the vocabulary
  * (see the 'Vocab' interface).
  *
  * @packageDocumentation
  */
 
-import { type Vocab, global, Container, type RDFProperty, RDFClass } from './common';
-import { RDFTermFactory }                                  from './factory';
-import { beautify }                                        from './beautify';
+import { type Vocab, global, Container, type RDFProperty, type RDFClass } from './common';
+import { RDFTermFactory }                                                 from './factory';
+import { beautify }                                                       from './beautify';
 
 
 // Just to get an extra help from TS if I mistype something...
