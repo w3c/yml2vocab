@@ -2,6 +2,10 @@
 
 This list does not include all the tiny, e.g., editorial changes, only the changes in the features and more important bug issues.
 
+## Version 1.13.0
+
+- Added the `scope` property to individuals, listing properties; the individual is added as part of the property context. Unless the `vocab` value is used in lieu of a property name, the individual does not appear in the top level context. See https://github.com/w3c/yml2vocab/issues/65.
+
 ## Version 1.12.0
 
 - Introduced the `html_class` feature. See readme for details.
