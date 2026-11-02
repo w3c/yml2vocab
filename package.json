@@ -26,7 +26,7 @@
     },
     "scripts": {
         "generate": "tsx main.ts",
-        "docs": "mv docs/previews /tmp; typedoc index.ts main.ts lib/* ; mv /tmp/previews docs",
+        "docs": "typedoc index.ts main.ts lib/*",
         "dist": "tsc",
         "distribute": "npm run dist && npm run docs",
         "local_vcdm": "tsx main.ts -v local/dev/vcdm/vocabulary.yml -t local/dev/vcdm//template.html -c",
