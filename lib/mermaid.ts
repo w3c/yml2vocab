@@ -95,15 +95,16 @@ function generateMermaid(classesIn: MClass[]): string {
     // ----------------------------------------
     // Hopefully, this is a temporary measure. At the moment
     // the mermaid interpreter with respec cannot handle
-    // identifiers with a ':' in them. This means
-    // all the curies must be changed to prefix.value format.
+    // identifiers with a ':' in them.
     // Hopefully, at some point, this will be safely solved and
     // the escape mechanism will work (This escape mechanism
     // is the alternative I found on the web...)
+    // In the meantime, if it is indeed a curie, only the
+    // name part is used.
     const sanitizeName = (inp: string): string => {
-        return inp.replace(':','.');
         // return inp.replace(':', '#58;')
-        // return inp;
+        const arr: string[] = inp.split(':');
+        return arr.length === 1 ? arr[0] : arr[1];
     };
     const sanitizeProperty = (prop: Property): Property => {
         return {
