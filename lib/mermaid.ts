@@ -97,12 +97,13 @@ function generateMermaid(classesIn: MClass[]): string {
     // the mermaid interpreter with respec cannot handle
     // identifiers with a ':' in them. This means
     // all the curies must be changed to prefix.value format.
+    // Hopefully, at some point, this will be safely solved and
+    // the escape mechanism will work (This escape mechanism
+    // is the alternative I found on the web...)
     const sanitizeName = (inp: string): string => {
-        // This is now a null operation, ie, no sanitization happens
-        // Kept it here, because what works and does not work
-        // in the respec plugin is a bit iffy...
-        // return inp.replace(':','.');
-        return inp;
+        return inp.replace(':','.');
+        // return inp.replace(':', '#58;')
+        // return inp;
     };
     const sanitizeProperty = (prop: Property): Property => {
         return {
@@ -163,7 +164,7 @@ function generateMermaid(classesIn: MClass[]): string {
     // Get the subclasses:
     for (const c of classes) {
         for (const sub of c.superclasses) {
-            lines.push(`${spaces}${c.name} ${arrows["subclass"]} ${sub} : rdfs.subClassOf`);
+            lines.push(`${spaces}${c.name} ${arrows["subclass"]} ${sub} : ${sanitizeName('rdfs:subClassOf')}`);
         }
     }
     lines.push("");
