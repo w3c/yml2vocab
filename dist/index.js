@@ -27,6 +27,7 @@ const turtle_1 = require("./lib/turtle");
 const jsonld_1 = require("./lib/jsonld");
 const html_1 = require("./lib/html");
 const context_1 = require("./lib/context");
+const mermaid_1 = require("./lib/mermaid");
 const beautify_1 = require("./lib/beautify");
 const node_fs_1 = require("node:fs");
 /**
@@ -70,8 +71,16 @@ class VocabGeneration {
      */
     getYAMLLD() {
         const jsonldObj = JSON.parse(this.getJSONLD());
-        const indent_size = (0, beautify_1.getEditorConfigOptions)('yamlld').indent_size;
+        const indent_size = (0, beautify_1.getEditorConfigOptions)("yamlld").indent_size;
         return (0, yaml_1.stringify)(jsonldObj, { indent: indent_size, lineWidth: 0 }); // { indent: 4, linewidth: 0});
+    }
+    /**
+     * Get a simple mermaid diagram for the vocabulary.
+     * @param template the content of the template file. Can be the empty string to use the default.
+     * @returns The mermaid content
+     */
+    getMermaid(template) {
+        return (0, mermaid_1.toMermaid)(this.vocab, template);
     }
     /**
      * Get the minimal JSON-LD Context file for the vocabulary.
@@ -125,7 +134,7 @@ exports.VocabGeneration = VocabGeneration;
  * @param debug - display a full stack if an error is reported
  * @throws on error situation in reading the input files, in yml validation, or when writing the result
  */
-async function generateVocabularyFiles(yaml_file_name, template_file_name, context, yamlVocab = false, debug = false) {
+async function generateVocabularyFiles(yaml_file_name, template_file_name, context, yamlVocab = false, mermaid = false, debug = false) {
     // This trick allows the user to give the full yaml file name, or only the common base
     const basename = yaml_file_name.endsWith('.yml') ? yaml_file_name.slice(0, -4) : yaml_file_name;
     // Get the two files from the file system (at some point, this can be extended
@@ -166,6 +175,19 @@ async function generateVocabularyFiles(yaml_file_name, template_file_name, conte
         if (context) {
             fs_writes.push(node_fs_1.promises.writeFile(`${basename}.context.jsonld`, conversion.getContext()));
         }
+        if (mermaid) {
+            const mermaid_template = await (async () => {
+                const mermaid_template_file = `${template_file_name.slice(0, -5)}.mmd`;
+                try {
+                    return await node_fs_1.promises.readFile(mermaid_template_file, "utf-8");
+                }
+                catch (_err) {
+                    return "";
+                }
+            })();
+            fs_writes.push(node_fs_1.promises.writeFile(`${basename}.mmd`, conversion.getMermaid(mermaid_template)));
+        }
+        ;
         const write_errors = (await Promise.allSettled(fs_writes))
             .filter((result) => result.status === "rejected")
             .map((result) => (result.status === "rejected" ? result.reason : ''));

@@ -51,6 +51,12 @@ export declare class VocabGeneration {
      */
     getYAMLLD(): string;
     /**
+     * Get a simple mermaid diagram for the vocabulary.
+     * @param template the content of the template file. Can be the empty string to use the default.
+     * @returns The mermaid content
+     */
+    getMermaid(template: string): string;
+    /**
      * Get the minimal JSON-LD Context file for the vocabulary.
      *
      * @returns The JSON-LD content
@@ -88,7 +94,7 @@ export declare class VocabGeneration {
  * @param debug - display a full stack if an error is reported
  * @throws on error situation in reading the input files, in yml validation, or when writing the result
  */
-export declare function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean, yamlVocab?: boolean, debug?: boolean): Promise<void>;
+export declare function generateVocabularyFiles(yaml_file_name: string, template_file_name: string, context: boolean, yamlVocab?: boolean, mermaid?: boolean, debug?: boolean): Promise<void>;
 /**
  *
  * @param yaml_file_name

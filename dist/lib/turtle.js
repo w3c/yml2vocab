@@ -11,21 +11,8 @@ const common_1 = require("./common");
 const common_2 = require("./common");
 const beautify_1 = require("./beautify");
 const factory_1 = require("./factory");
-const spaces = ((suffix) => {
-    const options = (0, beautify_1.getEditorConfigOptions)(suffix);
-    if (options.indent_with_tabs) {
-        return "\t";
-    }
-    else {
-        // We know that the indent size is always a number, but TS does not...
-        const number = typeof options.indent_size === 'number' ? options.indent_size : 4;
-        let output = "";
-        for (let i = 0; i < number; i++) {
-            output += " ";
-        }
-        return output;
-    }
-})('ttl');
+// Get the size of the indentation via .editorconfig
+const spaces = (0, beautify_1.getRequestedSpaces)('ttl');
 /**
  * Generate the Turtle representation of the vocabulary.
  * Nothing complex, just a straightforward conversion of the information into the turtle syntax.

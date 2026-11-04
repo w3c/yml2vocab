@@ -13,6 +13,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getEditorConfigOptions = getEditorConfigOptions;
 exports.beautify = beautify;
+exports.getRequestedSpaces = getRequestedSpaces;
 const jsBeautify = require("js-beautify");
 const path = require("node:path");
 const process = require("node:process");
@@ -60,7 +61,7 @@ const configOptions = {};
  * it may be unnecessary, but it just hurts my feeling to do it
  * otherwise😀.)
  *
- * This method is general; at the moment, it is invoked with the following suffixes: `html`, `ttl`, `jsonld`, and `yamlld`.
+ * This method is general; at the moment, it is invoked with the following suffixes: `html`, `ttl`, `jsonld`, 'mmd', and `yamlld`.
  *
  * @param suffix
  * @returns
@@ -107,7 +108,7 @@ function getEditorConfigOptions(suffix) {
  * Beautify a text.
  *
  * @param content the text content for HTML, CSS, JS, etc.
- * @param suffix the suffix, used also as a discriminator in .editorconfig. Can be 'js', 'ts', 'json', 'jsonld', 'html', 'xhtml', 'css', or 'scss'
+ * @param suffix the suffix, used also as a discriminator in .editorconfig. Can be 'js', 'ts', 'json', 'jsonld', 'html', 'xhtml', 'mmd', 'yamlld', 'yml', 'css', or 'scss'
  * @param options see https://www.npmjs.com/package/js-beautify for possible options; these take precedence over the .editorconfig options, when applicable.
  * @returns formatted text
  */
@@ -116,4 +117,22 @@ function beautify(content, suffix, options = {}) {
     const editorConfigOptions = getEditorConfigOptions(suffix);
     const final_options = { ...editorConfigOptions, ...options };
     return beautifyFunction(content, final_options);
+}
+/**
+ * Extract the spaces for the pure textual outputs (Turtle, Mermaid)
+ */
+function getRequestedSpaces(suffix) {
+    const options = getEditorConfigOptions(suffix);
+    if (options.indent_with_tabs) {
+        return "\t";
+    }
+    else {
+        // We know that the indent size is always a number, but TS does not...
+        const number = typeof options.indent_size === "number" ? options.indent_size : 4;
+        let output = "";
+        for (let i = 0; i < number; i++) {
+            output += " ";
+        }
+        return output;
+    }
 }

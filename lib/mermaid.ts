@@ -199,6 +199,8 @@ function toMClass(vocab: Vocab) : MClass[] {
         if (prop.range && prop.range.length > 0) {
             for (const rangeTerm of prop.range) {
                 const curie = rangeTerm.curie;
+                // const debug = curie.includes('multibase');
+                // if( debug ) console.log(rangeTerm.external)
                 if (prop.langString === true) {
                     properties.push({ name, type: "localizable string" });
                     break;
@@ -214,16 +216,16 @@ function toMClass(vocab: Vocab) : MClass[] {
                         properties.push({ name, type: curie });
                     }
                     break;
-                } else {
+                } else if (RDFTermFactory.isClass(rangeTerm)) {
                     if (relations !== undefined) {
-                        if (RDFTermFactory.isClass(rangeTerm) && !rangeTerm.external) {
-                            relations.push({
-                                target: rangeTerm.id,
-                                property: name,
-                                kind:  "property",
-                            });
-                        }
+                        relations.push({
+                            target: rangeTerm.id,
+                            property: name,
+                            kind:  "property",
+                        });
                     }
+                } else {
+                    properties.push(({name, type: curie}))
                 }
             }
         } else {
