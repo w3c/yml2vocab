@@ -17,9 +17,10 @@
       - [1.3.1. General JSON-LD context data — `json_ld` block](#131-general-json-ld-context-data--json_ld-block)
     - [1.3.2 Common term entries for the generated `@context`](#132-common-term-entries-for-the-generated-context)
     - [1.3.3 Property definitions entries for the generated `@context`](#133-property-definitions-entries-for-the-generated-context)
-  - [1.4. Formatting the output](#14-formatting-the-output)
+  - [1.4. Formatting the HTML output](#14-formatting-the-html-output)
     - [1.4.1. HTML templating](#141-html-templating)
       - [1.4.1.1. Styling the JSON-LD playground button](#1411-styling-the-json-ld-playground-button)
+  - [1.5 Mermaid diagrams](#15-mermaid-diagrams)
 - [2. Installation and use](#2-installation-and-use)
   - [2.1. Running the script on a command line](#21-running-the-script-on-a-command-line)
     - [2.1.1. NPM + node.js](#211-npm--nodejs)
@@ -817,7 +818,7 @@ yields the JSON-LD `@context`
 ```
 
 
-## 1.4. Formatting the output
+## 1.4. Formatting the HTML output
 
 Some efforts are made to make the output files (HTML, JSON-LD, Turtle, YAML-LD, or Mermaid) properly formatted to make them readable. A subset of the [`editorconfig`](https://spec.editorconfig.org) facilities are also taken into account. Namely, if an `.editorconfig` file is found, the following supported pairs are used (with the default values in parenthesis):
 
@@ -939,6 +940,11 @@ a.jsonld-playground-button:hover {
 The colors, the sizes, and the corner used may be adapted to the surrounding style.
 
 If using [`respec`](https://respec.org) for the template, bear in mind that respec decorates `pre.example` with a title bar of its own, so the offsets may need some adjustment if the template styles its examples differently.
+
+## 1.5 Mermaid diagrams
+
+Every class or property definition may have the `mermaid` key. The value is boolean, signalling whether the class, respectively the property, should appear in the generated diagram. Default value is `true`.
+
 
 # 2. Installation and use
 

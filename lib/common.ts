@@ -230,6 +230,7 @@ export interface RawVocabEntry {
     open_enumeration ?: boolean;
     pattern          ?: string;
     html_class       ?: string[];
+    mermaid          ?: boolean;
 }
 
 /**
@@ -375,6 +376,7 @@ export interface RDFClass extends RDFTerm {
     domain_of             : RDFProperty[];
     included_in_domain_of : RDFProperty[];
     includes_range_of     : RDFProperty[];
+    mermaid               : boolean;       // Whether the property should appear in the generated mermaid diagram
 }
 
 /**
@@ -397,6 +399,7 @@ export interface RDFProperty extends RDFTerm {
     type_vocab       : boolean;    // Whether, in the generated context, the type of the term should be @vocab
     strongURL        : boolean;    // Whether the property object should be required to be a real URL
     langString       : boolean;    // Whether the property gets the artificial range type langString
+    mermaid          : boolean;    // Whether the property should appear in the generated mermaid diagram
 }
 
 /**

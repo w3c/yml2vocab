@@ -159,6 +159,7 @@ export class RDFTermFactory {
             included_in_domain_of : [] as RDFProperty[],
             includes_range_of     : [] as RDFProperty[],
             term_type             : TermType.class,
+            mermaid               : true,
         }
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
@@ -198,6 +199,7 @@ export class RDFTermFactory {
             type_vocab     : false,
             strongURL      : false,
             term_type      : TermType.property,
+            mermaid        : true,
         }
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
@@ -410,4 +412,3 @@ export class RDFTermFactory {
  * The (only) factory object used in the package.
  */
 export const factory = new RDFTermFactory();
-

@@ -1,5 +1,5 @@
 
-import type { Vocab, RDFClass, RDFProperty, Container } from "./common";
+import type { Vocab, RDFClass, RDFProperty } from "./common";
 import { RDFTermFactory }                    from "./factory";
 import { getRequestedSpaces }                from "./beautify";
 
@@ -55,8 +55,6 @@ interface Property {
 interface Relation {
     target   : string;
     property : string;
-    // this seems an overkill, but is there for possible
-    // future additions of relationship types...
     kind     : string;
 }
 
@@ -199,12 +197,12 @@ function toMClass(vocab: Vocab) : MClass[] {
     // If it is a bona fide relationship within the vocabulary, that is also added  in the separate "relations" array
     //
     const addPropertyToMClass = (prop: RDFProperty, properties: Property[], relations: Relation[] | undefined = undefined): void => {
+        if (prop.mermaid === false) return;
+
         const name = prop.external ? prop.curie : prop.id;
         if (prop.range && prop.range.length > 0) {
             for (const rangeTerm of prop.range) {
                 const curie = rangeTerm.curie;
-                // const debug = curie.includes('multibase');
-                // if( debug ) console.log(rangeTerm.external)
                 if (prop.langString === true) {
                     properties.push({ name, type: "localizable string" });
                     break;
@@ -220,7 +218,7 @@ function toMClass(vocab: Vocab) : MClass[] {
                         properties.push({ name, type: curie });
                     }
                     break;
-                } else if (RDFTermFactory.isClass(rangeTerm)) {
+                } else if (RDFTermFactory.isClass(rangeTerm) && rangeTerm.mermaid === true) {
                     if (relations !== undefined) {
                         const kind: string = ((): string => {
                             if (prop.container) {
@@ -259,7 +257,7 @@ function toMClass(vocab: Vocab) : MClass[] {
 
     // Get all the classes and add the properties and relations
     for (const cl of vocab.classes) {
-        if (cl.external) continue;
+        if (cl.external || cl.mermaid === false) continue;
 
         const theClass: MClass = {
             name : cl.id,
@@ -278,7 +276,7 @@ function toMClass(vocab: Vocab) : MClass[] {
     for (const prop of vocab.properties) {
         if (prop.scope !== undefined) {
             for (const scope of prop.scope) {
-                if (scope.external) continue;
+                if (scope.external || scope.mermaid === false) continue;
                 const theClass = output.find((value: MClass): boolean => value.name === scope.id);
                 if (theClass !== undefined) {
                     // Note that relationships are irrelevant here
