@@ -1,5 +1,5 @@
 
-import type { Vocab, RDFClass, RDFProperty } from "./common";
+import type { Vocab, RDFClass, RDFProperty, Container } from "./common";
 import { RDFTermFactory }                    from "./factory";
 import { getRequestedSpaces }                from "./beautify";
 
@@ -57,15 +57,19 @@ interface Relation {
     property : string;
     // this seems an overkill, but is there for possible
     // future additions of relationship types...
-    kind     : "property";
+    kind     : string;
 }
 
 /**
  * The types of link used by mermaid for the relationships among classes
  */
-const arrows = {
+
+const arrows: Record<string,string> = {
     subclass   : "--|>",
     property   : "-->",
+    set        : "--o",  // array of targets
+    list       : "--*",  // list of targets
+    graph      : "..|>",
 } as const;
 
 /**
@@ -218,10 +222,23 @@ function toMClass(vocab: Vocab) : MClass[] {
                     break;
                 } else if (RDFTermFactory.isClass(rangeTerm)) {
                     if (relations !== undefined) {
+                        const kind: string = ((): string => {
+                            if (prop.container) {
+                                const con = `${prop.container}`;
+                                if (con === "list" || con === "set") {
+                                    return con;
+                                } else {
+                                    return "property";
+                                }
+                            } else {
+                                return "property";
+                            }
+                        })();
+
                         relations.push({
                             target: rangeTerm.id,
                             property: name,
-                            kind:  "property",
+                            kind,
                         });
                     }
                 } else {
