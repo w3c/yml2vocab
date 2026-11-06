@@ -154,6 +154,7 @@ class RDFTermFactory {
             included_in_domain_of: [],
             includes_range_of: [],
             term_type: common_1.TermType.class,
+            mermaid: true,
         };
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
@@ -195,6 +196,7 @@ class RDFTermFactory {
             type_vocab: false,
             strongURL: false,
             term_type: common_1.TermType.property,
+            mermaid: true,
         };
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);
@@ -221,6 +223,8 @@ class RDFTermFactory {
     individual(index) {
         const curie = createCurie(index);
         const extras = {
+            scope: [],
+            top_scope: false,
             term_type: common_1.TermType.individual,
         };
         if (this.terms.has(curie)) {

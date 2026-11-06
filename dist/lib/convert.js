@@ -250,6 +250,7 @@ function finalizeRawEntry(raw) {
         pattern: raw.pattern,
         one_of: toArray(raw.one_of),
         open_enumeration: raw.open_enumeration ?? false,
+        mermaid: raw.mermaid ?? true,
     };
 }
 /**
@@ -453,6 +454,18 @@ function getData(vocab_source) {
             }
         }
     };
+    const get_top_scope = (raw) => {
+        if (raw.scope === undefined) {
+            return false;
+        }
+        else if (raw.scope.includes("vocab")) {
+            raw.scope = [...raw.scope].filter((item) => item !== "vocab");
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
     /*****************************************************************************************************************/
     /************************************** Main processing part *****************************************************/
     /*****************************************************************************************************************/
@@ -626,6 +639,7 @@ function getData(vocab_source) {
                 domain_of: [], // these are set later, when all classes and properties are defined
                 included_in_domain_of: [], // these are set later, when all classes and properties are defined
                 includes_range_of: [], // these are set later, when all classes and properties are defined
+                mermaid: raw.mermaid,
             });
             return output;
         }) : [];
@@ -744,18 +758,6 @@ function getData(vocab_source) {
             if (container === common_2.Container.list && dataset) {
                 throw (new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`));
             }
-            const top_scope = (() => {
-                if (raw.scope === undefined) {
-                    return false;
-                }
-                else if (raw.scope.includes("vocab")) {
-                    raw.scope = [...raw.scope].filter((item) => item !== "vocab");
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            })();
             const property_scope = raw.property_scope === undefined ? undefined : factory_1.factory.class(raw.property_scope);
             // Checking a combination: creation of a property scoped context and a null context exclude one another
             if (raw.context_null === true && property_scope !== undefined) {
@@ -780,7 +782,7 @@ function getData(vocab_source) {
                 scope: raw.scope?.map(val => factory_1.factory.class(val)),
                 property_scope: property_scope,
                 context_null: raw.context_null,
-                top_scope: top_scope,
+                top_scope: get_top_scope(raw),
                 example: raw.example,
                 known_as: raw.known_as,
                 dataset: dataset,
@@ -789,6 +791,7 @@ function getData(vocab_source) {
                 strongURL: strongURL,
                 langString: langString,
                 context: final_contexts(raw, output),
+                mermaid: raw.mermaid,
             });
             return output;
         }) : [];
@@ -812,12 +815,14 @@ function getData(vocab_source) {
                 deprecated: raw.deprecated,
                 defined_by: raw.defined_by,
                 status: raw.status,
-                type: [...new Set(type)].map(t => factory_1.factory.term(t)),
+                type: [...new Set(type)].map((t) => factory_1.factory.term(t)),
                 html_class: raw.html_class,
                 see_also: raw.see_also,
                 example: raw.example,
                 known_as: raw.known_as,
                 context: final_contexts(raw, output),
+                scope: raw.scope?.map((val) => factory_1.factory.property(val)),
+                top_scope: get_top_scope(raw),
             });
             return output;
         }) : [];

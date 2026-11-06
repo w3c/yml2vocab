@@ -9,7 +9,7 @@ const beautify_1 = require("./beautify");
 const mmd_template = `
 %%{
     init: {
-        "theme" : "neutral",
+        "theme" : "mermaid",
         "class": {
             "hideEmptyMembersBox": true
         }
@@ -24,6 +24,9 @@ const mmd_template = `
 const arrows = {
     subclass: "--|>",
     property: "-->",
+    set: "--o", // array of targets
+    list: "--*", // list of targets
+    graph: "..|>",
 };
 /**
  * Generate a mermaid file from the MClass instances, both the class definitions and the relationships.
@@ -148,6 +151,8 @@ function toMClass(vocab) {
     // If it is a bona fide relationship within the vocabulary, that is also added  in the separate "relations" array
     //
     const addPropertyToMClass = (prop, properties, relations = undefined) => {
+        if (prop.mermaid === false)
+            return;
         const name = prop.external ? prop.curie : prop.id;
         if (prop.range && prop.range.length > 0) {
             for (const rangeTerm of prop.range) {
@@ -171,16 +176,31 @@ function toMClass(vocab) {
                     }
                     break;
                 }
-                else {
+                else if (factory_1.RDFTermFactory.isClass(rangeTerm) && rangeTerm.mermaid === true) {
                     if (relations !== undefined) {
-                        if (factory_1.RDFTermFactory.isClass(rangeTerm) && !rangeTerm.external) {
-                            relations.push({
-                                target: rangeTerm.id,
-                                property: name,
-                                kind: "property",
-                            });
-                        }
+                        const kind = (() => {
+                            if (prop.container) {
+                                const con = `${prop.container}`;
+                                if (con === "list" || con === "set") {
+                                    return con;
+                                }
+                                else {
+                                    return "property";
+                                }
+                            }
+                            else {
+                                return "property";
+                            }
+                        })();
+                        relations.push({
+                            target: rangeTerm.id,
+                            property: name,
+                            kind,
+                        });
                     }
+                }
+                else {
+                    properties.push(({ name, type: curie }));
                 }
             }
         }
@@ -198,7 +218,7 @@ function toMClass(vocab) {
     };
     // Get all the classes and add the properties and relations
     for (const cl of vocab.classes) {
-        if (cl.external)
+        if (cl.external || cl.mermaid === false)
             continue;
         const theClass = {
             name: cl.id,
@@ -216,7 +236,7 @@ function toMClass(vocab) {
     for (const prop of vocab.properties) {
         if (prop.scope !== undefined) {
             for (const scope of prop.scope) {
-                if (scope.external)
+                if (scope.external || scope.mermaid === false)
                     continue;
                 const theClass = output.find((value) => value.name === scope.id);
                 if (theClass !== undefined) {

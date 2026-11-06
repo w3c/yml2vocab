@@ -163,6 +163,7 @@ export interface RawVocabEntry {
     open_enumeration?: boolean;
     pattern?: string;
     html_class?: string[];
+    mermaid?: boolean;
 }
 /**
  * This is the structure of the YAML file itself. Note that only vocab and ontology are required, everything else is optional
@@ -284,6 +285,7 @@ export interface RDFClass extends RDFTerm {
     domain_of: RDFProperty[];
     included_in_domain_of: RDFProperty[];
     includes_range_of: RDFProperty[];
+    mermaid: boolean;
 }
 /**
  * Extra information necessary for a property: its super-properties, range, and domain.
@@ -305,13 +307,14 @@ export interface RDFProperty extends RDFTerm {
     type_vocab: boolean;
     strongURL: boolean;
     langString: boolean;
+    mermaid: boolean;
 }
 /**
- * No extra information is necessary for an individual, but it makes the code
- * more readable if there is a separate interface for it. And one may never
- * know how things will evolve...
+ * Extra information is necessary for a property
  */
 export interface RDFIndividual extends RDFTerm {
+    scope: RDFProperty[];
+    top_scope: boolean;
 }
 /**
  * Extra optional information is the superclass (ie, the datatypes that was used to derive this one).
