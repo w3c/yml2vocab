@@ -18,9 +18,10 @@
     - [1.3.2 Common term entries for the generated `@context`](#132-common-term-entries-for-the-generated-context)
     - [1.3.3 Property definitions entries for the generated `@context`](#133-property-definitions-entries-for-the-generated-context)
     - [1.3.4 Individual definitions entries for the generated `@context`](#134-individual-definitions-entries-for-the-generated-context)
-  - [1.4. Formatting the output](#14-formatting-the-output)
+  - [1.4. Formatting the HTML output](#14-formatting-the-html-output)
     - [1.4.1. HTML templating](#141-html-templating)
       - [1.4.1.1. Styling the JSON-LD playground button](#1411-styling-the-json-ld-playground-button)
+  - [1.5 Mermaid diagrams](#15-mermaid-diagrams)
 - [2. Installation and use](#2-installation-and-use)
   - [2.1. Running the script on a command line](#21-running-the-script-on-a-command-line)
     - [2.1.1. NPM + node.js](#211-npm--nodejs)
@@ -40,10 +41,13 @@
 
 This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-concepts/) vocabulary, described in [YAML](https://yaml.org/spec/1.2.2/), into a formal [RDFS](https://www.w3.org/TR/rdf-schema/) in [JSON-LD](https://www.w3.org/TR/json-ld11/), [Turtle](https://www.w3.org/TR/turtle/), optionally in [YAML-LD](https://www.w3.org/TR/yaml-ld-10/), and HTML. Optionally, a simple [JSON-LD `@context`](https://www.w3.org/TR/json-ld11/#the-context) is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements.
 
-When running, the script relies on two files:
+The script is also capable of generating a simple class diagram in [Mermaid](https://mermaid.js.org). The mermaid classes correspond to RDFS Classes, subclassing and relationships among RDFS classes are added to the diagram. Properties that map to data, or to classes not in the vocabulary, are just listes as members of the Mermaid classes in their domain or context scope.
+
+When running, the script relies on three files:
 
 1. The `vocabulary.yml` file, containing the definition for the vocabulary entries. (It is also possible to use a different name for the YAML file, see below.)
 2. The `template.html` file, used to create the HTML file version of the vocabulary. (It is also possible to use a different name for the template file, see below.) The template may also be an HTML fragment (ie, without the `<html>`, `<head>`, etc.), which comes handy if the generated fragment is to be included into the full specification as, say, an Appendix. Note that if a fragment is used, the `defined_by` entries use only the fragment part of the URL in the generated code (the URL is supposed to refer to the specification file itself).
+3. Optionally, a template `template.mmd` Mermaid file; the `<<VOCAB>>>` string is replaced by the generated Mermaid statements. This file is optional; the code includes a reasonable default.
 
 ## 1.2. Definition of the vocabulary in the YAML file
 
@@ -734,14 +738,12 @@ json_ld:
         </tr>
         <tr>
             <td><code>scope</code></td>
-            <td>One or more terms or CURIEs, referring to Classes</td>
+            <td>One or more terms or CURIEs</td>
             <td>
                 When generating a JSON-LD <code>@context</code>, the property will appear in the <a href="https://www.w3.org/TR/json-ld/#scoped-contexts">scoped context</a> of each of the classes in the list.
-                This effect is identical, in this respect, to <code>domain</code> setting, but it does not affect the formal RDF vocabularies.
-                <br/>This feature is especially important when using external property terms,
-                which should not use <code>domain</code> setting to avoid <a href="https://aidanhogan.com/docs/saor_billiontc08.pdf">ontology hijacking</a>.
-                <br/>
-                The <code>vocab</code> term can also be used in place of a class reference; the effect is that the term will <em>also</em> appear on the top level
+                This effect is identical, in this respect, to <code>domain</code> setting, but it does not affect the formal RDF vocabularies. <br/>This feature is especially important when using external property terms,
+                which should not use <code>domain</code> setting to avoid <a href="https://aidanhogan.com/docs/saor_billiontc08.pdf">ontology hijacking</a>.<br/>
+                The <code>vocab</code> term should also be used in place of a class reference; the effect is that the term will <em>also</em> appear on the top level
                 scope of the <code>@context</code>, and not only in the scoped contexts.
             </td>
             <td>No</td>
@@ -816,7 +818,6 @@ yields the JSON-LD `@context`
 }
 ```
 
-
 ### 1.3.4 Individual definitions entries for the generated `@context`
 
 <table>
@@ -844,9 +845,9 @@ yields the JSON-LD `@context`
 </table>
 
 
-## 1.4. Formatting the output
+## 1.4. Formatting the HTML output
 
-Some efforts are made to make the output files (HTML, JSON-LD, Turtle, or YAML-LD) properly formatted to make them readable. A subset of the [`editorconfig`](https://spec.editorconfig.org) facilities are also taken into account. Namely, if an `.editorconfig` file is found, the following supported pairs are used (with the default values in parenthesis):
+Some efforts are made to make the output files (HTML, JSON-LD, Turtle, YAML-LD, or Mermaid) properly formatted to make them readable. A subset of the [`editorconfig`](https://spec.editorconfig.org) facilities are also taken into account. Namely, if an `.editorconfig` file is found, the following supported pairs are used (with the default values in parenthesis):
 
 - `indent_style` (`space`)
 - `insert_final_newline` (`false`)
@@ -967,6 +968,11 @@ The colors, the sizes, and the corner used may be adapted to the surrounding sty
 
 If using [`respec`](https://respec.org) for the template, bear in mind that respec decorates `pre.example` with a title bar of its own, so the offsets may need some adjustment if the template styles its examples differently.
 
+## 1.5 Mermaid diagrams
+
+Every class or property definition may have the `mermaid` key. The value is boolean, signalling whether the class, respectively the property, should appear in the generated diagram. Default value is `true`.
+
+
 # 2. Installation and use
 
 The script has been written in TypeScript (version 5.0.2 and beyond) running on top of [`node.js`](https://nodejs.org) (version 21 and beyond) or  [`deno`](http://deno.land) (version 2.1 and beyond).
@@ -986,7 +992,7 @@ npm install yml2vocab
 The npm installation installs the `node_modules/.bin/yml2vocab` script. The script can be used as:
 
 ```sh
-yml2vocab [-v vocab_file_name] [-t template_file_name] [-c] [-y]
+yml2vocab [-v vocab_file_name] [-t template_file_name] [-c] [-y] [-m]
 ```
 
 ### 2.1.2. Deno
@@ -994,7 +1000,7 @@ yml2vocab [-v vocab_file_name] [-t template_file_name] [-c] [-y]
 If `deno` is installed globally, one can also run the script directly (without any further installation) from the code by
 
 ```sh
-deno run -A /a/b/c/main.ts [-v vocab_fname] [-t template_fname] [-c] [-y]
+deno run -A /a/b/c/main.ts [-v vocab_fname] [-t template_fname] [-c] [-y] [-m]
 ```
 
 on the top level. To make it simpler, a binary, compiled version of the program can be generated by
@@ -1008,7 +1014,7 @@ which results in an executable file, called `yml2vocab` that can be stored anywh
 The program can also run without installing the package locally from JSR. Just do a:
 
 ```sh
-deno run -A jsr:@iherman/yml2vocab/cli [-v vocab_file_name] [-t template_file_name] [-c] [-y]
+deno run -A jsr:@iherman/yml2vocab/cli [-v vocab_file_name] [-t template_file_name] [-c] [-y] [-m]
 ```
 
 ### 2.1.3. Command line argument
@@ -1017,7 +1023,10 @@ The script generates the `vocab_file_name.ttl`, `vocab_file_name.jsonld`, and `v
 
 If the `-y` flat is set, the additional `vocab_file_name.yamlld` file for a YAML-LD version is also generated.
 
-If the `-c` flag is also set, the additional `vocab_file_name.context.jsonld` is also generated, containing a JSON-LD file that can be used as a separate `@context` reference in a JSON-LD file. Note that this JSON-LD file does not necessarily use all the sophistication that JSON-LD [defines](https://www.w3.org/TR/json-ld11/#the-context) for `@context`; these may have to be added manually.
+If the `-c` flag is set, the additional `vocab_file_name.context.jsonld` is also generated, containing a JSON-LD file that can be used as a separate `@context` reference in a JSON-LD file. Note that this JSON-LD file does not necessarily use all the sophistication that JSON-LD [defines](https://www.w3.org/TR/json-ld11/#the-context) for `@context`; these may have to be added manually.
+
+If the `-m` flag is also set, the additional `vocab_file_name.mmd` file for a Mermaid diagram is also generated.
+
 
 ## 2.2. Running from a Javascript/TypeScript program
 
@@ -1053,6 +1062,9 @@ const yamlld: string  = vocabGeneration.getYAMLLD();
 const html: string    = vocabGeneration.getHTML(template_file_content, basename_for_files, context_generated);
 // returns the minimal @context file for the vocabulary
 const context: string = vocabGeneration.getContext();
+// returns a simple Mermaid diagram
+// The argument is the content of the template. Can be the empty string to use the default.
+const mermaid: string = vocabGeneration.getMermaid(template)
 ```
 
 Running TypeScript instead of Javascript is similar, except that the `require` must be replaced by:
