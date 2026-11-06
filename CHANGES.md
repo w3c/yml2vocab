@@ -4,7 +4,8 @@ This list does not include all the tiny, e.g., editorial changes, only the chang
 
 ## Version 1.13.0
 
-- Added the `scope` property to individuals, listing properties; the individual is added as part of the property context. Unless the `vocab` value is used in lieu of a property name, the individual does not appear in the top level context. See https://github.com/w3c/yml2vocab/issues/65.
+- Added the `scope` property to individuals, listing properties; the individual is added as part of the property context(s). Unless the `vocab` value is used in lieu of a property name, the individual does not appear in the top level context. See https://github.com/w3c/yml2vocab/issues/65.
+- Optionally, a mermaid diagram can be generated. It (mis)uses the [class diagram](https://mermaid.js.org/syntax/classDiagram.html) feature of mermaid
 
 ## Version 1.12.0
 
