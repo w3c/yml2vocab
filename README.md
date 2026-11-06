@@ -17,6 +17,7 @@
       - [1.3.1. General JSON-LD context data — `json_ld` block](#131-general-json-ld-context-data--json_ld-block)
     - [1.3.2 Common term entries for the generated `@context`](#132-common-term-entries-for-the-generated-context)
     - [1.3.3 Property definitions entries for the generated `@context`](#133-property-definitions-entries-for-the-generated-context)
+    - [1.3.4 Individual definitions entries for the generated `@context`](#134-individual-definitions-entries-for-the-generated-context)
   - [1.4. Formatting the HTML output](#14-formatting-the-html-output)
     - [1.4.1. HTML templating](#141-html-templating)
       - [1.4.1.1. Styling the JSON-LD playground button](#1411-styling-the-json-ld-playground-button)
@@ -816,6 +817,32 @@ yields the JSON-LD `@context`
     }
 }
 ```
+
+### 1.3.4 Individual definitions entries for the generated `@context`
+
+<table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>scope</code></td>
+            <td>One or more terms or CURIEs, referring to Properties</td>
+            <td>
+                When generating a JSON-LD <code>@context</code>, the individual will appear in the <a href="https://www.w3.org/TR/json-ld/#scoped-contexts">scoped context</a> of each of the properties in the list.
+                <br/>
+                The <code>vocab</code> term can also be used in place of a class reference; the effect is that the term will <em>also</em> appear on the top level
+                scope of the <code>@context</code>, and not only in the scoped contexts.
+            </td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
 
 
 ## 1.4. Formatting the HTML output

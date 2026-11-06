@@ -251,7 +251,7 @@ export function toHTML(vocab: Vocab, template_text: string, basename: string, co
         console.warn(`Template warning: the "${GROUPING_META}" value ("${grouping_setting}") is neither "true" nor "false"; the individuals are not grouped by type.`);
     }
 
-    const setExample = (section: Element, item: RDFClass | RDFIndividual | RDFProperty): void => {
+    const setExample = (section: Element, item: RDFClass | RDFIndividual | RDFProperty | RDFDatatype) : void => {
         if (item.example && item.example.length > 0) {
             for (const ex of item.example) {
                 // Without a button there is nothing to anchor, so the wrapper is only added when needed
