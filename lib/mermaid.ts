@@ -10,7 +10,7 @@ import { getRequestedSpaces }                from "./beautify";
 const mmd_template = `
 %%{
     init: {
-        "theme" : "neutral",
+        "theme" : "mermaid",
         "class": {
             "hideEmptyMembersBox": true
         }
