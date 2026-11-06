@@ -1,0 +1,53 @@
+%%{
+    init: {
+        "theme" : "neutral",
+        "class": {
+            "hideEmptyMembersBox": true
+        }
+    }
+}%%
+classDiagram
+    class CredentialEvidence {}
+    class CredentialSchema {}
+    class CredentialStatus {}
+    class ConfidenceMethod {}
+    class EnvelopedVerifiableCredential {}
+    class EnvelopedVerifiablePresentation {}
+    class JsonSchema {
+        jsonSchema : rdf:JSON
+    }
+    class JsonSchemaCredential {}
+    class RefreshService {}
+    class RenderMethod {}
+    class TermsOfUse {}
+    class VerifiableCredential {
+        credentialSubject : URL
+        issuer : URL
+        relatedResource : URL
+        validFrom : xsd:dateTime
+        validUntil : xsd:dateTime
+        sch:description
+        sch:name
+        sec:proof : URL
+    }
+    class VerifiableCredentialGraph {}
+    class VerifiablePresentation {
+        holder : URL
+        sec:proof : URL
+    }
+
+
+    JsonSchema --|> CredentialSchema : rdfs.subClassOf
+    JsonSchemaCredential --|> VerifiableCredential : rdfs.subClassOf
+
+    VerifiableCredential --> CredentialSchema : credentialSchema
+    VerifiableCredential --> CredentialStatus : credentialStatus
+    VerifiableCredential --> ConfidenceMethod : confidenceMethod
+    VerifiableCredential --> CredentialEvidence : evidence
+    VerifiableCredential --> RefreshService : refreshService
+    VerifiableCredential --> RenderMethod : renderMethod
+    VerifiableCredential --> TermsOfUse : termsOfUse
+    VerifiablePresentation --> VerifiableCredentialGraph : verifiableCredential
+    VerifiablePresentation --> TermsOfUse : termsOfUse
+
+    VerifiableCredentialGraph ..> VerifiableCredential

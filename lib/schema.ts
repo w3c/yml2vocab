@@ -148,6 +148,9 @@ const vocabSchema = `{
                             },
                             "one_of" : {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
+                            },
+                            "mermaid" : {
+                                "type": "boolean"
                             }
                         }
                     }
@@ -199,6 +202,9 @@ const vocabSchema = `{
                             "container": {
                                 "type" : "string",
                                 "enum" : ["set", "list", "graph", "language"]
+                            },
+                            "mermaid" : {
+                                "type": "boolean"
                             }
                         }
                     }
@@ -487,4 +493,3 @@ const vocabSchema = `{
         }
     }
 }`;
-

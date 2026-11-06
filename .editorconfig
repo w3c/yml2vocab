@@ -34,3 +34,6 @@ indent_size = 2
 [*.yamlld]
 indent_size = 4
 
+[*.mmd]
+indent_size = 4
+

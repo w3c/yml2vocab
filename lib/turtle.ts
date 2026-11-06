@@ -4,26 +4,13 @@
  *
  * @packageDocumentation
  */
-import { type Vocab, global, type RDFTerm, type Link, Status, Container, RDFProperty } from './common';
+import { type Vocab, global, type RDFTerm, type Link, Status, Container } from './common';
 import { requiredTurtlePrefixes }                                         from './common';
-import { getEditorConfigOptions }                                         from './beautify';
+import { getRequestedSpaces }                                             from "./beautify";
 import { factory }                                                        from './factory';
 
-
-const spaces: string = ((suffix: string): string => {
-    const options = getEditorConfigOptions(suffix);
-    if (options.indent_with_tabs) {
-        return "\t";
-    } else {
-        // We know that the indent size is always a number, but TS does not...
-        const number = typeof options.indent_size === 'number' ? options.indent_size : 4;
-        let output = "";
-        for (let i = 0; i < number; i++) {
-            output += " ";
-        }
-        return output;
-    }
-})('ttl');
+// Get the size of the indentation via .editorconfig
+const spaces: string = getRequestedSpaces('ttl');
 
 /**
  * Generate the Turtle representation of the vocabulary.

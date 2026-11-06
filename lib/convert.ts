@@ -253,6 +253,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         pattern:            raw.pattern,
         one_of:             toArray(raw.one_of) as undefined | string[],
         open_enumeration:   raw.open_enumeration ?? false,
+        mermaid:            raw.mermaid ?? true,
     };
 }
 
@@ -672,6 +673,7 @@ export function getData(vocab_source: string): Vocab {
                 domain_of             : [],      // these are set later, when all classes and properties are defined
                 included_in_domain_of : [],      // these are set later, when all classes and properties are defined
                 includes_range_of     : [],      // these are set later, when all classes and properties are defined
+                mermaid               : raw.mermaid,
             });
 
             return output;
@@ -833,6 +835,8 @@ export function getData(vocab_source: string): Vocab {
                 strongURL        : strongURL,
                 langString       : langString,
                 context          : final_contexts(raw, output),
+                mermaid          : raw.mermaid,
+
             });
             return output;
         }
