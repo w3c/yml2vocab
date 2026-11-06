@@ -216,6 +216,14 @@ const vocabSchema = `{
                 "allOf": [
                     {
                         "$ref": "#/$defs/CommonTerm"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "scope": {
+                                "$ref": "#/$defs/StringOrArrayOfStrings"
+                            }
+                        }
                     }
                 ],
                 "unevaluatedProperties": false
