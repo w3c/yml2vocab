@@ -40,16 +40,26 @@
 <li><a href="#134-individual-definitions-entries-for-the-generated-context">1.3.4 Individual definitions entries for the generated <code>@context</code></a></li>
 </ul>
 </li>
-<li><a href="#14-formatting-the-html-output">1.4. Formatting the HTML output</a>
+<li><a href="#14-mermaid-diagrams">1.4 Mermaid diagrams</a>
 <ul>
-<li><a href="#141-html-templating">1.4.1. HTML templating</a>
+<li><a href="#141-classproperty-term-entries-for-the-generated-mermaid-diagram">1.4.1 Class/property term entries for the generated mermaid diagram</a></li>
+</ul>
+</li>
+<li><a href="#15-formatting-the-html-output">1.5. Formatting the HTML output</a>
 <ul>
-<li><a href="#1411-styling-the-json-ld-playground-button">1.4.1.1. Styling the JSON-LD playground button</a></li>
+<li><a href="#151-html-templating">1.5.1. HTML templating</a></li>
+<li><a href="#152-output-control-via-meta">1.5.2 Output control via <code>&lt;meta&gt;</code></a>
+<ul>
+<li><a href="#1521-grouping-individuals">1.5.2.1 Grouping individuals</a></li>
+<li><a href="#1522-control-of-a-json-ld-playground-reference-for-examples">1.5.2.2 Control of a JSON-LD playground reference for examples</a>
+<ul>
+<li><a href="#15221-styling-the-json-ld-playground-button">1.5.2.2.1 Styling the JSON-LD playground button</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#15-mermaid-diagrams">1.5 Mermaid diagrams</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#2-installation-and-use">2. Installation and use</a>
@@ -733,7 +743,30 @@
         </tr>
     </tbody>
 </table>
-<h2 id="14-formatting-the-html-output" class="tsd-anchor-link">1.4. Formatting the HTML output<a href="#14-formatting-the-html-output" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h2 id="14-mermaid-diagrams" class="tsd-anchor-link">1.4 Mermaid diagrams<a href="#14-mermaid-diagrams" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="141-classproperty-term-entries-for-the-generated-mermaid-diagram" class="tsd-anchor-link">1.4.1 Class/property term entries for the generated mermaid diagram<a href="#141-classproperty-term-entries-for-the-generated-mermaid-diagram" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+       <tr>
+            <td><code>mermaid</code></td>
+            <td>boolean</td>
+            <td>
+                If set to `false`, the mermaid class box, and all relations involving the term, will be be ignored when generating the diagram.
+                Default value is `true`.
+            </td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+<h2 id="15-formatting-the-html-output" class="tsd-anchor-link">1.5. Formatting the HTML output<a href="#15-formatting-the-html-output" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Some efforts are made to make the output files (HTML, JSON-LD, Turtle, YAML-LD, or Mermaid) properly formatted to make them readable. A subset of the <a href="https://spec.editorconfig.org"><code>editorconfig</code></a> facilities are also taken into account. Namely, if an <code>.editorconfig</code> file is found, the following supported pairs are used (with the default values in parenthesis):</p>
 <ul>
 <li><code>indent_style</code> (<code>space</code>)</li>
@@ -743,7 +776,7 @@
 <li><code>end_of_line</code> (<code>lf</code>)</li>
 </ul>
 <p>See the <a href="https://spec.editorconfig.org/#supported-pairs"><code>.editorconfig</code></a> for further details.</p>
-<h3 id="141-html-templating" class="tsd-anchor-link">1.4.1. HTML templating<a href="#141-html-templating" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h3 id="151-html-templating" class="tsd-anchor-link">1.5.1. HTML templating<a href="#151-html-templating" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>The generation of the HTML output requires an HTML Template file. This can either be a complete HTML file or an HTML fragment (within a <code>&lt;section&gt;</code> or  <code>&lt;div&gt;</code>). The template should contain some specific HTML elements with predefined identifier values (i.e., <code>id</code> attribute values); the yml2vocab fills the respective content within those HTML elements. Each term is put into its own section, with the terms' <code>id</code> value serving both as the section header and its element identifiers. The content of the section is an HTML definition list with a human readable version of the vocabulary term data.</p>
 <p>The required <code>id</code> values, and the containing elements, are as follows:</p>
 <table>
@@ -885,7 +918,9 @@
 <p>If an element is missing, the content is ignored by the script.</p>
 <p>The template may contain CSS to provide a proper presentation in HTML; please look at the example template for a suitable CSS for the classes generated by the script.</p>
 <p>The <code>reserved</code> and <code>deprecated</code> section are filled with terms that have been labelled as <code>reserved</code>, resp. <code>deprecated</code>, using the <code>status</code> key in the term's defining block. If no <code>reserved</code> or <code>deprecated</code> entries are defined, the respective sections will be removed from the resulting HTML. Similarly, if no alternate context files are specified, the <code>&lt;ul id=contexts&gt;</code> entry is removed.</p>
-<p>Optional features of the script are switched on by <code>meta</code> elements whose name carries a <code>y2v:</code> prefix. These elements configure the generation and are removed from the generated document; if a setting is missing, the corresponding feature is off.</p>
+<h3 id="152-output-control-via" class="tsd-anchor-link">1.5.2 Output control via <code>&lt;meta&gt;</code><a href="#152-output-control-via" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Further control over the HTML output is provided via <code>meta</code> elements in the header, whose name carry a <code>y2v:</code> prefix. These elements configure the generation, and are removed from the generated document. If a setting is missing, the corresponding feature is off.</p>
+<p>The following <code>meta</code> entries are defined:</p>
 <table>
 <thead>
 <tr>
@@ -896,17 +931,24 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><code>y2v:jsonld-playground</code></td>
-<td style="text-align:left">URL template</td>
-<td style="text-align:left">Adds a button next to each example, opening it in the playground or viewer at that URL</td>
-</tr>
-<tr>
 <td style="text-align:left"><code>y2v:group-individuals</code></td>
 <td style="text-align:left"><code>true</code></td>
 <td style="text-align:left">Gathers the individuals into a subsection per type, instead of listing them consecutively</td>
 </tr>
+<tr>
+<td style="text-align:left"><code>y2v:jsonld-playground</code></td>
+<td style="text-align:left">URL template</td>
+<td style="text-align:left">Adds a button next to each example, referring to a playground or viewer at that URL</td>
+</tr>
 </tbody>
 </table>
+<h4 id="1521-grouping-individuals" class="tsd-anchor-link">1.5.2.1 Grouping individuals<a href="#1521-grouping-individuals" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<p>The <code>y2v:group-individuals</code> setting introduces, within the sections on individuals, a subsection per type (or per combination of types), listing the individuals that refer to it:</p>
+<pre><code class="html"><span class="hl-8">&lt;</span><span class="hl-0">meta</span><span class="hl-1"> </span><span class="hl-9">name</span><span class="hl-1">=</span><span class="hl-2">&quot;y2v:group-individuals&quot;</span><span class="hl-1"> </span><span class="hl-9">content</span><span class="hl-1">=</span><span class="hl-2">&quot;true&quot;</span><span class="hl-8">/&gt;</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Only the value <code>true</code> switches the grouping on; without the element the individuals follow one another, as all other terms do. The links to the individuals of a class, shown in the class sections, are generated either way.</p>
+<h4 id="1522-control-of-a-json-ld-playground-reference-for-examples" class="tsd-anchor-link">1.5.2.2 Control of a JSON-LD playground reference for examples<a href="#1522-control-of-a-json-ld-playground-reference-for-examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
 <p>With <code>y2v:jsonld-playground</code> the <code>content</code> value is the URL of a playground or JSON-LD viewer, in which <code>{jsonld}</code> is replaced by the URL encoded example (see the <code>example</code> key).
 As an example, to use the <a href="https://json-ld.org/playground">JSON-LD Playground</a>, the <code>meta</code> element may be:</p>
 <pre><code class="html"><span class="hl-8">&lt;</span><span class="hl-0">meta</span><span class="hl-1"> </span><span class="hl-9">name</span><span class="hl-1">=</span><span class="hl-2">&quot;y2v:jsonld-playground&quot;</span><span class="hl-1"> </span><span class="hl-9">content</span><span class="hl-1">=</span><span class="hl-2">&quot;https://json-ld.org/playground#json-ld={jsonld}</span><span class="hl-3">&amp;amp;</span><span class="hl-2">startTab=tab-expand&quot;</span><span class="hl-8">/&gt;</span>
@@ -917,12 +959,7 @@ As an example, to use the <a href="https://json-ld.org/playground">JSON-LD Playg
 </code><button type="button">Copy</button></pre>
 
 <p>Whichever viewer is used, the button text always reads “Open in JSON-LD Playground”. The script only generates the markup for the button; placing it is up to the template's CSS, see <a href="#1311-styling-the-json-ld-playground-button">Styling the JSON-LD Playground button</a> below.</p>
-<p>The <code>y2v:group-individuals</code> setting introduces, within the sections on individuals, a subsection per type (or per combination of types), listing the individuals that refer to it:</p>
-<pre><code class="html"><span class="hl-8">&lt;</span><span class="hl-0">meta</span><span class="hl-1"> </span><span class="hl-9">name</span><span class="hl-1">=</span><span class="hl-2">&quot;y2v:group-individuals&quot;</span><span class="hl-1"> </span><span class="hl-9">content</span><span class="hl-1">=</span><span class="hl-2">&quot;true&quot;</span><span class="hl-8">/&gt;</span>
-</code><button type="button">Copy</button></pre>
-
-<p>Only the value <code>true</code> switches the grouping on; without the element the individuals follow one another, as all other terms do. The links to the individuals of a class, shown in the class sections, are generated either way.</p>
-<h4 id="1411-styling-the-json-ld-playground-button" class="tsd-anchor-link">1.4.1.1. Styling the JSON-LD playground button<a href="#1411-styling-the-json-ld-playground-button" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<h5 id="15221-styling-the-json-ld-playground-button" class="tsd-anchor-link">1.5.2.2.1 Styling the JSON-LD playground button<a href="#15221-styling-the-json-ld-playground-button" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h5>
 <p>The script generates the markup for the “Open in JSON-LD Playground” button, but not its presentation. Each example is wrapped as follows:</p>
 <pre><code class="html"><span class="hl-8">&lt;</span><span class="hl-0">div</span><span class="hl-1"> </span><span class="hl-9">class</span><span class="hl-1">=</span><span class="hl-2">&quot;example-with-playground&quot;</span><span class="hl-8">&gt;</span><br/><span class="hl-1">  </span><span class="hl-8">&lt;</span><span class="hl-0">pre</span><span class="hl-1"> </span><span class="hl-9">class</span><span class="hl-1">=</span><span class="hl-2">&quot;example prettyprint language-json&quot;</span><span class="hl-1"> </span><span class="hl-9">title</span><span class="hl-1">=</span><span class="hl-2">&quot;…&quot;</span><span class="hl-8">&gt;</span><span class="hl-1">…</span><span class="hl-8">&lt;/</span><span class="hl-0">pre</span><span class="hl-8">&gt;</span><br/><span class="hl-1">  </span><span class="hl-8">&lt;</span><span class="hl-0">a</span><span class="hl-1"> </span><span class="hl-9">href</span><span class="hl-1">=</span><span class="hl-2">&quot;…&quot;</span><span class="hl-1"> </span><span class="hl-9">target</span><span class="hl-1">=</span><span class="hl-2">&quot;_blank&quot;</span><span class="hl-1"> </span><span class="hl-9">rel</span><span class="hl-1">=</span><span class="hl-2">&quot;noopener noreferrer&quot;</span><span class="hl-1"> </span><span class="hl-9">class</span><span class="hl-1">=</span><span class="hl-2">&quot;jsonld-playground-button&quot;</span><span class="hl-8">&gt;</span><span class="hl-1">Open in JSON-LD Playground</span><span class="hl-8">&lt;/</span><span class="hl-0">a</span><span class="hl-8">&gt;</span><br/><span class="hl-8">&lt;/</span><span class="hl-0">div</span><span class="hl-8">&gt;</span>
 </code><button type="button">Copy</button></pre>
@@ -931,10 +968,8 @@ As an example, to use the <a href="https://json-ld.org/playground">JSON-LD Playg
 <pre><code class="css"><span class="hl-10">.example-with-playground</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-9">position</span><span class="hl-1">: </span><span class="hl-11">relative</span><span class="hl-1">;          </span><span class="hl-6">/* the positioning context for the button */</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-10">a.jsonld-playground-button</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-9">position</span><span class="hl-1">: </span><span class="hl-11">absolute</span><span class="hl-1">;          </span><span class="hl-6">/* …so these offsets are relative to the example */</span><br/><span class="hl-1">  </span><span class="hl-9">top</span><span class="hl-1">: </span><span class="hl-12">0.4em</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-9">right</span><span class="hl-1">: </span><span class="hl-12">0.4em</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-9">z-index</span><span class="hl-1">: </span><span class="hl-12">1</span><span class="hl-1">;                  </span><span class="hl-6">/* stays above the example&#39;s own decoration */</span><br/><span class="hl-1">  </span><span class="hl-9">padding</span><span class="hl-1">: </span><span class="hl-12">0.3em</span><span class="hl-1"> </span><span class="hl-12">0.7em</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-9">font-size</span><span class="hl-1">: </span><span class="hl-12">0.8em</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-9">font-weight</span><span class="hl-1">: </span><span class="hl-11">bold</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-9">color</span><span class="hl-1">: </span><span class="hl-11">#fff</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-9">background-color</span><span class="hl-1">: </span><span class="hl-11">#005a9c</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-9">border-radius</span><span class="hl-1">: </span><span class="hl-12">4px</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-9">text-decoration</span><span class="hl-1">: </span><span class="hl-11">none</span><span class="hl-1">;</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-10">a.jsonld-playground-button:hover</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-9">background-color</span><span class="hl-1">: </span><span class="hl-11">#00457a</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
 </code><button type="button">Copy</button></pre>
 
-<p>The colors, the sizes, and the corner used may be adapted to the surrounding style.</p>
+<p>The colors, the sizes, and the radius of the corner may be adapted to the surrounding style.</p>
 <p>If using <a href="https://respec.org"><code>respec</code></a> for the template, bear in mind that respec decorates <code>pre.example</code> with a title bar of its own, so the offsets may need some adjustment if the template styles its examples differently.</p>
-<h2 id="15-mermaid-diagrams" class="tsd-anchor-link">1.5 Mermaid diagrams<a href="#15-mermaid-diagrams" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Every class or property definition may have the <code>mermaid</code> key. The value is boolean, signalling whether the class, respectively the property, should appear in the generated diagram. Default value is <code>true</code>.</p>
 <h1 id="2-installation-and-use" class="tsd-anchor-link">2. Installation and use<a href="#2-installation-and-use" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
 <p>The script has been written in TypeScript (version 5.0.2 and beyond) running on top of <a href="https://nodejs.org"><code>node.js</code></a> (version 21 and beyond) or  <a href="http://deno.land"><code>deno</code></a> (version 2.1 and beyond).</p>
 <p>Beyond the YAML file itself, the script relies on an HTML template file, i.e., a skeleton file in HTML that is completed by the vocabulary entries. The <a href="https://github.com/w3c/yml2vocab/tree/main/example/template.html">example template file on GitHub</a> provides a good starting point for a template that also makes use of <a href="https://respec.org">respec</a>. The script relies on the existing <code>id</code> values and section structures to be modified/extended by the script. Unused subsections (e.g., when there are no deprecated classes) are removed from the final HTML file.</p>
@@ -1014,7 +1049,7 @@ As an example, to use the <a href="https://json-ld.org/playground">JSON-LD Playg
 <li><code>deno.lock</code>: used by <code>deno</code> to manage imported packages using its own mechanism (bypassing <code>node_modules</code>).</li>
 </ul>
 <h1 id="4-acknowledgement" class="tsd-anchor-link">4. Acknowledgement<a href="#4-acknowledgement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
-<p>I got inspired by the structure and Ruby script created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript, and developed further since by adding new features based on practical usage.</p>
+<p>I got inspired by the structure and Ruby script created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, the script itself has been re-written in TypeScript, and developed further since by adding new features based on practical usage.</p>
 <p>Many features are the result of further discussions and submitted code with <a href="https://github.com/msporny">Many Sporny</a>, <a href="https://github.com/BigBlueHat">Benjamin Young</a>, <a href="https://github.com/pchampin">Pierre-Antoine Champin</a>, <a href="https://github.com/dlongley">Dave Longley</a>, and <a href="https://github.com/rkxx">Ronald Koenig</a>.</p>
 <p>I dedicate this script to the memory of Gregg Kellogg. R.I.P.</p>
 <hr>
@@ -1064,14 +1099,22 @@ As an example, to use the <a href="https://json-ld.org/playground">JSON-LD Playg
 <li><a href="#132-common-term-entries-for-the-generated"><span>1.3.2 <wbr/>Common term entries for the generated </span></a></li>
 <li><a href="#133-property-definitions-entries-for-the-generated"><span>1.3.3 <wbr/>Property definitions entries for the generated </span></a></li>
 <li><a href="#134-individual-definitions-entries-for-the-generated"><span>1.3.4 <wbr/>Individual definitions entries for the generated </span></a></li></ul></li>
-<li><a href="#14-formatting-the-html-output"><span>1.4. <wbr/>Formatting the <wbr/>HTML output</span></a></li>
+<li><a href="#14-mermaid-diagrams"><span>1.4 <wbr/>Mermaid diagrams</span></a></li>
 <li>
 <ul>
-<li><a href="#141-html-templating"><span>1.4.1. <wbr/>HTML templating</span></a></li>
+<li><a href="#141-classproperty-term-entries-for-the-generated-mermaid-diagram"><span>1.4.1 <wbr/>Class/property term entries for the generated mermaid diagram</span></a></li></ul></li>
+<li><a href="#15-formatting-the-html-output"><span>1.5. <wbr/>Formatting the <wbr/>HTML output</span></a></li>
 <li>
 <ul>
-<li><a href="#1411-styling-the-json-ld-playground-button"><span>1.4.1.1. <wbr/>Styling the <wbr/>JSON-<wbr/>LD playground button</span></a></li></ul></li></ul></li>
-<li><a href="#15-mermaid-diagrams"><span>1.5 <wbr/>Mermaid diagrams</span></a></li></ul><a href="#2-installation-and-use"><span>2. <wbr/>Installation and use</span></a>
+<li><a href="#151-html-templating"><span>1.5.1. <wbr/>HTML templating</span></a></li>
+<li><a href="#152-output-control-via"><span>1.5.2 <wbr/>Output control via </span></a></li>
+<li>
+<ul>
+<li><a href="#1521-grouping-individuals"><span>1.5.2.1 <wbr/>Grouping individuals</span></a></li>
+<li><a href="#1522-control-of-a-json-ld-playground-reference-for-examples"><span>1.5.2.2 <wbr/>Control of a <wbr/>JSON-<wbr/>LD playground reference for examples</span></a></li>
+<li>
+<ul>
+<li><a href="#15221-styling-the-json-ld-playground-button"><span>1.5.2.2.1 <wbr/>Styling the <wbr/>JSON-<wbr/>LD playground button</span></a></li></ul></li></ul></li></ul></li></ul><a href="#2-installation-and-use"><span>2. <wbr/>Installation and use</span></a>
 <ul>
 <li><a href="#21-running-the-script-on-a-command-line"><span>2.1. <wbr/>Running the script on a command line</span></a></li>
 <li>

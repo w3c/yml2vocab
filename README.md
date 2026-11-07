@@ -18,10 +18,14 @@
     - [1.3.2 Common term entries for the generated `@context`](#132-common-term-entries-for-the-generated-context)
     - [1.3.3 Property definitions entries for the generated `@context`](#133-property-definitions-entries-for-the-generated-context)
     - [1.3.4 Individual definitions entries for the generated `@context`](#134-individual-definitions-entries-for-the-generated-context)
-  - [1.4. Formatting the HTML output](#14-formatting-the-html-output)
-    - [1.4.1. HTML templating](#141-html-templating)
-      - [1.4.1.1. Styling the JSON-LD playground button](#1411-styling-the-json-ld-playground-button)
-  - [1.5 Mermaid diagrams](#15-mermaid-diagrams)
+  - [1.4 Mermaid diagrams](#14-mermaid-diagrams)
+    - [1.4.1 Class/property term entries for the generated mermaid diagram](#141-classproperty-term-entries-for-the-generated-mermaid-diagram)
+  - [1.5. Formatting the HTML output](#15-formatting-the-html-output)
+    - [1.5.1. HTML templating](#151-html-templating)
+    - [1.5.2 Output control via `<meta>`](#152-output-control-via-meta)
+      - [1.5.2.1 Grouping individuals](#1521-grouping-individuals)
+      - [1.5.2.2 Control of a JSON-LD playground reference for examples](#1522-control-of-a-json-ld-playground-reference-for-examples)
+        - [1.5.2.2.1 Styling the JSON-LD playground button](#15221-styling-the-json-ld-playground-button)
 - [2. Installation and use](#2-installation-and-use)
   - [2.1. Running the script on a command line](#21-running-the-script-on-a-command-line)
     - [2.1.1. NPM + node.js](#211-npm--nodejs)
@@ -844,8 +848,33 @@ yields the JSON-LD `@context`
     </tbody>
 </table>
 
+## 1.4 Mermaid diagrams
 
-## 1.4. Formatting the HTML output
+### 1.4.1 Class/property term entries for the generated mermaid diagram
+
+<table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+       <tr>
+            <td><code>mermaid</code></td>
+            <td>boolean</td>
+            <td>
+                If set to `false`, the mermaid class box, and all relations involving the term, will be be ignored when generating the diagram.
+                Default value is `true`.
+            </td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+
+## 1.5. Formatting the HTML output
 
 Some efforts are made to make the output files (HTML, JSON-LD, Turtle, YAML-LD, or Mermaid) properly formatted to make them readable. A subset of the [`editorconfig`](https://spec.editorconfig.org) facilities are also taken into account. Namely, if an `.editorconfig` file is found, the following supported pairs are used (with the default values in parenthesis):
 
@@ -857,7 +886,7 @@ Some efforts are made to make the output files (HTML, JSON-LD, Turtle, YAML-LD, 
 
 See the [`.editorconfig`](https://spec.editorconfig.org/#supported-pairs) for further details.
 
-### 1.4.1. HTML templating
+### 1.5.1. HTML templating
 
 The generation of the HTML output requires an HTML Template file. This can either be a complete HTML file or an HTML fragment (within a `<section>` or  `<div>`). The template should contain some specific HTML elements with predefined identifier values (i.e., `id` attribute values); the yml2vocab fills the respective content within those HTML elements. Each term is put into its own section, with the terms' `id` value serving both as the section header and its element identifiers. The content of the section is an HTML definition list with a human readable version of the vocabulary term data.
 
@@ -897,12 +926,30 @@ The template may contain CSS to provide a proper presentation in HTML; please lo
 
 The `reserved` and `deprecated` section are filled with terms that have been labelled as `reserved`, resp. `deprecated`, using the `status` key in the term's defining block. If no `reserved` or `deprecated` entries are defined, the respective sections will be removed from the resulting HTML. Similarly, if no alternate context files are specified, the `<ul id=contexts>` entry is removed.
 
-Optional features of the script are switched on by `meta` elements whose name carries a `y2v:` prefix. These elements configure the generation and are removed from the generated document; if a setting is missing, the corresponding feature is off.
+### 1.5.2 Output control via `<meta>`
+
+Further control over the HTML output is provided via `meta` elements in the header, whose name carry a `y2v:` prefix. These elements configure the generation, and are removed from the generated document. If a setting is missing, the corresponding feature is off.
+
+The following `meta` entries are defined:
+
 
 | `meta` name              | Value              | Effect                                                                              |
 | :----------------------- | :----------------- | :---------------------------------------------------------------------------------- |
-| `y2v:jsonld-playground`  | URL template       | Adds a button next to each example, opening it in the playground or viewer at that URL |
 | `y2v:group-individuals`  | `true`             | Gathers the individuals into a subsection per type, instead of listing them consecutively |
+| `y2v:jsonld-playground`  | URL template       | Adds a button next to each example, referring to a playground or viewer at that URL |
+
+#### 1.5.2.1 Grouping individuals
+
+The `y2v:group-individuals` setting introduces, within the sections on individuals, a subsection per type (or per combination of types), listing the individuals that refer to it:
+
+```html
+<meta name="y2v:group-individuals" content="true"/>
+```
+
+Only the value `true` switches the grouping on; without the element the individuals follow one another, as all other terms do. The links to the individuals of a class, shown in the class sections, are generated either way.
+
+
+#### 1.5.2.2 Control of a JSON-LD playground reference for examples
 
 With `y2v:jsonld-playground` the `content` value is the URL of a playground or JSON-LD viewer, in which `{jsonld}` is replaced by the URL encoded example (see the `example` key).
 As an example, to use the [JSON-LD Playground](https://json-ld.org/playground), the `meta` element may be:
@@ -919,15 +966,7 @@ As another example, to use [SoWasm](https://perso.liris.cnrs.fr/pierre-antoine.c
 
 Whichever viewer is used, the button text always reads “Open in JSON-LD Playground”. The script only generates the markup for the button; placing it is up to the template's CSS, see [Styling the JSON-LD Playground button](#1311-styling-the-json-ld-playground-button) below.
 
-The `y2v:group-individuals` setting introduces, within the sections on individuals, a subsection per type (or per combination of types), listing the individuals that refer to it:
-
-```html
-<meta name="y2v:group-individuals" content="true"/>
-```
-
-Only the value `true` switches the grouping on; without the element the individuals follow one another, as all other terms do. The links to the individuals of a class, shown in the class sections, are generated either way.
-
-#### 1.4.1.1. Styling the JSON-LD playground button
+##### 1.5.2.2.1 Styling the JSON-LD playground button
 
 The script generates the markup for the “Open in JSON-LD Playground” button, but not its presentation. Each example is wrapped as follows:
 
@@ -964,14 +1003,9 @@ a.jsonld-playground-button:hover {
 }
 ```
 
-The colors, the sizes, and the corner used may be adapted to the surrounding style.
+The colors, the sizes, and the radius of the corner may be adapted to the surrounding style.
 
 If using [`respec`](https://respec.org) for the template, bear in mind that respec decorates `pre.example` with a title bar of its own, so the offsets may need some adjustment if the template styles its examples differently.
-
-## 1.5 Mermaid diagrams
-
-Every class or property definition may have the `mermaid` key. The value is boolean, signalling whether the class, respectively the property, should appear in the generated diagram. Default value is `true`.
-
 
 # 2. Installation and use
 
@@ -1115,7 +1149,7 @@ The following files and directories are generated/modified by either the script 
 
 # 4. Acknowledgement
 
-I got inspired by the structure and Ruby script created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, and the script itself has been re-written in TypeScript, and developed further since by adding new features based on practical usage.
+I got inspired by the structure and Ruby script created by my late colleague and friend Gregg Kellogg for version 1 of the Credentials Vocabulary. The vocabulary definition itself was using CSV. The CSV definitions have been changed to YAML, the script itself has been re-written in TypeScript, and developed further since by adding new features based on practical usage.
 
 Many features are the result of further discussions and submitted code with [Many Sporny](https://github.com/msporny), [Benjamin Young](https://github.com/BigBlueHat), [Pierre-Antoine Champin](https://github.com/pchampin), [Dave Longley](https://github.com/dlongley), and [Ronald Koenig](https://github.com/rkxx).
 
