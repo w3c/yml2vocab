@@ -222,6 +222,15 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         }
     })(raw.label);
 
+
+    const mermaid = ((mmd: boolean | undefined): boolean => {
+        if (mmd !== undefined) {
+            return mmd;
+        } else {
+            return deprecated === false ? true : false;
+        }
+    })(raw.mermaid);
+
     /* ***************************** Do the real cleanup *****************************/
 
     return {
@@ -253,7 +262,7 @@ function finalizeRawEntry(raw: RawVocabEntry): RawVocabEntry {
         pattern:            raw.pattern,
         one_of:             toArray(raw.one_of) as undefined | string[],
         open_enumeration:   raw.open_enumeration ?? false,
-        mermaid:            raw.mermaid ?? true,
+        mermaid:            mermaid,
     };
 }
 

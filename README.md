@@ -867,7 +867,7 @@ yields the JSON-LD `@context`
             <td>boolean</td>
             <td>
                 If set to `false`, the mermaid class box, and all relations involving the term, will be be ignored when generating the diagram.
-                Default value is `true`.
+                Default value is `false` if the `deprecated` term is set, otherwise `true`.
             </td>
             <td>No</td>
         </tr>
