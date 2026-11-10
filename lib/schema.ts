@@ -228,6 +228,9 @@ const vocabSchema = `{
                         "properties": {
                             "scope": {
                                 "$ref": "#/$defs/StringOrArrayOfStrings"
+                            },
+                            "mermaid" : {
+                                "type": "boolean"
                             }
                         }
                     }

@@ -408,6 +408,7 @@ export interface RDFProperty extends RDFTerm {
 export interface RDFIndividual extends RDFTerm {
     scope           : RDFProperty[];
     top_scope       : boolean;
+    mermaid         : boolean
 }
 
 /**

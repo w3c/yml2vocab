@@ -19,7 +19,7 @@
     - [1.3.3 Property definitions entries for the generated `@context`](#133-property-definitions-entries-for-the-generated-context)
     - [1.3.4 Individual definitions entries for the generated `@context`](#134-individual-definitions-entries-for-the-generated-context)
   - [1.4 Mermaid diagrams](#14-mermaid-diagrams)
-    - [1.4.1 Class/property term entries for the generated mermaid diagram](#141-classproperty-term-entries-for-the-generated-mermaid-diagram)
+    - [1.4.1 Class/property/individual term entries for the generated mermaid diagram](#141-classpropertyindividual-term-entries-for-the-generated-mermaid-diagram)
   - [1.5. Formatting the HTML output](#15-formatting-the-html-output)
     - [1.5.1. HTML templating](#151-html-templating)
     - [1.5.2 Output control via `<meta>`](#152-output-control-via-meta)
@@ -45,7 +45,7 @@
 
 This script in this module converts a simple [RDF](https://www.w3.org/TR/rdf11-concepts/) vocabulary, described in [YAML](https://yaml.org/spec/1.2.2/), into a formal [RDFS](https://www.w3.org/TR/rdf-schema/) in [JSON-LD](https://www.w3.org/TR/json-ld11/), [Turtle](https://www.w3.org/TR/turtle/), optionally in [YAML-LD](https://www.w3.org/TR/yaml-ld-10/), and HTML. Optionally, a simple [JSON-LD `@context`](https://www.w3.org/TR/json-ld11/#the-context) is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements.
 
-The script is also capable of generating a simple class diagram in [Mermaid](https://mermaid.js.org). The mermaid classes correspond to RDFS Classes, subclassing and relationships among RDFS classes are added to the diagram. Properties that map to data, or to classes not in the vocabulary, are just listes as members of the Mermaid classes in their domain or context scope.
+The script is also capable of generating a simple class diagram in [Mermaid](https://mermaid.js.org). The mermaid classes correspond to RDFS Classes, subclassing and relationships among RDFS classes (including type relationships) are added to the diagram. Properties that map to data, or to classes not in the vocabulary, are just listed as members of the Mermaid classes in their domains or context scopes. (This diagram is only an illustration, it should not be considered as an exhaustive depiction of the vocabulary.)
 
 When running, the script relies on three files:
 
@@ -850,7 +850,7 @@ yields the JSON-LD `@context`
 
 ## 1.4 Mermaid diagrams
 
-### 1.4.1 Class/property term entries for the generated mermaid diagram
+### 1.4.1 Class/property/individual term entries for the generated mermaid diagram
 
 <table>
     <thead>
@@ -867,7 +867,7 @@ yields the JSON-LD `@context`
             <td>boolean</td>
             <td>
                 If set to `false`, the mermaid class box, and all relations involving the term, will be be ignored when generating the diagram.
-                Default value is `false` if the `deprecated` term is set, otherwise `true`.
+                Default value is `false` if the `deprecated` key is set for the term, otherwise `true`.
             </td>
             <td>No</td>
         </tr>

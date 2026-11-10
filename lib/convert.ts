@@ -881,6 +881,7 @@ export function getData(vocab_source: string): Vocab {
                 context         : final_contexts(raw, output),
                 scope           : raw.scope?.map((val) => factory.property(val)),
                 top_scope       : get_top_scope(raw),
+                mermaid         : raw.mermaid
             });
             return output;
         }
