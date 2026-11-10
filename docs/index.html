@@ -42,7 +42,7 @@
 </li>
 <li><a href="#14-mermaid-diagrams">1.4 Mermaid diagrams</a>
 <ul>
-<li><a href="#141-classproperty-term-entries-for-the-generated-mermaid-diagram">1.4.1 Class/property term entries for the generated mermaid diagram</a></li>
+<li><a href="#141-classpropertyindividual-term-entries-for-the-generated-mermaid-diagram">1.4.1 Class/property/individual term entries for the generated mermaid diagram</a></li>
 </ul>
 </li>
 <li><a href="#15-formatting-the-html-output">1.5. Formatting the HTML output</a>
@@ -92,7 +92,7 @@
 <h1 id="1-generate-rdfs-vocabulary-files-from-yaml" class="tsd-anchor-link">1. Generate RDFS vocabulary files from YAML<a href="#1-generate-rdfs-vocabulary-files-from-yaml" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
 <h2 id="11-introduction" class="tsd-anchor-link">1.1. Introduction<a href="#11-introduction" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>This script in this module converts a simple <a href="https://www.w3.org/TR/rdf11-concepts/">RDF</a> vocabulary, described in <a href="https://yaml.org/spec/1.2.2/">YAML</a>, into a formal <a href="https://www.w3.org/TR/rdf-schema/">RDFS</a> in <a href="https://www.w3.org/TR/json-ld11/">JSON-LD</a>, <a href="https://www.w3.org/TR/turtle/">Turtle</a>, optionally in <a href="https://www.w3.org/TR/yaml-ld-10/">YAML-LD</a>, and HTML. Optionally, a simple <a href="https://www.w3.org/TR/json-ld11/#the-context">JSON-LD <code>@context</code></a> is also generated for the vocabulary. Neither the script nor the YAML format is prepared for complex vocabularies; its primary goal is to simplify the generation of simple, straightforward RDFS vocabularies not requiring, for instance, sophisticated OWL statements.</p>
-<p>The script is also capable of generating a simple class diagram in <a href="https://mermaid.js.org">Mermaid</a>. The mermaid classes correspond to RDFS Classes, subclassing and relationships among RDFS classes are added to the diagram. Properties that map to data, or to classes not in the vocabulary, are just listes as members of the Mermaid classes in their domain or context scope.</p>
+<p>The script is also capable of generating a simple class diagram in <a href="https://mermaid.js.org">Mermaid</a>. The mermaid classes correspond to RDFS Classes, subclassing and relationships among RDFS classes (including type relationships) are added to the diagram. Properties that map to data, or to classes not in the vocabulary, are just listed as members of the Mermaid classes in their domains or context scopes. (This diagram is only an illustration, it should not be considered as an exhaustive depiction of the vocabulary.)</p>
 <p>When running, the script relies on three files:</p>
 <ol>
 <li>The <code>vocabulary.yml</code> file, containing the definition for the vocabulary entries. (It is also possible to use a different name for the YAML file, see below.)</li>
@@ -744,7 +744,7 @@
     </tbody>
 </table>
 <h2 id="14-mermaid-diagrams" class="tsd-anchor-link">1.4 Mermaid diagrams<a href="#14-mermaid-diagrams" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<h3 id="141-classproperty-term-entries-for-the-generated-mermaid-diagram" class="tsd-anchor-link">1.4.1 Class/property term entries for the generated mermaid diagram<a href="#141-classproperty-term-entries-for-the-generated-mermaid-diagram" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h3 id="141-classpropertyindividual-term-entries-for-the-generated-mermaid-diagram" class="tsd-anchor-link">1.4.1 Class/property/individual term entries for the generated mermaid diagram<a href="#141-classpropertyindividual-term-entries-for-the-generated-mermaid-diagram" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <table>
     <thead>
         <tr>
@@ -760,7 +760,7 @@
             <td>boolean</td>
             <td>
                 If set to `false`, the mermaid class box, and all relations involving the term, will be be ignored when generating the diagram.
-                Default value is `true`.
+                Default value is `false` if the `deprecated` key is set for the term, otherwise `true`.
             </td>
             <td>No</td>
         </tr>
@@ -1102,7 +1102,7 @@ As an example, to use the <a href="https://json-ld.org/playground">JSON-LD Playg
 <li><a href="#14-mermaid-diagrams"><span>1.4 <wbr/>Mermaid diagrams</span></a></li>
 <li>
 <ul>
-<li><a href="#141-classproperty-term-entries-for-the-generated-mermaid-diagram"><span>1.4.1 <wbr/>Class/property term entries for the generated mermaid diagram</span></a></li></ul></li>
+<li><a href="#141-classpropertyindividual-term-entries-for-the-generated-mermaid-diagram"><span>1.4.1 <wbr/>Class/property/individual term entries for the generated mermaid diagram</span></a></li></ul></li>
 <li><a href="#15-formatting-the-html-output"><span>1.5. <wbr/>Formatting the <wbr/>HTML output</span></a></li>
 <li>
 <ul>

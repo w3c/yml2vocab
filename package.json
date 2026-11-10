@@ -35,7 +35,8 @@
         "local_test_did": "tsx main.ts -v local/tests/did/vocabulary.yml -t local/tests/did/template.html -c",
         "local_test_epub": "tsx main.ts -v local/tests/epub/index.yml -t local/tests/epub/template.html -c",
         "local_test_lws": "tsx main.ts -v local/tests/lws/vocabulary.yml -t local/tests/lws/template.html -c",
-        "local_test_mermaid": "tsx main.ts -v local/tests/mermaid/vocabulary.yml -t local/tests/mermaid/template.html -c -y -m"
+        "local_test_mermaid": "tsx main.ts -v local/tests/mermaid/vocabulary.yml -t local/tests/mermaid/template.html -c -y -m",
+        "local_test_di": "tsx main.ts -v local/tests/di/vocabulary.yml -t local/tests/di/template.html -cym"
     },
     "author": "Ivan Herman <ivan@w3.org> (https://www.w3.org/People/Ivan/)",
     "license": "W3C-20150513",

@@ -315,6 +315,7 @@ export interface RDFProperty extends RDFTerm {
 export interface RDFIndividual extends RDFTerm {
     scope: RDFProperty[];
     top_scope: boolean;
+    mermaid: boolean;
 }
 /**
  * Extra optional information is the superclass (ie, the datatypes that was used to derive this one).

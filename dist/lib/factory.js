@@ -226,6 +226,7 @@ class RDFTermFactory {
             scope: [],
             top_scope: false,
             term_type: common_1.TermType.individual,
+            mermaid: true
         };
         if (this.terms.has(curie)) {
             const output = this.terms.get(curie);

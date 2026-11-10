@@ -220,6 +220,14 @@ function finalizeRawEntry(raw) {
             return "";
         }
     })(raw.label);
+    const mermaid = ((mmd) => {
+        if (mmd !== undefined) {
+            return mmd;
+        }
+        else {
+            return deprecated === false ? true : false;
+        }
+    })(raw.mermaid);
     /* ***************************** Do the real cleanup *****************************/
     return {
         id: raw.id ? raw.id : "",
@@ -250,7 +258,7 @@ function finalizeRawEntry(raw) {
         pattern: raw.pattern,
         one_of: toArray(raw.one_of),
         open_enumeration: raw.open_enumeration ?? false,
-        mermaid: raw.mermaid ?? true,
+        mermaid: mermaid,
     };
 }
 /**
@@ -823,6 +831,7 @@ function getData(vocab_source) {
                 context: final_contexts(raw, output),
                 scope: raw.scope?.map((val) => factory_1.factory.property(val)),
                 top_scope: get_top_scope(raw),
+                mermaid: raw.mermaid
             });
             return output;
         }) : [];
