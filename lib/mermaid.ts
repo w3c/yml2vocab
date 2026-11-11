@@ -16,6 +16,7 @@ const mmd_template = `
         }
     }
 }%%
+classDiagram
 <<VOCAB>>>
 `;
 
@@ -248,7 +249,8 @@ function toMClass(vocab: Vocab) : MClass[] {
 function generateMermaid(classesIn: MClass[]): string {
     const spaces = getRequestedSpaces("mmd");
 
-    const lines = ["classDiagram"];
+    // const lines = ["classDiagram"];
+    const lines = [];
 
     // ----------------------------------------
     // Hopefully, this is a temporary measure. At the moment
@@ -293,11 +295,14 @@ function generateMermaid(classesIn: MClass[]): string {
 
     // first get the class definitions
     for (const c of classes) {
+        // Properties and individuals are marked on the diagram; they are the
+        // exceptional cases
+        const extra_label = c.label === "Class" ? "" : ` ["${c.name} (${c.label})"]`;
         if(c.externals.length + c.properties.length === 0) {
             // worth compacting the class definition line
-            lines.push(`${spaces}class ${c.name} ["${c.name} (${c.label})"] {}`);
+            lines.push(`${spaces}class ${c.name}${extra_label} {}`);
         } else {
-            lines.push(`${spaces}class ${c.name} ["${c.name} (${c.label})"] {`);
+            lines.push(`${spaces}class ${c.name}${extra_label} {`);
             for (const p of c.properties) {
                 if (p.type) {
                     lines.push(`${spaces}${spaces}${p.name} : ${p.type}`);

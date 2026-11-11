@@ -20,6 +20,7 @@
     - [1.3.4 Individual definitions entries for the generated `@context`](#134-individual-definitions-entries-for-the-generated-context)
   - [1.4 Mermaid diagrams](#14-mermaid-diagrams)
     - [1.4.1 Class/property/individual term entries for the generated mermaid diagram](#141-classpropertyindividual-term-entries-for-the-generated-mermaid-diagram)
+    - [1.4.2 Templating the mermaid diagram](#142-templating-the-mermaid-diagram)
   - [1.5. Formatting the HTML output](#15-formatting-the-html-output)
     - [1.5.1. HTML templating](#151-html-templating)
     - [1.5.2 Output control via `<meta>`](#152-output-control-via-meta)
@@ -873,6 +874,42 @@ yields the JSON-LD `@context`
         </tr>
     </tbody>
 </table>
+
+### 1.4.2 Templating the mermaid diagram
+
+The built-in template of a generated mermaid file is as follows:
+
+```
+%%{
+    init: {
+        "theme" : "mermaid",
+        "class": {
+            "hideEmptyMembersBox": true
+        }
+    }
+}%%
+classDiagram
+<<VOCAB>>>
+```
+
+The `<<VOCAB>>>` string is replaced by the generated mermaid statements. The `template.mmd` file’s content may, for example, change the [theme](https://mermaid.js.org/config/theming.html#available-themes), set the direction of the diagram, or add unusual relationships. Here is an example of a template file that sets a different theme, sets the diagram to left-to-right, and adds some special (and styled) relationships:
+
+```
+%%{
+    init: {
+        "theme" : "redux",
+        "class": {
+            "hideEmptyMembersBox": true
+        }
+    }
+}%%
+classDiagram
+    direction LR
+<<VOCAB>>>
+    ProofGraph ..|> Proof : graph containment
+    AnyResource --> ProofGraph : proof
+    style AnyResource fill:white,stroke:#f66,stroke-width:2px,stroke-dasharray: 5 5
+```
 
 ## 1.5. Formatting the HTML output
 
