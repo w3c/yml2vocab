@@ -1,7 +1,8 @@
 
 import type { Vocab, RDFClass, RDFProperty, RDFTerm } from "./common";
-import { RDFTermFactory }                    from "./factory";
-import { getRequestedSpaces }                from "./beautify";
+import { global }                                     from "./common";
+import { RDFTermFactory }                             from "./factory";
+import { getRequestedSpaces }                         from "./beautify";
 
 
 /**
@@ -9,14 +10,17 @@ import { getRequestedSpaces }                from "./beautify";
  */
 const mmd_template = `
 %%{
-    init: {
-        "theme" : "mermaid",
+     init: {
+        "theme" : "<<THEME>>",
+        "layout" : "<<LAYOUT>>",
+        "look" : "<<LOOK>>",
         "class": {
             "hideEmptyMembersBox": true
         }
     }
 }%%
 classDiagram
+    direction <<DIRECTION>>
 <<VOCAB>>>
 `;
 
@@ -341,7 +345,10 @@ function generateMermaid(classesIn: MClass[]): string {
         }
     }
     lines.push("");
-    return lines.join("\n");
+
+    const extras = global.extras ? global.extras.map((str) => `${spaces}${str}`) : [];
+
+    return [...lines, ...extras].join("\n");
 }
 
 
@@ -359,9 +366,14 @@ export function toMermaid(vocab: Vocab, template: string = ""): string {
     const mermaid_classes = toMClass(vocab);
 
     // Generate the mermaid data itself
-    const mermaid         = generateMermaid(mermaid_classes);
+    const mermaid = generateMermaid(mermaid_classes);
 
     // Plug it into the template and return
-    const final_template  = template.length === 0 ? mmd_template : template;
-    return final_template.replace("<<VOCAB>>>", mermaid);
+    const final_template = template.length === 0 ? mmd_template : template;
+    return final_template
+        .replace("<<VOCAB>>>", mermaid)
+        .replace("<<THEME>>", global.theme as string)          // this is to fool typescript; we know that it is a string
+        .replace("<<LAYOUT>>", global.layout as string)        // this is to fool typescript; we know that it is a string
+        .replace("<<LOOK>>", global.look as string)            // this is to fool typescript; we know that it is a string
+        .replace("<<DIRECTION>>", global.direction as string); // this is to fool typescript; we know that it is a string
 }

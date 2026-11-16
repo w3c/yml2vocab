@@ -7,6 +7,7 @@ import type { RDFClass, RDFProperty, RDFIndividual, RDFPrefix, RDFDatatype, RDFT
 import { Status, global }                                                             from './common';
 import type { RawVocabEntry, RawVocab, ValidationResults  }                           from './common';
 import type { OntologyProperty, Vocab, Link, Example }                                from './common';
+import { DEFAULT_M_DIRECTION, DEFAULT_M_THEME, DEFAULT_M_LOOK, DEFAULT_M_LAYOUT }     from "./common";
 import { EXTRA_DATATYPES, Container, defaultPrefixes }                                from "./common";
 import { validateWithSchema }                                                         from './schema';
 import { RDFTermFactory, factory }                                                    from './factory';
@@ -76,6 +77,19 @@ function localeUnCamelise(str: string, separator = ' '): string {
         return output.join('');
     }
 }
+
+// Some entries are to be put into an array, even if there is only one item; this ensures a uniform handling.
+function toArray(val: undefined | string | string[]): undefined | string[] {
+    if (val === undefined) {
+        return undefined;
+    } else if (val.length === 0) {
+        return [];
+    } else if (typeof val === "string") {
+        return [val];
+    } else {
+        return val;
+    }
+};
 
 
 /**
@@ -302,6 +316,7 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
         individual : individuals,
         datatype   : datatypes,
         json_ld    : raw.json_ld,
+        mermaid    : raw.mermaid,
     }
 }
 
@@ -845,7 +860,6 @@ export function getData(vocab_source: string): Vocab {
                 langString       : langString,
                 context          : final_contexts(raw, output),
                 mermaid          : raw.mermaid,
-
             });
             return output;
         }
@@ -975,6 +989,15 @@ export function getData(vocab_source: string): Vocab {
 
     global.set_vocab = vocab.json_ld?.set_vocab ?? false;
     global.protected = vocab.json_ld?.protected ?? true;
+
+    /*********************************************************************************************/
+    // The mermaid settings are also for global space only
+
+    global.direction = vocab.mermaid?.direction ?? DEFAULT_M_DIRECTION;
+    global.theme     = vocab.mermaid?.theme ?? DEFAULT_M_THEME;
+    global.look      = vocab.mermaid?.look ?? DEFAULT_M_LOOK;
+    global.layout    = vocab.mermaid?.layout ?? DEFAULT_M_LAYOUT;
+    global.extras    = toArray(vocab.mermaid?.extras) ?? [];
 
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary

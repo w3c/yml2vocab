@@ -92,6 +92,33 @@ const vocabSchema = `{
             }
         },
 
+        "mermaid" : {
+            "title": "Mermaid diagram specific settings",
+            "type" : "object",
+            "properties" : {
+                "direction" : {
+                    "type": "string",
+                    "enum" : ["RL", "LR", "TB", "BT"]
+                },
+                "theme" : {
+                    "type" : "string",
+                    "enum" : ["redux-color", "redux-dark-color", "redux", "redux-dark", "default", "neutral", "dark", "forest", "neo", "neo-dark"]
+                },
+                "look" : {
+                    "type" : "string",
+                    "enum" : ["classic", "handDrawn", "neo"]
+                },
+                "layout" : {
+                    "type" : "string",
+                    "enum" : ["elk", "dagree"]
+                },
+                "extras" : {
+                    "$ref": "#/$defs/StringOrArrayOfStrings"
+                },
+                "unevaluatedProperties": false
+            }
+        },
+
         "vocab": {
             "title": "Vocabulary setting",
             "anyOf": [

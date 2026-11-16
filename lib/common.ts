@@ -88,6 +88,29 @@ export interface JSON_LD {
 }
 
 /**
+ * Flags/features/types controlling the generated Mermaid
+ * class diagram
+ */
+type M_DIRECTION = "RL" | "LR" | "TB" | "BT";
+type M_THEME     = "redux-color" | "redux-dark-color" | "redux" | "redux-dark" | "default" | "neutral" | "dark" | "forest" | "neo" | "neo-dark";
+type M_LOOK      = "classic" | "handDrawn" | "neo";
+type M_LAYOUT    = "elk" | "dagree";
+
+export const DEFAULT_M_DIRECTION = "TB";
+export const DEFAULT_M_THEME     = "default";
+export const DEFAULT_M_LOOK      = "neo";
+export const DEFAULT_M_LAYOUT    = "dagree";
+
+export interface MERMAID {
+    direction ?: M_DIRECTION;
+    theme     ?: M_THEME;
+    look      ?: M_LOOK;
+    layout    ?: M_LAYOUT;
+    extras    ?: string | string[];
+}
+
+
+/**
  * Context references. Lists, for a context, the terms that are listed in them.
  * Used when generating the list of terms used by a context in, e.g., the HTML output.
  * Terms in the values are identified by their CURIE (i.e., the namespace is also included)
@@ -151,6 +174,15 @@ export interface GlobalData {
      * Whether the "@protected" keyword should be added to the context (and scoped contexts)
      */
     protected        ?: boolean,
+
+    /**
+     * Mermaid specific data: direction
+     */
+    direction        ?: M_DIRECTION,
+    theme            ?: M_THEME,
+    look             ?: M_LOOK,
+    layout           ?: M_LAYOUT,
+    extras           ?: string[],
 }
 
 /**
@@ -165,6 +197,11 @@ export const global: GlobalData = {
     real_curies      : [],
     aliases          : DEFAULT_ALIASES,
     import           : [],
+    direction        : DEFAULT_M_DIRECTION,
+    theme            : DEFAULT_M_THEME,
+    look             : DEFAULT_M_LOOK,
+    layout           : DEFAULT_M_LAYOUT,
+    extras           : [],
 }
 
 /**
@@ -231,7 +268,7 @@ export interface RawVocabEntry {
     pattern          ?: string;
     html_class       ?: string[];
     mermaid          ?: boolean;
-}
+ }
 
 /**
  * This is the structure of the YAML file itself. Note that only vocab and ontology are required, everything else is optional
@@ -245,6 +282,7 @@ export interface RawVocab {
     individual ?: RawVocabEntry[];
     datatype   ?: RawVocabEntry[];
     json_ld    ?: JSON_LD;
+    mermaid    ?: MERMAID;
 }
 
 /**
