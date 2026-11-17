@@ -47,6 +47,39 @@ export interface JSON_LD {
     protected?: boolean;
 }
 /**
+ * Possible directions for mermaid diagrams
+ */
+export type M_DIRECTION = "RL" | "LR" | "TB" | "BT";
+/**
+ * Possible themes for mermaid diagrams
+ */
+export type M_THEME = "redux-color" | "redux-dark-color" | "redux" | "redux-dark" | "default" | "neutral" | "dark" | "forest" | "neo" | "neo-dark";
+/**
+ * Possible looks for mermaid diagrams
+ */
+export type M_LOOK = "classic" | "handDrawn" | "neo";
+/**
+ * Possible layouts for mermaid diagrams
+ */
+export type M_LAYOUT = "elk" | "dagree";
+/** Default value for Mermaid diagram direction */
+export declare const DEFAULT_M_DIRECTION = "TB";
+/** Default value for Mermaid diagram theme
+ *
+ */
+export declare const DEFAULT_M_THEME = "redux";
+/** Default value for Mermaid diagram look */
+export declare const DEFAULT_M_LOOK = "neo";
+/** Default value for Mermaid diagram layout */
+export declare const DEFAULT_M_LAYOUT = "dagree";
+export interface MERMAID {
+    direction?: M_DIRECTION;
+    theme?: M_THEME;
+    look?: M_LOOK;
+    layout?: M_LAYOUT;
+    extras?: string | string[];
+}
+/**
  * Context references. Lists, for a context, the terms that are listed in them.
  * Used when generating the list of terms used by a context in, e.g., the HTML output.
  * Terms in the values are identified by their CURIE (i.e., the namespace is also included)
@@ -100,6 +133,26 @@ export interface GlobalData {
      * Whether the "@protected" keyword should be added to the context (and scoped contexts)
      */
     protected?: boolean;
+    /**
+     * Mermaid specific data: direction
+     */
+    direction?: M_DIRECTION;
+    /**
+     * Mermaid specific data: theme
+     */
+    theme?: M_THEME;
+    /**
+     * Mermaid specific data: look
+     */
+    look?: M_LOOK;
+    /**
+     * Mermaid specific data: layout
+     */
+    layout?: M_LAYOUT;
+    /**
+     * Mermaid specific data: extra mermaid statements to be added to the generated ones
+     */
+    extras?: string[];
 }
 /**
  * As it name says: some global data that are needed by some of the media type specific modules.
@@ -177,6 +230,7 @@ export interface RawVocab {
     individual?: RawVocabEntry[];
     datatype?: RawVocabEntry[];
     json_ld?: JSON_LD;
+    mermaid?: MERMAID;
 }
 /**
  * Type needed for the JSON Schema validation interface.

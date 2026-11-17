@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toMermaid = toMermaid;
+const common_1 = require("./common");
 const factory_1 = require("./factory");
 const beautify_1 = require("./beautify");
 /**
@@ -8,14 +9,17 @@ const beautify_1 = require("./beautify");
  */
 const mmd_template = `
 %%{
-    init: {
-        "theme" : "mermaid",
+     init: {
+        "theme" : "<<THEME>>",
+        "layout" : "<<LAYOUT>>",
+        "look" : "<<LOOK>>",
         "class": {
             "hideEmptyMembersBox": true
         }
     }
 }%%
 classDiagram
+    direction <<DIRECTION>>
 <<VOCAB>>>
 `;
 ;
@@ -291,7 +295,8 @@ function generateMermaid(classesIn) {
         }
     }
     lines.push("");
-    return lines.join("\n");
+    const extras = common_1.global.extras ? common_1.global.extras.map((str) => `${spaces}${str}`) : [];
+    return [...lines, ...extras].join("\n");
 }
 /**
  * Generation of an illustrative mermaid diagram. It is not the goal to be 100% exhaustive: general properties may
@@ -309,5 +314,10 @@ function toMermaid(vocab, template = "") {
     const mermaid = generateMermaid(mermaid_classes);
     // Plug it into the template and return
     const final_template = template.length === 0 ? mmd_template : template;
-    return final_template.replace("<<VOCAB>>>", mermaid);
+    return final_template
+        .replace("<<VOCAB>>>", mermaid)
+        .replace("<<THEME>>", common_1.global.theme) // this is to fool typescript; we know that it is a string
+        .replace("<<LAYOUT>>", common_1.global.layout) // this is to fool typescript; we know that it is a string
+        .replace("<<LOOK>>", common_1.global.look) // this is to fool typescript; we know that it is a string
+        .replace("<<DIRECTION>>", common_1.global.direction); // this is to fool typescript; we know that it is a string
 }

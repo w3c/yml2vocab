@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requiredJsonPrefixes = exports.requiredTurtlePrefixes = exports.defaultPrefixes = exports.TermType = exports.bona_fide_prefixes = exports.bona_fide_urls = exports.Container = exports.global = exports.StatusCounter = exports.Status = exports.EXTRA_DATATYPES = void 0;
+exports.requiredJsonPrefixes = exports.requiredTurtlePrefixes = exports.defaultPrefixes = exports.TermType = exports.bona_fide_prefixes = exports.bona_fide_urls = exports.Container = exports.global = exports.DEFAULT_M_LAYOUT = exports.DEFAULT_M_LOOK = exports.DEFAULT_M_THEME = exports.DEFAULT_M_DIRECTION = exports.StatusCounter = exports.Status = exports.EXTRA_DATATYPES = void 0;
 /**
  * List of datatypes that are formally defined in the RDF World beyond the
  * list of XSD datatypes.
@@ -75,6 +75,16 @@ class StatusCounter {
     }
 }
 exports.StatusCounter = StatusCounter;
+/** Default value for Mermaid diagram direction */
+exports.DEFAULT_M_DIRECTION = "TB";
+/** Default value for Mermaid diagram theme
+ *
+ */
+exports.DEFAULT_M_THEME = "redux";
+/** Default value for Mermaid diagram look */
+exports.DEFAULT_M_LOOK = "neo";
+/** Default value for Mermaid diagram layout */
+exports.DEFAULT_M_LAYOUT = "dagree";
 /**
  * As it name says: some global data that are needed by some of the media type specific modules.
  */
@@ -87,6 +97,11 @@ exports.global = {
     real_curies: [],
     aliases: DEFAULT_ALIASES,
     import: [],
+    direction: exports.DEFAULT_M_DIRECTION,
+    theme: exports.DEFAULT_M_THEME,
+    look: exports.DEFAULT_M_LOOK,
+    layout: exports.DEFAULT_M_LAYOUT,
+    extras: [],
 };
 /**
  * Enumeration for possible container values

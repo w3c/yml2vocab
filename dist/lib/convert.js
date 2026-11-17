@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getData = getData;
 const common_1 = require("./common");
 const common_2 = require("./common");
+const common_3 = require("./common");
 const schema_1 = require("./schema");
 const factory_1 = require("./factory");
 /******************************************** Helper functions and constants **********************************/
@@ -71,6 +72,22 @@ function localeUnCamelise(str, separator = ' ') {
         return output.join('');
     }
 }
+// Some entries are to be put into an array, even if there is only one item; this ensures a uniform handling.
+function toArray(val) {
+    if (val === undefined) {
+        return undefined;
+    }
+    else if (val.length === 0) {
+        return [];
+    }
+    else if (typeof val === "string") {
+        return [val];
+    }
+    else {
+        return val;
+    }
+}
+;
 /**
  * These ontology properties are added no matter what; they are not vocabulary specific.
  *
@@ -294,6 +311,7 @@ function finalizeRawVocab(raw) {
         individual: individuals,
         datatype: datatypes,
         json_ld: raw.json_ld,
+        mermaid: raw.mermaid,
     };
 }
 /******************************************* External entry point **********************************/
@@ -401,7 +419,7 @@ function getData(vocab_source) {
                     if (rg === "vocab") {
                         typeVocab = true;
                     }
-                    else if (rg.startsWith("xsd") === true || common_2.EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
+                    else if (rg.startsWith("xsd") === true || common_3.EXTRA_DATATYPES.find((entry) => entry === rg) !== undefined) {
                         // The datatype is a simple one, not a class; a term nevertheless, to make it uniform
                         extra_types.push("owl:DatatypeProperty");
                         range.push(factory.term(rg));
@@ -522,7 +540,7 @@ function getData(vocab_source) {
                 };
             })
             : []),
-        ...common_2.defaultPrefixes
+        ...common_3.defaultPrefixes
     ];
     // Remove duplicates; trick is that, using a map, the second setting of a prefix would overwrite the previous
     const prefixes = Array.from(new Map(allPrefixes.map(p => [p.prefix, p])).values());
@@ -739,7 +757,7 @@ function getData(vocab_source) {
                 if (raw.dataset) {
                     return true;
                 }
-                else if (raw.container !== undefined && raw.container === common_2.Container.graph) {
+                else if (raw.container !== undefined && raw.container === common_3.Container.graph) {
                     return true;
                 }
                 else {
@@ -748,7 +766,7 @@ function getData(vocab_source) {
             })();
             const container = (() => {
                 if (raw.container !== undefined) {
-                    if (raw.container !== common_2.Container.graph) {
+                    if (raw.container !== common_3.Container.graph) {
                         return raw.container;
                     }
                     else {
@@ -756,14 +774,14 @@ function getData(vocab_source) {
                     }
                 }
                 else if (containerSet) {
-                    return common_2.Container.list;
+                    return common_3.Container.list;
                 }
                 else {
                     return undefined;
                 }
             })();
             // Checking one combination: it is disallowed in JSON-LD to define a container to be a list and a graph
-            if (container === common_2.Container.list && dataset) {
+            if (container === common_3.Container.list && dataset) {
                 throw (new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`));
             }
             const property_scope = raw.property_scope === undefined ? undefined : factory_1.factory.class(raw.property_scope);
@@ -914,6 +932,13 @@ function getData(vocab_source) {
     }
     common_1.global.set_vocab = vocab.json_ld?.set_vocab ?? false;
     common_1.global.protected = vocab.json_ld?.protected ?? true;
+    /*********************************************************************************************/
+    // The mermaid settings are also for global space only
+    common_1.global.direction = vocab.mermaid?.direction ?? common_2.DEFAULT_M_DIRECTION;
+    common_1.global.theme = vocab.mermaid?.theme ?? common_2.DEFAULT_M_THEME;
+    common_1.global.look = vocab.mermaid?.look ?? common_2.DEFAULT_M_LOOK;
+    common_1.global.layout = vocab.mermaid?.layout ?? common_2.DEFAULT_M_LAYOUT;
+    common_1.global.extras = toArray(vocab.mermaid?.extras) ?? [];
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary
     return { prefixes, ontology_properties, classes, properties, individuals, datatypes };

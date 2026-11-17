@@ -88,17 +88,36 @@ export interface JSON_LD {
 }
 
 /**
- * Flags/features/types controlling the generated Mermaid
- * class diagram
+ * Possible directions for mermaid diagrams
  */
-type M_DIRECTION = "RL" | "LR" | "TB" | "BT";
-type M_THEME     = "redux-color" | "redux-dark-color" | "redux" | "redux-dark" | "default" | "neutral" | "dark" | "forest" | "neo" | "neo-dark";
-type M_LOOK      = "classic" | "handDrawn" | "neo";
-type M_LAYOUT    = "elk" | "dagree";
+export type M_DIRECTION = "RL" | "LR" | "TB" | "BT";
 
+/**
+ * Possible themes for mermaid diagrams
+ */
+export type M_THEME     = "redux-color" | "redux-dark-color" | "redux" | "redux-dark" | "default" | "neutral" | "dark" | "forest" | "neo" | "neo-dark";
+
+/**
+ * Possible looks for mermaid diagrams
+ */
+export type M_LOOK      = "classic" | "handDrawn" | "neo";
+
+/**
+ * Possible layouts for mermaid diagrams
+ */
+export type M_LAYOUT    = "elk" | "dagree";
+
+/** Default value for Mermaid diagram direction */
 export const DEFAULT_M_DIRECTION = "TB";
+/** Default value for Mermaid diagram theme
+ *
+ */
 export const DEFAULT_M_THEME     = "redux";
+
+/** Default value for Mermaid diagram look */
 export const DEFAULT_M_LOOK      = "neo";
+
+/** Default value for Mermaid diagram layout */
 export const DEFAULT_M_LAYOUT    = "dagree";
 
 export interface MERMAID {
@@ -125,25 +144,25 @@ export interface Contexts {
  */
 export interface GlobalData {
     /** Vocabulary prefix for the vocabulary being handled. */
-    vocab_prefix     : string;
+    vocab_prefix: string;
 
     /** Vocabulary URL for the vocabulary being handled. */
-    vocab_url        : string;
+    vocab_url: string;
 
     /** Default context URL for the vocabulary being handled. */
-    vocab_context   ?: string;
+    vocab_context?: string;
 
     /**
      * Counter for the terms with various status values.
      * Some serializers (e.g. HTML) may optimize/improve the final
      * output if one of the categories have no entries whatsoever.
      */
-    status_counter   : StatusCounter;
+    status_counter: StatusCounter;
 
     /**
      * Inverted info for contexts: for each context the list of relevant terms are listed.
      */
-    context_mentions : Contexts;
+    context_mentions: Contexts;
 
     /**
      * List of "real" curies that occur in the vocabulary as terms. These are, usually,
@@ -152,37 +171,53 @@ export interface GlobalData {
      *
      * Used to set the right 'id' values for cross-references in the generated HTML file
      */
-    real_curies      : string[];
+    real_curies: string[];
 
     /**
      * JSON-LD keyword aliases, to be added to the JSON-LD context file on the user's request
      */
-    aliases          : Record<string,string>;
+    aliases: Record<string, string>;
 
     /**
      * Imported context files, to be added to the JSON-LD context file on the user's request
      */
-    import            : string[];
+    import: string[];
 
     /**
      * A flag for the context generation, whether the vocabulary's URL should be set as a fallback
      * value in the context using "@vocab".
      */
-    set_vocab        ?: boolean;
+    set_vocab?: boolean;
 
     /**
      * Whether the "@protected" keyword should be added to the context (and scoped contexts)
      */
-    protected        ?: boolean,
+    protected?: boolean;
 
     /**
      * Mermaid specific data: direction
      */
-    direction        ?: M_DIRECTION,
-    theme            ?: M_THEME,
-    look             ?: M_LOOK,
-    layout           ?: M_LAYOUT,
-    extras           ?: string[],
+    direction?: M_DIRECTION;
+
+    /**
+     * Mermaid specific data: theme
+     */
+    theme?:     M_THEME;
+
+    /**
+     * Mermaid specific data: look
+     */
+    look?:      M_LOOK;
+
+    /**
+     * Mermaid specific data: layout
+     */
+    layout?:    M_LAYOUT;
+
+    /**
+     * Mermaid specific data: extra mermaid statements to be added to the generated ones
+     */
+    extras?: string[];
 }
 
 /**
