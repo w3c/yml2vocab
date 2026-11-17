@@ -1,8 +1,8 @@
 
-import type { Vocab, RDFClass, RDFProperty, RDFTerm } from "./common";
-import { global }                                     from "./common";
-import { RDFTermFactory }                             from "./factory";
-import { getRequestedSpaces }                         from "./beautify";
+import type { Vocab, RDFClass, RDFProperty, RDFTerm, OntologyProperty } from "./common";
+import { global }                                                       from "./common";
+import { RDFTermFactory }                                               from "./factory";
+import { getRequestedSpaces }                                           from "./beautify";
 
 
 /**
@@ -248,12 +248,10 @@ function toMClass(vocab: Vocab) : MClass[] {
  * terms in the data.
  *
  * @param classesIn
+ * @param spaces to be put at the start of each line
  * @returns The mermaid text
  */
-function generateMermaid(classesIn: MClass[]): string {
-    const spaces = getRequestedSpaces("mmd");
-
-    // const lines = ["classDiagram"];
+function generateMermaid(classesIn: MClass[], spaces: string): string[] {
     const lines = [];
 
     // ----------------------------------------
@@ -348,7 +346,35 @@ function generateMermaid(classesIn: MClass[]): string {
 
     const extras = global.extras ? global.extras.map((str) => `${spaces}${str}`) : [];
 
-    return [...lines, ...extras].join("\n");
+    return [...lines, ...extras];
+}
+
+function accData(vocab: Vocab, spaces: string): string[] {
+    const output: string[] = [];
+
+    const ontFilter = (prop: string): OntologyProperty[] => {
+        return vocab.ontology_properties.filter((property): boolean => property.property === prop);
+    }
+
+    const titleProperty = ontFilter('dc:title');
+    if (titleProperty.length > 0) {
+        output.push(`${spaces}accTitle: ${titleProperty[0].value}`);
+    }
+
+    const descrProperty = ontFilter('dc:description');
+    const seeAlsoProperty = ontFilter('rdfs:seeAlso');
+
+    if (descrProperty.length + seeAlsoProperty.length > 0) {
+        output.push(`${spaces}accDescr {`);
+        if (descrProperty.length > 0) {
+            output.push(`${spaces}${spaces}${descrProperty[0].value}`)
+        }
+        if (seeAlsoProperty.length > 0) {
+            output.push(`${spaces}${spaces}See also ${seeAlsoProperty[0].value}`)
+        }
+        output.push(`${spaces}}`)
+    }
+    return output;
 }
 
 
@@ -362,11 +388,16 @@ function generateMermaid(classesIn: MClass[]): string {
  * @returns
  */
 export function toMermaid(vocab: Vocab, template: string = ""): string {
+    const spaces = getRequestedSpaces("mmd");
+
     // Convert the data into mermaid classes
     const mermaid_classes = toMClass(vocab);
 
     // Generate the mermaid data itself
-    const mermaid = generateMermaid(mermaid_classes);
+    const accLines     = accData(vocab, spaces);
+    const mermaidLines = generateMermaid(mermaid_classes, spaces);
+
+    const mermaid = [...accLines, ...mermaidLines].join('\n');
 
     // Plug it into the template and return
     const final_template = template.length === 0 ? mmd_template : template;
