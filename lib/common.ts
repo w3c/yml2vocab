@@ -97,7 +97,7 @@ type M_LOOK      = "classic" | "handDrawn" | "neo";
 type M_LAYOUT    = "elk" | "dagree";
 
 export const DEFAULT_M_DIRECTION = "TB";
-export const DEFAULT_M_THEME     = "default";
+export const DEFAULT_M_THEME     = "redux";
 export const DEFAULT_M_LOOK      = "neo";
 export const DEFAULT_M_LAYOUT    = "dagree";
 

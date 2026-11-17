@@ -14,12 +14,13 @@
       - [1.2.2.4. Individual definitions —`individual` block](#1224-individual-definitions-individual-block)
       - [1.2.2.5. Datatype definitions — `datatype` block](#1225-datatype-definitions--datatype-block)
   - [1.3. Control for the generated `@context`](#13-control-for-the-generated-context)
-      - [1.3.1. General JSON-LD context data — `json_ld` block](#131-general-json-ld-context-data--json_ld-block)
+    - [1.3.1. General JSON-LD context data — `json_ld` block](#131-general-json-ld-context-data--json_ld-block)
     - [1.3.2 Common term entries for the generated `@context`](#132-common-term-entries-for-the-generated-context)
     - [1.3.3 Property definitions entries for the generated `@context`](#133-property-definitions-entries-for-the-generated-context)
     - [1.3.4 Individual definitions entries for the generated `@context`](#134-individual-definitions-entries-for-the-generated-context)
   - [1.4 Mermaid diagrams](#14-mermaid-diagrams)
-    - [1.4.1 Class/property/individual term entries for the generated mermaid diagram](#141-classpropertyindividual-term-entries-for-the-generated-mermaid-diagram)
+    - [1.4.1 General Mermaid data — the `mermaid` block](#141-general-mermaid-data--the-mermaid-block)
+    - [1.4.2 Class/property/individual term entries for the generated mermaid diagram](#142-classpropertyindividual-term-entries-for-the-generated-mermaid-diagram)
     - [1.4.2 Templating the mermaid diagram](#142-templating-the-mermaid-diagram)
   - [1.5. Formatting the HTML output](#15-formatting-the-html-output)
     - [1.5.1. HTML templating](#151-html-templating)
@@ -519,7 +520,7 @@ individual:
         <tr>
             <td><code>one_of</code></td>
             <td>array of strings</td>
-            <td>This is a shorthand for a pattern property with the value of <code>"val1\|val2\|…\|valn"</code>, i.e., it restricts the value to a predefined set of strings (without spaces).</td>
+            <td>This is a shorthand for a pattern property with the value of <code>"val1|val2|…|valn"</code>, i.e., it restricts the value to a predefined set of strings (without spaces).</td>
             <td>No</td>
         </tr>
         <tr>
@@ -571,7 +572,7 @@ datatype:
 
 The script is also able to generate a [`@context` file](https://www.w3.org/TR/json-ld11/#the-context). There are a number keys that can be added to the vocabulary definition file to control this process.
 
-#### 1.3.1. General JSON-LD context data — `json_ld` block
+### 1.3.1. General JSON-LD context data — `json_ld` block
 
  This level block affects the generated JSON-LD context file.
 
@@ -851,7 +852,73 @@ yields the JSON-LD `@context`
 
 ## 1.4 Mermaid diagrams
 
-### 1.4.1 Class/property/individual term entries for the generated mermaid diagram
+### 1.4.1 General Mermaid data — the `mermaid` block
+
+<table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Possible values</th>
+            <th>Description</th>
+            <th>Required?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>direction</code></td>
+            <td>string</td>
+            <td>
+                Sets the <a href="https://mermaid.ai/open-source/syntax/classDiagram.html#setting-the-direction-of-the-diagram">direction</a> of the class diagram. Possible values are
+                <code>TB</code>, <code>LR</code>, <code>TB</code>, <code>BT</code>, for right-to-left, left-to-right, top-to-bottom, and
+                bottom-to-top, respectively. Default is <code>TB</code>.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>theme</code></td>
+            <td>string</td>
+            <td>
+                Sets the <a href="https://mermaid.ai/open-source/syntax/classDiagram.html#default-theme-look-and-layout-v12-0-0">theme</a> of the class diagram. Possible values are
+                <code>redux-color</code>, <code>redux-dark-color</code>, <code>redux</code>, <code>reux-dark</code>, <code>default</code>, <code>neutral</code>, <code>dark</code>, <code>forest</code>, <code>neo</code>, or <code>neo-dark</code>. Default is <code>redux</code>.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>look</code></td>
+            <td>string</td>
+            <td>
+                Sets the <a href="https://mermaid.ai/open-source/syntax/classDiagram.html#default-theme-look-and-layout-v12-0-0">look</a> of the class diagram. Possible values are
+                <code>classic</code>, <code>handDrawn</code>, or <code>neo</code>. Default is <code>neo</code>.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>layout</code></td>
+            <td>string</td>
+            <td>
+                 Sets the <a href="https://mermaid.ai/open-source/syntax/classDiagram.html#default-theme-look-and-layout-v12-0-0">layout</a> of the class diagram. Possible values are
+                <code>elk</code> or <code>dagree</code>. Default is <code>dagree</code>.
+            </td>
+            <td>No</td>
+        </tr>
+       <tr>
+            <td><code>extras</code></td>
+            <td>string or array of strings</td>
+            <td>
+                Mermaid class statements (one per string) to be added to the end of the generated
+                class diagram.
+            </td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+
+Note that the final look of the diagram depends on the converter from the mermaid statements to,
+e.g., SVG. In other words, the effects of the theme, look, and layout statements maybe different
+from one converter to the other.
+For example, converters may not interpret all the themes listed above.
+
+### 1.4.2 Class/property/individual term entries for the generated mermaid diagram
 
 <table>
     <thead>
@@ -867,8 +934,8 @@ yields the JSON-LD `@context`
             <td><code>mermaid</code></td>
             <td>boolean</td>
             <td>
-                If set to `false`, the mermaid class box, and all relations involving the term, will be be ignored when generating the diagram.
-                Default value is `false` if the `deprecated` key is set for the term, otherwise `true`.
+                If set to <code>false</code>, the mermaid class box, and all relations involving the term, will be be ignored when generating the diagram.
+                Default value is <code>false</code> if the <code>deprecated</code> key is set for the term, otherwise <code>true</code>.
             </td>
             <td>No</td>
         </tr>
@@ -877,39 +944,29 @@ yields the JSON-LD `@context`
 
 ### 1.4.2 Templating the mermaid diagram
 
+Although the general settings, mainly the extra statements, may cover most of the needs, complex
+vocabulary diagrams may need more control.
+
 The built-in template of a generated mermaid file is as follows:
 
 ```
 %%{
-    init: {
-        "theme" : "mermaid",
+     init: {
+        "theme" : "<<THEME>>",
+        "layout" : "<<LAYOUT>>",
+        "look" : "<<LOOK>>",
         "class": {
             "hideEmptyMembersBox": true
         }
     }
 }%%
 classDiagram
+    direction <<DIRECTION>>
 <<VOCAB>>>
 ```
 
-The `<<VOCAB>>>` string is replaced by the generated mermaid statements. The `template.mmd` file’s content may, for example, change the [theme](https://mermaid.js.org/config/theming.html#available-themes), set the direction of the diagram, or add unusual relationships. Here is an example of a template file that sets a different theme, sets the diagram to left-to-right, and adds some special (and styled) relationships:
-
-```
-%%{
-    init: {
-        "theme" : "redux",
-        "class": {
-            "hideEmptyMembersBox": true
-        }
-    }
-}%%
-classDiagram
-    direction LR
-<<VOCAB>>>
-    ProofGraph ..|> Proof : graph containment
-    AnyResource --> ProofGraph : proof
-    style AnyResource fill:white,stroke:#f66,stroke-width:2px,stroke-dasharray: 5 5
-```
+The `<<VOCAB>>>` string is replaced by the generated mermaid statements, and the other template strings are replaced by the values for theme, layout, look, and directions, respectively. The extra statements
+are added to the end of the generated statements.
 
 ## 1.5. Formatting the HTML output
 
