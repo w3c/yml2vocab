@@ -126,6 +126,8 @@ export interface MERMAID {
     look      ?: M_LOOK;
     layout    ?: M_LAYOUT;
     extras    ?: string | string[];
+    accTitle  ?: string;
+    accDescr  ?: string;
 }
 
 
@@ -202,22 +204,32 @@ export interface GlobalData {
     /**
      * Mermaid specific data: theme
      */
-    theme?:     M_THEME;
+    theme?: M_THEME;
 
     /**
      * Mermaid specific data: look
      */
-    look?:      M_LOOK;
+    look?: M_LOOK;
 
     /**
      * Mermaid specific data: layout
      */
-    layout?:    M_LAYOUT;
+    layout?: M_LAYOUT;
 
     /**
      * Mermaid specific data: extra mermaid statements to be added to the generated ones
      */
     extras?: string[];
+
+    /**
+     * Mermaid specific data: accessibility title
+     */
+    accTitle: string;
+
+    /**
+     * Mermaid specific data: accessibility title
+     */
+    accDescr: string;
 }
 
 /**
@@ -237,6 +249,8 @@ export const global: GlobalData = {
     look             : DEFAULT_M_LOOK,
     layout           : DEFAULT_M_LAYOUT,
     extras           : [],
+    accTitle         : "",
+    accDescr         : "",
 }
 
 /**

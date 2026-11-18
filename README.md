@@ -910,6 +910,23 @@ yields the JSON-LD `@context`
             </td>
             <td>No</td>
         </tr>
+        <tr>
+            <td><code>accTitle</code></td>
+            <td>string</td>
+            <td>
+                Add an <a href="https://mermaid.js.org/config/accessibility.html#accessible-title">accessible title</a> to the diagram. Default is to reuse the ontology title, if available.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td><code>accDescr</code></td>
+            <td>string</td>
+            <td>
+                Add an <a href="https://mermaid.js.org/config/accessibility.html#accessible-description">accessible description</a> to the diagram. Default is to reuse the ontology description
+                combined with the <code>seeAlso</code> ontology property, if available.
+            </td>
+            <td>No</td>
+        </tr>
     </tbody>
 </table>
 

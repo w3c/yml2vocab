@@ -115,6 +115,12 @@ const vocabSchema = `{
                 "extras" : {
                     "$ref": "#/$defs/StringOrArrayOfStrings"
                 },
+                "accTitle" : {
+                    "type" : "string"
+                },
+                "accDescr" : {
+                    "type" : "string"
+                },
                 "unevaluatedProperties": false
             }
         },

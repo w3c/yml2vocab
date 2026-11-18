@@ -90,7 +90,7 @@ const arrows: Record<string,string> = {
  * @param vocab
  * @returns
  */
-function toMClass(vocab: Vocab) : MClass[] {
+function toMClasses(vocab: Vocab) : MClass[] {
     const output: MClass[] = [];
 
     //
@@ -344,33 +344,29 @@ function generateMermaid(classesIn: MClass[], spaces: string): string[] {
     }
     lines.push("");
 
+    // Get the extra mermaid statements provided in the vocabulary definition
     const extras = global.extras ? global.extras.map((str) => `${spaces}${str}`) : [];
 
     return [...lines, ...extras];
 }
 
-function accData(vocab: Vocab, spaces: string): string[] {
+/**
+ * Generate the mermaid accessibility metadata lines/
+ *
+ * @param spaces
+ * @returns
+ */
+function accData(spaces: string): string[] {
     const output: string[] = [];
 
-    const ontFilter = (prop: string): OntologyProperty[] => {
-        return vocab.ontology_properties.filter((property): boolean => property.property === prop);
+    if (global.accTitle.length > 0) {
+        output.push(`${spaces}accTitle: ${global.accTitle}`);
     }
 
-    const titleProperty = ontFilter('dc:title');
-    if (titleProperty.length > 0) {
-        output.push(`${spaces}accTitle: ${titleProperty[0].value}`);
-    }
-
-    const descrProperty = ontFilter('dc:description');
-    const seeAlsoProperty = ontFilter('rdfs:seeAlso');
-
-    if (descrProperty.length + seeAlsoProperty.length > 0) {
+    if (global.accDescr.length > 0) {
         output.push(`${spaces}accDescr {`);
-        if (descrProperty.length > 0) {
-            output.push(`${spaces}${spaces}${descrProperty[0].value}`)
-        }
-        if (seeAlsoProperty.length > 0) {
-            output.push(`${spaces}${spaces}See also ${seeAlsoProperty[0].value}`)
+        for (const line of global.accDescr.split('\n')) {
+            if (line.length > 0) output.push(`${spaces}${spaces}${line}`);
         }
         output.push(`${spaces}}`)
     }
@@ -390,11 +386,11 @@ function accData(vocab: Vocab, spaces: string): string[] {
 export function toMermaid(vocab: Vocab, template: string = ""): string {
     const spaces = getRequestedSpaces("mmd");
 
-    // Convert the data into mermaid classes
-    const mermaid_classes = toMClass(vocab);
+    // Convert the data into mermaid classes and relations
+    const mermaid_classes = toMClasses(vocab);
 
     // Generate the mermaid data itself
-    const accLines     = accData(vocab, spaces);
+    const accLines     = accData(spaces);
     const mermaidLines = generateMermaid(mermaid_classes, spaces);
 
     const mermaid = [...accLines, ...mermaidLines].join('\n');

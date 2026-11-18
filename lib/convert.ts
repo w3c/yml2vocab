@@ -336,13 +336,12 @@ function finalizeRawVocab(raw: RawVocab) : RawVocab {
  * @throws {ValidationError} Error in the schema validation or when parsing the YAML content
  */
 export function getData(vocab_source: string): Vocab {
-
     // Run the incoming YAML through a schema validation, and return the
     // generated object if everything is fine.
     const validation_results: ValidationResults = validateWithSchema(vocab_source);
     if (validation_results.vocab === null) {
         const error = JSON.stringify(validation_results.error, null, 2);
-        throw(new TypeError(`${error}`, {cause: '\n' + error}));
+        throw new TypeError(`${error}`, { cause: "\n" + error });
     }
 
     // Clean up the raw vocab representation.
@@ -353,27 +352,29 @@ export function getData(vocab_source: string): Vocab {
     // Reminder: there is an initially empty global structure, initialized in common.ts
     // These functions will also update that global structure when applicable
 
-
     // Establish the final context reference(s), if any, for a term.
     // As a side effect, the 'inverse' info, ie, the list of terms per context, is
     // created in the global data structure.
     // "curie" is the CURIE encoded id of the term, ie, namespace:name format.
-    const final_contexts = (raw: RawVocabEntry, term: RDFTerm ): string[] => {
+    const final_contexts = (raw: RawVocabEntry, term: RDFTerm): string[] => {
         if (raw.context === undefined) return [];
 
         // replace the value of "vocab" by the global context, if applicable then
         // get the possible "none" out of the way.
-        const contexts: string[] = raw.context.map((val: string): string => {
-            if (val === "vocab") {
-                // The global context may not have been set per TypeScript... although this
-                // function is invoked once that has been set already. Price to pay for
-                // Typescript checking...
-                const returnValue = (global.vocab_context !== undefined && global.vocab_context !== 'vocab') ? global.vocab_context : "none";
-                return returnValue || "none";
-            } else {
-                return val;
-            }
-        }).filter((val:string): boolean => val !== "none");
+        const contexts: string[] = raw.context
+            .map((val: string): string => {
+                if (val === "vocab") {
+                    // The global context may not have been set per TypeScript... although this
+                    // function is invoked once that has been set already. Price to pay for
+                    // Typescript checking...
+                    const returnValue =
+                        global.vocab_context !== undefined && global.vocab_context !== "vocab" ? global.vocab_context : "none";
+                    return returnValue || "none";
+                } else {
+                    return val;
+                }
+            })
+            .filter((val: string): boolean => val !== "none");
 
         // Make sure that all entries are unique before returning it
         const ctx_s = [...new Set(contexts)];
@@ -386,7 +387,7 @@ export function getData(vocab_source: string): Vocab {
             global.context_mentions[ctx].push(term);
         }
         return ctx_s;
-    }
+    };
 
     //
     // Convert the ranges of a property into the internal representation. The range can be a class, a datatype, or
@@ -394,12 +395,16 @@ export function getData(vocab_source: string): Vocab {
     //
     // The function also sets the possible values of a (pure) datatype or object property as extra types
     // to be added to the enclosing property
-    const get_ranges = (factory: RDFTermFactory, raw: RawVocabEntry, id: string): { extra_types: string[], range: RDFTerm[], strongURL: boolean, langString: boolean, typeVocab: boolean } => {
+    const get_ranges = (
+        factory: RDFTermFactory,
+        raw: RawVocabEntry,
+        id: string,
+    ): { extra_types: string[]; range: RDFTerm[]; strongURL: boolean; langString: boolean; typeVocab: boolean } => {
         let extra_types: string[] = [];
-        const range: RDFTerm[]    = [];
-        let strongURL: boolean    = false;
-        let langString: boolean   = false;
-        let typeVocab: boolean   = false;
+        const range: RDFTerm[] = [];
+        let strongURL: boolean = false;
+        let langString: boolean = false;
+        let typeVocab: boolean = false;
 
         if (raw.range && raw.range.length > 0) {
             if (raw.range.length === 1 && (raw.range[0].toUpperCase() === "IRI" || raw.range[0].toUpperCase() === "URL")) {
@@ -409,7 +414,7 @@ export function getData(vocab_source: string): Vocab {
                 langString = true;
                 raw.range_union = true;
                 for (const term of ["rdf:langString", "rdf:dirLangString", "xsd:string"]) {
-                    range.push(factory.term(term))
+                    range.push(factory.term(term));
                 }
             } else if (raw.range.length === 1 && raw.range[0] === "vocab") {
                 typeVocab = true;
@@ -422,7 +427,7 @@ export function getData(vocab_source: string): Vocab {
                 }
                 // As a future-proof action adding both RDF lang strings to the mix, but avoiding duplications
                 const frange = new Set([...raw.range, "rdf:langString", "rdf:dirLangString"]);
-                raw.range_union = true;            // this may be necessary if the original included one setting only
+                raw.range_union = true; // this may be necessary if the original included one setting only
                 for (const term of frange) {
                     range.push(factory.term(term));
                 }
@@ -450,9 +455,7 @@ export function getData(vocab_source: string): Vocab {
                                     );
                                 }
                             } else {
-                                throw new Error(
-                                    `The range ${rg} of the property ${id} is not defined in this vocabulary`,
-                                );
+                                throw new Error(`The range ${rg} of the property ${id} is not defined in this vocabulary`);
                             }
                         } else {
                             // By now, local classes and datatypes have been accounted for; the only remaining
@@ -467,13 +470,13 @@ export function getData(vocab_source: string): Vocab {
             extra_types.push("owl:ObjectProperty");
         }
 
-        extra_types = [ ...new Set(extra_types) ];  // remove duplicates
+        extra_types = [...new Set(extra_types)]; // remove duplicates
         // In fact, the length of the types must be 0 or 1, otherwise, it is a general property that can have any range
         if (extra_types.length > 1) {
             extra_types = [];
-        };
-        return { extra_types, range, strongURL, langString, typeVocab }
-    }
+        }
+        return { extra_types, range, strongURL, langString, typeVocab };
+    };
 
     // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
     // This function raises an error if this is not the case
@@ -485,13 +488,11 @@ export function getData(vocab_source: string): Vocab {
         }
         // Extra check for the possible error
         else {
-            if ((raw.comment === undefined || raw.comment === "") &&
-                (raw.defined_by === undefined || raw.defined_by.length === 0))
-            {
-                throw (new Error(`${raw.id} is incomplete: either "defined_by" or "comment" should be provided.`));
+            if ((raw.comment === undefined || raw.comment === "") && (raw.defined_by === undefined || raw.defined_by.length === 0)) {
+                throw new Error(`${raw.id} is incomplete: either "defined_by" or "comment" should be provided.`);
             }
         }
-    }
+    };
 
     const get_top_scope = (raw: RawVocabEntry): boolean => {
         if (raw.scope === undefined) {
@@ -503,7 +504,6 @@ export function getData(vocab_source: string): Vocab {
             return false;
         }
     };
-
 
     /*****************************************************************************************************************/
     /************************************** Main processing part *****************************************************/
@@ -533,36 +533,35 @@ export function getData(vocab_source: string): Vocab {
     const allPrefixes: RDFPrefix[] = [
         ...vocab.vocab.map((raw: RawVocabEntry): RDFPrefix => {
             if (raw.id === undefined) {
-                throw(new Error("The vocabulary has no prefix"));
+                throw new Error("The vocabulary has no prefix");
             }
             if (raw.value === undefined) {
-                throw(new Error("The vocabulary has no identifier"));
+                throw new Error("The vocabulary has no identifier");
             }
-            global.vocab_prefix  = raw.id;
-            global.vocab_url     = raw.value;
+            global.vocab_prefix = raw.id;
+            global.vocab_url = raw.value;
             global.vocab_context = raw.context === undefined ? undefined : raw.context[0];
             if (global.vocab_context) {
                 global.context_mentions[global.vocab_context] = [];
             }
             return {
-                prefix : raw.id,
-                url    : raw.value,
-            }
+                prefix: raw.id,
+                url: raw.value,
+            };
         }),
-        ...((vocab.prefix &&  vocab.prefix.length > 0)
+        ...(vocab.prefix && vocab.prefix.length > 0
             ? vocab.prefix.map((raw: RawVocabEntry): RDFPrefix => {
-                return {
-                    prefix : raw.id,
-                    url    : (raw.value) ? raw.value : "UNDEFINED PREFIX VALUE",
-                }
-            })
-            : []
-        ),
-        ...defaultPrefixes
+                  return {
+                      prefix: raw.id,
+                      url: raw.value ? raw.value : "UNDEFINED PREFIX VALUE",
+                  };
+              })
+            : []),
+        ...defaultPrefixes,
     ];
 
     // Remove duplicates; trick is that, using a map, the second setting of a prefix would overwrite the previous
-    const prefixes: RDFPrefix[] = Array.from(new Map(allPrefixes.map(p => [p.prefix, p])).values());
+    const prefixes: RDFPrefix[] = Array.from(new Map(allPrefixes.map((p) => [p.prefix, p])).values());
 
     /********************************************************************************************/
     // Get the ontology properties. Note that there are also default ontology properties
@@ -570,10 +569,10 @@ export function getData(vocab_source: string): Vocab {
     const ontology_properties: OntologyProperty[] = [
         ...vocab.ontology.map((raw: RawVocabEntry): OntologyProperty => {
             return {
-                property : (raw.property) ? raw.property : "UNDEFINED ONTOLOGY PROPERTY",
-                value    : (raw.value) ? raw.value : "UNDEFINED PROPERTY VALUE",
-                url      : (raw.value) ? isURL(raw.value) : false,
-            }
+                property: raw.property ? raw.property : "UNDEFINED ONTOLOGY PROPERTY",
+                value: raw.value ? raw.value : "UNDEFINED PROPERTY VALUE",
+                url: raw.value ? isURL(raw.value) : false,
+            };
         }),
         ...defaultOntologyProperties,
     ];
@@ -587,129 +586,131 @@ export function getData(vocab_source: string): Vocab {
 
     /********************************************************************************************/
     // Get the datatypes.
-    const datatypes: RDFDatatype[] = (vocab.datatype !== undefined) ?
-        vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
-            const output: RDFDatatype = factory.datatype(raw.id);
+    const datatypes: RDFDatatype[] =
+        vocab.datatype !== undefined
+            ? vocab.datatype.map((raw: RawVocabEntry): RDFDatatype => {
+                  const output: RDFDatatype = factory.datatype(raw.id);
 
-            // Extra check for possible error for external terms
-            set_and_check_external(raw, output);
+                  // Extra check for possible error for external terms
+                  set_and_check_external(raw, output);
 
-            // In the former version of the package the user's type was done via the upper_value property, which was not clean
-            // the current version has a separate type attribute, but the upper_value could also be used for backward compatibility
-            // To be sure, an extra action below is necessary to make sure there are no repeated entries.
-            const type_entries = [
-                ...(raw.type !== undefined) ? raw.type : [],
-                ...(raw.upper_value !== undefined) ? raw.upper_value : []
-            ];
-            const type = [...new Set(type_entries)].map(t => factory.datatype(t));
+                  // In the former version of the package the user's type was done via the upper_value property, which was not clean
+                  // the current version has a separate type attribute, but the upper_value could also be used for backward compatibility
+                  // To be sure, an extra action below is necessary to make sure there are no repeated entries.
+                  const type_entries = [
+                      ...(raw.type !== undefined ? raw.type : []),
+                      ...(raw.upper_value !== undefined ? raw.upper_value : []),
+                  ];
+                  const type = [...new Set(type_entries)].map((t) => factory.datatype(t));
 
-            // Calculate the number of entries in various categories
-            // The conditional assignment is actually unnecessary per the earlier processing,
-            // but the deno typescript checker complains...
-            global.status_counter.add(raw.status ? raw.status : Status.stable);
+                  // Calculate the number of entries in various categories
+                  // The conditional assignment is actually unnecessary per the earlier processing,
+                  // but the deno typescript checker complains...
+                  global.status_counter.add(raw.status ? raw.status : Status.stable);
 
-            // Setting the right pattern and enum values: if there is no pattern but there is an enum,
-            // create a pattern artificially.
-            // Both are restricted to string values, though.
-            const [pattern, one_of] = ((): [string, string[]] => {
-                if (raw.one_of || raw.pattern) {
-                    // The supertype must include an xsd:string
-                    if (!(type && type.map((term: RDFTerm): string => `${term}`).includes('xsd:string'))) {
-                        throw(new Error(`${output.id} must be an xsd:string for template or enumeration`));
-                    }
-                }
-                if (raw.one_of && raw.one_of.length > 0) {
-                    const pattern = raw.one_of.join('|');
-                    return [pattern, raw.one_of];
-                } else if (raw.pattern !== undefined) {
-                    return [raw.pattern, []]
-                } else {
-                    return ["", []]
-                }
-            })();
+                  // Setting the right pattern and enum values: if there is no pattern but there is an enum,
+                  // create a pattern artificially.
+                  // Both are restricted to string values, though.
+                  const [pattern, one_of] = ((): [string, string[]] => {
+                      if (raw.one_of || raw.pattern) {
+                          // The supertype must include an xsd:string
+                          if (!(type && type.map((term: RDFTerm): string => `${term}`).includes("xsd:string"))) {
+                              throw new Error(`${output.id} must be an xsd:string for template or enumeration`);
+                          }
+                      }
+                      if (raw.one_of && raw.one_of.length > 0) {
+                          const pattern = raw.one_of.join("|");
+                          return [pattern, raw.one_of];
+                      } else if (raw.pattern !== undefined) {
+                          return [raw.pattern, []];
+                      } else {
+                          return ["", []];
+                      }
+                  })();
 
-            Object. assign(output, {
-                label             : raw.label,
-                comment           : raw.comment,
-                deprecated        : raw.deprecated,
-                defined_by        : raw.defined_by,
-                status            : raw.status,
-                type              : type,
-                html_class        : raw.html_class,
-                subClassOf        : type,
-                upper_union       : raw.upper_union,
-                see_also          : raw.see_also,
-                known_as          : raw.known_as,
-                example           : raw.example,
-                context           : final_contexts(raw, output),
-                one_of            : one_of,
-                pattern           : pattern,
-                range_of          : [],   // these are set later, when all classes and properties are defined
-                includes_range_of : [],   // these are set later, when all classes and properties are defined
-            });
-            return output;
-        }
-    ) : [];
+                  Object.assign(output, {
+                      label: raw.label,
+                      comment: raw.comment,
+                      deprecated: raw.deprecated,
+                      defined_by: raw.defined_by,
+                      status: raw.status,
+                      type: type,
+                      html_class: raw.html_class,
+                      subClassOf: type,
+                      upper_union: raw.upper_union,
+                      see_also: raw.see_also,
+                      known_as: raw.known_as,
+                      example: raw.example,
+                      context: final_contexts(raw, output),
+                      one_of: one_of,
+                      pattern: pattern,
+                      range_of: [], // these are set later, when all classes and properties are defined
+                      includes_range_of: [], // these are set later, when all classes and properties are defined
+                  });
+                  return output;
+              })
+            : [];
 
     /********************************************************************************************/
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
-    const classes: RDFClass[] = (vocab.class !== undefined) ?
-        vocab.class.map((raw: RawVocabEntry): RDFClass => {
-            const output: RDFClass = factory.class(raw.id);
+    const classes: RDFClass[] =
+        vocab.class !== undefined
+            ? vocab.class.map((raw: RawVocabEntry): RDFClass => {
+                  const output: RDFClass = factory.class(raw.id);
 
-            // Extra check for possible error for external terms
-            set_and_check_external(raw, output);
+                  // Extra check for possible error for external terms
+                  set_and_check_external(raw, output);
 
-            const user_type: string[] = (raw.type === undefined) ? [] : raw.type;
-            const types: string[] = [
-                ...(raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"],
-                ...user_type
-            ];
+                  const user_type: string[] = raw.type === undefined ? [] : raw.type;
+                  const types: string[] = [
+                      ...(raw.status === Status.deprecated ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"]),
+                      ...user_type,
+                  ];
 
-            // Calculate the number of entries in various categories
-            // The conditional assignment is actually unnecessary per the earlier processing,
-            // but the deno typescript checker complains...
-            global.status_counter.add(raw.status ? raw.status : Status.stable);
+                  // Calculate the number of entries in various categories
+                  // The conditional assignment is actually unnecessary per the earlier processing,
+                  // but the deno typescript checker complains...
+                  global.status_counter.add(raw.status ? raw.status : Status.stable);
 
-            if (raw.one_of && raw.one_of.length > 0) {
-                // The owl:Class has to be added to types because the
-                // expression for one_of applies on an owl class only...
-                types.push("owl:Class")
-            }
+                  if (raw.one_of && raw.one_of.length > 0) {
+                      // The owl:Class has to be added to types because the
+                      // expression for one_of applies on an owl class only...
+                      types.push("owl:Class");
+                  }
 
-            Object.assign(output, {
-                type                  : [...new Set(types)].map(t => factory.term(t)),
-                html_class            : raw.html_class,
-                user_type             : user_type.map(t => factory.term(t)),
-                label                 : raw.label,
-                comment               : raw.comment,
-                deprecated            : raw.deprecated,
-                defined_by            : raw.defined_by,
-                status                : raw.status,
-                subClassOf            : raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
-                upper_union           : raw.upper_union,
-                one_of                : raw.one_of?.map((val: string): RDFIndividual => factory.individual(val)),
-                see_also              : raw.see_also,
-                known_as              : raw.known_as,
-                example               : raw.example,
-                context               : final_contexts(raw, output),
-                range_of              : [],      // these are set later, when all classes and properties are defined
-                domain_of             : [],      // these are set later, when all classes and properties are defined
-                included_in_domain_of : [],      // these are set later, when all classes and properties are defined
-                includes_range_of     : [],      // these are set later, when all classes and properties are defined
-                mermaid               : raw.mermaid,
-            });
+                  Object.assign(output, {
+                      type: [...new Set(types)].map((t) => factory.term(t)),
+                      html_class: raw.html_class,
+                      user_type: user_type.map((t) => factory.term(t)),
+                      label: raw.label,
+                      comment: raw.comment,
+                      deprecated: raw.deprecated,
+                      defined_by: raw.defined_by,
+                      status: raw.status,
+                      subClassOf: raw.upper_value?.map((val: string): RDFClass => factory.class(val)),
+                      upper_union: raw.upper_union,
+                      one_of: raw.one_of?.map((val: string): RDFIndividual => factory.individual(val)),
+                      see_also: raw.see_also,
+                      known_as: raw.known_as,
+                      example: raw.example,
+                      context: final_contexts(raw, output),
+                      range_of: [], // these are set later, when all classes and properties are defined
+                      domain_of: [], // these are set later, when all classes and properties are defined
+                      included_in_domain_of: [], // these are set later, when all classes and properties are defined
+                      includes_range_of: [], // these are set later, when all classes and properties are defined
+                      mermaid: raw.mermaid,
+                  });
 
-            return output;
-        }
-    ) : [];
+                  return output;
+              })
+            : [];
 
     /********************************************************************************************/
     // Bookkeeping for the `open_enumeration` flag on a property's `one_of`: the fresh, named
     // range classes that get generated, and the (one_of value -> generated class) memberships
     // that must be turned into `rdf:type` relationships once the individuals are all known.
     const openEnumClasses: RDFClass[] = [];
-    const openEnumMemberships: { id: string, cls: RDFClass }[] = [];
+    const openEnumMemberships: { id: string; cls: RDFClass }[] = [];
 
     /********************************************************************************************/
     // Get the properties. Note the special treatment for deprecated properties, as well as
@@ -717,189 +718,195 @@ export function getData(vocab_source: string): Vocab {
     //
     // Note that the function sets the object property or datatype property types in the obvious cases.
     // These extra types are also added when handling a class or a datatype, looking up the references.
-    const properties: RDFProperty[] = (vocab.property !== undefined) ?
-        vocab.property.map((raw: RawVocabEntry): RDFProperty => {
-            const output: RDFProperty = factory.property(raw.id);
+    const properties: RDFProperty[] =
+        vocab.property !== undefined
+            ? vocab.property.map((raw: RawVocabEntry): RDFProperty => {
+                  const output: RDFProperty = factory.property(raw.id);
 
-            // Extra check for possible error for external terms
-            set_and_check_external(raw, output);
+                  // Extra check for possible error for external terms
+                  set_and_check_external(raw, output);
 
-            // Calculate the number of entries in various categories
-            // The conditional assignment is actually unnecessary per the earlier processing,
-            // but the deno typescript checker complains...
-            global.status_counter.add(raw.status ? raw.status : Status.stable);
+                  // Calculate the number of entries in various categories
+                  // The conditional assignment is actually unnecessary per the earlier processing,
+                  // but the deno typescript checker complains...
+                  global.status_counter.add(raw.status ? raw.status : Status.stable);
 
-            // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
-            const { extra_types, range, strongURL, langString, typeVocab } = get_ranges(factory, raw, output.id);
+                  // Calculate the ranges, which can be a mixture of classes, datatypes, and unknown terms
+                  const { extra_types, range, strongURL, langString, typeVocab } = get_ranges(factory, raw, output.id);
 
-            // Handling of `open_enumeration`: instead of the `one_of` values ending up in an
-            // anonymous `owl:oneOf` class (see `multiRange` in the turtle/jsonld modules), a fresh,
-            // named class is created (and added to the vocabulary's classes) to serve as the
-            // property's range; the `one_of` values are later declared as instances of that class.
-            const openEnumRangeClass = ((): RDFClass | undefined => {
-                if (!raw.open_enumeration) return undefined;
-                if (!raw.one_of || raw.one_of.length === 0) {
-                    throw new Error(`${output.curie} sets "open_enumeration" but has no "one_of" values.`);
-                }
-                if (output.external) {
-                    // External properties are not given formal RDF statements anyway
-                    return undefined;
-                }
-                if (extra_types.includes("owl:DatatypeProperty")) {
-                    throw new Error(`${output.curie} is a DatatypeProperty; "open_enumeration" can only be used for ObjectProperties.`);
-                }
-                const rangeClassId = `${capitalize(output.id)}Range`;
-                if (factory.has(rangeClassId)) {
-                    throw new Error(`Cannot create the automatic "open_enumeration" range class "${rangeClassId}" for property ${output.curie}: a term with that name is already defined.`);
-                }
-                const rangeClass: RDFClass = factory.class(rangeClassId);
-                const classTypes: string[] = (raw.status === Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
-                Object.assign(rangeClass, {
-                    type                  : classTypes.map(t => factory.term(t)),
-                    html_class            : raw.html_class,
-                    user_type             : [],
-                    label                 : `${raw.label} range`,
-                    comment               : `The range of possible values for the <code>${output.curie}</code> property. This is an open enumeration: values beyond those specified in this vocabulary may also be valid.`,
-                    deprecated            : raw.deprecated,
-                    status                : raw.status,
-                    subClassOf            : [],
-                    upper_union           : false,
-                    one_of                : [],
-                    context               : [],
-                    range_of              : [],
-                    domain_of             : [],
-                    included_in_domain_of : [],
-                    includes_range_of     : [],
-                });
-                global.status_counter.add(raw.status ? raw.status : Status.stable);
-                openEnumClasses.push(rangeClass);
-                for (const val of raw.one_of) {
-                    openEnumMemberships.push({ id: val, cls: rangeClass });
-                }
-                return rangeClass;
-            })();
+                  // Handling of `open_enumeration`: instead of the `one_of` values ending up in an
+                  // anonymous `owl:oneOf` class (see `multiRange` in the turtle/jsonld modules), a fresh,
+                  // named class is created (and added to the vocabulary's classes) to serve as the
+                  // property's range; the `one_of` values are later declared as instances of that class.
+                  const openEnumRangeClass = ((): RDFClass | undefined => {
+                      if (!raw.open_enumeration) return undefined;
+                      if (!raw.one_of || raw.one_of.length === 0) {
+                          throw new Error(`${output.curie} sets "open_enumeration" but has no "one_of" values.`);
+                      }
+                      if (output.external) {
+                          // External properties are not given formal RDF statements anyway
+                          return undefined;
+                      }
+                      if (extra_types.includes("owl:DatatypeProperty")) {
+                          throw new Error(
+                              `${output.curie} is a DatatypeProperty; "open_enumeration" can only be used for ObjectProperties.`,
+                          );
+                      }
+                      const rangeClassId = `${capitalize(output.id)}Range`;
+                      if (factory.has(rangeClassId)) {
+                          throw new Error(
+                              `Cannot create the automatic "open_enumeration" range class "${rangeClassId}" for property ${output.curie}: a term with that name is already defined.`,
+                          );
+                      }
+                      const rangeClass: RDFClass = factory.class(rangeClassId);
+                      const classTypes: string[] =
+                          raw.status === Status.deprecated ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
+                      Object.assign(rangeClass, {
+                          type: classTypes.map((t) => factory.term(t)),
+                          html_class: raw.html_class,
+                          user_type: [],
+                          label: `${raw.label} range`,
+                          comment: `The range of possible values for the <code>${output.curie}</code> property. This is an open enumeration: values beyond those specified in this vocabulary may also be valid.`,
+                          deprecated: raw.deprecated,
+                          status: raw.status,
+                          subClassOf: [],
+                          upper_union: false,
+                          one_of: [],
+                          context: [],
+                          range_of: [],
+                          domain_of: [],
+                          included_in_domain_of: [],
+                          includes_range_of: [],
+                      });
+                      global.status_counter.add(raw.status ? raw.status : Status.stable);
+                      openEnumClasses.push(rangeClass);
+                      for (const val of raw.one_of) {
+                          openEnumMemberships.push({ id: val, cls: rangeClass });
+                      }
+                      return rangeClass;
+                  })();
 
-            // A little hack to ensure backward compatibility: if the range includes rdf:List,
-            // it should be removed and the information put aside because that should now
-            // go to the separate "container" information.
-            const range2 = range.filter ((r: RDFTerm): boolean => r.curie !== "rdf:List");
-            const containerSet = (range2.length !== range.length);
+                  // A little hack to ensure backward compatibility: if the range includes rdf:List,
+                  // it should be removed and the information put aside because that should now
+                  // go to the separate "container" information.
+                  const range2 = range.filter((r: RDFTerm): boolean => r.curie !== "rdf:List");
+                  const containerSet = range2.length !== range.length;
 
-            // If this property accepts an open enumeration,
-            // add the generated class in its range.
-            const finalRange = openEnumRangeClass ? [...range2, openEnumRangeClass] : range2;
+                  // If this property accepts an open enumeration,
+                  // add the generated class in its range.
+                  const finalRange = openEnumRangeClass ? [...range2, openEnumRangeClass] : range2;
 
-            const user_type: string[] = (raw.type === undefined) ? [] : raw.type
-            const types: string[] = [
-                ...(raw.status === Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],
-                ...extra_types,
-                ...user_type
-            ];
+                  const user_type: string[] = raw.type === undefined ? [] : raw.type;
+                  const types: string[] = [
+                      ...(raw.status === Status.deprecated ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"]),
+                      ...extra_types,
+                      ...user_type,
+                  ];
 
-            const dataset = ((): boolean => {
-                if (raw.dataset) {
-                    return true;
-                } else if (raw.container !== undefined && raw.container === Container.graph) {
-                    return true;
-                } else {
-                    return false;
-                }
-            })();
+                  const dataset = ((): boolean => {
+                      if (raw.dataset) {
+                          return true;
+                      } else if (raw.container !== undefined && raw.container === Container.graph) {
+                          return true;
+                      } else {
+                          return false;
+                      }
+                  })();
 
-            const container = ((): Container | undefined => {
-                if (raw.container !== undefined) {
-                    if (raw.container !== Container.graph) {
-                        return raw.container
-                    } else {
-                        return undefined;
-                    }
-                } else if (containerSet) {
-                    return Container.list
-                } else {
-                    return undefined;
-                }
-            })();
+                  const container = ((): Container | undefined => {
+                      if (raw.container !== undefined) {
+                          if (raw.container !== Container.graph) {
+                              return raw.container;
+                          } else {
+                              return undefined;
+                          }
+                      } else if (containerSet) {
+                          return Container.list;
+                      } else {
+                          return undefined;
+                      }
+                  })();
 
-            // Checking one combination: it is disallowed in JSON-LD to define a container to be a list and a graph
-            if (container === Container.list && dataset) {
-                throw (new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`));
-            }
+                  // Checking one combination: it is disallowed in JSON-LD to define a container to be a list and a graph
+                  if (container === Container.list && dataset) {
+                      throw new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`);
+                  }
 
-            const property_scope = raw.property_scope === undefined ? undefined : factory.class(raw.property_scope)
-            // Checking a combination: creation of a property scoped context and a null context exclude one another
-            if (raw.context_null === true && property_scope !== undefined) {
-                throw new Error(`${output.curie} is invalid: it combines a property scoped context and a null context, which is not allowed.`);
-            }
+                  const property_scope = raw.property_scope === undefined ? undefined : factory.class(raw.property_scope);
+                  // Checking a combination: creation of a property scoped context and a null context exclude one another
+                  if (raw.context_null === true && property_scope !== undefined) {
+                      throw new Error(
+                          `${output.curie} is invalid: it combines a property scoped context and a null context, which is not allowed.`,
+                      );
+                  }
 
-            Object.assign(output, {
-                type             : types.map(t => factory.term(t)),
-                html_class       : raw.html_class,
-                user_type        : user_type.map(t => factory.term(t)),
-                label            : raw.label,
-                comment          : raw.comment,
-                deprecated       : raw.deprecated,
-                defined_by       : raw.defined_by,
-                status           : raw.status,
-                subPropertyOf    : raw.upper_value?.map((val: string): RDFProperty => factory.property(val)),
-                see_also         : raw.see_also,
-                range            : finalRange,
-                range_union      : (langString === true) ? true : raw.range_union,
-                one_of           : raw.one_of?.map((val: string): RDFIndividual => factory.individual(val)),
-                open_enumeration : raw.open_enumeration ?? false,
-                domain           : raw.domain?.map(val => factory.class(val)),
-                scope            : raw.scope?.map(val => factory.class(val)),
-                property_scope   : property_scope,
-                context_null     : raw.context_null,
-                top_scope        : get_top_scope(raw),
-                example          : raw.example,
-                known_as         : raw.known_as,
-                dataset          : dataset,
-                type_vocab       : typeVocab,
-                container        : container,
-                strongURL        : strongURL,
-                langString       : langString,
-                context          : final_contexts(raw, output),
-                mermaid          : raw.mermaid,
-            });
-            return output;
-        }
-    ) : [];
+                  Object.assign(output, {
+                      type: types.map((t) => factory.term(t)),
+                      html_class: raw.html_class,
+                      user_type: user_type.map((t) => factory.term(t)),
+                      label: raw.label,
+                      comment: raw.comment,
+                      deprecated: raw.deprecated,
+                      defined_by: raw.defined_by,
+                      status: raw.status,
+                      subPropertyOf: raw.upper_value?.map((val: string): RDFProperty => factory.property(val)),
+                      see_also: raw.see_also,
+                      range: finalRange,
+                      range_union: langString === true ? true : raw.range_union,
+                      one_of: raw.one_of?.map((val: string): RDFIndividual => factory.individual(val)),
+                      open_enumeration: raw.open_enumeration ?? false,
+                      domain: raw.domain?.map((val) => factory.class(val)),
+                      scope: raw.scope?.map((val) => factory.class(val)),
+                      property_scope: property_scope,
+                      context_null: raw.context_null,
+                      top_scope: get_top_scope(raw),
+                      example: raw.example,
+                      known_as: raw.known_as,
+                      dataset: dataset,
+                      type_vocab: typeVocab,
+                      container: container,
+                      strongURL: strongURL,
+                      langString: langString,
+                      context: final_contexts(raw, output),
+                      mermaid: raw.mermaid,
+                  });
+                  return output;
+              })
+            : [];
 
     /********************************************************************************************/
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
-    const individuals: RDFIndividual[] = (vocab.individual !== undefined) ?
-        vocab.individual.map((raw:RawVocabEntry): RDFIndividual => {
-            const output = factory.individual(raw.id);
+    const individuals: RDFIndividual[] =
+        vocab.individual !== undefined
+            ? vocab.individual.map((raw: RawVocabEntry): RDFIndividual => {
+                  const output = factory.individual(raw.id);
 
-            // Extra check for possible error for external terms
-            set_and_check_external(raw, output);
+                  // Extra check for possible error for external terms
+                  set_and_check_external(raw, output);
 
-            // In the former version the user's type was done via the upper_value property, which was not clean
-            // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
-            // To be sure, an extra action below is necessary to make sure there are no repeated entries.
-            const type = [
-                ...(raw.type !== undefined) ? raw.type : [],
-                ...(raw.upper_value !== undefined) ? raw.upper_value : []
-            ];
-            Object.assign(output, {
-                label           : raw.label,
-                comment         : raw.comment,
-                deprecated      : raw.deprecated,
-                defined_by      : raw.defined_by,
-                status          : raw.status,
-                type            : [...new Set(type)].map((t) => factory.term(t)),
-                html_class      : raw.html_class,
-                see_also        : raw.see_also,
-                example         : raw.example,
-                known_as        : raw.known_as,
-                context         : final_contexts(raw, output),
-                scope           : raw.scope?.map((val) => factory.property(val)),
-                top_scope       : get_top_scope(raw),
-                mermaid         : raw.mermaid
-            });
-            return output;
-        }
-    ) : [];
+                  // In the former version the user's type was done via the upper_value property, which was not clean
+                  // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
+                  // To be sure, an extra action below is necessary to make sure there are no repeated entries.
+                  const type = [...(raw.type !== undefined ? raw.type : []), ...(raw.upper_value !== undefined ? raw.upper_value : [])];
+                  Object.assign(output, {
+                      label: raw.label,
+                      comment: raw.comment,
+                      deprecated: raw.deprecated,
+                      defined_by: raw.defined_by,
+                      status: raw.status,
+                      type: [...new Set(type)].map((t) => factory.term(t)),
+                      html_class: raw.html_class,
+                      see_also: raw.see_also,
+                      example: raw.example,
+                      known_as: raw.known_as,
+                      context: final_contexts(raw, output),
+                      scope: raw.scope?.map((val) => factory.property(val)),
+                      top_scope: get_top_scope(raw),
+                      mermaid: raw.mermaid,
+                  });
+                  return output;
+              })
+            : [];
 
     /********************************************************************************************/
     // Set the back references for subclasses: for each class register it as a subclass of
@@ -937,12 +944,12 @@ export function getData(vocab_source: string): Vocab {
 
         if (!ind.label) {
             Object.assign(ind, {
-                label      : localeUnCamelise(ind.id),
-                comment    : '',
-                deprecated : false,
-                defined_by : [],
-                status     : Status.stable,
-                context    : [],
+                label: localeUnCamelise(ind.id),
+                comment: "",
+                deprecated: false,
+                defined_by: [],
+                status: Status.stable,
+                context: [],
             });
             global.status_counter.add(Status.stable);
             individuals.push(ind);
@@ -955,12 +962,12 @@ export function getData(vocab_source: string): Vocab {
         for (const prop of properties) {
             if (prop.range?.length > 0) {
                 if (prop.range.find((val: RDFTerm) => RDFTermFactory.equals(val, current_class))) {
-                    ((prop.range.length > 1) ? current_class.includes_range_of : current_class.range_of).push(prop);
+                    (prop.range.length > 1 ? current_class.includes_range_of : current_class.range_of).push(prop);
                 }
             }
             if (prop.domain?.length > 0) {
                 if (prop.domain.find((val: RDFTerm) => RDFTermFactory.equals(val, current_class))) {
-                    ((prop.domain.length > 1) ? current_class.included_in_domain_of : current_class.domain_of).push(prop);
+                    (prop.domain.length > 1 ? current_class.included_in_domain_of : current_class.domain_of).push(prop);
                 }
             }
         }
@@ -970,7 +977,7 @@ export function getData(vocab_source: string): Vocab {
         for (const prop of properties) {
             if (prop.range?.length > 0) {
                 if (prop.range.find((val: RDFTerm) => RDFTermFactory.equals(val, current_datatype))) {
-                    ((prop.range.length > 1) ? current_datatype.includes_range_of : current_datatype.range_of).push(prop);
+                    (prop.range.length > 1 ? current_datatype.includes_range_of : current_datatype.range_of).push(prop);
                 }
             }
         }
@@ -992,14 +999,47 @@ export function getData(vocab_source: string): Vocab {
 
     /*********************************************************************************************/
     // The mermaid settings are also for global space only
+    const ontFilter = (prop: string): OntologyProperty[] => {
+        return ontology_properties.filter((property): boolean => property.property === prop);
+    };
 
     global.direction = vocab.mermaid?.direction ?? DEFAULT_M_DIRECTION;
-    global.theme     = vocab.mermaid?.theme ?? DEFAULT_M_THEME;
-    global.look      = vocab.mermaid?.look ?? DEFAULT_M_LOOK;
-    global.layout    = vocab.mermaid?.layout ?? DEFAULT_M_LAYOUT;
-    global.extras    = toArray(vocab.mermaid?.extras) ?? [];
+    global.theme = vocab.mermaid?.theme ?? DEFAULT_M_THEME;
+    global.look = vocab.mermaid?.look ?? DEFAULT_M_LOOK;
+    global.layout = vocab.mermaid?.layout ?? DEFAULT_M_LAYOUT;
+    global.extras = toArray(vocab.mermaid?.extras) ?? [];
+
+    // Get the accessibility title: either given explicitly or
+    // reuse the ontology title
+    global.accTitle = ((): string => {
+        if (vocab.mermaid?.accTitle) {
+            return vocab.mermaid.accTitle;
+        } else {
+            const titleProperty = ontFilter("dc:title");
+            return titleProperty.length > 0 ? titleProperty[0].value : "";
+        }
+    })();
+
+    // Get the accessibility description: either given explicitly or
+    // reuse tje ontology description and seeAlso.
+    global.accDescr = ((): string => {
+        if (vocab.mermaid?.accDescr) {
+            return vocab.mermaid.accDescr;
+        } else {
+            const descrProperty = ontFilter("dc:description");
+            const seeAlsoProperty = ontFilter("rdfs:seeAlso");
+
+            if (descrProperty.length + seeAlsoProperty.length) {
+                const descr = descrProperty.length > 0 ? descrProperty[0].value : "";
+                const seeAlso = seeAlsoProperty.length > 0 ? seeAlsoProperty[0].value : "";
+                return descr + ". See also:" + seeAlso;
+            } else {
+                return "";
+            }
+        }
+    })();
 
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary
-    return {prefixes, ontology_properties, classes, properties, individuals, datatypes}
+    return { prefixes, ontology_properties, classes, properties, individuals, datatypes };
 }
