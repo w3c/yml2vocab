@@ -40,7 +40,7 @@ const arrows = {
  * @param vocab
  * @returns
  */
-function toMClass(vocab) {
+function toMClasses(vocab) {
     const output = [];
     //
     // This is the tricky bit: it generates a reasonable entry for the properties that do not represent a link
@@ -200,11 +200,10 @@ function toMClass(vocab) {
  * terms in the data.
  *
  * @param classesIn
+ * @param spaces to be put at the start of each line
  * @returns The mermaid text
  */
-function generateMermaid(classesIn) {
-    const spaces = (0, beautify_1.getRequestedSpaces)("mmd");
-    // const lines = ["classDiagram"];
+function generateMermaid(classesIn, spaces) {
     const lines = [];
     // ----------------------------------------
     // Hopefully, this is a temporary measure. At the moment
@@ -295,8 +294,30 @@ function generateMermaid(classesIn) {
         }
     }
     lines.push("");
+    // Get the extra mermaid statements provided in the vocabulary definition
     const extras = common_1.global.extras ? common_1.global.extras.map((str) => `${spaces}${str}`) : [];
-    return [...lines, ...extras].join("\n");
+    return [...lines, ...extras];
+}
+/**
+ * Generate the mermaid accessibility metadata lines/
+ *
+ * @param spaces
+ * @returns
+ */
+function accData(spaces) {
+    const output = [];
+    if (common_1.global.accTitle.length > 0) {
+        output.push(`${spaces}accTitle: ${common_1.global.accTitle}`);
+    }
+    if (common_1.global.accDescr.length > 0) {
+        output.push(`${spaces}accDescr {`);
+        for (const line of common_1.global.accDescr.split('\n')) {
+            if (line.length > 0)
+                output.push(`${spaces}${spaces}${line}`);
+        }
+        output.push(`${spaces}}`);
+    }
+    return output;
 }
 /**
  * Generation of an illustrative mermaid diagram. It is not the goal to be 100% exhaustive: general properties may
@@ -308,10 +329,13 @@ function generateMermaid(classesIn) {
  * @returns
  */
 function toMermaid(vocab, template = "") {
-    // Convert the data into mermaid classes
-    const mermaid_classes = toMClass(vocab);
+    const spaces = (0, beautify_1.getRequestedSpaces)("mmd");
+    // Convert the data into mermaid classes and relations
+    const mermaid_classes = toMClasses(vocab);
     // Generate the mermaid data itself
-    const mermaid = generateMermaid(mermaid_classes);
+    const accLines = accData(spaces);
+    const mermaidLines = generateMermaid(mermaid_classes, spaces);
+    const mermaid = [...accLines, ...mermaidLines].join('\n');
     // Plug it into the template and return
     const final_template = template.length === 0 ? mmd_template : template;
     return final_template

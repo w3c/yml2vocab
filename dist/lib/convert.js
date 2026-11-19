@@ -335,7 +335,7 @@ function getData(vocab_source) {
     const validation_results = (0, schema_1.validateWithSchema)(vocab_source);
     if (validation_results.vocab === null) {
         const error = JSON.stringify(validation_results.error, null, 2);
-        throw (new TypeError(`${error}`, { cause: '\n' + error }));
+        throw new TypeError(`${error}`, { cause: "\n" + error });
     }
     // Clean up the raw vocab representation.
     const vocab = finalizeRawVocab(validation_results.vocab);
@@ -352,18 +352,20 @@ function getData(vocab_source) {
             return [];
         // replace the value of "vocab" by the global context, if applicable then
         // get the possible "none" out of the way.
-        const contexts = raw.context.map((val) => {
+        const contexts = raw.context
+            .map((val) => {
             if (val === "vocab") {
                 // The global context may not have been set per TypeScript... although this
                 // function is invoked once that has been set already. Price to pay for
                 // Typescript checking...
-                const returnValue = (common_1.global.vocab_context !== undefined && common_1.global.vocab_context !== 'vocab') ? common_1.global.vocab_context : "none";
+                const returnValue = common_1.global.vocab_context !== undefined && common_1.global.vocab_context !== "vocab" ? common_1.global.vocab_context : "none";
                 return returnValue || "none";
             }
             else {
                 return val;
             }
-        }).filter((val) => val !== "none");
+        })
+            .filter((val) => val !== "none");
         // Make sure that all entries are unique before returning it
         const ctx_s = [...new Set(contexts)];
         // 'Inverse' info: add the term reference to the global data
@@ -461,7 +463,6 @@ function getData(vocab_source) {
         if (extra_types.length > 1) {
             extra_types = [];
         }
-        ;
         return { extra_types, range, strongURL, langString, typeVocab };
     };
     // Check whether the external term is defined somewhere, ie, a defined by or at least a comment.
@@ -474,9 +475,8 @@ function getData(vocab_source) {
         }
         // Extra check for the possible error
         else {
-            if ((raw.comment === undefined || raw.comment === "") &&
-                (raw.defined_by === undefined || raw.defined_by.length === 0)) {
-                throw (new Error(`${raw.id} is incomplete: either "defined_by" or "comment" should be provided.`));
+            if ((raw.comment === undefined || raw.comment === "") && (raw.defined_by === undefined || raw.defined_by.length === 0)) {
+                throw new Error(`${raw.id} is incomplete: either "defined_by" or "comment" should be provided.`);
             }
         }
     };
@@ -516,10 +516,10 @@ function getData(vocab_source) {
     const allPrefixes = [
         ...vocab.vocab.map((raw) => {
             if (raw.id === undefined) {
-                throw (new Error("The vocabulary has no prefix"));
+                throw new Error("The vocabulary has no prefix");
             }
             if (raw.value === undefined) {
-                throw (new Error("The vocabulary has no identifier"));
+                throw new Error("The vocabulary has no identifier");
             }
             common_1.global.vocab_prefix = raw.id;
             common_1.global.vocab_url = raw.value;
@@ -532,27 +532,27 @@ function getData(vocab_source) {
                 url: raw.value,
             };
         }),
-        ...((vocab.prefix && vocab.prefix.length > 0)
+        ...(vocab.prefix && vocab.prefix.length > 0
             ? vocab.prefix.map((raw) => {
                 return {
                     prefix: raw.id,
-                    url: (raw.value) ? raw.value : "UNDEFINED PREFIX VALUE",
+                    url: raw.value ? raw.value : "UNDEFINED PREFIX VALUE",
                 };
             })
             : []),
-        ...common_3.defaultPrefixes
+        ...common_3.defaultPrefixes,
     ];
     // Remove duplicates; trick is that, using a map, the second setting of a prefix would overwrite the previous
-    const prefixes = Array.from(new Map(allPrefixes.map(p => [p.prefix, p])).values());
+    const prefixes = Array.from(new Map(allPrefixes.map((p) => [p.prefix, p])).values());
     /********************************************************************************************/
     // Get the ontology properties. Note that there are also default ontology properties
     // that are added to what the YAML input provides
     const ontology_properties = [
         ...vocab.ontology.map((raw) => {
             return {
-                property: (raw.property) ? raw.property : "UNDEFINED ONTOLOGY PROPERTY",
-                value: (raw.value) ? raw.value : "UNDEFINED PROPERTY VALUE",
-                url: (raw.value) ? isURL(raw.value) : false,
+                property: raw.property ? raw.property : "UNDEFINED ONTOLOGY PROPERTY",
+                value: raw.value ? raw.value : "UNDEFINED PROPERTY VALUE",
+                url: raw.value ? isURL(raw.value) : false,
             };
         }),
         ...defaultOntologyProperties,
@@ -565,8 +565,8 @@ function getData(vocab_source) {
     factory_1.factory.initialize(prefixes);
     /********************************************************************************************/
     // Get the datatypes.
-    const datatypes = (vocab.datatype !== undefined) ?
-        vocab.datatype.map((raw) => {
+    const datatypes = vocab.datatype !== undefined
+        ? vocab.datatype.map((raw) => {
             const output = factory_1.factory.datatype(raw.id);
             // Extra check for possible error for external terms
             set_and_check_external(raw, output);
@@ -574,10 +574,10 @@ function getData(vocab_source) {
             // the current version has a separate type attribute, but the upper_value could also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
             const type_entries = [
-                ...(raw.type !== undefined) ? raw.type : [],
-                ...(raw.upper_value !== undefined) ? raw.upper_value : []
+                ...(raw.type !== undefined ? raw.type : []),
+                ...(raw.upper_value !== undefined ? raw.upper_value : []),
             ];
-            const type = [...new Set(type_entries)].map(t => factory_1.factory.datatype(t));
+            const type = [...new Set(type_entries)].map((t) => factory_1.factory.datatype(t));
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
             // but the deno typescript checker complains...
@@ -588,12 +588,12 @@ function getData(vocab_source) {
             const [pattern, one_of] = (() => {
                 if (raw.one_of || raw.pattern) {
                     // The supertype must include an xsd:string
-                    if (!(type && type.map((term) => `${term}`).includes('xsd:string'))) {
-                        throw (new Error(`${output.id} must be an xsd:string for template or enumeration`));
+                    if (!(type && type.map((term) => `${term}`).includes("xsd:string"))) {
+                        throw new Error(`${output.id} must be an xsd:string for template or enumeration`);
                     }
                 }
                 if (raw.one_of && raw.one_of.length > 0) {
-                    const pattern = raw.one_of.join('|');
+                    const pattern = raw.one_of.join("|");
                     return [pattern, raw.one_of];
                 }
                 else if (raw.pattern !== undefined) {
@@ -623,18 +623,19 @@ function getData(vocab_source) {
                 includes_range_of: [], // these are set later, when all classes and properties are defined
             });
             return output;
-        }) : [];
+        })
+        : [];
     /********************************************************************************************/
     // Get the classes. Note the special treatment for deprecated classes and the location of relevant domains and ranges
-    const classes = (vocab.class !== undefined) ?
-        vocab.class.map((raw) => {
+    const classes = vocab.class !== undefined
+        ? vocab.class.map((raw) => {
             const output = factory_1.factory.class(raw.id);
             // Extra check for possible error for external terms
             set_and_check_external(raw, output);
-            const user_type = (raw.type === undefined) ? [] : raw.type;
+            const user_type = raw.type === undefined ? [] : raw.type;
             const types = [
-                ...(raw.status === common_1.Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"],
-                ...user_type
+                ...(raw.status === common_1.Status.deprecated ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"]),
+                ...user_type,
             ];
             // Calculate the number of entries in various categories
             // The conditional assignment is actually unnecessary per the earlier processing,
@@ -646,9 +647,9 @@ function getData(vocab_source) {
                 types.push("owl:Class");
             }
             Object.assign(output, {
-                type: [...new Set(types)].map(t => factory_1.factory.term(t)),
+                type: [...new Set(types)].map((t) => factory_1.factory.term(t)),
                 html_class: raw.html_class,
-                user_type: user_type.map(t => factory_1.factory.term(t)),
+                user_type: user_type.map((t) => factory_1.factory.term(t)),
                 label: raw.label,
                 comment: raw.comment,
                 deprecated: raw.deprecated,
@@ -668,7 +669,8 @@ function getData(vocab_source) {
                 mermaid: raw.mermaid,
             });
             return output;
-        }) : [];
+        })
+        : [];
     /********************************************************************************************/
     // Bookkeeping for the `open_enumeration` flag on a property's `one_of`: the fresh, named
     // range classes that get generated, and the (one_of value -> generated class) memberships
@@ -681,8 +683,8 @@ function getData(vocab_source) {
     //
     // Note that the function sets the object property or datatype property types in the obvious cases.
     // These extra types are also added when handling a class or a datatype, looking up the references.
-    const properties = (vocab.property !== undefined) ?
-        vocab.property.map((raw) => {
+    const properties = vocab.property !== undefined
+        ? vocab.property.map((raw) => {
             const output = factory_1.factory.property(raw.id);
             // Extra check for possible error for external terms
             set_and_check_external(raw, output);
@@ -714,9 +716,9 @@ function getData(vocab_source) {
                     throw new Error(`Cannot create the automatic "open_enumeration" range class "${rangeClassId}" for property ${output.curie}: a term with that name is already defined.`);
                 }
                 const rangeClass = factory_1.factory.class(rangeClassId);
-                const classTypes = (raw.status === common_1.Status.deprecated) ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
+                const classTypes = raw.status === common_1.Status.deprecated ? ["rdfs:Class", "owl:DeprecatedClass"] : ["rdfs:Class"];
                 Object.assign(rangeClass, {
-                    type: classTypes.map(t => factory_1.factory.term(t)),
+                    type: classTypes.map((t) => factory_1.factory.term(t)),
                     html_class: raw.html_class,
                     user_type: [],
                     label: `${raw.label} range`,
@@ -743,15 +745,15 @@ function getData(vocab_source) {
             // it should be removed and the information put aside because that should now
             // go to the separate "container" information.
             const range2 = range.filter((r) => r.curie !== "rdf:List");
-            const containerSet = (range2.length !== range.length);
+            const containerSet = range2.length !== range.length;
             // If this property accepts an open enumeration,
             // add the generated class in its range.
             const finalRange = openEnumRangeClass ? [...range2, openEnumRangeClass] : range2;
-            const user_type = (raw.type === undefined) ? [] : raw.type;
+            const user_type = raw.type === undefined ? [] : raw.type;
             const types = [
-                ...(raw.status === common_1.Status.deprecated) ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"],
+                ...(raw.status === common_1.Status.deprecated ? ["rdf:Property", "owl:DeprecatedProperty"] : ["rdf:Property"]),
                 ...extra_types,
-                ...user_type
+                ...user_type,
             ];
             const dataset = (() => {
                 if (raw.dataset) {
@@ -782,7 +784,7 @@ function getData(vocab_source) {
             })();
             // Checking one combination: it is disallowed in JSON-LD to define a container to be a list and a graph
             if (container === common_3.Container.list && dataset) {
-                throw (new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`));
+                throw new Error(`${output.curie} is invalid: it combines a list container with a dataset, which is not allowed.`);
             }
             const property_scope = raw.property_scope === undefined ? undefined : factory_1.factory.class(raw.property_scope);
             // Checking a combination: creation of a property scoped context and a null context exclude one another
@@ -790,9 +792,9 @@ function getData(vocab_source) {
                 throw new Error(`${output.curie} is invalid: it combines a property scoped context and a null context, which is not allowed.`);
             }
             Object.assign(output, {
-                type: types.map(t => factory_1.factory.term(t)),
+                type: types.map((t) => factory_1.factory.term(t)),
                 html_class: raw.html_class,
-                user_type: user_type.map(t => factory_1.factory.term(t)),
+                user_type: user_type.map((t) => factory_1.factory.term(t)),
                 label: raw.label,
                 comment: raw.comment,
                 deprecated: raw.deprecated,
@@ -801,11 +803,11 @@ function getData(vocab_source) {
                 subPropertyOf: raw.upper_value?.map((val) => factory_1.factory.property(val)),
                 see_also: raw.see_also,
                 range: finalRange,
-                range_union: (langString === true) ? true : raw.range_union,
+                range_union: langString === true ? true : raw.range_union,
                 one_of: raw.one_of?.map((val) => factory_1.factory.individual(val)),
                 open_enumeration: raw.open_enumeration ?? false,
-                domain: raw.domain?.map(val => factory_1.factory.class(val)),
-                scope: raw.scope?.map(val => factory_1.factory.class(val)),
+                domain: raw.domain?.map((val) => factory_1.factory.class(val)),
+                scope: raw.scope?.map((val) => factory_1.factory.class(val)),
                 property_scope: property_scope,
                 context_null: raw.context_null,
                 top_scope: get_top_scope(raw),
@@ -820,21 +822,19 @@ function getData(vocab_source) {
                 mermaid: raw.mermaid,
             });
             return output;
-        }) : [];
+        })
+        : [];
     /********************************************************************************************/
     // Get the individuals. Note that, in this case, the 'type' value may be a full array of types provided in the YAML file
-    const individuals = (vocab.individual !== undefined) ?
-        vocab.individual.map((raw) => {
+    const individuals = vocab.individual !== undefined
+        ? vocab.individual.map((raw) => {
             const output = factory_1.factory.individual(raw.id);
             // Extra check for possible error for external terms
             set_and_check_external(raw, output);
             // In the former version the user's type was done via the upper_value property, which was not clean
             // the current version has a separate type attribute, but the upper_value should also be used for backward compatibility
             // To be sure, an extra action below is necessary to make sure there are no repeated entries.
-            const type = [
-                ...(raw.type !== undefined) ? raw.type : [],
-                ...(raw.upper_value !== undefined) ? raw.upper_value : []
-            ];
+            const type = [...(raw.type !== undefined ? raw.type : []), ...(raw.upper_value !== undefined ? raw.upper_value : [])];
             Object.assign(output, {
                 label: raw.label,
                 comment: raw.comment,
@@ -849,10 +849,11 @@ function getData(vocab_source) {
                 context: final_contexts(raw, output),
                 scope: raw.scope?.map((val) => factory_1.factory.property(val)),
                 top_scope: get_top_scope(raw),
-                mermaid: raw.mermaid
+                mermaid: raw.mermaid,
             });
             return output;
-        }) : [];
+        })
+        : [];
     /********************************************************************************************/
     // Set the back references for subclasses: for each class register it as a subclass of
     // each of its (locally defined) superclasses.
@@ -887,7 +888,7 @@ function getData(vocab_source) {
         if (!ind.label) {
             Object.assign(ind, {
                 label: localeUnCamelise(ind.id),
-                comment: '',
+                comment: "",
                 deprecated: false,
                 defined_by: [],
                 status: common_1.Status.stable,
@@ -903,12 +904,12 @@ function getData(vocab_source) {
         for (const prop of properties) {
             if (prop.range?.length > 0) {
                 if (prop.range.find((val) => factory_1.RDFTermFactory.equals(val, current_class))) {
-                    ((prop.range.length > 1) ? current_class.includes_range_of : current_class.range_of).push(prop);
+                    (prop.range.length > 1 ? current_class.includes_range_of : current_class.range_of).push(prop);
                 }
             }
             if (prop.domain?.length > 0) {
                 if (prop.domain.find((val) => factory_1.RDFTermFactory.equals(val, current_class))) {
-                    ((prop.domain.length > 1) ? current_class.included_in_domain_of : current_class.domain_of).push(prop);
+                    (prop.domain.length > 1 ? current_class.included_in_domain_of : current_class.domain_of).push(prop);
                 }
             }
         }
@@ -917,7 +918,7 @@ function getData(vocab_source) {
         for (const prop of properties) {
             if (prop.range?.length > 0) {
                 if (prop.range.find((val) => factory_1.RDFTermFactory.equals(val, current_datatype))) {
-                    ((prop.range.length > 1) ? current_datatype.includes_range_of : current_datatype.range_of).push(prop);
+                    (prop.range.length > 1 ? current_datatype.includes_range_of : current_datatype.range_of).push(prop);
                 }
             }
         }
@@ -934,11 +935,44 @@ function getData(vocab_source) {
     common_1.global.protected = vocab.json_ld?.protected ?? true;
     /*********************************************************************************************/
     // The mermaid settings are also for global space only
+    const ontFilter = (prop) => {
+        return ontology_properties.filter((property) => property.property === prop);
+    };
     common_1.global.direction = vocab.mermaid?.direction ?? common_2.DEFAULT_M_DIRECTION;
     common_1.global.theme = vocab.mermaid?.theme ?? common_2.DEFAULT_M_THEME;
     common_1.global.look = vocab.mermaid?.look ?? common_2.DEFAULT_M_LOOK;
     common_1.global.layout = vocab.mermaid?.layout ?? common_2.DEFAULT_M_LAYOUT;
     common_1.global.extras = toArray(vocab.mermaid?.extras) ?? [];
+    // Get the accessibility title: either given explicitly or
+    // reuse the ontology title
+    common_1.global.accTitle = (() => {
+        if (vocab.mermaid?.accTitle) {
+            return vocab.mermaid.accTitle;
+        }
+        else {
+            const titleProperty = ontFilter("dc:title");
+            return titleProperty.length > 0 ? titleProperty[0].value : "";
+        }
+    })();
+    // Get the accessibility description: either given explicitly or
+    // reuse tje ontology description and seeAlso.
+    common_1.global.accDescr = (() => {
+        if (vocab.mermaid?.accDescr) {
+            return vocab.mermaid.accDescr;
+        }
+        else {
+            const descrProperty = ontFilter("dc:description");
+            const seeAlsoProperty = ontFilter("rdfs:seeAlso");
+            if (descrProperty.length + seeAlsoProperty.length) {
+                const descr = descrProperty.length > 0 ? descrProperty[0].value : "";
+                const seeAlso = seeAlsoProperty.length > 0 ? seeAlsoProperty[0].value : "";
+                return descr + ". See also:" + seeAlso;
+            }
+            else {
+                return "";
+            }
+        }
+    })();
     /********************************************************************************************/
     // We're all set: return the internal representation of the vocabulary
     return { prefixes, ontology_properties, classes, properties, individuals, datatypes };

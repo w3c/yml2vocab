@@ -102,6 +102,8 @@ exports.global = {
     look: exports.DEFAULT_M_LOOK,
     layout: exports.DEFAULT_M_LAYOUT,
     extras: [],
+    accTitle: "",
+    accDescr: "",
 };
 /**
  * Enumeration for possible container values

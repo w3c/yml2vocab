@@ -78,6 +78,8 @@ export interface MERMAID {
     look?: M_LOOK;
     layout?: M_LAYOUT;
     extras?: string | string[];
+    accTitle?: string;
+    accDescr?: string;
 }
 /**
  * Context references. Lists, for a context, the terms that are listed in them.
@@ -153,6 +155,14 @@ export interface GlobalData {
      * Mermaid specific data: extra mermaid statements to be added to the generated ones
      */
     extras?: string[];
+    /**
+     * Mermaid specific data: accessibility title
+     */
+    accTitle: string;
+    /**
+     * Mermaid specific data: accessibility title
+     */
+    accDescr: string;
 }
 /**
  * As it name says: some global data that are needed by some of the media type specific modules.
